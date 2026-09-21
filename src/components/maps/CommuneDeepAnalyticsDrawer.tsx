@@ -15,7 +15,8 @@ import {
   ShieldAlert,
   Award,
   Landmark,
-  CheckCircle2
+  CheckCircle2,
+  FileText
 } from 'lucide-react';
 import { TerritoryGeoFeature, ZoomLevelId } from '../../data/geojson';
 import { MEDELLIN_COMUNAS_DATA, METROPOLITAN_MUNICIPALITIES_DATA } from '../../data/metropolitanAndMedellinData';
@@ -24,6 +25,11 @@ import { E24HistoricalViewer } from './E24HistoricalViewer';
 import { IPM_DATA } from '../../data/observatorioComunas/ipmData';
 import { CRIMINALITY_DATA } from '../../data/observatorioComunas/criminalityData';
 import { POPULATION_DATA, getDemographicIndicators } from '../../data/observatorioComunas/populationData';
+import { DemographicPyramid } from '../observatorioComunas/DemographicPyramid';
+import { IpmVariableEvolution } from '../observatorioComunas/IpmVariableEvolution';
+import { CriminalityPanel } from '../observatorioComunas/CriminalityPanel';
+import { CommuneReportModal } from '../observatorioComunas/CommuneReportModal';
+import { COMMUNES } from '../../data/observatorioComunas/communeList';
 
 interface CommuneDeepAnalyticsDrawerProps {
   feature: TerritoryGeoFeature | null;
@@ -48,6 +54,7 @@ export const CommuneDeepAnalyticsDrawer: React.FC<CommuneDeepAnalyticsDrawerProp
   onDrillDown
 }) => {
   const [activeTab, setActiveTab] = useState<DrawerTab>('resumen');
+  const [showReportModal, setShowReportModal] = useState<boolean>(false);
 
   if (!feature) return null;
 
@@ -70,6 +77,21 @@ export const CommuneDeepAnalyticsDrawer: React.FC<CommuneDeepAnalyticsDrawerProp
     MEDELLIN_COMUNAS_DATA[feature.id.replace('-de-prado', '')] ||
     (comunaNumber ? MEDELLIN_COMUNAS_DATA[`med-c${comunaNumber}`] : null) ||
     (comunaNumber === 80 ? MEDELLIN_COMUNAS_DATA['med-correg-san-antonio'] : null)
+  ) : null;
+
+  // Active Commune Object for full reports
+  const activeCommuneObj = comunaNumber ? (
+    COMMUNES.find((c) => c.id === comunaNumber) || {
+      id: comunaNumber,
+      code: String(comunaNumber).padStart(2, '0'),
+      name: props.comunaName || props.name,
+      type: (comunaNumber >= 50 ? 'corregimiento' : 'comuna') as any,
+      zone: props.zone || 'Medellín',
+      description: comunaData?.keyDynamics || '',
+      estratoPredominante: comunaData?.predominantStratum || 'Estrato 3',
+      barriosCount: props.barriosCount || 8,
+      areaKm2: props.areaKm2 || 4.5
+    }
   ) : null;
 
   // Municipality match (Observatorio Antioquia / AMVA)
@@ -118,7 +140,7 @@ export const CommuneDeepAnalyticsDrawer: React.FC<CommuneDeepAnalyticsDrawerProp
   const drillTarget = getDrillDownTarget();
 
   return (
-    <div className={`w-full ${activeTab === 'e24' ? 'lg:w-[480px]' : 'lg:w-96'} flex flex-col max-h-[780px] overflow-hidden rounded-3xl bg-slate-950/75 backdrop-blur-3xl border border-white/25 shadow-[0_20px_50px_0_rgba(0,0,0,0.6),inset_0_1.5px_2px_0_rgba(255,255,255,0.45)] text-white transition-all duration-300`}>
+    <div className={`w-full ${activeTab === 'resumen' ? 'lg:w-[420px]' : 'lg:w-[600px]'} flex flex-col max-h-[820px] overflow-hidden rounded-3xl bg-slate-950/85 backdrop-blur-3xl border border-white/25 shadow-[0_20px_50px_0_rgba(0,0,0,0.6),inset_0_1.5px_2px_0_rgba(255,255,255,0.45)] text-white transition-all duration-300`}>
       {/* Header */}
       <div className="p-4 border-b border-white/15 flex items-start justify-between gap-2 bg-gradient-to-r from-amber-500/20 via-sky-500/10 to-transparent">
         <div>
@@ -146,13 +168,25 @@ export const CommuneDeepAnalyticsDrawer: React.FC<CommuneDeepAnalyticsDrawerProp
             <p className="text-xs text-slate-300 font-medium">Subregión: {props.subregion}</p>
           )}
         </div>
-        <button
-          onClick={onClose}
-          className="p-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-slate-300 hover:text-white transition"
-          title="Cerrar panel"
-        >
-          <X className="w-4 h-4" />
-        </button>
+        <div className="flex items-center gap-1.5">
+          {activeCommuneObj && (
+            <button
+              onClick={() => setShowReportModal(true)}
+              className="px-2.5 py-1.5 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border border-sky-400/40 text-[10px] font-mono font-bold flex items-center gap-1.5 transition cursor-pointer shadow-xs"
+              title="Abrir Informe Diagnóstico Completo (Imprimir / Guardar en PDF / Descargar HTML)"
+            >
+              <FileText className="w-3.5 h-3.5 text-sky-400" />
+              <span className="hidden sm:inline">Informe Completo</span>
+            </button>
+          )}
+          <button
+            onClick={onClose}
+            className="p-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-slate-300 hover:text-white transition cursor-pointer"
+            title="Cerrar panel"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
       </div>
 
       {/* Drill-Down Action Button */}
@@ -400,133 +434,62 @@ export const CommuneDeepAnalyticsDrawer: React.FC<CommuneDeepAnalyticsDrawerProp
         )}
 
         {/* TAB 3: ÍNDICE DE POBREZA MULTIDIMENSIONAL (IPM) */}
-        {activeTab === 'ipm' && latestIpm && (
-          <div className="space-y-3">
-            <div className="p-3 rounded-2xl bg-emerald-500/10 border border-emerald-400/25 flex items-center justify-between">
-              <div>
-                <div className="text-[10px] font-mono text-emerald-300 uppercase font-bold">Incidencia de Pobreza Global ({latestIpm.year})</div>
-                <div className="text-xl font-black text-white font-mono mt-0.5">{latestIpm.ipmGlobal}%</div>
-              </div>
-              <div className="text-right text-[10px] text-slate-300 font-medium">
-                DANE / Alcaldía
-              </div>
-            </div>
-
-            <div className="p-3.5 rounded-2xl bg-white/05 border border-white/15 space-y-2.5">
-              <div className="text-[10px] font-mono uppercase text-amber-400 font-bold tracking-wider">
-                Dimensiones de Privación (%)
-              </div>
-              <div className="grid grid-cols-2 gap-2 text-xs">
-                <div className="p-2 rounded-xl bg-black/25 border border-white/10">
-                  <div className="text-[10px] text-slate-400">Bajo Logro Educativo</div>
-                  <div className="text-sm font-black font-mono text-amber-300">{latestIpm.bajoLogroEducativo}%</div>
+        {activeTab === 'ipm' && (
+          comunaNumber ? (
+            <IpmVariableEvolution
+              communeId={comunaNumber}
+              communeName={props.comunaName || props.name}
+            />
+          ) : latestIpm ? (
+            <div className="space-y-3">
+              <div className="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-400/25 flex items-center justify-between">
+                <div>
+                  <div className="text-[10px] font-mono text-emerald-300 uppercase font-bold">Incidencia de Pobreza Global ({latestIpm.year})</div>
+                  <div className="text-xl font-black text-white font-mono mt-0.5">{latestIpm.ipmGlobal}%</div>
                 </div>
-                <div className="p-2 rounded-xl bg-black/25 border border-white/10">
-                  <div className="text-[10px] text-slate-400">Empleo Informal</div>
-                  <div className="text-sm font-black font-mono text-rose-300">{latestIpm.empleoInformal}%</div>
-                </div>
-                <div className="p-2 rounded-xl bg-black/25 border border-white/10">
-                  <div className="text-[10px] text-slate-400">Sin Aseguramiento Salud</div>
-                  <div className="text-sm font-black font-mono text-sky-300">{latestIpm.sinAseguramientoSalud}%</div>
-                </div>
-                <div className="p-2 rounded-xl bg-black/25 border border-white/10">
-                  <div className="text-[10px] text-slate-400">Desempleo Larga Duración</div>
-                  <div className="text-sm font-black font-mono text-indigo-300">{latestIpm.desempleoLargaDuracion}%</div>
-                </div>
-                <div className="p-2 rounded-xl bg-black/25 border border-white/10">
-                  <div className="text-[10px] text-slate-400">Hacinamiento Crítico</div>
-                  <div className="text-sm font-black font-mono text-emerald-300">{latestIpm.hacinamiento}%</div>
-                </div>
-                <div className="p-2 rounded-xl bg-black/25 border border-white/10">
-                  <div className="text-[10px] text-slate-400">Inasistencia Escolar</div>
-                  <div className="text-sm font-black font-mono text-purple-300">{latestIpm.inasistenciaEscolar}%</div>
+                <div className="text-right text-[10px] text-slate-300 font-medium">
+                  DANE / Alcaldía
                 </div>
               </div>
             </div>
-          </div>
+          ) : (
+            <div className="p-4 rounded-2xl bg-white/05 text-slate-400 text-xs text-center">
+              No hay microdatos IPM detallados para este nivel territorial.
+            </div>
+          )
         )}
 
         {/* TAB 4: SEGURIDAD Y GOBERNANZA CRIMINAL (CIEF EAFIT / CHICAGO) */}
-        {activeTab === 'seguridad' && crimeRecord && (
-          <div className="space-y-3">
-            <div className="p-3 rounded-2xl bg-rose-500/10 border border-rose-400/25">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-rose-300 flex items-center gap-1.5">
-                  <ShieldAlert className="w-3.5 h-3.5 text-rose-400" />
-                  Gobierno Criminal & Extorsión
-                </span>
-                <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 font-bold border border-rose-500/30">
-                  Nivel: {crimeRecord.governanceLevel}
-                </span>
-              </div>
-              <div className="grid grid-cols-2 gap-2 mt-2.5">
-                <div className="p-2 rounded-xl bg-black/30 border border-white/10">
-                  <div className="text-[10px] text-slate-400">Extorsión Comercios</div>
-                  <div className="text-base font-black font-mono text-rose-300">{crimeRecord.extorsionNegociosPct}%</div>
-                  <div className="text-[9px] text-slate-400">Pagan "vacuna" mensual</div>
-                </div>
-                <div className="p-2 rounded-xl bg-black/30 border border-white/10">
-                  <div className="text-[10px] text-slate-400">Extorsión Hogares</div>
-                  <div className="text-base font-black font-mono text-amber-300">{crimeRecord.extorsionHogaresPct}%</div>
-                  <div className="text-[9px] text-slate-400">Pagan cobro residencial</div>
-                </div>
-              </div>
+        {activeTab === 'seguridad' && (
+          comunaNumber ? (
+            <CriminalityPanel
+              communeId={comunaNumber}
+              communeName={props.comunaName || props.name}
+            />
+          ) : crimeRecord ? (
+            <div className="p-3.5 rounded-2xl bg-rose-500/10 border border-rose-400/25 space-y-2">
+              <span className="text-xs font-bold text-rose-300">
+                Gobernanza Criminal: {crimeRecord.governanceLevel}
+              </span>
+              <p className="text-xs text-slate-300">{crimeRecord.summaryPDF}</p>
             </div>
-
-            <div className="p-3.5 rounded-2xl bg-white/05 border border-white/15 space-y-2">
-              <div className="text-[10px] font-mono uppercase text-amber-400 font-bold">Estructuras & Combos Estimados</div>
-              <div className="flex items-center justify-between text-xs text-slate-200">
-                <span>Combos activos aproximados:</span>
-                <span className="font-mono font-bold text-white px-2 py-0.5 rounded-md bg-white/10">{crimeRecord.combosCountEst}</span>
-              </div>
-              <div className="text-xs text-slate-300">
-                <strong>Bandas Dominantes:</strong> {crimeRecord.bandasDominantes.join(', ')}
-              </div>
-              {crimeRecord.funcionesGobiernoEjercidas && crimeRecord.funcionesGobiernoEjercidas.length > 0 && (
-                <div className="mt-2 pt-2 border-t border-white/10">
-                  <div className="text-[10px] text-slate-400 font-bold mb-1">Funciones Cooptadas:</div>
-                  <ul className="list-disc pl-4 space-y-0.5 text-[11px] text-slate-300">
-                    {crimeRecord.funcionesGobiernoEjercidas.slice(0, 3).map((f, i) => (
-                      <li key={i}>{f}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-              <div className="mt-2 text-[10px] text-slate-400 italic bg-black/20 p-2 rounded-xl border border-white/05">
-                "{crimeRecord.summaryPDF}"
-              </div>
-              <div className="text-[9px] font-mono text-slate-500">
-                Fuente: CIEF Universidad EAFIT / Chicago / IPA / SISC
-              </div>
+          ) : (
+            <div className="p-4 rounded-2xl bg-white/05 text-slate-400 text-xs text-center">
+              No hay microdatos de gobernanza criminal CIEF disponibles para este nivel.
             </div>
-          </div>
+          )
         )}
 
-        {/* TAB 5: DEMOGRAFÍA & PROYECCIONES DANE */}
+        {/* TAB 5: DEMOGRAFÍA & PIRÁMIDES POBLACIONALES DINÁMICAS */}
         {activeTab === 'demografia' && (
-          <div className="space-y-3">
-            {pop2026 ? (
-              <div className="p-3.5 rounded-2xl bg-white/05 border border-white/15 space-y-2.5">
-                <div className="text-xs font-bold text-indigo-300 flex items-center gap-1.5">
-                  <Users className="w-3.5 h-3.5 text-indigo-400" />
-                  Proyección Poblacional DANE (2026)
-                </div>
-                <div className="space-y-1.5 text-xs">
-                  <div className="flex justify-between items-center py-1 border-b border-white/10">
-                    <span className="text-slate-300">Población Total:</span>
-                    <span className="font-mono text-white font-black text-sm">{pop2026.total.toLocaleString()} hab.</span>
-                  </div>
-                  <div className="flex justify-between items-center py-0.5">
-                    <span className="text-slate-300">Mujeres ({(((pop2026.mujeres || pop2026.women || 0) / pop2026.total) * 100).toFixed(1)}%):</span>
-                    <span className="font-mono text-pink-300 font-bold">{(pop2026.mujeres || pop2026.women || 0).toLocaleString()}</span>
-                  </div>
-                  <div className="flex justify-between items-center py-0.5">
-                    <span className="text-slate-300">Hombres ({(((pop2026.hombres || pop2026.men || 0) / pop2026.total) * 100).toFixed(1)}%):</span>
-                    <span className="font-mono text-sky-300 font-bold">{(pop2026.hombres || pop2026.men || 0).toLocaleString()}</span>
-                  </div>
-                </div>
-              </div>
-            ) : (
+          comunaNumber ? (
+            <DemographicPyramid
+              communeId={comunaNumber}
+              communeName={props.comunaName || props.name}
+              initialYear={2026}
+            />
+          ) : (
+            <div className="space-y-3">
               <div className="p-3.5 rounded-2xl bg-white/05 border border-white/15 space-y-2">
                 <div className="text-xs font-bold text-indigo-300 flex items-center gap-1.5">
                   <Users className="w-3.5 h-3.5 text-indigo-400" />
@@ -539,34 +502,8 @@ export const CommuneDeepAnalyticsDrawer: React.FC<CommuneDeepAnalyticsDrawerProp
                   Censo Electoral Registraduría: <strong className="font-mono text-emerald-300">{(props.electoralCensus || 0).toLocaleString()} votantes</strong>
                 </div>
               </div>
-            )}
-
-            {demoIndicators && (
-              <div className="p-3.5 rounded-2xl bg-white/05 border border-white/15 space-y-2">
-                <div className="text-[10px] font-mono uppercase text-sky-400 font-bold tracking-wider">
-                  Indicadores Demográficos Estructurales
-                </div>
-                <div className="grid grid-cols-3 gap-2 text-center">
-                  <div className="p-2 rounded-xl bg-black/30 border border-white/10">
-                    <div className="text-[9px] text-slate-400">Edad Mediana</div>
-                    <div className="text-sm font-black font-mono text-sky-300 mt-0.5">{demoIndicators.medianAge} a.</div>
-                  </div>
-                  <div className="p-2 rounded-xl bg-black/30 border border-white/10">
-                    <div className="text-[9px] text-slate-400">Envejecimiento</div>
-                    <div className="text-sm font-black font-mono text-amber-300 mt-0.5">{demoIndicators.agingIndex}%</div>
-                  </div>
-                  <div className="p-2 rounded-xl bg-black/30 border border-white/10">
-                    <div className="text-[9px] text-slate-400">Dependencia</div>
-                    <div className="text-sm font-black font-mono text-indigo-300 mt-0.5">{demoIndicators.dependencyRatio}%</div>
-                  </div>
-                </div>
-                <div className="flex items-center justify-between text-[10px] text-slate-300 pt-1 border-t border-white/10">
-                  <span>Bono Demográfico (15-64): <strong>{demoIndicators.workingAgeShare}%</strong></span>
-                  <span>Adultos Mayores (65+): <strong>{demoIndicators.elderlyShare}%</strong></span>
-                </div>
-              </div>
-            )}
-          </div>
+            </div>
+          )
         )}
 
         {/* TAB 6: ALCALDÍA & CONCEJO (MUNICIPIOS) */}
@@ -625,6 +562,31 @@ export const CommuneDeepAnalyticsDrawer: React.FC<CommuneDeepAnalyticsDrawerProp
           </div>
         )}
       </div>
+
+      {/* Footer Quick Action: Full Diagnostic Report */}
+      {activeCommuneObj && (
+        <div className="p-3 bg-slate-900/80 border-t border-white/10 flex items-center justify-between text-xs">
+          <div className="text-[10px] text-slate-400 font-mono">
+            Comuna {activeCommuneObj.code} • {activeCommuneObj.name}
+          </div>
+          <button
+            onClick={() => setShowReportModal(true)}
+            className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-sky-500/30 to-indigo-500/30 hover:from-sky-500/40 hover:to-indigo-500/40 text-white font-bold border border-sky-400/40 flex items-center gap-1.5 text-xs transition cursor-pointer shadow-xs"
+          >
+            <FileText className="w-3.5 h-3.5 text-sky-400" />
+            <span>Ver Informe Completo (PDF / HTML)</span>
+          </button>
+        </div>
+      )}
+
+      {/* Full Commune Diagnostic Report Modal */}
+      {showReportModal && activeCommuneObj && (
+        <CommuneReportModal
+          commune={activeCommuneObj}
+          selectedYear={2026}
+          onClose={() => setShowReportModal(false)}
+        />
+      )}
     </div>
   );
 };
