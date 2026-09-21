@@ -23,14 +23,17 @@ import {
   TrendingUp, 
   ArrowRight,
   FileSpreadsheet,
-  Network
+  Network,
+  X
 } from 'lucide-react';
+import { E24HistoricalViewer } from '../../components/maps/E24HistoricalViewer';
 
 export const TerritorialZoomHubView: React.FC = () => {
   const [currentLevel, setCurrentLevel] = useState<ZoomLevelId>('municipal');
   const [activeLayer, setActiveLayer] = useState<ThematicMetricLayer>('electoral');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFeature, setSelectedFeature] = useState<TerritoryGeoFeature | null>(null);
+  const [e24ModalOpen, setE24ModalOpen] = useState(false);
 
   const currentDataset = GEOJSON_LAYERS_BY_ZOOM[currentLevel];
   const currentLevelConfig = ZOOM_LEVELS_CONFIG[currentLevel];
@@ -95,8 +98,15 @@ export const TerritorialZoomHubView: React.FC = () => {
             </p>
           </div>
 
-          {/* Aggregated KPI badges */}
+          {/* Aggregated KPI badges & E24 Quick Action */}
           <div className="flex flex-wrap lg:flex-col gap-2 shrink-0">
+            <button
+              onClick={() => setE24ModalOpen(true)}
+              className="px-3.5 py-2 rounded-2xl bg-gradient-to-r from-amber-500/25 via-orange-500/25 to-amber-600/30 hover:from-amber-500/40 hover:to-orange-500/40 border border-amber-400/50 hover:border-amber-300 text-amber-200 hover:text-white text-xs font-black shadow-[0_0_20px_rgba(251,191,36,0.3)] flex items-center justify-center gap-2 transition-all transform hover:scale-[1.02] active:scale-95 cursor-pointer"
+            >
+              <FileSpreadsheet className="w-4 h-4 text-amber-400" />
+              <span>Matriz E-24 Histórica Oficial</span>
+            </button>
             <div className="px-3.5 py-2 rounded-2xl bg-white/05 border border-white/15 backdrop-blur-xl">
               <div className="text-[10px] font-mono uppercase text-slate-400 font-bold">Población en Escala Activa</div>
               <div className="text-base font-black text-sky-300 font-mono">
@@ -305,9 +315,24 @@ export const TerritorialZoomHubView: React.FC = () => {
                 Barrios & Puestos 2015-2023
               </div>
             </div>
-          </button>
         </div>
       </div>
+
+      {/* Standalone E-24 Historical Matrix Modal */}
+      {e24ModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 animate-fadeIn">
+          <div className="w-full max-w-2xl max-h-[92vh] overflow-y-auto rounded-3xl relative border border-white/20 shadow-2xl">
+            <button
+              onClick={() => setE24ModalOpen(false)}
+              className="absolute top-4 right-4 z-20 p-2 rounded-full bg-black/60 hover:bg-black/90 border border-white/20 text-white transition shadow-lg cursor-pointer"
+              title="Cerrar Matriz E-24"
+            >
+              <X className="w-4 h-4" />
+            </button>
+            <E24HistoricalViewer />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

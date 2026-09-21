@@ -2,8 +2,18 @@ import { ComunaInfo, ZoneId, ZoneVotes, ComunaVotesAggregation, MunicipalSummary
 import { COMUNAS_INFO } from './comunasData';
 import { PARTIES, PARTY_CANDIDATES, ALL_PROMINENT_CANDIDATES } from './partiesData';
 import { ALL_ZONES, RAW_E24_PARTIES, RAW_VOTOS_EN_BLANCO, RAW_VOTOS_NO_MARCADOS, RAW_VOTOS_NULOS } from './e24RawData';
-import { CAMARA_PARTIES, CAMARA_CANDIDATES, RAW_ZONE_VOTES_CAMARA, MUNICIPAL_SUMMARY_CAMARA, COMUNA_AGGREGATIONS_CAMARA, getZonePartySummaryCamara } from './camaraData';
-import { PRESIDENCIA_CANDIDATES, RAW_ZONE_VOTES_PRESIDENCIA, MUNICIPAL_SUMMARY_PRESIDENCIA, COMUNA_AGGREGATIONS_PRESIDENCIA, getZonePartySummaryPresidencia, PRESIDENTIAL_STAGES } from './presidenciaData';
+import { 
+  PRESIDENCIA_CANDIDATES, 
+  RAW_ZONE_VOTES_PRESIDENCIA, 
+  MUNICIPAL_SUMMARY_PRESIDENCIA, 
+  COMUNA_AGGREGATIONS_PRESIDENCIA, 
+  getZonePartySummaryPresidencia, 
+  PRESIDENTIAL_STAGES,
+  COMUNA_AGGREGATIONS_PRESIDENCIA_2022_1V,
+  COMUNA_AGGREGATIONS_PRESIDENCIA_2022_2V,
+  MUNICIPAL_SUMMARY_PRESIDENCIA_2022_1V,
+  MUNICIPAL_SUMMARY_PRESIDENCIA_2022_2V
+} from './presidenciaData';
 import {
   isTerritorialElection,
   getTerritorialParties,
@@ -327,13 +337,18 @@ export function getElectionCandidates(type?: ElectionType | string, year?: numbe
   }
 }
 
-export function getElectionMunicipalSummary(type?: ElectionType | string, year?: number): MunicipalSummary {
+export function getElectionMunicipalSummary(type?: ElectionType | string, year?: number, stage?: string): MunicipalSummary {
   if (isTerritorialElection(type)) {
     return getTerritorialMunicipalSummary(type, year);
   }
   if (year === 2022) {
     if (type === 'camara') return CAMARA_2022_MUNICIPAL_SUMMARY;
     if (type === 'senado') return SENADO_2022_MUNICIPAL_SUMMARY;
+    if (type === 'presidencia') {
+      return stage === 'segunda_vuelta' 
+        ? MUNICIPAL_SUMMARY_PRESIDENCIA_2022_2V 
+        : MUNICIPAL_SUMMARY_PRESIDENCIA_2022_1V;
+    }
   }
   switch (type) {
     case 'camara':
@@ -346,13 +361,18 @@ export function getElectionMunicipalSummary(type?: ElectionType | string, year?:
   }
 }
 
-export function getElectionComunaAggregations(type?: ElectionType | string, year?: number): Record<number, ComunaVotesAggregation> {
+export function getElectionComunaAggregations(type?: ElectionType | string, year?: number, stage?: string): Record<number, ComunaVotesAggregation> {
   if (isTerritorialElection(type)) {
     return getTerritorialComunaAggregations(type, year);
   }
   if (year === 2022) {
     if (type === 'camara') return CAMARA_2022_COMUNA_AGGREGATIONS;
     if (type === 'senado') return SENADO_2022_COMUNA_AGGREGATIONS;
+    if (type === 'presidencia') {
+      return stage === 'segunda_vuelta' 
+        ? COMUNA_AGGREGATIONS_PRESIDENCIA_2022_2V 
+        : COMUNA_AGGREGATIONS_PRESIDENCIA_2022_1V;
+    }
   }
   switch (type) {
     case 'camara':

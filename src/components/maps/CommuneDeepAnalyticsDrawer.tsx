@@ -118,7 +118,7 @@ export const CommuneDeepAnalyticsDrawer: React.FC<CommuneDeepAnalyticsDrawerProp
   const drillTarget = getDrillDownTarget();
 
   return (
-    <div className="w-full lg:w-96 flex flex-col max-h-[750px] overflow-hidden rounded-3xl bg-slate-950/75 backdrop-blur-3xl border border-white/25 shadow-[0_20px_50px_0_rgba(0,0,0,0.6),inset_0_1.5px_2px_0_rgba(255,255,255,0.45)] text-white">
+    <div className={`w-full ${activeTab === 'e24' ? 'lg:w-[480px]' : 'lg:w-96'} flex flex-col max-h-[780px] overflow-hidden rounded-3xl bg-slate-950/75 backdrop-blur-3xl border border-white/25 shadow-[0_20px_50px_0_rgba(0,0,0,0.6),inset_0_1.5px_2px_0_rgba(255,255,255,0.45)] text-white transition-all duration-300`}>
       {/* Header */}
       <div className="p-4 border-b border-white/15 flex items-start justify-between gap-2 bg-gradient-to-r from-amber-500/20 via-sky-500/10 to-transparent">
         <div>
