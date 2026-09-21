@@ -1,59 +1,67 @@
 @echo off
-chcp 65001 > nul
+set "GIT_EXE=C:\Users\isaac\AppData\Local\Programs\Git\cmd\git.exe"
+if not exist "%GIT_EXE%" set "GIT_EXE=%LOCALAPPDATA%\Programs\Git\cmd\git.exe"
+set "GH_EXE=C:\Users\isaac\AppData\Local\Microsoft\WinGet\Packages\GitHub.cli_Microsoft.Winget.Source_8wekyb3d8bbwe\bin\gh.exe"
+set "PATH=C:\Users\isaac\AppData\Local\Programs\Git\cmd;C:\Users\isaac\AppData\Local\Microsoft\WinGet\Packages\GitHub.cli_Microsoft.Winget.Source_8wekyb3d8bbwe\bin;%PATH%"
+
 echo =====================================================================
-echo           PROYECTO PROTEUS 1.2 - ASISTENTE DE SUBIDA A GITHUB
+echo           PROYECTO PROTEUS 1.2 - SUBIDA DIRECTA A GITHUB
 echo =====================================================================
 echo.
 
-where git >nul 2>nul
-if %errorlevel% neq 0 (
-    echo [ERROR] Git no esta instalado o no se encuentra en el PATH del sistema.
-    echo Por favor instala Git desde https://git-scm.com/ e intenta nuevamente.
-    echo.
+if not exist "%GIT_EXE%" (
+    echo [ERROR] No se encontro git.exe en: %GIT_EXE%
     pause
     exit /b 1
 )
 
-echo [1/4] Inicializando repositorio Git local...
-git init
+echo [1/3] Verificando repositorio y 135 archivos locales...
+"%GIT_EXE%" init
+"%GIT_EXE%" branch -M main
+"%GIT_EXE%" add .
+"%GIT_EXE%" commit -m "feat: Lanzamiento Proyecto Proteus 1.2 - Centro Estrategico y Multi-Agente IA" 2>nul
+
+echo.
+echo [2/3] Configurando enlace remoto...
+set "REPO_URL=https://github.com/isaacmendoza265-cmd/proteus-1.45.git"
+echo Repositorio: %REPO_URL%
+"%GIT_EXE%" remote remove origin 2>nul
+"%GIT_EXE%" remote add origin %REPO_URL%
+
+echo.
+echo [3/3] Subiendo proyecto a GitHub...
 echo.
 
-echo [2/4] Agregando todos los archivos limpios del proyecto...
-git add .
-echo.
-
-echo [3/4] Creando commit inicial...
-git commit -m "feat: Lanzamiento Proyecto Proteus 1.2 - Centro Estrategico y Multi-Agente IA"
-git branch -M main
-echo.
-
-set /p REPO_URL="Pega la URL de tu repositorio vacio en GitHub (ej. https://github.com/usuario/proyecto-proteus.git): "
-
-if "%REPO_URL%"=="" (
-    echo No ingresaste ninguna URL. Tu repositorio local esta listo con el commit creado.
-    echo Puedes vincular el remoto mas adelante con:
-    echo   git remote add origin TU_URL
-    echo   git push -u origin main
-    echo.
-    pause
-    exit /b 0
+if exist "%GH_EXE%" (
+    "%GH_EXE%" auth setup-git 2>nul
 )
 
-echo.
-echo [4/4] Vinculando remoto y subiendo cambios a GitHub...
-git remote remove origin 2>nul
-git remote add origin %REPO_URL%
-git push -u origin main
+"%GIT_EXE%" push -u origin main
 
 if %errorlevel% equ 0 (
     echo.
     echo =====================================================================
-    echo   ¡EXITO! El proyecto ha sido subido correctamente a tu GitHub.
+    echo   EXITO TOTAL! Todo el proyecto Proteus 1.2 ha sido subido a GitHub.
+    echo   Recarga tu navegador en:
+    echo   https://github.com/isaacmendoza265-cmd/proteus-1.45
     echo =====================================================================
 ) else (
     echo.
-    echo [AVISO] Ocurrio un error al subir los cambios.
-    echo Verifica que tengas permisos de escritura y que el repositorio este vacio.
+    echo =====================================================================
+    echo   [AUTENTICACION DE GITHUB REQUERIDA]
+    echo   Para vincular tu cuenta con tu equipo, se abrira GitHub en tu
+    echo   navegador para iniciar sesion y confirmar con un codigo.
+    echo =====================================================================
+    echo.
+    if exist "%GH_EXE%" (
+        "%GH_EXE%" auth login --web -h github.com -p https
+        "%GH_EXE%" auth setup-git
+        echo.
+        echo Reintentando la subida a GitHub...
+        "%GIT_EXE%" push -u origin main
+    ) else (
+        echo Por favor genera un Personal Access Token en GitHub para autenticar.
+    )
 )
 
 echo.
