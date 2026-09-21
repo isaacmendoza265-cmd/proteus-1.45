@@ -16,7 +16,8 @@ import {
   Brain,
   Megaphone,
   Video,
-  HardDrive
+  HardDrive,
+  Network
 } from 'lucide-react';
 import { CmtIsotipo } from '../CmtProteusLogo';
 
@@ -30,6 +31,7 @@ export type NavViewId =
   | 'content-director'
   | 'multimedia-studio'
   | 'agent-team'
+  | 'political-houses-graph'
   | 'antioquia-gobernacion'
   | 'antioquia-subregiones'
   | 'antioquia-municipios'
@@ -281,6 +283,26 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
             >
               <MapPin className="w-4 h-4 shrink-0 text-amber-400" />
               {!collapsed && <span>125 Municipios</span>}
+            </button>
+
+            <button
+              onClick={() => onSelectView('political-houses-graph')}
+              className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold transition-all duration-200 ${
+                currentView === 'political-houses-graph'
+                  ? 'bg-gradient-to-r from-sky-500/35 to-indigo-600/40 border border-sky-300/60 text-white shadow-[inset_0_1.5px_2px_0_rgba(255,255,255,0.5),0_4px_20px_rgba(56,189,248,0.4)]'
+                  : 'text-slate-300 hover:text-white hover:bg-white/10 border border-transparent'
+              }`}
+              title="Observatorio Electoral: Redes de Poder y Casas Políticas (Grafos 2D/3D)"
+            >
+              <Network className="w-4 h-4 shrink-0 text-sky-400" />
+              {!collapsed && (
+                <div className="flex items-center justify-between w-full">
+                  <span>Casas Políticas</span>
+                  <span className="text-[9px] px-1.5 py-0.2 rounded bg-sky-500/20 text-sky-300 font-mono font-bold">
+                    2D/3D
+                  </span>
+                </div>
+              )}
             </button>
           </div>
         </div>

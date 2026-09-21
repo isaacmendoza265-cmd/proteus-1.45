@@ -12,7 +12,8 @@ import {
   Palette,
   Camera,
   Activity,
-  Layers
+  Layers,
+  Network
 } from 'lucide-react';
 import { 
   CandidateProfileManager, 
@@ -147,7 +148,7 @@ export const CandidateProfilesView: React.FC<CandidateProfilesViewProps> = ({
               </span>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
               <button
                 type="button"
                 onClick={() => onNavigateToView('territorial-zoom')}
@@ -230,6 +231,23 @@ export const CandidateProfilesView: React.FC<CandidateProfilesViewProps> = ({
                 </div>
                 <div className="text-[10px] text-slate-400 mt-0.5">
                   28 actores y 7 ejes
+                </div>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => onNavigateToView('political-houses-graph')}
+                className="p-3 rounded-2xl bg-white/05 hover:bg-rose-500/20 border border-white/10 hover:border-rose-400/50 text-left transition transform hover:scale-[1.02] active:scale-95 group cursor-pointer"
+              >
+                <div className="flex items-center justify-between text-rose-400 mb-1.5">
+                  <Network className="w-4 h-4" />
+                  <ArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition" />
+                </div>
+                <div className="text-xs font-black text-white group-hover:text-rose-200">
+                  Casas Políticas
+                </div>
+                <div className="text-[10px] text-slate-400 mt-0.5">
+                  Grafos de Poder 2D/3D
                 </div>
               </button>
             </div>

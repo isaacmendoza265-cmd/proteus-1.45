@@ -26,6 +26,7 @@ import { AgentTeamConsoleView } from './modules/agents/AgentTeamConsoleView';
 import { GobernacionExecutiveView } from './modules/antioquia/departamental/GobernacionExecutiveView';
 import { SubregionesView } from './modules/antioquia/subregiones/SubregionesView';
 import { AntioquiaExplorerView } from './modules/antioquia/municipios/AntioquiaExplorerView';
+import { PoliticalHousesGraphView } from './modules/observatorio/PoliticalHousesGraphView';
 
 // System & Agent Views
 import { AntigravityAgentConsole } from './components/AntigravityAgentConsole';
@@ -168,6 +169,13 @@ export default function App() {
         <AntioquiaExplorerView
           candidateProfile={candidateProfile}
           onNavigateToBio={() => setCurrentView('national-candidates')}
+          onNavigateToContentDirector={() => setCurrentView('content-director')}
+        />
+      )}
+
+      {currentView === 'political-houses-graph' && (
+        <PoliticalHousesGraphView
+          candidateProfile={candidateProfile}
           onNavigateToContentDirector={() => setCurrentView('content-director')}
         />
       )}
