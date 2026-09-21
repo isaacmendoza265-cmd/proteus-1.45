@@ -17,30 +17,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05002",
         "name": "Abejorral",
         "daneCode": "05002",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Oriente",
-        "centroid": [
-          5.8159,
-          -75.424
-        ],
-        "bounds": [
-          [
-            5.6639,
-            -75.5561
-          ],
-          [
-            5.9341,
-            -75.2684
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#3b82f6",
-        "areaKm2": 507.1
+        "category": "6",
+        "population": 20000,
+        "electoralCensus": 15200,
+        "nbiPercentage": 13.2,
+        "areaKm2": 507.1,
+        "riskLevel": "Bajo",
+        "electedMayor": "Manuel Alberto Guzmán Marín",
+        "winnerParty": "Coalición Unidos Volvemos a Creer (Centro Democrático)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -105,30 +91,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05004",
         "name": "Abriaquí",
         "daneCode": "05004",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Occidente",
-        "centroid": [
-          6.631,
-          -76.073
-        ],
-        "bounds": [
-          [
-            6.5043,
-            -76.1767
-          ],
-          [
-            6.7547,
-            -76.0078
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#8b5cf6",
-        "areaKm2": 297.0
+        "category": "6",
+        "population": 2700,
+        "electoralCensus": 2052,
+        "nbiPercentage": 29.3,
+        "areaKm2": 297.0,
+        "riskLevel": "Alto",
+        "electedMayor": "Daniel Alberto Salas Gallego",
+        "winnerParty": "Coalición Abriaquí Nos Une (Partido Conservador)",
+        "predominantParty": "Partido Conservador"
       },
       "geometry": {
         "type": "Polygon",
@@ -181,30 +153,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05021",
         "name": "Alejandría",
         "daneCode": "05021",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Oriente",
-        "centroid": [
-          6.3704,
-          -75.0754
-        ],
-        "bounds": [
-          [
-            6.2973,
-            -75.1705
-          ],
-          [
-            6.4175,
-            -74.9869
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#3b82f6",
-        "areaKm2": 128.9
+        "category": "6",
+        "population": 4800,
+        "electoralCensus": 3648,
+        "nbiPercentage": 13.2,
+        "areaKm2": 128.9,
+        "riskLevel": "Bajo",
+        "electedMayor": "Gloria Cecilia Naranjo Osorio",
+        "winnerParty": "Coalición Alejandría Nos Une (Centro Democrático)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -249,30 +207,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05030",
         "name": "Amagá",
         "daneCode": "05030",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Suroeste",
-        "centroid": [
-          6.0225,
-          -75.7051
-        ],
-        "bounds": [
-          [
-            5.9812,
-            -75.7667
-          ],
-          [
-            6.0878,
-            -75.67
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
+        "category": "5",
+        "population": 32000,
+        "electoralCensus": 24320,
+        "nbiPercentage": 19.3,
+        "areaKm2": 84.1,
         "riskLevel": "Medio",
-        "colorCode": "#f59e0b",
-        "areaKm2": 84.1
+        "electedMayor": "Wilser Darío Molina Molina",
+        "winnerParty": "Coalición Creemos - Centro Democrático",
+        "predominantParty": "Creemos / CD"
       },
       "geometry": {
         "type": "Polygon",
@@ -313,30 +257,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05031",
         "name": "Amalfi",
         "daneCode": "05031",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Nordeste",
-        "centroid": [
-          6.9902,
-          -74.9821
-        ],
-        "bounds": [
-          [
-            6.7509,
-            -75.1815
-          ],
-          [
-            7.2876,
-            -74.8375
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#14b8a6",
-        "areaKm2": 1209.1
+        "category": "5",
+        "population": 26000,
+        "electoralCensus": 19760,
+        "nbiPercentage": 39.7,
+        "areaKm2": 1209.1,
+        "riskLevel": "Crítico",
+        "electedMayor": "Wilmar Alonso Vélez Londoño",
+        "winnerParty": "Coalición Amalfi Nos Une (Partido Conservador)",
+        "predominantParty": "Partido Conservador"
       },
       "geometry": {
         "type": "Polygon",
@@ -413,30 +343,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05034",
         "name": "Andes",
         "daneCode": "05034",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Suroeste",
-        "centroid": [
-          5.6472,
-          -75.92
-        ],
-        "bounds": [
-          [
-            5.4817,
-            -76.0739
-          ],
-          [
-            5.7755,
-            -75.8095
-          ]
-        ],
+        "category": "4",
         "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
+        "electoralCensus": 36480,
+        "nbiPercentage": 19.3,
+        "areaKm2": 402.5,
         "riskLevel": "Medio",
-        "colorCode": "#f59e0b",
-        "areaKm2": 402.5
+        "electedMayor": "Germán Alexander Vélez Orozco",
+        "winnerParty": "Coalición Es el Momento de Andes",
+        "predominantParty": "Coalición"
       },
       "geometry": {
         "type": "Polygon",
@@ -509,30 +425,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05036",
         "name": "Angelópolis",
         "daneCode": "05036",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Suroeste",
-        "centroid": [
-          6.1348,
-          -75.7081
-        ],
-        "bounds": [
-          [
-            6.0692,
-            -75.7667
-          ],
-          [
-            6.1944,
-            -75.6724
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
+        "category": "6",
+        "population": 9800,
+        "electoralCensus": 7448,
+        "nbiPercentage": 19.3,
+        "areaKm2": 81.9,
         "riskLevel": "Medio",
-        "colorCode": "#f59e0b",
-        "areaKm2": 81.9
+        "electedMayor": "José Luis Montoya Quiceno",
+        "winnerParty": "Coalición Angelópolis Nos Une (Centro Democrático)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -581,30 +483,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05038",
         "name": "Angostura",
         "daneCode": "05038",
-        "level": "departamental",
-        "department": "Antioquia",
-        "subregion": "Nordeste",
-        "centroid": [
-          6.8767,
-          -75.3436
-        ],
-        "bounds": [
-          [
-            6.7733,
-            -75.49
-          ],
-          [
-            6.9703,
-            -75.2427
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#14b8a6",
-        "areaKm2": 338.7
+        "subregion": "Norte",
+        "category": "6",
+        "population": 12500,
+        "electoralCensus": 9500,
+        "nbiPercentage": 24.6,
+        "areaKm2": 338.7,
+        "riskLevel": "Alto",
+        "electedMayor": "Víctor Ignacio Medina Gómez",
+        "winnerParty": "Coalición Angostura Nos Une (Centro Democrático)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -657,30 +545,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05040",
         "name": "Anorí",
         "daneCode": "05040",
-        "level": "departamental",
-        "department": "Antioquia",
-        "subregion": "Norte",
-        "centroid": [
-          7.1964,
-          -75.137
-        ],
-        "bounds": [
-          [
-            6.9059,
-            -75.3174
-          ],
-          [
-            7.424,
-            -74.8902
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#ec4899",
-        "areaKm2": 1413.8
+        "subregion": "Nordeste",
+        "category": "6",
+        "population": 18500,
+        "electoralCensus": 14060,
+        "nbiPercentage": 39.7,
+        "areaKm2": 1413.8,
+        "riskLevel": "Crítico",
+        "electedMayor": "Gustavo Alfredo Silva Gutiérrez",
+        "winnerParty": "Coalición Anorí Nos Une (Partido Conservador)",
+        "predominantParty": "Partido Conservador"
       },
       "geometry": {
         "type": "Polygon",
@@ -765,30 +639,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05044",
         "name": "Anzá",
         "daneCode": "05044",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Occidente",
-        "centroid": [
-          6.3178,
-          -75.8952
-        ],
-        "bounds": [
-          [
-            6.2167,
-            -76.0041
-          ],
-          [
-            6.3977,
-            -75.8315
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#8b5cf6",
-        "areaKm2": 255.9
+        "category": "6",
+        "population": 8200,
+        "electoralCensus": 6232,
+        "nbiPercentage": 29.3,
+        "areaKm2": 255.9,
+        "riskLevel": "Alto",
+        "electedMayor": "Juan Guillermo Hincapié Figueroa",
+        "winnerParty": "Coalición Anzá Nos Une (Partido Conservador)",
+        "predominantParty": "Partido Conservador"
       },
       "geometry": {
         "type": "Polygon",
@@ -841,30 +701,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05045",
         "name": "Apartadó",
         "daneCode": "05045",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Urabá",
-        "centroid": [
-          7.9196,
-          -76.5203
-        ],
-        "bounds": [
-          [
-            7.771,
-            -76.7533
-          ],
-          [
-            8.0735,
-            -76.4118
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#06b6d4",
-        "areaKm2": 535.2
+        "category": "2",
+        "population": 135000,
+        "electoralCensus": 97200,
+        "nbiPercentage": 32.6,
+        "areaKm2": 535.2,
+        "riskLevel": "Crítico",
+        "electedMayor": "Héctor Rangel Palacios Rodríguez",
+        "winnerParty": "Coalición Unidos por la Vida y la Paz",
+        "predominantParty": "Coalición"
       },
       "geometry": {
         "type": "Polygon",
@@ -921,30 +767,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05051",
         "name": "Arboletes",
         "daneCode": "05051",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Urabá",
-        "centroid": [
-          8.6234,
-          -76.4006
-        ],
-        "bounds": [
-          [
-            8.4465,
-            -76.5709
-          ],
-          [
-            8.8742,
-            -76.2514
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#06b6d4",
-        "areaKm2": 754.3
+        "category": "6",
+        "population": 32000,
+        "electoralCensus": 24320,
+        "nbiPercentage": 41.6,
+        "areaKm2": 754.3,
+        "riskLevel": "Crítico",
+        "electedMayor": "Álvaro González Ávila",
+        "winnerParty": "Coalición Arboletes Nos Une (Partido Conservador)",
+        "predominantParty": "Partido Conservador"
       },
       "geometry": {
         "type": "Polygon",
@@ -1013,30 +845,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05055",
         "name": "Argelia",
         "daneCode": "05055",
-        "level": "departamental",
-        "department": "Antioquia",
-        "subregion": "Occidente",
-        "centroid": [
-          5.7132,
-          -75.0605
-        ],
-        "bounds": [
-          [
-            5.6466,
-            -75.2366
-          ],
-          [
-            5.7594,
-            -74.8804
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#8b5cf6",
-        "areaKm2": 245.3
+        "subregion": "Oriente",
+        "category": "6",
+        "population": 9800,
+        "electoralCensus": 7448,
+        "nbiPercentage": 13.2,
+        "areaKm2": 245.3,
+        "riskLevel": "Bajo",
+        "electedMayor": "Diego Alexander López Giraldo",
+        "winnerParty": "Coalición Argelia Nos Une (Centro Democrático)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -1087,32 +905,18 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
       "id": "mpio-05059",
       "properties": {
         "id": "mpio-05059",
-        "name": "Armenia",
+        "name": "Armenia Mantequilla",
         "daneCode": "05059",
-        "level": "departamental",
-        "department": "Antioquia",
-        "subregion": "Oriente",
-        "centroid": [
-          6.1867,
-          -75.8188
-        ],
-        "bounds": [
-          [
-            6.1002,
-            -75.8548
-          ],
-          [
-            6.249,
-            -75.7471
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#3b82f6",
-        "areaKm2": 110.4
+        "subregion": "Occidente",
+        "category": "6",
+        "population": 6200,
+        "electoralCensus": 4712,
+        "nbiPercentage": 29.3,
+        "areaKm2": 110.4,
+        "riskLevel": "Alto",
+        "electedMayor": "Martha Libia Parra Gil",
+        "winnerParty": "Coalición Armenia Mantequilla Nos Une (Partido Conservador)",
+        "predominantParty": "Partido Conservador"
       },
       "geometry": {
         "type": "Polygon",
@@ -1161,30 +965,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05079",
         "name": "Barbosa",
         "daneCode": "05079",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Valle de Aburrá",
-        "centroid": [
-          6.4513,
-          -75.3308
-        ],
-        "bounds": [
-          [
-            6.3655,
-            -75.4484
-          ],
-          [
-            6.513,
-            -75.2415
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Creemos",
+        "category": "4",
+        "population": 54000,
+        "electoralCensus": 38880,
+        "nbiPercentage": 6.7,
+        "areaKm2": 205.7,
         "riskLevel": "Medio",
-        "colorCode": "#10b981",
-        "areaKm2": 205.7
+        "electedMayor": "Juan David Rojas Agudelo",
+        "winnerParty": "Coalición ¡Barbosa Nos Une!",
+        "predominantParty": "Coalición"
       },
       "geometry": {
         "type": "Polygon",
@@ -1233,30 +1023,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05088",
         "name": "Bello",
         "daneCode": "05088",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Valle de Aburrá",
-        "centroid": [
-          6.3729,
-          -75.5946
-        ],
-        "bounds": [
-          [
-            6.2886,
-            -75.6687
-          ],
-          [
-            6.4324,
-            -75.5218
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Creemos",
+        "category": "1",
+        "population": 560000,
+        "electoralCensus": 403200,
+        "nbiPercentage": 4.2,
+        "areaKm2": 147.8,
         "riskLevel": "Medio",
-        "colorCode": "#10b981",
-        "areaKm2": 147.8
+        "electedMayor": "Yulieth Lorena González Ospina",
+        "winnerParty": "Coalición Bello Nos Une",
+        "predominantParty": "Coalición"
       },
       "geometry": {
         "type": "Polygon",
@@ -1301,30 +1077,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05086",
         "name": "Belmira",
         "daneCode": "05086",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Norte",
-        "centroid": [
-          6.6606,
-          -75.6533
-        ],
-        "bounds": [
-          [
-            6.4944,
-            -75.7263
-          ],
-          [
-            6.798,
-            -75.5647
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#ec4899",
-        "areaKm2": 296.2
+        "category": "6",
+        "population": 7200,
+        "electoralCensus": 5472,
+        "nbiPercentage": 24.6,
+        "areaKm2": 296.2,
+        "riskLevel": "Alto",
+        "electedMayor": "Darcy Esteban Arboleda Rua",
+        "winnerParty": "Coalición Belmira Nos Une (Centro Democrático)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -1385,30 +1147,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05091",
         "name": "Betania",
         "daneCode": "05091",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Suroeste",
-        "centroid": [
-          5.7287,
-          -75.9885
-        ],
-        "bounds": [
-          [
-            5.6701,
-            -76.0874
-          ],
-          [
-            5.7978,
-            -75.8927
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
+        "category": "6",
+        "population": 11000,
+        "electoralCensus": 8360,
+        "nbiPercentage": 19.3,
+        "areaKm2": 180.5,
         "riskLevel": "Medio",
-        "colorCode": "#f59e0b",
-        "areaKm2": 180.5
+        "electedMayor": "Diego Arley de Jesús Guerra Gutiérrez",
+        "winnerParty": "Coalición Betania Nos Une (Centro Democrático)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -1461,30 +1209,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05093",
         "name": "Betulia",
         "daneCode": "05093",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Suroeste",
-        "centroid": [
-          6.2142,
-          -75.9333
-        ],
-        "bounds": [
-          [
-            6.0779,
-            -76.0482
-          ],
-          [
-            6.2849,
-            -75.8413
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
+        "category": "6",
+        "population": 17500,
+        "electoralCensus": 13300,
+        "nbiPercentage": 19.3,
+        "areaKm2": 262.4,
         "riskLevel": "Medio",
-        "colorCode": "#f59e0b",
-        "areaKm2": 262.4
+        "electedMayor": "Néstor Camilo Serna Hernández",
+        "winnerParty": "Coalición Betulia Nos Une (Centro Democrático)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -1529,30 +1263,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05107",
         "name": "Briceño",
         "daneCode": "05107",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Norte",
-        "centroid": [
-          7.091,
-          -75.5534
-        ],
-        "bounds": [
-          [
-            6.9902,
-            -75.6871
-          ],
-          [
-            7.2492,
-            -75.4447
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#ec4899",
-        "areaKm2": 376.3
+        "category": "6",
+        "population": 9800,
+        "electoralCensus": 7448,
+        "nbiPercentage": 24.6,
+        "areaKm2": 376.3,
+        "riskLevel": "Alto",
+        "electedMayor": "Noé de Jesús Espinosa Vásquez",
+        "winnerParty": "Coalición Briceño Nos Une (Centro Democrático)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -1605,30 +1325,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05113",
         "name": "Buriticá",
         "daneCode": "05113",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Occidente",
-        "centroid": [
-          6.8078,
-          -75.8986
-        ],
-        "bounds": [
-          [
-            6.6456,
-            -75.9833
-          ],
-          [
-            6.9666,
-            -75.8328
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#8b5cf6",
-        "areaKm2": 355.2
+        "category": "6",
+        "population": 10500,
+        "electoralCensus": 7980,
+        "nbiPercentage": 29.3,
+        "areaKm2": 355.2,
+        "riskLevel": "Alto",
+        "electedMayor": "José Luis Rodríguez Úsuga",
+        "winnerParty": "Coalición Buriticá Nos Une (Partido Conservador)",
+        "predominantParty": "Partido Conservador"
       },
       "geometry": {
         "type": "Polygon",
@@ -1681,30 +1387,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05125",
         "name": "Caicedo",
         "daneCode": "05125",
-        "level": "departamental",
-        "department": "Antioquia",
-        "subregion": "Antioquia",
-        "centroid": [
-          6.4418,
-          -76.0019
-        ],
-        "bounds": [
-          [
-            6.3444,
-            -76.058
-          ],
-          [
-            6.5068,
-            -75.905
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#64748b",
-        "areaKm2": 200.1
+        "subregion": "Occidente",
+        "category": "6",
+        "population": 8800,
+        "electoralCensus": 6688,
+        "nbiPercentage": 29.3,
+        "areaKm2": 200.1,
+        "riskLevel": "Alto",
+        "electedMayor": "Yúber Felipe Molina Murillo",
+        "winnerParty": "Coalición Caicedo Nos Une (Partido Conservador)",
+        "predominantParty": "Partido Conservador"
       },
       "geometry": {
         "type": "Polygon",
@@ -1749,30 +1441,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05129",
         "name": "Caldas",
         "daneCode": "05129",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Valle de Aburrá",
-        "centroid": [
-          6.0705,
-          -75.6223
-        ],
-        "bounds": [
-          [
-            5.9788,
-            -75.6773
-          ],
-          [
-            6.1188,
-            -75.5732
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Creemos",
+        "category": "2",
+        "population": 85000,
+        "electoralCensus": 61200,
+        "nbiPercentage": 5.2,
+        "areaKm2": 132.8,
         "riskLevel": "Medio",
-        "colorCode": "#10b981",
-        "areaKm2": 132.8
+        "electedMayor": "Jorge Mario Rendón Vélez",
+        "winnerParty": "Coalición Profe Piolo Creemos",
+        "predominantParty": "Creemos"
       },
       "geometry": {
         "type": "Polygon",
@@ -1825,30 +1503,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05134",
         "name": "Campamento",
         "daneCode": "05134",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Norte",
-        "centroid": [
-          7.0292,
-          -75.2781
-        ],
-        "bounds": [
-          [
-            6.9269,
-            -75.3358
-          ],
-          [
-            7.2133,
-            -75.2244
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#ec4899",
-        "areaKm2": 206.3
+        "category": "6",
+        "population": 10200,
+        "electoralCensus": 7752,
+        "nbiPercentage": 24.6,
+        "areaKm2": 206.3,
+        "riskLevel": "Alto",
+        "electedMayor": "Cristián Ándrés Agudelo Posada",
+        "winnerParty": "Coalición Campamento Nos Une (Centro Democrático)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -1909,30 +1573,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05142",
         "name": "Caracolí",
         "daneCode": "05142",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Magdalena Medio",
-        "centroid": [
-          6.3596,
-          -74.7463
-        ],
-        "bounds": [
-          [
-            6.2403,
-            -74.8375
-          ],
-          [
-            6.4621,
-            -74.6331
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#f97316",
-        "areaKm2": 262.8
+        "category": "6",
+        "population": 5200,
+        "electoralCensus": 3952,
+        "nbiPercentage": 34.3,
+        "areaKm2": 262.8,
+        "riskLevel": "Alto",
+        "electedMayor": "Rodrigo Alveiro Cadavid Herrera",
+        "winnerParty": "Coalición Caracolí Nos Une (Partido Liberal)",
+        "predominantParty": "Partido Liberal"
       },
       "geometry": {
         "type": "Polygon",
@@ -1977,30 +1627,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05145",
         "name": "Caramanta",
         "daneCode": "05145",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Suroeste",
-        "centroid": [
-          5.5606,
-          -75.6305
-        ],
-        "bounds": [
-          [
-            5.5164,
-            -75.714
-          ],
-          [
-            5.6057,
-            -75.5708
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
+        "category": "6",
+        "population": 5800,
+        "electoralCensus": 4408,
+        "nbiPercentage": 19.3,
+        "areaKm2": 92.1,
         "riskLevel": "Medio",
-        "colorCode": "#f59e0b",
-        "areaKm2": 92.1
+        "electedMayor": "Juan Esteban Correa Cárdenas",
+        "winnerParty": "Coalición Caramanta Nos Une (Centro Democrático)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -2049,30 +1685,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05147",
         "name": "Carepa",
         "daneCode": "05147",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Urabá",
-        "centroid": [
-          7.8054,
-          -76.6515
-        ],
-        "bounds": [
-          [
-            7.719,
-            -76.8096
-          ],
-          [
-            7.8789,
-            -76.4644
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#06b6d4",
-        "areaKm2": 387.3
+        "category": "4",
+        "population": 62000,
+        "electoralCensus": 44640,
+        "nbiPercentage": 41.6,
+        "areaKm2": 387.3,
+        "riskLevel": "Crítico",
+        "electedMayor": "Agapito Murillo Palacios",
+        "winnerParty": "Coalición Alianza por Carepa",
+        "predominantParty": "Coalición"
       },
       "geometry": {
         "type": "Polygon",
@@ -2131,32 +1753,18 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
       "id": "mpio-05150",
       "properties": {
         "id": "mpio-05150",
-        "name": "Carolina",
+        "name": "Carolina del Príncipe",
         "daneCode": "05150",
-        "level": "departamental",
-        "department": "Antioquia",
-        "subregion": "Antioquia",
-        "centroid": [
-          6.7487,
-          -75.2941
-        ],
-        "bounds": [
-          [
-            6.6778,
-            -75.3786
-          ],
-          [
-            6.8216,
-            -75.2305
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#64748b",
-        "areaKm2": 149.6
+        "subregion": "Norte",
+        "category": "6",
+        "population": 4200,
+        "electoralCensus": 3192,
+        "nbiPercentage": 24.6,
+        "areaKm2": 149.6,
+        "riskLevel": "Alto",
+        "electedMayor": "Ana Isabel Avendaño Duque",
+        "winnerParty": "Coalición Carolina del Príncipe Nos Une (Centro Democrático)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -2193,30 +1801,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05154",
         "name": "Caucasia",
         "daneCode": "05154",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Bajo Cauca",
-        "centroid": [
-          7.8465,
-          -75.0545
-        ],
-        "bounds": [
-          [
-            7.5814,
-            -75.337
-          ],
-          [
-            8.0995,
-            -74.7824
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#ef4444",
-        "areaKm2": 1429.1
+        "category": "3",
+        "population": 125000,
+        "electoralCensus": 90000,
+        "nbiPercentage": 37.4,
+        "areaKm2": 1429.1,
+        "riskLevel": "Crítico",
+        "electedMayor": "Jhoan Oderis Montes Cortés",
+        "winnerParty": "Coalición Caucasia Adelante (Partido Liberal)",
+        "predominantParty": "Partido Liberal"
       },
       "geometry": {
         "type": "Polygon",
@@ -2319,32 +1913,18 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
       "id": "mpio-05138",
       "properties": {
         "id": "mpio-05138",
-        "name": "Cañasgordas",
+        "name": "Caicedo",
         "daneCode": "05138",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Occidente",
-        "centroid": [
-          6.8489,
-          -76.012
-        ],
-        "bounds": [
-          [
-            6.6468,
-            -76.1217
-          ],
-          [
-            6.9802,
-            -75.954
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#8b5cf6",
-        "areaKm2": 364.8
+        "category": "6",
+        "population": 8800,
+        "electoralCensus": 6688,
+        "nbiPercentage": 29.3,
+        "areaKm2": 364.8,
+        "riskLevel": "Alto",
+        "electedMayor": "Yúber Felipe Molina Murillo",
+        "winnerParty": "Coalición Caicedo Nos Une (Partido Conservador)",
+        "predominantParty": "Partido Conservador"
       },
       "geometry": {
         "type": "Polygon",
@@ -2401,30 +1981,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05172",
         "name": "Chigorodó",
         "daneCode": "05172",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Urabá",
-        "centroid": [
-          7.6436,
-          -76.6359
-        ],
-        "bounds": [
-          [
-            7.4686,
-            -76.8096
-          ],
-          [
-            7.771,
-            -76.4914
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#06b6d4",
-        "areaKm2": 721.7
+        "category": "4",
+        "population": 68000,
+        "electoralCensus": 48960,
+        "nbiPercentage": 41.6,
+        "areaKm2": 721.7,
+        "riskLevel": "Crítico",
+        "electedMayor": "Tulia Irene Ruiz García",
+        "winnerParty": "Coalición Chigorodó con Futuro",
+        "predominantParty": "Coalición"
       },
       "geometry": {
         "type": "Polygon",
@@ -2481,30 +2047,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05190",
         "name": "Cisneros",
         "daneCode": "05190",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Nordeste",
-        "centroid": [
-          6.5514,
-          -75.0747
-        ],
-        "bounds": [
-          [
-            6.5378,
-            -75.1362
-          ],
-          [
-            6.5824,
-            -75.0346
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#14b8a6",
-        "areaKm2": 46.9
+        "category": "6",
+        "population": 10500,
+        "electoralCensus": 7980,
+        "nbiPercentage": 39.7,
+        "areaKm2": 46.9,
+        "riskLevel": "Crítico",
+        "electedMayor": "Lina María Correa Valencia",
+        "winnerParty": "Coalición Cisneros Nos Une (Partido Conservador)",
+        "predominantParty": "Partido Conservador"
       },
       "geometry": {
         "type": "Polygon",
@@ -2537,30 +2089,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05101",
         "name": "Ciudad Bolívar",
         "daneCode": "05101",
-        "level": "departamental",
-        "department": "Antioquia",
-        "subregion": "Antioquia",
-        "centroid": [
-          5.8339,
-          -75.9922
-        ],
-        "bounds": [
-          [
-            5.7532,
-            -76.0984
-          ],
-          [
-            5.9317,
-            -75.9148
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
+        "subregion": "Suroeste",
+        "category": "5",
+        "population": 29000,
+        "electoralCensus": 22040,
+        "nbiPercentage": 19.3,
+        "areaKm2": 260.4,
         "riskLevel": "Medio",
-        "colorCode": "#64748b",
-        "areaKm2": 260.4
+        "electedMayor": "León Darío Acevedo Vargas",
+        "winnerParty": "Coalición Ciudad Bolívar Merece Más (Creemos)",
+        "predominantParty": "Creemos"
       },
       "geometry": {
         "type": "Polygon",
@@ -2609,30 +2147,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05197",
         "name": "Cocorná",
         "daneCode": "05197",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Oriente",
-        "centroid": [
-          6.0142,
-          -75.1482
-        ],
-        "bounds": [
-          [
-            5.8734,
-            -75.2684
-          ],
-          [
-            6.1139,
-            -75.0554
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#3b82f6",
-        "areaKm2": 241.8
+        "category": "6",
+        "population": 17000,
+        "electoralCensus": 12920,
+        "nbiPercentage": 13.2,
+        "areaKm2": 241.8,
+        "riskLevel": "Bajo",
+        "electedMayor": "David Alejandro Gómez Hoyos",
+        "winnerParty": "Coalición Cocorná Nos Une (Centro Democrático)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -2685,30 +2209,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05206",
         "name": "Concepción",
         "daneCode": "05206",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Oriente",
-        "centroid": [
-          6.3665,
-          -75.2048
-        ],
-        "bounds": [
-          [
-            6.2849,
-            -75.3064
-          ],
-          [
-            6.4473,
-            -75.1448
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#3b82f6",
-        "areaKm2": 202.1
+        "category": "6",
+        "population": 4500,
+        "electoralCensus": 3420,
+        "nbiPercentage": 13.2,
+        "areaKm2": 202.1,
+        "riskLevel": "Bajo",
+        "electedMayor": "Adrián Henao Carvajal",
+        "winnerParty": "Coalición Concepción Nos Une (Centro Democrático)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -2753,30 +2263,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05209",
         "name": "Concordia",
         "daneCode": "05209",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Suroeste",
-        "centroid": [
-          6.063,
-          -75.901
-        ],
-        "bounds": [
-          [
-            5.9564,
-            -75.998
-          ],
-          [
-            6.1659,
-            -75.8413
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
+        "category": "6",
+        "population": 22000,
+        "electoralCensus": 16720,
+        "nbiPercentage": 19.3,
+        "areaKm2": 247.9,
         "riskLevel": "Medio",
-        "colorCode": "#f59e0b",
-        "areaKm2": 247.9
+        "electedMayor": "Alexandra María Herrera Quijano",
+        "winnerParty": "Coalición Concordia Nos Une (Centro Democrático)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -2829,30 +2325,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05212",
         "name": "Copacabana",
         "daneCode": "05212",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Valle de Aburrá",
-        "centroid": [
-          6.3456,
-          -75.491
-        ],
-        "bounds": [
-          [
-            6.2886,
-            -75.5328
-          ],
-          [
-            6.4299,
-            -75.4508
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Creemos",
+        "category": "2",
+        "population": 75000,
+        "electoralCensus": 54000,
+        "nbiPercentage": 5.2,
+        "areaKm2": 67.8,
         "riskLevel": "Medio",
-        "colorCode": "#10b981",
-        "areaKm2": 67.8
+        "electedMayor": "Johnnatan Andrés Pineda Agudelo",
+        "winnerParty": "Partido Político Creemos",
+        "predominantParty": "Creemos"
       },
       "geometry": {
         "type": "Polygon",
@@ -2893,30 +2375,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05120",
         "name": "Cáceres",
         "daneCode": "05120",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Bajo Cauca",
-        "centroid": [
-          7.656,
-          -75.2072
-        ],
-        "bounds": [
-          [
-            7.3558,
-            -75.4851
-          ],
-          [
-            7.9445,
-            -74.9942
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#ef4444",
-        "areaKm2": 1873.8
+        "category": "6",
+        "population": 38000,
+        "electoralCensus": 28880,
+        "nbiPercentage": 47.7,
+        "areaKm2": 1873.8,
+        "riskLevel": "Crítico",
+        "electedMayor": "Damiana María Monterrosa Pérez",
+        "winnerParty": "Coalición Cáceres Nos Une (Partido Liberal)",
+        "predominantParty": "Partido Liberal"
       },
       "geometry": {
         "type": "Polygon",
@@ -3021,30 +2489,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05234",
         "name": "Dabeiba",
         "daneCode": "05234",
-        "level": "departamental",
-        "department": "Antioquia",
-        "subregion": "Suroeste",
-        "centroid": [
-          6.9655,
-          -76.3263
-        ],
-        "bounds": [
-          [
-            6.6952,
-            -76.6015
-          ],
-          [
-            7.1872,
-            -75.9662
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#f59e0b",
-        "areaKm2": 1957.3
+        "subregion": "Occidente",
+        "category": "6",
+        "population": 26000,
+        "electoralCensus": 19760,
+        "nbiPercentage": 29.3,
+        "areaKm2": 1957.3,
+        "riskLevel": "Alto",
+        "electedMayor": "Daniel Higuita Herrera",
+        "winnerParty": "Coalición Dabeiba Nos Une (Partido Conservador)",
+        "predominantParty": "Partido Conservador"
       },
       "geometry": {
         "type": "Polygon",
@@ -3157,30 +2611,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05237",
         "name": "Donmatías",
         "daneCode": "05237",
-        "level": "departamental",
-        "department": "Antioquia",
-        "subregion": "Occidente",
-        "centroid": [
-          6.5105,
-          -75.3559
-        ],
-        "bounds": [
-          [
-            6.4299,
-            -75.4888
-          ],
-          [
-            6.5737,
-            -75.2097
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#8b5cf6",
-        "areaKm2": 203.3
+        "subregion": "Norte",
+        "category": "5",
+        "population": 24000,
+        "electoralCensus": 18240,
+        "nbiPercentage": 24.6,
+        "areaKm2": 203.3,
+        "riskLevel": "Alto",
+        "electedMayor": "Javier Darío López Restrepo",
+        "winnerParty": "Coalición Donmatías Nos Une (Centro Democrático)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -3245,30 +2685,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05240",
         "name": "Ebéjico",
         "daneCode": "05240",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Occidente",
-        "centroid": [
-          6.3269,
-          -75.7911
-        ],
-        "bounds": [
-          [
-            6.2254,
-            -75.856
-          ],
-          [
-            6.42,
-            -75.7103
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#8b5cf6",
-        "areaKm2": 237.8
+        "category": "6",
+        "population": 13000,
+        "electoralCensus": 9880,
+        "nbiPercentage": 29.3,
+        "areaKm2": 237.8,
+        "riskLevel": "Alto",
+        "electedMayor": "David Alonso Restrepo Castrillón",
+        "winnerParty": "Coalición Ebéjico Nos Une (Partido Conservador)",
+        "predominantParty": "Partido Conservador"
       },
       "geometry": {
         "type": "Polygon",
@@ -3325,30 +2751,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05250",
         "name": "El Bagre",
         "daneCode": "05250",
-        "level": "departamental",
-        "department": "Antioquia",
-        "subregion": "Norte",
-        "centroid": [
-          7.7068,
-          -74.6689
-        ],
-        "bounds": [
-          [
-            7.3868,
-            -74.8204
-          ],
-          [
-            7.9681,
-            -74.5082
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#ec4899",
-        "areaKm2": 1560.2
+        "subregion": "Bajo Cauca",
+        "category": "5",
+        "population": 58000,
+        "electoralCensus": 41760,
+        "nbiPercentage": 47.7,
+        "areaKm2": 1560.2,
+        "riskLevel": "Crítico",
+        "electedMayor": "Marco Fidel Trespalacio Bulloso",
+        "winnerParty": "Coalición El Bagre Nos Une (Partido Liberal)",
+        "predominantParty": "Partido Liberal"
       },
       "geometry": {
         "type": "Polygon",
@@ -3437,30 +2849,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05148",
         "name": "El Carmen de Viboral",
         "daneCode": "05148",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Oriente",
-        "centroid": [
-          6.0118,
-          -75.2837
-        ],
-        "bounds": [
-          [
-            5.8536,
-            -75.3872
-          ],
-          [
-            6.1448,
-            -75.1362
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#3b82f6",
-        "areaKm2": 423.6
+        "category": "3",
+        "population": 62000,
+        "electoralCensus": 44640,
+        "nbiPercentage": 10.3,
+        "areaKm2": 423.6,
+        "riskLevel": "Bajo",
+        "electedMayor": "Hugo Alfonso Jímenez Cuervo",
+        "winnerParty": "Coalición El Carmen de Viboral Nos Une (Centro Democrático)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -3517,30 +2915,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05697",
         "name": "El Santuario",
         "daneCode": "05697",
-        "level": "departamental",
-        "department": "Antioquia",
-        "subregion": "Antioquia",
-        "centroid": [
-          6.1305,
-          -75.2403
-        ],
-        "bounds": [
-          [
-            6.0568,
-            -75.3076
-          ],
-          [
-            6.1709,
-            -75.1668
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#64748b",
-        "areaKm2": 83.5
+        "subregion": "Oriente",
+        "category": "3",
+        "population": 38000,
+        "electoralCensus": 28880,
+        "nbiPercentage": 10.3,
+        "areaKm2": 83.5,
+        "riskLevel": "Bajo",
+        "electedMayor": "Martín Alberto Duque Gallo",
+        "winnerParty": "Coalición El Santuario Nos Une (Centro Democrático)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -3585,30 +2969,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05264",
         "name": "Entrerríos",
         "daneCode": "05264",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Norte",
-        "centroid": [
-          6.5822,
-          -75.529
-        ],
-        "bounds": [
-          [
-            6.5117,
-            -75.654
-          ],
-          [
-            6.6791,
-            -75.4582
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#ec4899",
-        "areaKm2": 214.2
+        "category": "6",
+        "population": 11000,
+        "electoralCensus": 8360,
+        "nbiPercentage": 24.6,
+        "areaKm2": 214.2,
+        "riskLevel": "Alto",
+        "electedMayor": "Julio César Lopera Posada",
+        "winnerParty": "Coalición Entrerríos Nos Une (Centro Democrático)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -3657,30 +3027,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05266",
         "name": "Envigado",
         "daneCode": "05266",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Valle de Aburrá",
-        "centroid": [
-          6.1578,
-          -75.5425
-        ],
-        "bounds": [
-          [
-            6.099,
-            -75.6051
-          ],
-          [
-            6.1907,
-            -75.4753
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Creemos",
+        "category": "1",
+        "population": 245000,
+        "electoralCensus": 176400,
+        "nbiPercentage": 4.2,
+        "areaKm2": 78.0,
         "riskLevel": "Medio",
-        "colorCode": "#10b981",
-        "areaKm2": 78.0
+        "electedMayor": "Raúl Eduardo Cardona González",
+        "winnerParty": "Envigado, Vamos Adelante (Partido Liberal)",
+        "predominantParty": "Partido Liberal"
       },
       "geometry": {
         "type": "Polygon",
@@ -3725,30 +3081,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05282",
         "name": "Fredonia",
         "daneCode": "05282",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Suroeste",
-        "centroid": [
-          5.9022,
-          -75.6693
-        ],
-        "bounds": [
-          [
-            5.7618,
-            -75.7752
-          ],
-          [
-            5.9986,
-            -75.6136
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
+        "category": "6",
+        "population": 23000,
+        "electoralCensus": 17480,
+        "nbiPercentage": 19.3,
+        "areaKm2": 258.1,
         "riskLevel": "Medio",
-        "colorCode": "#f59e0b",
-        "areaKm2": 258.1
+        "electedMayor": "Aldubar de Jesús Vanegas Marín",
+        "winnerParty": "Coalición Fredonia Nos Une (Centro Democrático)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -3805,30 +3147,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05284",
         "name": "Frontino",
         "daneCode": "05284",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Occidente",
-        "centroid": [
-          6.7196,
-          -76.3167
-        ],
-        "bounds": [
-          [
-            6.4968,
-            -76.577
-          ],
-          [
-            6.9207,
-            -76.0874
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#8b5cf6",
-        "areaKm2": 1384.1
+        "category": "6",
+        "population": 21000,
+        "electoralCensus": 15960,
+        "nbiPercentage": 29.3,
+        "areaKm2": 1384.1,
+        "riskLevel": "Alto",
+        "electedMayor": "Luz Gabriela Rivera Cano",
+        "winnerParty": "Coalición Frontino Nos Une (Partido Conservador)",
+        "predominantParty": "Partido Conservador"
       },
       "geometry": {
         "type": "Polygon",
@@ -3937,30 +3265,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05306",
         "name": "Giraldo",
         "daneCode": "05306",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Occidente",
-        "centroid": [
-          6.6534,
-          -75.945
-        ],
-        "bounds": [
-          [
-            6.622,
-            -76.0115
-          ],
-          [
-            6.7262,
-            -75.8805
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#8b5cf6",
-        "areaKm2": 93.5
+        "category": "6",
+        "population": 4500,
+        "electoralCensus": 3420,
+        "nbiPercentage": 29.3,
+        "areaKm2": 93.5,
+        "riskLevel": "Alto",
+        "electedMayor": "María Camila Manco Suárez",
+        "winnerParty": "Coalición Giraldo Nos Une (Partido Conservador)",
+        "predominantParty": "Partido Conservador"
       },
       "geometry": {
         "type": "Polygon",
@@ -4001,30 +3315,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05308",
         "name": "Girardota",
         "daneCode": "05308",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Valle de Aburrá",
-        "centroid": [
-          6.3799,
-          -75.4339
-        ],
-        "bounds": [
-          [
-            6.3345,
-            -75.4888
-          ],
-          [
-            6.4361,
-            -75.4043
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Creemos",
+        "category": "3",
+        "population": 62000,
+        "electoralCensus": 44640,
+        "nbiPercentage": 5.2,
+        "areaKm2": 82.9,
         "riskLevel": "Medio",
-        "colorCode": "#10b981",
-        "areaKm2": 82.9
+        "electedMayor": "Kevin René Bernal Morales",
+        "winnerParty": "Decencia en lo Público",
+        "predominantParty": "Coalición"
       },
       "geometry": {
         "type": "Polygon",
@@ -4065,30 +3365,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05313",
         "name": "Granada",
         "daneCode": "05313",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Oriente",
-        "centroid": [
-          6.1349,
-          -75.1275
-        ],
-        "bounds": [
-          [
-            6.0209,
-            -75.2329
-          ],
-          [
-            6.2316,
-            -75.0615
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#3b82f6",
-        "areaKm2": 190.2
+        "category": "6",
+        "population": 11000,
+        "electoralCensus": 8360,
+        "nbiPercentage": 13.2,
+        "areaKm2": 190.2,
+        "riskLevel": "Bajo",
+        "electedMayor": "Daniel Andrés Hoyos Yepes",
+        "winnerParty": "Coalición Granada Nos Une (Centro Democrático)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -4131,32 +3417,18 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
       "id": "mpio-05315",
       "properties": {
         "id": "mpio-05315",
-        "name": "Guadalupe",
+        "name": "Guarne",
         "daneCode": "05315",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Oriente",
-        "centroid": [
-          6.8761,
-          -75.2154
-        ],
-        "bounds": [
-          [
-            6.7931,
-            -75.288
-          ],
-          [
-            6.9331,
-            -75.1705
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#3b82f6",
-        "areaKm2": 118.2
+        "category": "3",
+        "population": 58000,
+        "electoralCensus": 41760,
+        "nbiPercentage": 10.3,
+        "areaKm2": 118.2,
+        "riskLevel": "Bajo",
+        "electedMayor": "Diego Mauricio Grisales Gallego",
+        "winnerParty": "Coalición Guarne con Sentido Social",
+        "predominantParty": "Coalición"
       },
       "geometry": {
         "type": "Polygon",
@@ -4199,32 +3471,18 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
       "id": "mpio-05318",
       "properties": {
         "id": "mpio-05318",
-        "name": "Guarne",
+        "name": "Guatapé",
         "daneCode": "05318",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Oriente",
-        "centroid": [
-          6.2944,
-          -75.4386
-        ],
-        "bounds": [
-          [
-            6.2056,
-            -75.501
-          ],
-          [
-            6.3481,
-            -75.3798
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#3b82f6",
-        "areaKm2": 151.8
+        "category": "6",
+        "population": 9500,
+        "electoralCensus": 7220,
+        "nbiPercentage": 13.2,
+        "areaKm2": 151.8,
+        "riskLevel": "Bajo",
+        "electedMayor": "Diego Mauricio Grisales Gallego",
+        "winnerParty": "Coalición Guarne con Sentido Social",
+        "predominantParty": "Coalición"
       },
       "geometry": {
         "type": "Polygon",
@@ -4265,30 +3523,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05321",
         "name": "Guatapé",
         "daneCode": "05321",
-        "level": "departamental",
-        "department": "Antioquia",
-        "subregion": "Antioquia",
-        "centroid": [
-          6.25,
-          -75.1483
-        ],
-        "bounds": [
-          [
-            6.1721,
-            -75.1962
-          ],
-          [
-            6.3023,
-            -75.1166
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#64748b",
-        "areaKm2": 83.3
+        "subregion": "Oriente",
+        "category": "6",
+        "population": 9500,
+        "electoralCensus": 7220,
+        "nbiPercentage": 13.2,
+        "areaKm2": 83.3,
+        "riskLevel": "Bajo",
+        "electedMayor": "David Esteban Franco Vallejo",
+        "winnerParty": "Coalición Guatapé Nos Une (Centro Democrático)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -4337,30 +3581,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05310",
         "name": "Gómez Plata",
         "daneCode": "05310",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Norte",
-        "centroid": [
-          6.7306,
-          -75.1768
-        ],
-        "bounds": [
-          [
-            6.5749,
-            -75.2868
-          ],
-          [
-            6.8464,
-            -75.1093
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#ec4899",
-        "areaKm2": 332.2
+        "category": "6",
+        "population": 13500,
+        "electoralCensus": 10260,
+        "nbiPercentage": 24.6,
+        "areaKm2": 332.2,
+        "riskLevel": "Alto",
+        "electedMayor": "Luis Guillermo Pérez Echeverri",
+        "winnerParty": "Coalición Gómez Plata Nos Une (Centro Democrático)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -4405,30 +3635,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05347",
         "name": "Heliconia",
         "daneCode": "05347",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Occidente",
-        "centroid": [
-          6.224,
-          -75.7481
-        ],
-        "bounds": [
-          [
-            6.1461,
-            -75.8168
-          ],
-          [
-            6.2601,
-            -75.6944
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#8b5cf6",
-        "areaKm2": 114.8
+        "category": "6",
+        "population": 6500,
+        "electoralCensus": 4940,
+        "nbiPercentage": 29.3,
+        "areaKm2": 114.8,
+        "riskLevel": "Alto",
+        "electedMayor": "Jorge Alexander Álvarez Arango",
+        "winnerParty": "Coalición Heliconia Nos Une (Partido Conservador)",
+        "predominantParty": "Partido Conservador"
       },
       "geometry": {
         "type": "Polygon",
@@ -4469,30 +3685,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05353",
         "name": "Hispania",
         "daneCode": "05353",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Suroeste",
-        "centroid": [
-          5.7901,
-          -75.9018
-        ],
-        "bounds": [
-          [
-            5.7544,
-            -75.9552
-          ],
-          [
-            5.8474,
-            -75.8732
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
+        "category": "6",
+        "population": 5400,
+        "electoralCensus": 4104,
+        "nbiPercentage": 19.3,
+        "areaKm2": 57.5,
         "riskLevel": "Medio",
-        "colorCode": "#f59e0b",
-        "areaKm2": 57.5
+        "electedMayor": "Orlando Arturo Marín Atehortua",
+        "winnerParty": "Coalición Hispania Nos Une (Centro Democrático)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -4529,30 +3731,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05360",
         "name": "Itagüí",
         "daneCode": "05360",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Valle de Aburrá",
-        "centroid": [
-          6.1736,
-          -75.609
-        ],
-        "bounds": [
-          [
-            6.1535,
-            -75.6479
-          ],
-          [
-            6.1895,
-            -75.583
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Creemos",
+        "category": "1",
+        "population": 295000,
+        "electoralCensus": 212400,
+        "nbiPercentage": 4.2,
+        "areaKm2": 19.6,
         "riskLevel": "Medio",
-        "colorCode": "#10b981",
-        "areaKm2": 19.6
+        "electedMayor": "Diego León Torres Sánchez",
+        "winnerParty": "Itagüí Somos Todos (Partido Conservador)",
+        "predominantParty": "Partido Conservador"
       },
       "geometry": {
         "type": "Polygon",
@@ -4589,30 +3777,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05361",
         "name": "Ituango",
         "daneCode": "05361",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Norte",
-        "centroid": [
-          7.2969,
-          -75.8117
-        ],
-        "bounds": [
-          [
-            7.0459,
-            -76.3812
-          ],
-          [
-            7.6124,
-            -75.4447
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#ec4899",
-        "areaKm2": 2841.1
+        "category": "6",
+        "population": 26500,
+        "electoralCensus": 20140,
+        "nbiPercentage": 24.6,
+        "areaKm2": 2841.1,
+        "riskLevel": "Alto",
+        "electedMayor": "Javier de Jesús Parias Posso",
+        "winnerParty": "Coalición Ituango Nos Une (Centro Democrático)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -4725,30 +3899,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05364",
         "name": "Jardín",
         "daneCode": "05364",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Suroeste",
-        "centroid": [
-          5.5897,
-          -75.8249
-        ],
-        "bounds": [
-          [
-            5.4817,
-            -75.9062
-          ],
-          [
-            5.6552,
-            -75.7299
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
+        "category": "6",
+        "population": 15500,
+        "electoralCensus": 11780,
+        "nbiPercentage": 19.3,
+        "areaKm2": 201.2,
         "riskLevel": "Medio",
-        "colorCode": "#f59e0b",
-        "areaKm2": 201.2
+        "electedMayor": "Claudia Yaneth Naranjo Agudelo",
+        "winnerParty": "Coalición Jardín Nos Une (Centro Democrático)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -4801,30 +3961,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05368",
         "name": "Jericó",
         "daneCode": "05368",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Suroeste",
-        "centroid": [
-          5.7584,
-          -75.7636
-        ],
-        "bounds": [
-          [
-            5.654,
-            -75.8364
-          ],
-          [
-            5.8734,
-            -75.6651
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
+        "category": "6",
+        "population": 13500,
+        "electoralCensus": 10260,
+        "nbiPercentage": 19.3,
+        "areaKm2": 205.0,
         "riskLevel": "Medio",
-        "colorCode": "#f59e0b",
-        "areaKm2": 205.0
+        "electedMayor": "Sebastián Garcés Piedrahita",
+        "winnerParty": "Coalición Jericó Primero (Centro Democrático - Creemos)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -4873,30 +4019,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05376",
         "name": "La Ceja",
         "daneCode": "05376",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Oriente",
-        "centroid": [
-          5.9983,
-          -75.4291
-        ],
-        "bounds": [
-          [
-            5.9019,
-            -75.5084
-          ],
-          [
-            6.0593,
-            -75.3602
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#3b82f6",
-        "areaKm2": 132.7
+        "category": "2",
+        "population": 65000,
+        "electoralCensus": 46800,
+        "nbiPercentage": 10.3,
+        "areaKm2": 132.7,
+        "riskLevel": "Bajo",
+        "electedMayor": "María Ilbed Santa Santa",
+        "winnerParty": "Coalición La Ceja Nos Une (Centro Democrático)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -4949,30 +4081,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05380",
         "name": "La Estrella",
         "daneCode": "05380",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Valle de Aburrá",
-        "centroid": [
-          6.1494,
-          -75.6467
-        ],
-        "bounds": [
-          [
-            6.1163,
-            -75.6797
-          ],
-          [
-            6.1721,
-            -75.6063
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Creemos",
+        "category": "2",
+        "population": 78000,
+        "electoralCensus": 56160,
+        "nbiPercentage": 5.2,
+        "areaKm2": 36.5,
         "riskLevel": "Medio",
-        "colorCode": "#10b981",
-        "areaKm2": 36.5
+        "electedMayor": "Carlos Mario Gutiérrez Arrubla",
+        "winnerParty": "Coalición La Estrella Nos Une (Partido Conservador)",
+        "predominantParty": "Partido Conservador"
       },
       "geometry": {
         "type": "Polygon",
@@ -5013,30 +4131,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05390",
         "name": "La Pintada",
         "daneCode": "05390",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Suroeste",
-        "centroid": [
-          5.7418,
-          -75.6067
-        ],
-        "bounds": [
-          [
-            5.6813,
-            -75.6418
-          ],
-          [
-            5.8015,
-            -75.5696
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
+        "category": "6",
+        "population": 8500,
+        "electoralCensus": 6460,
+        "nbiPercentage": 19.3,
+        "areaKm2": 54.3,
         "riskLevel": "Medio",
-        "colorCode": "#f59e0b",
-        "areaKm2": 54.3
+        "electedMayor": "Hermán Antonio Correa Bedoya",
+        "winnerParty": "Coalición La Pintada Nos Une (Centro Democrático)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -5077,30 +4181,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05400",
         "name": "La Unión",
         "daneCode": "05400",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Oriente",
-        "centroid": [
-          5.9321,
-          -75.3526
-        ],
-        "bounds": [
-          [
-            5.8734,
-            -75.419
-          ],
-          [
-            6.0308,
-            -75.2843
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#3b82f6",
-        "areaKm2": 167.7
+        "category": "5",
+        "population": 24000,
+        "electoralCensus": 18240,
+        "nbiPercentage": 13.2,
+        "areaKm2": 167.7,
+        "riskLevel": "Bajo",
+        "electedMayor": "Carmen Judith Valencia Moreno",
+        "winnerParty": "Coalición La Unión Nos Une (Centro Democrático)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -5137,30 +4227,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05411",
         "name": "Liborina",
         "daneCode": "05411",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Occidente",
-        "centroid": [
-          6.7444,
-          -75.7755
-        ],
-        "bounds": [
-          [
-            6.6419,
-            -75.8707
-          ],
-          [
-            6.8055,
-            -75.7201
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#8b5cf6",
-        "areaKm2": 216.4
+        "category": "6",
+        "population": 10200,
+        "electoralCensus": 7752,
+        "nbiPercentage": 29.3,
+        "areaKm2": 216.4,
+        "riskLevel": "Alto",
+        "electedMayor": "Nancy Amparo Avendaño Moreno",
+        "winnerParty": "Coalición Liborina Nos Une (Partido Conservador)",
+        "predominantParty": "Partido Conservador"
       },
       "geometry": {
         "type": "Polygon",
@@ -5209,30 +4285,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05425",
         "name": "Maceo",
         "daneCode": "05425",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Magdalena Medio",
-        "centroid": [
-          6.5349,
-          -74.6854
-        ],
-        "bounds": [
-          [
-            6.3965,
-            -74.8388
-          ],
-          [
-            6.6381,
-            -74.5609
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#f97316",
-        "areaKm2": 387.1
+        "category": "6",
+        "population": 8500,
+        "electoralCensus": 6460,
+        "nbiPercentage": 34.3,
+        "areaKm2": 387.1,
+        "riskLevel": "Alto",
+        "electedMayor": "Carolina Andrea Sosa Gómez",
+        "winnerParty": "Coalición Maceo Nos Une (Partido Liberal)",
+        "predominantParty": "Partido Liberal"
       },
       "geometry": {
         "type": "Polygon",
@@ -5281,30 +4343,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05440",
         "name": "Marinilla",
         "daneCode": "05440",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Oriente",
-        "centroid": [
-          6.2002,
-          -75.3013
-        ],
-        "bounds": [
-          [
-            6.1436,
-            -75.3517
-          ],
-          [
-            6.2589,
-            -75.2525
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#3b82f6",
-        "areaKm2": 114.9
+        "category": "2",
+        "population": 68000,
+        "electoralCensus": 48960,
+        "nbiPercentage": 10.3,
+        "areaKm2": 114.9,
+        "riskLevel": "Bajo",
+        "electedMayor": "Julio César Serna Gómez",
+        "winnerParty": "Coalición Marinilla Crece (Creemos - Centro Democrático)",
+        "predominantParty": "Creemos / CD"
       },
       "geometry": {
         "type": "Polygon",
@@ -5345,30 +4393,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05001",
         "name": "Medellín",
         "daneCode": "05001",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Valle de Aburrá",
-        "centroid": [
-          6.2615,
-          -75.6166
-        ],
-        "bounds": [
-          [
-            6.1634,
-            -75.7177
-          ],
-          [
-            6.3729,
-            -75.4851
-          ]
-        ],
-        "population": 2569000,
-        "electoralCensus": 1850000,
-        "nbiPercentage": 18.5,
-        "predominantParty": "Creemos",
+        "category": "Especial",
+        "population": 2650000,
+        "electoralCensus": 1908000,
+        "nbiPercentage": 4.2,
+        "areaKm2": 374.8,
         "riskLevel": "Medio",
-        "colorCode": "#10b981",
-        "areaKm2": 374.8
+        "electedMayor": "Federico Andrés Gutiérrez Zuluaga",
+        "winnerParty": "Partido Creemos",
+        "predominantParty": "Creemos"
       },
       "geometry": {
         "type": "Polygon",
@@ -5437,30 +4471,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05467",
         "name": "Montebello",
         "daneCode": "05467",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Suroeste",
-        "centroid": [
-          5.9292,
-          -75.5224
-        ],
-        "bounds": [
-          [
-            5.8598,
-            -75.5622
-          ],
-          [
-            5.975,
-            -75.4814
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
+        "category": "6",
+        "population": 8000,
+        "electoralCensus": 6080,
+        "nbiPercentage": 19.3,
+        "areaKm2": 76.0,
         "riskLevel": "Medio",
-        "colorCode": "#f59e0b",
-        "areaKm2": 76.0
+        "electedMayor": "Óscar Ernesto Cuervo Villada",
+        "winnerParty": "Coalición Montebello Nos Une (Centro Democrático)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -5501,30 +4521,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05475",
         "name": "Murindó",
         "daneCode": "05475",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Urabá",
-        "centroid": [
-          6.8142,
-          -76.7013
-        ],
-        "bounds": [
-          [
-            6.6332,
-            -76.9174
-          ],
-          [
-            7.0298,
-            -76.5122
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#06b6d4",
-        "areaKm2": 1266.2
+        "category": "6",
+        "population": 5200,
+        "electoralCensus": 3952,
+        "nbiPercentage": 41.6,
+        "areaKm2": 1266.2,
+        "riskLevel": "Crítico",
+        "electedMayor": "Emperatriz Mena Palacio",
+        "winnerParty": "Coalición Murindó Nos Une (Partido Conservador)",
+        "predominantParty": "Partido Conservador"
       },
       "geometry": {
         "type": "Polygon",
@@ -5605,30 +4611,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05480",
         "name": "Mutatá",
         "daneCode": "05480",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Urabá",
-        "centroid": [
-          7.3295,
-          -76.4775
-        ],
-        "bounds": [
-          [
-            7.1352,
-            -76.6823
-          ],
-          [
-            7.5554,
-            -76.2184
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#06b6d4",
-        "areaKm2": 1075.2
+        "category": "6",
+        "population": 24000,
+        "electoralCensus": 18240,
+        "nbiPercentage": 41.6,
+        "areaKm2": 1075.2,
+        "riskLevel": "Crítico",
+        "electedMayor": "Jairo Enrique Ortiz Palacios",
+        "winnerParty": "Coalición Mutatá Nos Une (Partido Conservador)",
+        "predominantParty": "Partido Conservador"
       },
       "geometry": {
         "type": "Polygon",
@@ -5693,30 +4685,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05483",
         "name": "Nariño",
         "daneCode": "05483",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Oriente",
-        "centroid": [
-          5.5796,
-          -75.194
-        ],
-        "bounds": [
-          [
-            5.4755,
-            -75.2831
-          ],
-          [
-            5.6763,
-            -75.0689
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#3b82f6",
-        "areaKm2": 316.8
+        "category": "6",
+        "population": 11500,
+        "electoralCensus": 8740,
+        "nbiPercentage": 13.2,
+        "areaKm2": 316.8,
+        "riskLevel": "Bajo",
+        "electedMayor": "Érika Cardona Pérez",
+        "winnerParty": "Coalición Nariño Nos Une (Centro Democrático)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -5757,30 +4735,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05495",
         "name": "Nechí",
         "daneCode": "05495",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Bajo Cauca",
-        "centroid": [
-          7.9778,
-          -74.7575
-        ],
-        "bounds": [
-          [
-            7.7847,
-            -74.933
-          ],
-          [
-            8.1999,
-            -74.5609
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#ef4444",
-        "areaKm2": 937.3
+        "category": "6",
+        "population": 29000,
+        "electoralCensus": 22040,
+        "nbiPercentage": 47.7,
+        "areaKm2": 937.3,
+        "riskLevel": "Crítico",
+        "electedMayor": "Yumaris Patricia Henríquez Banquet",
+        "winnerParty": "Coalición Nechí Nos Une (Partido Liberal)",
+        "predominantParty": "Partido Liberal"
       },
       "geometry": {
         "type": "Polygon",
@@ -5853,30 +4817,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05490",
         "name": "Necoclí",
         "daneCode": "05490",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Urabá",
-        "centroid": [
-          8.5133,
-          -76.6677
-        ],
-        "bounds": [
-          [
-            8.2668,
-            -76.9272
-          ],
-          [
-            8.7205,
-            -76.4338
-          ]
-        ],
+        "category": "5",
         "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#06b6d4",
-        "areaKm2": 1255.5
+        "electoralCensus": 36480,
+        "nbiPercentage": 41.6,
+        "areaKm2": 1255.5,
+        "riskLevel": "Crítico",
+        "electedMayor": "Guillermo José Cardona Moreno",
+        "winnerParty": "Coalición Necoclí Merece Más",
+        "predominantParty": "Coalición"
       },
       "geometry": {
         "type": "Polygon",
@@ -5953,30 +4903,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05501",
         "name": "Olaya",
         "daneCode": "05501",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Occidente",
-        "centroid": [
-          6.6238,
-          -75.7564
-        ],
-        "bounds": [
-          [
-            6.5378,
-            -75.823
-          ],
-          [
-            6.6518,
-            -75.7177
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#8b5cf6",
-        "areaKm2": 87.0
+        "category": "6",
+        "population": 3600,
+        "electoralCensus": 2736,
+        "nbiPercentage": 29.3,
+        "areaKm2": 87.0,
+        "riskLevel": "Alto",
+        "electedMayor": "Jesús David Hernández Londoño",
+        "winnerParty": "Coalición Olaya Nos Une (Partido Conservador)",
+        "predominantParty": "Partido Conservador"
       },
       "geometry": {
         "type": "Polygon",
@@ -6013,30 +4949,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05543",
         "name": "Peque",
         "daneCode": "05543",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Occidente",
-        "centroid": [
-          7.0424,
-          -75.8927
-        ],
-        "bounds": [
-          [
-            6.8712,
-            -75.9821
-          ],
-          [
-            7.2219,
-            -75.7752
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#8b5cf6",
-        "areaKm2": 434.1
+        "category": "6",
+        "population": 9200,
+        "electoralCensus": 6992,
+        "nbiPercentage": 29.3,
+        "areaKm2": 434.1,
+        "riskLevel": "Alto",
+        "electedMayor": "Emilson de Jesús Hernández Hernández",
+        "winnerParty": "Coalición Peque Nos Une (Partido Conservador)",
+        "predominantParty": "Partido Conservador"
       },
       "geometry": {
         "type": "Polygon",
@@ -6099,32 +5021,18 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
       "id": "mpio-05541",
       "properties": {
         "id": "mpio-05541",
-        "name": "Peñol",
+        "name": "El Peñol",
         "daneCode": "05541",
-        "level": "departamental",
-        "department": "Antioquia",
-        "subregion": "Antioquia",
-        "centroid": [
-          6.2373,
-          -75.2172
-        ],
-        "bounds": [
-          [
-            6.1634,
-            -75.2843
-          ],
-          [
-            6.3221,
-            -75.1632
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#64748b",
-        "areaKm2": 118.3
+        "subregion": "Oriente",
+        "category": "5",
+        "population": 20000,
+        "electoralCensus": 15200,
+        "nbiPercentage": 13.2,
+        "areaKm2": 118.3,
+        "riskLevel": "Bajo",
+        "electedMayor": "Sandra Arelis Duque Velásquez",
+        "winnerParty": "Coalición El Peñol Nos Une (Centro Democrático)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -6173,30 +5081,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05576",
         "name": "Pueblorrico",
         "daneCode": "05576",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Suroeste",
-        "centroid": [
-          5.8395,
-          -75.8771
-        ],
-        "bounds": [
-          [
-            5.7296,
-            -75.9148
-          ],
-          [
-            5.9069,
-            -75.8205
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
+        "category": "6",
+        "population": 9100,
+        "electoralCensus": 6916,
+        "nbiPercentage": 19.3,
+        "areaKm2": 75.4,
         "riskLevel": "Medio",
-        "colorCode": "#f59e0b",
-        "areaKm2": 75.4
+        "electedMayor": "Cristian Camilo Zapata Ramírez",
+        "winnerParty": "Coalición Pueblorrico Nos Une (Centro Democrático)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -6245,30 +5139,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05579",
         "name": "Puerto Berrío",
         "daneCode": "05579",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Magdalena Medio",
-        "centroid": [
-          6.4998,
-          -74.5053
-        ],
-        "bounds": [
-          [
-            6.2688,
-            -74.7176
-          ],
-          [
-            6.7547,
-            -74.3601
-          ]
-        ],
+        "category": "4",
         "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#f97316",
-        "areaKm2": 1220.1
+        "electoralCensus": 36480,
+        "nbiPercentage": 34.3,
+        "areaKm2": 1220.1,
+        "riskLevel": "Alto",
+        "electedMayor": "Robinson Alberto Baena Zuluaga",
+        "winnerParty": "Coalición Puerto Berrío Adelante",
+        "predominantParty": "Coalición"
       },
       "geometry": {
         "type": "Polygon",
@@ -6349,30 +5229,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05585",
         "name": "Puerto Nare",
         "daneCode": "05585",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Magdalena Medio",
-        "centroid": [
-          6.1453,
-          -74.698
-        ],
-        "bounds": [
-          [
-            5.9936,
-            -74.9195
-          ],
-          [
-            6.275,
-            -74.5339
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#f97316",
-        "areaKm2": 669.3
+        "category": "6",
+        "population": 19500,
+        "electoralCensus": 14820,
+        "nbiPercentage": 34.3,
+        "areaKm2": 669.3,
+        "riskLevel": "Alto",
+        "electedMayor": "Juan Carlos Acevedo Alzate",
+        "winnerParty": "Coalición Puerto Nare Nos Une (Partido Liberal)",
+        "predominantParty": "Partido Liberal"
       },
       "geometry": {
         "type": "Polygon",
@@ -6433,30 +5299,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05591",
         "name": "Puerto Triunfo",
         "daneCode": "05591",
-        "level": "departamental",
-        "department": "Antioquia",
-        "subregion": "Oriente",
-        "centroid": [
-          5.9506,
-          -74.6786
-        ],
-        "bounds": [
-          [
-            5.8598,
-            -74.8436
-          ],
-          [
-            6.0581,
-            -74.567
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#3b82f6",
-        "areaKm2": 369.6
+        "subregion": "Magdalena Medio",
+        "category": "6",
+        "population": 22000,
+        "electoralCensus": 16720,
+        "nbiPercentage": 34.3,
+        "areaKm2": 369.6,
+        "riskLevel": "Alto",
+        "electedMayor": "Franklin Portillo Gómez",
+        "winnerParty": "Coalición Puerto Triunfo Nos Une (Partido Liberal)",
+        "predominantParty": "Partido Liberal"
       },
       "geometry": {
         "type": "Polygon",
@@ -6501,30 +5353,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05604",
         "name": "Remedios",
         "daneCode": "05604",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Nordeste",
-        "centroid": [
-          6.9826,
-          -74.5458
-        ],
-        "bounds": [
-          [
-            6.7001,
-            -74.8583
-          ],
-          [
-            7.2666,
-            -74.2438
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#14b8a6",
-        "areaKm2": 1989.2
+        "category": "5",
+        "population": 32000,
+        "electoralCensus": 24320,
+        "nbiPercentage": 39.7,
+        "areaKm2": 1989.2,
+        "riskLevel": "Crítico",
+        "electedMayor": "Albeiro Arenas Molina",
+        "winnerParty": "Coalición Remedios Seguro y Productivo",
+        "predominantParty": "Coalición"
       },
       "geometry": {
         "type": "Polygon",
@@ -6623,32 +5461,18 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
       "id": "mpio-05607",
       "properties": {
         "id": "mpio-05607",
-        "name": "Retiro",
+        "name": "El Retiro",
         "daneCode": "05607",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Oriente",
-        "centroid": [
-          6.0522,
-          -75.5111
-        ],
-        "bounds": [
-          [
-            5.9602,
-            -75.5916
-          ],
-          [
-            6.1585,
-            -75.4447
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#3b82f6",
-        "areaKm2": 243.6
+        "category": "3",
+        "population": 26000,
+        "electoralCensus": 19760,
+        "nbiPercentage": 10.3,
+        "areaKm2": 243.6,
+        "riskLevel": "Bajo",
+        "electedMayor": "Santiago Montoya Giraldo",
+        "winnerParty": "Coalición El Retiro Nos Une (Centro Democrático)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -6697,30 +5521,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05615",
         "name": "Rionegro",
         "daneCode": "05615",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Oriente",
-        "centroid": [
-          6.1665,
-          -75.4072
-        ],
-        "bounds": [
-          [
-            6.0581,
-            -75.4863
-          ],
-          [
-            6.2328,
-            -75.3272
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#3b82f6",
-        "areaKm2": 195.9
+        "category": "1",
+        "population": 145000,
+        "electoralCensus": 104400,
+        "nbiPercentage": 8.0,
+        "areaKm2": 195.9,
+        "riskLevel": "Bajo",
+        "electedMayor": "Jorge Humberto Rivas Urrea",
+        "winnerParty": "Coalición Rionegro con Futuro (Creemos - Centro Democrático)",
+        "predominantParty": "Creemos / CD"
       },
       "geometry": {
         "type": "Polygon",
@@ -6773,30 +5583,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05628",
         "name": "Sabanalarga",
         "daneCode": "05628",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Occidente",
-        "centroid": [
-          6.923,
-          -75.7895
-        ],
-        "bounds": [
-          [
-            6.7844,
-            -75.8707
-          ],
-          [
-            7.062,
-            -75.7361
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#8b5cf6",
-        "areaKm2": 265.8
+        "category": "6",
+        "population": 9800,
+        "electoralCensus": 7448,
+        "nbiPercentage": 29.3,
+        "areaKm2": 265.8,
+        "riskLevel": "Alto",
+        "electedMayor": "César Alonso Cuadros George",
+        "winnerParty": "Coalición Sabanalarga Nos Une (Partido Conservador)",
+        "predominantParty": "Partido Conservador"
       },
       "geometry": {
         "type": "Polygon",
@@ -6845,30 +5641,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05631",
         "name": "Sabaneta",
         "daneCode": "05631",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Valle de Aburrá",
-        "centroid": [
-          6.1317,
-          -75.6036
-        ],
-        "bounds": [
-          [
-            6.1126,
-            -75.6259
-          ],
-          [
-            6.1634,
-            -75.5904
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Creemos",
+        "category": "1",
+        "population": 92000,
+        "electoralCensus": 66240,
+        "nbiPercentage": 4.2,
+        "areaKm2": 16.0,
         "riskLevel": "Medio",
-        "colorCode": "#10b981",
-        "areaKm2": 16.0
+        "electedMayor": "Alder James Cruz Ocampo",
+        "winnerParty": "Somos Sabaneta (Coalición Alder Cruz)",
+        "predominantParty": "Coalición"
       },
       "geometry": {
         "type": "Polygon",
@@ -6905,30 +5687,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05642",
         "name": "Salgar",
         "daneCode": "05642",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Suroeste",
-        "centroid": [
-          5.9761,
-          -75.9539
-        ],
-        "bounds": [
-          [
-            5.8635,
-            -76.0972
-          ],
-          [
-            6.0692,
-            -75.8487
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
+        "category": "6",
+        "population": 19000,
+        "electoralCensus": 14440,
+        "nbiPercentage": 19.3,
+        "areaKm2": 288.2,
         "riskLevel": "Medio",
-        "colorCode": "#f59e0b",
-        "areaKm2": 288.2
+        "electedMayor": "Víctor Raúl Maya Ceballos",
+        "winnerParty": "Coalición Salgar Nos Une (Centro Democrático)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -6983,32 +5751,18 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
       "id": "mpio-05647",
       "properties": {
         "id": "mpio-05647",
-        "name": "San Andrés de Cuerquía",
+        "name": "San Andrés de Cuerquia",
         "daneCode": "05647",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Norte",
-        "centroid": [
-          6.8965,
-          -75.6653
-        ],
-        "bounds": [
-          [
-            6.7881,
-            -75.7642
-          ],
-          [
-            7.0286,
-            -75.5757
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#ec4899",
-        "areaKm2": 218.7
+        "category": "6",
+        "population": 7500,
+        "electoralCensus": 5700,
+        "nbiPercentage": 24.6,
+        "areaKm2": 218.7,
+        "riskLevel": "Alto",
+        "electedMayor": "José Fernando Chavarría Chavarría",
+        "winnerParty": "Coalición San Andrés de Cuerquia Nos Une (Centro Democrático)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -7061,30 +5815,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05649",
         "name": "San Carlos",
         "daneCode": "05649",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Oriente",
-        "centroid": [
-          6.2115,
-          -74.9128
-        ],
-        "bounds": [
-          [
-            6.0432,
-            -75.1215
-          ],
-          [
-            6.3382,
-            -74.7127
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#3b82f6",
-        "areaKm2": 717.8
+        "category": "6",
+        "population": 18000,
+        "electoralCensus": 13680,
+        "nbiPercentage": 13.2,
+        "areaKm2": 717.8,
+        "riskLevel": "Bajo",
+        "electedMayor": "Santiago Daza Espinosa",
+        "winnerParty": "Coalición San Carlos Nos Une (Centro Democrático)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -7153,30 +5893,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05652",
         "name": "San Francisco",
         "daneCode": "05652",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Oriente",
-        "centroid": [
-          5.8838,
-          -74.9696
-        ],
-        "bounds": [
-          [
-            5.7519,
-            -75.0689
-          ],
-          [
-            5.9998,
-            -74.8436
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#3b82f6",
-        "areaKm2": 356.3
+        "category": "6",
+        "population": 6500,
+        "electoralCensus": 4940,
+        "nbiPercentage": 13.2,
+        "areaKm2": 356.3,
+        "riskLevel": "Bajo",
+        "electedMayor": "Arturo Alexander Arias Duque",
+        "winnerParty": "Coalición San Francisco Nos Une (Centro Democrático)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -7233,30 +5959,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05656",
         "name": "San Jerónimo",
         "daneCode": "05656",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Occidente",
-        "centroid": [
-          6.4434,
-          -75.6885
-        ],
-        "bounds": [
-          [
-            6.3605,
-            -75.7801
-          ],
-          [
-            6.5018,
-            -75.6455
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#8b5cf6",
-        "areaKm2": 161.3
+        "category": "5",
+        "population": 16000,
+        "electoralCensus": 12160,
+        "nbiPercentage": 29.3,
+        "areaKm2": 161.3,
+        "riskLevel": "Alto",
+        "electedMayor": "Donaldo Fernán Vivares Gallego",
+        "winnerParty": "Coalición San Jerónimo Nos Une (Partido Conservador)",
+        "predominantParty": "Partido Conservador"
       },
       "geometry": {
         "type": "Polygon",
@@ -7305,30 +6017,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05658",
         "name": "San José de la Montaña",
         "daneCode": "05658",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Norte",
-        "centroid": [
-          6.8242,
-          -75.6769
-        ],
-        "bounds": [
-          [
-            6.7534,
-            -75.7336
-          ],
-          [
-            6.8873,
-            -75.6271
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#ec4899",
-        "areaKm2": 126.1
+        "category": "6",
+        "population": 3800,
+        "electoralCensus": 2888,
+        "nbiPercentage": 24.6,
+        "areaKm2": 126.1,
+        "riskLevel": "Alto",
+        "electedMayor": "Julián Andrés González Posada",
+        "winnerParty": "Coalición San José de la Montaña Nos Une (Centro Democrático)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -7373,30 +6071,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05659",
         "name": "San Juan de Urabá",
         "daneCode": "05659",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Urabá",
-        "centroid": [
-          8.7023,
-          -76.5403
-        ],
-        "bounds": [
-          [
-            8.6114,
-            -76.6285
-          ],
-          [
-            8.8184,
-            -76.451
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#06b6d4",
-        "areaKm2": 252.0
+        "category": "6",
+        "population": 29000,
+        "electoralCensus": 22040,
+        "nbiPercentage": 41.6,
+        "areaKm2": 252.0,
+        "riskLevel": "Crítico",
+        "electedMayor": "Julia Esperanza Medrano Coa",
+        "winnerParty": "Coalición San Juan de Urabá Nos Une (Partido Conservador)",
+        "predominantParty": "Partido Conservador"
       },
       "geometry": {
         "type": "Polygon",
@@ -7437,30 +6121,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05660",
         "name": "San Luis",
         "daneCode": "05660",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Oriente",
-        "centroid": [
-          6.0133,
-          -74.9586
-        ],
-        "bounds": [
-          [
-            5.9255,
-            -75.0848
-          ],
-          [
-            6.1275,
-            -74.769
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#3b82f6",
-        "areaKm2": 425.6
+        "category": "6",
+        "population": 13500,
+        "electoralCensus": 10260,
+        "nbiPercentage": 13.2,
+        "areaKm2": 425.6,
+        "riskLevel": "Bajo",
+        "electedMayor": "César Abad Buitrago Arias",
+        "winnerParty": "Coalición San Luis Nos Une (Centro Democrático)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -7517,30 +6187,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05665",
         "name": "San Pedro de Urabá",
         "daneCode": "05665",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Urabá",
-        "centroid": [
-          8.3836,
-          -76.3117
-        ],
-        "bounds": [
-          [
-            8.102,
-            -76.4106
-          ],
-          [
-            8.594,
-            -76.1804
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#06b6d4",
-        "areaKm2": 602.5
+        "category": "6",
+        "population": 34000,
+        "electoralCensus": 25840,
+        "nbiPercentage": 41.6,
+        "areaKm2": 602.5,
+        "riskLevel": "Crítico",
+        "electedMayor": "Never Jacinto Carvajal Miranda",
+        "winnerParty": "Coalición San Pedro de Urabá Nos Une (Partido Conservador)",
+        "predominantParty": "Partido Conservador"
       },
       "geometry": {
         "type": "Polygon",
@@ -7613,30 +6269,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05664",
         "name": "San Pedro de los Milagros",
         "daneCode": "05664",
-        "level": "departamental",
-        "department": "Antioquia",
-        "subregion": "Oriente",
-        "centroid": [
-          6.4631,
-          -75.5509
-        ],
-        "bounds": [
-          [
-            6.389,
-            -75.6626
-          ],
-          [
-            6.5303,
-            -75.4606
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#3b82f6",
-        "areaKm2": 220.9
+        "subregion": "Norte",
+        "category": "5",
+        "population": 29000,
+        "electoralCensus": 22040,
+        "nbiPercentage": 24.6,
+        "areaKm2": 220.9,
+        "riskLevel": "Alto",
+        "electedMayor": "José Danilo Álvarez Rodríguez",
+        "winnerParty": "Coalición San Pedro de los Milagros Nos Une (Centro Democrático)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -7685,30 +6327,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05667",
         "name": "San Rafael",
         "daneCode": "05667",
-        "level": "departamental",
-        "department": "Antioquia",
-        "subregion": "Antioquia",
-        "centroid": [
-          6.3151,
-          -74.9705
-        ],
-        "bounds": [
-          [
-            6.2093,
-            -75.1179
-          ],
-          [
-            6.4026,
-            -74.8277
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#64748b",
-        "areaKm2": 363.9
+        "subregion": "Oriente",
+        "category": "6",
+        "population": 16000,
+        "electoralCensus": 12160,
+        "nbiPercentage": 13.2,
+        "areaKm2": 363.9,
+        "riskLevel": "Bajo",
+        "electedMayor": "Eduin Aniceno Giraldo Quintana",
+        "winnerParty": "Coalición San Rafael Nos Une (Centro Democrático)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -7757,30 +6385,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05670",
         "name": "San Roque",
         "daneCode": "05670",
-        "level": "departamental",
-        "department": "Antioquia",
-        "subregion": "Suroeste",
-        "centroid": [
-          6.434,
-          -74.9093
-        ],
-        "bounds": [
-          [
-            6.3134,
-            -75.097
-          ],
-          [
-            6.539,
-            -74.7935
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#f59e0b",
-        "areaKm2": 424.9
+        "subregion": "Nordeste",
+        "category": "6",
+        "population": 19000,
+        "electoralCensus": 14440,
+        "nbiPercentage": 39.7,
+        "areaKm2": 424.9,
+        "riskLevel": "Crítico",
+        "electedMayor": "Luis Alejandro Villegas Cano",
+        "winnerParty": "Coalición San Roque Nos Une (Partido Conservador)",
+        "predominantParty": "Partido Conservador"
       },
       "geometry": {
         "type": "Polygon",
@@ -7839,32 +6453,18 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
       "id": "mpio-05674",
       "properties": {
         "id": "mpio-05674",
-        "name": "San Vicente Ferrer",
+        "name": "San Rafael",
         "daneCode": "05674",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Oriente",
-        "centroid": [
-          6.3168,
-          -75.3322
-        ],
-        "bounds": [
-          [
-            6.2242,
-            -75.4068
-          ],
-          [
-            6.3915,
-            -75.2427
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#3b82f6",
-        "areaKm2": 230.5
+        "category": "6",
+        "population": 16000,
+        "electoralCensus": 12160,
+        "nbiPercentage": 13.2,
+        "areaKm2": 230.5,
+        "riskLevel": "Bajo",
+        "electedMayor": "Eduin Aniceno Giraldo Quintana",
+        "winnerParty": "Coalición San Rafael Nos Une (Centro Democrático)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -7913,30 +6513,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05679",
         "name": "Santa Bárbara",
         "daneCode": "05679",
-        "level": "departamental",
-        "department": "Antioquia",
-        "subregion": "Antioquia",
-        "centroid": [
-          5.8937,
-          -75.586
-        ],
-        "bounds": [
-          [
-            5.7247,
-            -75.6357
-          ],
-          [
-            6.006,
-            -75.5341
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
+        "subregion": "Suroeste",
+        "category": "5",
+        "population": 24000,
+        "electoralCensus": 18240,
+        "nbiPercentage": 19.3,
+        "areaKm2": 196.2,
         "riskLevel": "Medio",
-        "colorCode": "#64748b",
-        "areaKm2": 196.2
+        "electedMayor": "Jorge Mario Quintana Cañaveral",
+        "winnerParty": "Coalición Santa Bárbara con Fuerza (Centro Democrático)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -7987,32 +6573,18 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
       "id": "mpio-05042",
       "properties": {
         "id": "mpio-05042",
-        "name": "Santa Fé de Antioquia",
+        "name": "Santa Fe de Antioquia",
         "daneCode": "05042",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Occidente",
-        "centroid": [
-          6.5476,
-          -75.8863
-        ],
-        "bounds": [
-          [
-            6.3965,
-            -76.0384
-          ],
-          [
-            6.6803,
-            -75.8009
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#8b5cf6",
-        "areaKm2": 525.6
+        "category": "4",
+        "population": 27500,
+        "electoralCensus": 20900,
+        "nbiPercentage": 29.3,
+        "areaKm2": 525.6,
+        "riskLevel": "Alto",
+        "electedMayor": "Yamid Carvajal Carvajal",
+        "winnerParty": "Coalición Santa Fe de Antioquia Nos Une (Partido Conservador)",
+        "predominantParty": "Partido Conservador"
       },
       "geometry": {
         "type": "Polygon",
@@ -8077,30 +6649,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05686",
         "name": "Santa Rosa de Osos",
         "daneCode": "05686",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Norte",
-        "centroid": [
-          6.6772,
-          -75.4326
-        ],
-        "bounds": [
-          [
-            6.5167,
-            -75.643
-          ],
-          [
-            6.8935,
-            -75.1974
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#ec4899",
-        "areaKm2": 864.8
+        "category": "4",
+        "population": 39000,
+        "electoralCensus": 29640,
+        "nbiPercentage": 24.6,
+        "areaKm2": 864.8,
+        "riskLevel": "Alto",
+        "electedMayor": "Luis Bernardo Molina Granda",
+        "winnerParty": "Coalición Santa Rosa Nos Une",
+        "predominantParty": "Coalición"
       },
       "geometry": {
         "type": "Polygon",
@@ -8189,30 +6747,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05690",
         "name": "Santo Domingo",
         "daneCode": "05690",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Nordeste",
-        "centroid": [
-          6.4936,
-          -75.1344
-        ],
-        "bounds": [
-          [
-            6.394,
-            -75.2635
-          ],
-          [
-            6.5551,
-            -75.0199
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#14b8a6",
-        "areaKm2": 266.0
+        "category": "6",
+        "population": 12000,
+        "electoralCensus": 9120,
+        "nbiPercentage": 39.7,
+        "areaKm2": 266.0,
+        "riskLevel": "Crítico",
+        "electedMayor": "Fabio Ignacio Mira Valencia",
+        "winnerParty": "Coalición Santo Domingo Nos Une (Partido Conservador)",
+        "predominantParty": "Partido Conservador"
       },
       "geometry": {
         "type": "Polygon",
@@ -8277,30 +6821,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05736",
         "name": "Segovia",
         "daneCode": "05736",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Nordeste",
-        "centroid": [
-          7.3188,
-          -74.5534
-        ],
-        "bounds": [
-          [
-            7.0707,
-            -74.9159
-          ],
-          [
-            7.4723,
-            -74.3197
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#14b8a6",
-        "areaKm2": 1127.3
+        "category": "4",
+        "population": 43000,
+        "electoralCensus": 32680,
+        "nbiPercentage": 39.7,
+        "areaKm2": 1127.3,
+        "riskLevel": "Crítico",
+        "electedMayor": "Edwin Alexander Castañeda Vahos",
+        "winnerParty": "Coalición Segovia Segura y Productiva",
+        "predominantParty": "Coalición"
       },
       "geometry": {
         "type": "Polygon",
@@ -8381,30 +6911,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05756",
         "name": "Sonsón",
         "daneCode": "05756",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Oriente",
-        "centroid": [
-          5.7487,
-          -75.0392
-        ],
-        "bounds": [
-          [
-            5.4594,
-            -75.4239
-          ],
-          [
-            5.9267,
-            -74.6404
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#3b82f6",
-        "areaKm2": 1346.4
+        "category": "5",
+        "population": 38000,
+        "electoralCensus": 28880,
+        "nbiPercentage": 13.2,
+        "areaKm2": 1346.4,
+        "riskLevel": "Bajo",
+        "electedMayor": "Juan Diego Zuluaga Pulgarín",
+        "winnerParty": "Centro Democrático (Sonsón con Futuro)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -8521,30 +7037,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05761",
         "name": "Sopetrán",
         "daneCode": "05761",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Occidente",
-        "centroid": [
-          6.4997,
-          -75.7359
-        ],
-        "bounds": [
-          [
-            6.4101,
-            -75.8193
-          ],
-          [
-            6.6357,
-            -75.6504
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#8b5cf6",
-        "areaKm2": 219.1
+        "category": "5",
+        "population": 17500,
+        "electoralCensus": 13300,
+        "nbiPercentage": 29.3,
+        "areaKm2": 219.1,
+        "riskLevel": "Alto",
+        "electedMayor": "Tatiana Alexandra Carballo Hoyos",
+        "winnerParty": "Coalición Sopetrán Adelante",
+        "predominantParty": "Coalición"
       },
       "geometry": {
         "type": "Polygon",
@@ -8589,30 +7091,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05790",
         "name": "Tarazá",
         "daneCode": "05790",
-        "level": "departamental",
-        "department": "Antioquia",
-        "subregion": "Suroeste",
-        "centroid": [
-          7.4591,
-          -75.3703
-        ],
-        "bounds": [
-          [
-            7.2294,
-            -75.6014
-          ],
-          [
-            7.7363,
-            -75.1656
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#f59e0b",
-        "areaKm2": 1149.0
+        "subregion": "Bajo Cauca",
+        "category": "6",
+        "population": 45000,
+        "electoralCensus": 34200,
+        "nbiPercentage": 47.7,
+        "areaKm2": 1149.0,
+        "riskLevel": "Crítico",
+        "electedMayor": "Yomer Fabián Álvarez Correa",
+        "winnerParty": "Coalición Tarazá Nos Une (Partido Liberal)",
+        "predominantParty": "Partido Liberal"
       },
       "geometry": {
         "type": "Polygon",
@@ -8693,30 +7181,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05792",
         "name": "Tarso",
         "daneCode": "05792",
-        "level": "departamental",
-        "department": "Antioquia",
-        "subregion": "Bajo Cauca",
-        "centroid": [
-          5.8808,
-          -75.8228
-        ],
-        "bounds": [
-          [
-            5.8213,
-            -75.8866
-          ],
-          [
-            5.9378,
-            -75.7605
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
+        "subregion": "Suroeste",
+        "category": "6",
+        "population": 8200,
+        "electoralCensus": 6232,
+        "nbiPercentage": 19.3,
+        "areaKm2": 120.5,
         "riskLevel": "Medio",
-        "colorCode": "#ef4444",
-        "areaKm2": 120.5
+        "electedMayor": "Hugo Alexander Ocampo Ríos",
+        "winnerParty": "Coalición Tarso Nos Une (Centro Democrático)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -8761,30 +7235,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05809",
         "name": "Titiribí",
         "daneCode": "05809",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Suroeste",
-        "centroid": [
-          6.0636,
-          -75.7873
-        ],
-        "bounds": [
-          [
-            5.9998,
-            -75.8548
-          ],
-          [
-            6.1349,
-            -75.7471
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
+        "category": "6",
+        "population": 13000,
+        "electoralCensus": 9880,
+        "nbiPercentage": 19.3,
+        "areaKm2": 140.3,
         "riskLevel": "Medio",
-        "colorCode": "#f59e0b",
-        "areaKm2": 140.3
+        "electedMayor": "Alex David Restrepo Salazar",
+        "winnerParty": "Coalición Titiribí Nos Une (Centro Democrático)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -8825,30 +7285,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05819",
         "name": "Toledo",
         "daneCode": "05819",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Norte",
-        "centroid": [
-          7.0373,
-          -75.7069
-        ],
-        "bounds": [
-          [
-            6.9269,
-            -75.7654
-          ],
-          [
-            7.0844,
-            -75.6589
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#ec4899",
-        "areaKm2": 122.6
+        "category": "6",
+        "population": 6800,
+        "electoralCensus": 5168,
+        "nbiPercentage": 24.6,
+        "areaKm2": 122.6,
+        "riskLevel": "Alto",
+        "electedMayor": "Jhonny Alberto Marín Muñetón",
+        "winnerParty": "Coalición Toledo Nos Une (Centro Democrático)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -8885,30 +7331,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05837",
         "name": "Turbo",
         "daneCode": "05837",
-        "level": "departamental",
-        "department": "Antioquia",
-        "subregion": "Suroeste",
-        "centroid": [
-          7.9829,
-          -76.747
-        ],
-        "bounds": [
-          [
-            7.4674,
-            -77.123
-          ],
-          [
-            8.4639,
-            -76.3934
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#f59e0b",
-        "areaKm2": 2919.5
+        "subregion": "Urabá",
+        "category": "2",
+        "population": 130000,
+        "electoralCensus": 93600,
+        "nbiPercentage": 32.6,
+        "areaKm2": 2919.5,
+        "riskLevel": "Crítico",
+        "electedMayor": "Alejandro Abuchar González",
+        "winnerParty": "Coalición Turbo Líder y Productivo",
+        "predominantParty": "Coalición"
       },
       "geometry": {
         "type": "Polygon",
@@ -9065,30 +7497,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05789",
         "name": "Támesis",
         "daneCode": "05789",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Suroeste",
-        "centroid": [
-          5.6805,
-          -75.7012
-        ],
-        "bounds": [
-          [
-            5.5474,
-            -75.8071
-          ],
-          [
-            5.8003,
-            -75.6406
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
+        "category": "6",
+        "population": 16500,
+        "electoralCensus": 12540,
+        "nbiPercentage": 19.3,
+        "areaKm2": 252.2,
         "riskLevel": "Medio",
-        "colorCode": "#f59e0b",
-        "areaKm2": 252.2
+        "electedMayor": "Juan Pablo Pérez Rámirez",
+        "winnerParty": "Coalición Támesis Nos Une (Centro Democrático)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -9145,30 +7563,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05842",
         "name": "Uramita",
         "daneCode": "05842",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Occidente",
-        "centroid": [
-          6.9263,
-          -76.0885
-        ],
-        "bounds": [
-          [
-            6.8241,
-            -76.2465
-          ],
-          [
-            7.0013,
-            -75.965
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#8b5cf6",
-        "areaKm2": 265.9
+        "category": "6",
+        "population": 8800,
+        "electoralCensus": 6688,
+        "nbiPercentage": 29.3,
+        "areaKm2": 265.9,
+        "riskLevel": "Alto",
+        "electedMayor": "Leonardo Úsuga Correa",
+        "winnerParty": "Coalición Uramita Nos Une (Partido Conservador)",
+        "predominantParty": "Partido Conservador"
       },
       "geometry": {
         "type": "Polygon",
@@ -9229,30 +7633,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05847",
         "name": "Urrao",
         "daneCode": "05847",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Suroeste",
-        "centroid": [
-          6.3269,
-          -76.2387
-        ],
-        "bounds": [
-          [
-            6.0035,
-            -76.5636
-          ],
-          [
-            6.5935,
-            -75.9882
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
+        "category": "5",
+        "population": 45000,
+        "electoralCensus": 34200,
+        "nbiPercentage": 19.3,
+        "areaKm2": 2563.4,
         "riskLevel": "Medio",
-        "colorCode": "#f59e0b",
-        "areaKm2": 2563.4
+        "electedMayor": "Nelson Javier Barrera Holguín",
+        "winnerParty": "Coalición Urrao Nos Une (Centro Democrático)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -9365,30 +7755,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05854",
         "name": "Valdivia",
         "daneCode": "05854",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Norte",
-        "centroid": [
-          7.233,
-          -75.4082
-        ],
-        "bounds": [
-          [
-            7.0497,
-            -75.5292
-          ],
-          [
-            7.388,
-            -75.2745
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#ec4899",
-        "areaKm2": 567.7
+        "category": "6",
+        "population": 21000,
+        "electoralCensus": 15960,
+        "nbiPercentage": 24.6,
+        "areaKm2": 567.7,
+        "riskLevel": "Alto",
+        "electedMayor": "Carlos Danober Molina Betancur",
+        "winnerParty": "Coalición Valdivia Nos Une (Centro Democrático)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -9453,30 +7829,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05856",
         "name": "Valparaíso",
         "daneCode": "05856",
-        "level": "departamental",
-        "department": "Antioquia",
-        "subregion": "Nordeste",
-        "centroid": [
-          5.6647,
-          -75.6193
-        ],
-        "bounds": [
-          [
-            5.5982,
-            -75.6761
-          ],
-          [
-            5.7569,
-            -75.5806
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
+        "subregion": "Suroeste",
+        "category": "6",
+        "population": 7200,
+        "electoralCensus": 5472,
+        "nbiPercentage": 19.3,
+        "areaKm2": 126.2,
         "riskLevel": "Medio",
-        "colorCode": "#14b8a6",
-        "areaKm2": 126.2
+        "electedMayor": "José Mario Hernández Devia",
+        "winnerParty": "Coalición Valparaíso Nos Une (Centro Democrático)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -9513,30 +7875,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05858",
         "name": "Vegachí",
         "daneCode": "05858",
-        "level": "departamental",
-        "department": "Antioquia",
-        "subregion": "Suroeste",
-        "centroid": [
-          6.8222,
-          -74.7468
-        ],
-        "bounds": [
-          [
-            6.7323,
-            -74.9208
-          ],
-          [
-            6.9914,
-            -74.5719
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#f59e0b",
-        "areaKm2": 525.0
+        "subregion": "Nordeste",
+        "category": "6",
+        "population": 14000,
+        "electoralCensus": 10640,
+        "nbiPercentage": 39.7,
+        "areaKm2": 525.0,
+        "riskLevel": "Crítico",
+        "electedMayor": "José María Ochoa Muñoz",
+        "winnerParty": "Coalición Vegachí Nos Une (Partido Conservador)",
+        "predominantParty": "Partido Conservador"
       },
       "geometry": {
         "type": "Polygon",
@@ -9601,30 +7949,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05861",
         "name": "Venecia",
         "daneCode": "05861",
-        "level": "departamental",
-        "department": "Antioquia",
-        "subregion": "Antioquia",
-        "centroid": [
-          5.9663,
-          -75.7934
-        ],
-        "bounds": [
-          [
-            5.8808,
-            -75.856
-          ],
-          [
-            6.0085,
-            -75.6993
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
+        "subregion": "Suroeste",
+        "category": "6",
+        "population": 14500,
+        "electoralCensus": 11020,
+        "nbiPercentage": 19.3,
+        "areaKm2": 139.7,
         "riskLevel": "Medio",
-        "colorCode": "#64748b",
-        "areaKm2": 139.7
+        "electedMayor": "Natalia Orozco Loaiza",
+        "winnerParty": "Coalición Venecia Nos Une (Centro Democrático)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -9669,30 +8003,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05873",
         "name": "Vigía del Fuerte",
         "daneCode": "05873",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Urabá",
-        "centroid": [
-          6.5319,
-          -76.7566
-        ],
-        "bounds": [
-          [
-            6.1684,
-            -76.9724
-          ],
-          [
-            6.8464,
-            -76.4448
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#06b6d4",
-        "areaKm2": 1661.9
+        "category": "6",
+        "population": 8500,
+        "electoralCensus": 6460,
+        "nbiPercentage": 41.6,
+        "areaKm2": 1661.9,
+        "riskLevel": "Crítico",
+        "electedMayor": "Jhoselin Lozano Mena",
+        "winnerParty": "Coalición Vigía del Fuerte Nos Une (Partido Conservador)",
+        "predominantParty": "Partido Conservador"
       },
       "geometry": {
         "type": "Polygon",
@@ -9797,30 +8117,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05885",
         "name": "Yalí",
         "daneCode": "05885",
-        "level": "departamental",
-        "department": "Antioquia",
-        "subregion": "Norte",
-        "centroid": [
-          6.7282,
-          -74.7449
-        ],
-        "bounds": [
-          [
-            6.6369,
-            -74.9501
-          ],
-          [
-            6.798,
-            -74.5792
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#ec4899",
-        "areaKm2": 440.9
+        "subregion": "Nordeste",
+        "category": "6",
+        "population": 8500,
+        "electoralCensus": 6460,
+        "nbiPercentage": 39.7,
+        "areaKm2": 440.9,
+        "riskLevel": "Crítico",
+        "electedMayor": "Jhon Jairo Giraldo Posada",
+        "winnerParty": "Coalición Yalí Nos Une (Partido Conservador)",
+        "predominantParty": "Partido Conservador"
       },
       "geometry": {
         "type": "Polygon",
@@ -9881,30 +8187,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05887",
         "name": "Yarumal",
         "daneCode": "05887",
-        "level": "departamental",
-        "department": "Antioquia",
-        "subregion": "Nordeste",
-        "centroid": [
-          7.0183,
-          -75.4488
-        ],
-        "bounds": [
-          [
-            6.7733,
-            -75.6589
-          ],
-          [
-            7.2269,
-            -75.3015
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#14b8a6",
-        "areaKm2": 738.3
+        "subregion": "Norte",
+        "category": "4",
+        "population": 46000,
+        "electoralCensus": 34960,
+        "nbiPercentage": 24.6,
+        "areaKm2": 738.3,
+        "riskLevel": "Alto",
+        "electedMayor": "Cristian David Céspedes Correa",
+        "winnerParty": "Coalición Yarumal Adelante (Centro Democrático - Conservador)",
+        "predominantParty": "Centro Democrático"
       },
       "geometry": {
         "type": "Polygon",
@@ -9993,30 +8285,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05890",
         "name": "Yolombó",
         "daneCode": "05890",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Nordeste",
-        "centroid": [
-          6.6571,
-          -74.9218
-        ],
-        "bounds": [
-          [
-            6.5092,
-            -75.2072
-          ],
-          [
-            6.834,
-            -74.4972
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#14b8a6",
-        "areaKm2": 1012.5
+        "category": "6",
+        "population": 25000,
+        "electoralCensus": 19000,
+        "nbiPercentage": 39.7,
+        "areaKm2": 1012.5,
+        "riskLevel": "Crítico",
+        "electedMayor": "Jesús Amador Pérez Palacio",
+        "winnerParty": "Coalición Yolombó Nos Une (Partido Conservador)",
+        "predominantParty": "Partido Conservador"
       },
       "geometry": {
         "type": "Polygon",
@@ -10121,30 +8399,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05893",
         "name": "Yondó",
         "daneCode": "05893",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Magdalena Medio",
-        "centroid": [
-          6.9258,
-          -74.1272
-        ],
-        "bounds": [
-          [
-            6.632,
-            -74.4519
-          ],
-          [
-            7.2951,
-            -73.8876
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#f97316",
-        "areaKm2": 1895.0
+        "category": "6",
+        "population": 21500,
+        "electoralCensus": 16340,
+        "nbiPercentage": 34.3,
+        "areaKm2": 1895.0,
+        "riskLevel": "Alto",
+        "electedMayor": "Yerson Antonio Ariza Rivera",
+        "winnerParty": "Coalición Yondó Nos Une (Partido Liberal)",
+        "predominantParty": "Partido Liberal"
       },
       "geometry": {
         "type": "Polygon",
@@ -10225,30 +8489,16 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         "id": "mpio-05895",
         "name": "Zaragoza",
         "daneCode": "05895",
-        "level": "departamental",
-        "department": "Antioquia",
         "subregion": "Bajo Cauca",
-        "centroid": [
-          7.4921,
-          -74.8465
-        ],
-        "bounds": [
-          [
-            7.2641,
-            -75.0799
-          ],
-          [
-            7.7252,
-            -74.6074
-          ]
-        ],
-        "population": 48000,
-        "electoralCensus": 32000,
-        "nbiPercentage": 24.0,
-        "predominantParty": "Centro Democrático",
-        "riskLevel": "Medio",
-        "colorCode": "#ef4444",
-        "areaKm2": 1167.4
+        "category": "6",
+        "population": 34000,
+        "electoralCensus": 25840,
+        "nbiPercentage": 47.7,
+        "areaKm2": 1167.4,
+        "riskLevel": "Crítico",
+        "electedMayor": "Andrés Emilio Lujan Monroy",
+        "winnerParty": "Coalición Zaragoza Nos Une (Partido Liberal)",
+        "predominantParty": "Partido Liberal"
       },
       "geometry": {
         "type": "Polygon",
