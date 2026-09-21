@@ -9,7 +9,7 @@ import {
   ZOOM_LEVELS_CONFIG,
   ANTIOQUIA_125_MUNICIPIOS_GEOJSON
 } from '../../data/geojson';
-import { Maximize2, Layers, Compass, Sparkles, Map, Building } from 'lucide-react';
+import { Maximize2, Layers, Compass, Sparkles, Map, Building, Megaphone } from 'lucide-react';
 
 interface MultiLevelZoomMapProps {
   currentLevel: ZoomLevelId;
@@ -18,6 +18,7 @@ interface MultiLevelZoomMapProps {
   selectedFeature: TerritoryGeoFeature | null;
   onSelectFeature: (feature: TerritoryGeoFeature | null) => void;
   onDrillDown: (targetLevel: ZoomLevelId, featureId: string) => void;
+  onGenerateContent?: (feature: TerritoryGeoFeature) => void;
 }
 
 export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
@@ -26,7 +27,8 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
   searchQuery,
   selectedFeature,
   onSelectFeature,
-  onDrillDown
+  onDrillDown,
+  onGenerateContent
 }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
@@ -419,6 +421,20 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
           {mapBaseTheme === 'dark' ? '🌙' : '☀️'}
         </button>
       </div>
+
+      {/* Quick Floating Action: Generate content for selected feature */}
+      {selectedFeature && onGenerateContent && (
+        <div className="absolute top-4 left-4 z-10 animate-fadeIn pointer-events-auto">
+          <button
+            onClick={() => onGenerateContent(selectedFeature)}
+            className="px-3.5 py-2 rounded-2xl bg-gradient-to-r from-sky-500/90 to-blue-600/90 hover:from-sky-400 hover:to-indigo-500 text-white text-xs font-black shadow-[0_0_20px_rgba(56,189,248,0.5)] border border-white/40 flex items-center gap-2 transition-all transform hover:scale-[1.03] active:scale-95 cursor-pointer backdrop-blur-xl"
+            title={`Generar contenido con IA para ${selectedFeature.properties.name}`}
+          >
+            <Megaphone className="w-4 h-4 text-sky-200" />
+            <span>Generar Contenido: {selectedFeature.properties.name}</span>
+          </button>
+        </div>
+      )}
 
       {/* Dynamic Hover Banner (Top Center) */}
       {hoveredFeature && (

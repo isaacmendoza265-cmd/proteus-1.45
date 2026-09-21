@@ -131,13 +131,13 @@ export class TerritoryHierarchyService {
       municipalityName: m.name,
       population: m.population,
       electoralCensus: m.electoralCensus,
-      nbiPercentage: m.nbi,
-      keyIssues: m.keyIssues || [
+      nbiPercentage: m.nbiPercentage,
+      keyIssues: m.keyProblems || [
         `Generación de ingresos y empleo en ${m.name}`,
         `Mantenimiento de vías terciarias y placas huella`,
         `Seguridad urbana y prevención de microtráfico/extorsión`
       ],
-      strategicContext: `Municipio de ${m.name}, subregión ${m.subregion}. Censo de ${m.electoralCensus.toLocaleString('es-CO')} sufragantes y alcalde actual: ${m.mayor.electedMayor} (${m.mayor.electedParty}).`
+      strategicContext: `Municipio de ${m.name}, subregión ${m.subregion}. Censo de ${m.electoralCensus.toLocaleString('es-CO')} sufragantes y alcalde actual: ${m.electedMayor} (${m.winnerParty}).`
     })).sort((a, b) => a.name.localeCompare(b.name));
   }
 

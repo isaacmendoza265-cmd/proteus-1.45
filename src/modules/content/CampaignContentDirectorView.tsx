@@ -44,10 +44,12 @@ import {
   VoterAudienceGroup,
   VoterAudienceCategory
 } from '../../data/voterAudienceCatalog';
+import { useActiveTerritory, activeTerritoryService } from '../../services/activeTerritoryContextService';
 
 interface CampaignContentDirectorViewProps {
   candidateProfile: CandidateProfile;
   onSaveToDrive?: (title: string, data: any) => void;
+  onNavigateToZoom?: () => void;
 }
 
 type ContentFormat = 
@@ -61,17 +63,32 @@ export type CognitiveFraming = 'gain-hope' | 'loss-protection' | 'balanced';
 
 export const CampaignContentDirectorView: React.FC<CampaignContentDirectorViewProps> = ({
   candidateProfile,
-  onSaveToDrive
+  onSaveToDrive,
+  onNavigateToZoom
 }) => {
+  const { activeTerritory, setActiveTerritory } = useActiveTerritory();
+
   // =========================================================================
   // 1. TERRITORIAL HIERARCHY STATE (5 ESCALAS JERÁRQUICAS)
   // =========================================================================
-  const [selectedScale, setSelectedScale] = useState<TerritorialScale>('municipal');
-  const [selectedDeptId, setSelectedDeptId] = useState<string>('dept-antioquia');
-  const [selectedSubregId, setSelectedSubregId] = useState<string>('subreg-valle-de-aburra');
-  const [selectedMuniId, setSelectedMuniId] = useState<string>('mpio-05001'); // Medellín default
-  const [selectedComunaId, setSelectedComunaId] = useState<string>('comuna-11'); // Laureles default
-  const [selectedBarrioId, setSelectedBarrioId] = useState<string>('all-comuna');
+  const [selectedScale, setSelectedScale] = useState<TerritorialScale>(activeTerritory.scale || 'municipal');
+  const [selectedDeptId, setSelectedDeptId] = useState<string>(activeTerritory.deptId || 'dept-antioquia');
+  const [selectedSubregId, setSelectedSubregId] = useState<string>(activeTerritory.subregId || 'subreg-valle-de-aburra');
+  const [selectedMuniId, setSelectedMuniId] = useState<string>(activeTerritory.muniId || 'mpio-05001'); // Medellín default
+  const [selectedComunaId, setSelectedComunaId] = useState<string>(activeTerritory.comunaId || 'comuna-11'); // Laureles default
+  const [selectedBarrioId, setSelectedBarrioId] = useState<string>(activeTerritory.barrioId || 'all-comuna');
+
+  // React to updates from activeTerritoryContextService (e.g. clicks in GIS Map or Drawer)
+  React.useEffect(() => {
+    if (activeTerritory) {
+      if (activeTerritory.scale) setSelectedScale(activeTerritory.scale);
+      if (activeTerritory.deptId) setSelectedDeptId(activeTerritory.deptId);
+      if (activeTerritory.subregId) setSelectedSubregId(activeTerritory.subregId);
+      if (activeTerritory.muniId) setSelectedMuniId(activeTerritory.muniId);
+      if (activeTerritory.comunaId) setSelectedComunaId(activeTerritory.comunaId);
+      if (activeTerritory.barrioId) setSelectedBarrioId(activeTerritory.barrioId);
+    }
+  }, [activeTerritory.updatedAt]);
 
   // Pre-load datasets for dropdowns
   const departmentsList = useMemo(() => TerritoryHierarchyService.getDepartments(), []);
@@ -79,6 +96,98 @@ export const CampaignContentDirectorView: React.FC<CampaignContentDirectorViewPr
   const allMunicipalities = useMemo(() => TerritoryHierarchyService.getMunicipalities(), []);
   const comunasList = useMemo(() => TerritoryHierarchyService.getComunas(), []);
   const barriosList = useMemo(() => TerritoryHierarchyService.getBarrios(selectedComunaId), [selectedComunaId]);
+
+  // Helpers to synchronize bidirectional state
+  const handleSelectScale = (scale: TerritorialScale) => {
+    setSelectedScale(scale);
+    activeTerritoryService.setState({ scale, source: 'manual_selector' });
+  };
+
+  const handleSelectDept = (deptId: string) => {
+    setSelectedDeptId(deptId);
+    const d = departmentsList.find(item => item.id === deptId);
+    if (d) {
+      activeTerritoryService.setState({
+        scale: 'departamental',
+        deptId,
+        name: d.name,
+        fullName: d.fullName,
+        electoralCensus: d.electoralCensus,
+        population: d.population,
+        nbiPercentage: d.nbiPercentage,
+        source: 'manual_selector'
+      });
+    }
+  };
+
+  const handleSelectSubreg = (subregId: string) => {
+    setSelectedSubregId(subregId);
+    const s = subregionsList.find(item => item.id === subregId);
+    if (s) {
+      activeTerritoryService.setState({
+        scale: 'subregional',
+        subregId,
+        name: s.name,
+        fullName: s.fullName,
+        population: s.population,
+        nbiPercentage: s.nbiPercentage,
+        source: 'manual_selector'
+      });
+    }
+  };
+
+  const handleSelectMuni = (muniId: string) => {
+    setSelectedMuniId(muniId);
+    const m = allMunicipalities.find(item => item.id === muniId);
+    if (m) {
+      activeTerritoryService.setState({
+        scale: 'municipal',
+        muniId,
+        name: m.name,
+        fullName: m.fullName,
+        population: m.population,
+        electoralCensus: m.electoralCensus,
+        nbiPercentage: m.nbiPercentage,
+        source: 'manual_selector'
+      });
+    }
+  };
+
+  const handleSelectComuna = (comunaId: string) => {
+    setSelectedComunaId(comunaId);
+    setSelectedBarrioId('all-comuna');
+    const c = comunasList.find(item => item.id === comunaId);
+    if (c) {
+      activeTerritoryService.setState({
+        scale: 'comuna-barrio',
+        comunaId,
+        barrioId: 'all-comuna',
+        name: c.name,
+        fullName: c.fullName,
+        population: c.population,
+        electoralCensus: c.electoralCensus,
+        nbiPercentage: c.nbiPercentage,
+        predominantStratum: c.predominantStratum,
+        source: 'manual_selector'
+      });
+    }
+  };
+
+  const handleSelectBarrio = (barrioId: string) => {
+    setSelectedBarrioId(barrioId);
+    const b = barriosList.find(item => item.id === barrioId);
+    if (b) {
+      activeTerritoryService.setState({
+        scale: 'comuna-barrio',
+        barrioId,
+        name: b.name,
+        fullName: b.fullName,
+        population: b.population,
+        predominantStratum: b.predominantStratum,
+        source: 'manual_selector'
+      });
+    }
+  };
 
   // Resolve active territory node with full micro-data
   const currentTerritory = useMemo(() => {
@@ -153,12 +262,21 @@ export const CampaignContentDirectorView: React.FC<CampaignContentDirectorViewPr
 [CONTEXTO TERRITORIAL DETALLADO - ESCALA ${currentTerritory.scale.toUpperCase()}]:
 - Territorio Seleccionado: ${currentTerritory.fullName}
 - Nivel de Escala: ${currentTerritory.scale}
-- Censo Electoral: ${currentTerritory.electoralCensus ? currentTerritory.electoralCensus.toLocaleString('es-CO') + ' votantes' : 'Consolidado nacional'}
-- Población Estimada: ${currentTerritory.population ? currentTerritory.population.toLocaleString('es-CO') + ' habitantes' : 'Nacional'}
-- Índice NBI / Pobreza: ${currentTerritory.nbiPercentage ? currentTerritory.nbiPercentage + '%' : 'Variable'}
-- Estratificación Predominante: ${currentTerritory.predominantStratum || 'Mixta'}
+- Censo Electoral: ${currentTerritory.electoralCensus ? currentTerritory.electoralCensus.toLocaleString('es-CO') + ' votantes' : (activeTerritory.electoralCensus ? activeTerritory.electoralCensus.toLocaleString('es-CO') + ' votantes' : 'Consolidado nacional')}
+- Población Estimada: ${currentTerritory.population ? currentTerritory.population.toLocaleString('es-CO') + ' habitantes' : (activeTerritory.population ? activeTerritory.population.toLocaleString('es-CO') + ' habitantes' : 'Nacional')}
+- Índice NBI / Pobreza: ${currentTerritory.nbiPercentage ? currentTerritory.nbiPercentage + '%' : (activeTerritory.nbiPercentage ? activeTerritory.nbiPercentage + '%' : 'Variable')}
+- Estratificación Predominante: ${currentTerritory.predominantStratum || activeTerritory.predominantStratum || 'Mixta'}
+- Autoridad Local / Alcalde 2024-2027: ${activeTerritory.electedMayor || 'Administración Municipal'} (${activeTerritory.winnerParty || 'Coalición'})
+- Bancadas del Concejo: ${activeTerritory.councilSummary || 'Multipartidista'}
+- Dinámica de Seguridad y Convivencia:
+  * Riesgo de Extorsión a Negocios: ${activeTerritory.securityDynamics.extortionRisk || 'Monitoreo territorial'}
+  * Bandas y Presencia Delincuencial: ${activeTerritory.securityDynamics.armedPresence || 'Vigilancia institucional'}
+  * Homicidios: ${activeTerritory.securityDynamics.homicideRate || 'Normal subregional'}
+- Sectores Económicos: ${activeTerritory.economicSectors.length > 0 ? activeTerritory.economicSectors.join(', ') : 'Comercio, servicios y producción local'}
 - Problemáticas Territoriales Clave:
-${currentTerritory.keyIssues.map(issue => `  * ${issue}`).join('\n')}
+${(activeTerritory.keyProblems.length > 0 ? activeTerritory.keyProblems : currentTerritory.keyIssues).map(issue => `  * ${issue}`).join('\n')}
+- Oportunidades Estratégicas y Propuestas Locales:
+${(activeTerritory.strategicOpportunities.length > 0 ? activeTerritory.strategicOpportunities : [currentTerritory.strategicContext]).map(opp => `  * ${opp}`).join('\n')}
 - Perfil Estratégico del Territorio: ${currentTerritory.strategicContext}
 
 [AUDIENCIA OBJETIVO & SEGMENTO EXACTO]:
@@ -188,7 +306,7 @@ ${activeAudience.dominantPains.map(p => `  * ${p}`).join('\n')}
 Diseña un BRIEF ESTRATÉGICO DE ALTO IMPACTO estructurado exactamente en los siguientes 7 puntos:
 1. OBJETIVO DE LA PIEZA: Qué queremos que ${activeAudience.name} en ${currentTerritory.name} piense, sienta y haga tras escucharla (calibrado según el sesgo cognitivo ${cognitiveFraming}).
 2. EL GANCHO (HOOK DE LOS PRIMEROS 3-5 SEGUNDOS): Frase demoledora e irresistible dirigida directamente a los dolores de ${activeAudience.name} en ${currentTerritory.name}.
-3. DATOS TERRITORIALES HIPERLOCALES: Cita al menos 2 cifras reales del territorio (censo, población, estrato o problemáticas citadas arriba) para demostrar que el candidato conoce el territorio como la palma de su mano.
+3. DATOS TERRITORIALES HIPERLOCALES: Cita al menos 2 cifras reales del territorio (censo electoral, población DANE, NBI, alcalde actual o problema de extorsión/seguridad citado arriba) para demostrar que el candidato conoce el territorio como la palma de su mano.
 4. NÚCLEO DEL MENSAJE / PROPUESTA VALOR: La solución clara y creíble que ${candidateProfile.nombre} propone para este segmento sin rodeos.
 5. LLAMADO A LA ACCIÓN (CTA): Convocatoria específica adaptada a los canales del segmento (${activeAudience.effectiveChannels[0] || 'WhatsApp'}).
 6. RECOMENDACIONES DE PUESTA EN ESCENA & SEMIÓTICA:
@@ -300,6 +418,54 @@ Diseña un BRIEF ESTRATÉGICO DE ALTO IMPACTO estructurado exactamente en los si
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
         {/* Controls Column */}
         <div className="lg:col-span-6 space-y-4">
+          {/* Bioluminescent GIS Connection Banner */}
+          <div className="p-4 rounded-3xl bg-gradient-to-r from-sky-500/20 via-indigo-500/20 to-purple-500/20 border border-sky-400/50 backdrop-blur-2xl shadow-[0_0_30px_rgba(56,189,248,0.25)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 animate-fadeIn">
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 rounded-2xl bg-sky-500/30 border border-sky-400/60 text-sky-300 shadow-[0_0_15px_rgba(56,189,248,0.4)] shrink-0">
+                <Compass className="w-5 h-5 animate-pulse" />
+              </div>
+              <div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="text-[10px] font-mono uppercase tracking-widest text-sky-300 font-black px-2 py-0.5 rounded-full bg-sky-500/25 border border-sky-400/40">
+                    📍 VINCULADO AL ZOOM TERRITORIAL GIS
+                  </span>
+                  <span className="text-xs font-black text-white">
+                    {activeTerritory.fullName}
+                  </span>
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-400/30 uppercase font-bold">
+                    Escala {activeTerritory.scale}
+                  </span>
+                </div>
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-slate-300 mt-1 font-mono">
+                  {activeTerritory.electoralCensus && (
+                    <span>Censo: <strong className="text-emerald-300">{activeTerritory.electoralCensus.toLocaleString('es-CO')}</strong> votantes</span>
+                  )}
+                  {activeTerritory.population && (
+                    <span>Población: <strong className="text-sky-300">{activeTerritory.population.toLocaleString('es-CO')}</strong> hab.</span>
+                  )}
+                  {activeTerritory.nbiPercentage && (
+                    <span>NBI: <strong className="text-amber-300">{activeTerritory.nbiPercentage}%</strong></span>
+                  )}
+                  {activeTerritory.electedMayor && (
+                    <span>Alcalde: <strong className="text-purple-300">{activeTerritory.electedMayor}</strong></span>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {onNavigateToZoom && (
+              <button
+                type="button"
+                onClick={onNavigateToZoom}
+                className="shrink-0 px-3.5 py-2 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/25 hover:border-sky-400 text-sky-200 hover:text-white text-xs font-bold transition-all flex items-center gap-1.5 shadow-lg transform hover:scale-[1.02] active:scale-95 cursor-pointer"
+                title="Volver al mapa GIS interactivo"
+              >
+                <span>🗺️ Ver en Mapa GIS</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            )}
+          </div>
+
           {/* =========================================================================
               PANEL 1: NAVEGACIÓN TERRITORIAL EN 5 ESCALAS
               ========================================================================= */}
@@ -318,7 +484,7 @@ Diseña un BRIEF ESTRATÉGICO DE ALTO IMPACTO estructurado exactamente en los si
             <div className="grid grid-cols-5 gap-1 p-1 rounded-2xl bg-black/40 border border-white/10 text-[11px] font-bold">
               <button
                 type="button"
-                onClick={() => setSelectedScale('nacional')}
+                onClick={() => handleSelectScale('nacional')}
                 className={`py-1.5 px-1 rounded-xl transition text-center flex flex-col items-center gap-0.5 ${
                   selectedScale === 'nacional'
                     ? 'bg-amber-500/30 text-amber-200 border border-amber-400/60 shadow-[0_0_10px_rgba(251,191,36,0.3)] font-black'
@@ -331,7 +497,7 @@ Diseña un BRIEF ESTRATÉGICO DE ALTO IMPACTO estructurado exactamente en los si
 
               <button
                 type="button"
-                onClick={() => setSelectedScale('departamental')}
+                onClick={() => handleSelectScale('departamental')}
                 className={`py-1.5 px-1 rounded-xl transition text-center flex flex-col items-center gap-0.5 ${
                   selectedScale === 'departamental'
                     ? 'bg-sky-500/30 text-sky-200 border border-sky-400/60 shadow-[0_0_10px_rgba(56,189,248,0.3)] font-black'
@@ -344,7 +510,7 @@ Diseña un BRIEF ESTRATÉGICO DE ALTO IMPACTO estructurado exactamente en los si
 
               <button
                 type="button"
-                onClick={() => setSelectedScale('subregional')}
+                onClick={() => handleSelectScale('subregional')}
                 className={`py-1.5 px-1 rounded-xl transition text-center flex flex-col items-center gap-0.5 ${
                   selectedScale === 'subregional'
                     ? 'bg-emerald-500/30 text-emerald-200 border border-emerald-400/60 shadow-[0_0_10px_rgba(52,211,153,0.3)] font-black'
@@ -357,7 +523,7 @@ Diseña un BRIEF ESTRATÉGICO DE ALTO IMPACTO estructurado exactamente en los si
 
               <button
                 type="button"
-                onClick={() => setSelectedScale('municipal')}
+                onClick={() => handleSelectScale('municipal')}
                 className={`py-1.5 px-1 rounded-xl transition text-center flex flex-col items-center gap-0.5 ${
                   selectedScale === 'municipal'
                     ? 'bg-indigo-500/30 text-indigo-200 border border-indigo-400/60 shadow-[0_0_10px_rgba(129,140,248,0.3)] font-black'
@@ -370,7 +536,7 @@ Diseña un BRIEF ESTRATÉGICO DE ALTO IMPACTO estructurado exactamente en los si
 
               <button
                 type="button"
-                onClick={() => setSelectedScale('comuna-barrio')}
+                onClick={() => handleSelectScale('comuna-barrio')}
                 className={`py-1.5 px-1 rounded-xl transition text-center flex flex-col items-center gap-0.5 ${
                   selectedScale === 'comuna-barrio'
                     ? 'bg-purple-500/30 text-purple-200 border border-purple-400/60 shadow-[0_0_10px_rgba(168,85,247,0.3)] font-black'
@@ -406,7 +572,7 @@ Diseña un BRIEF ESTRATÉGICO DE ALTO IMPACTO estructurado exactamente en los si
                   <label className="text-[11px] text-slate-300 font-semibold">Selecciona el Departamento:</label>
                   <select
                     value={selectedDeptId}
-                    onChange={(e) => setSelectedDeptId(e.target.value)}
+                    onChange={(e) => handleSelectDept(e.target.value)}
                     className="w-full px-3 py-2 rounded-2xl bg-white/10 border border-white/20 text-white text-xs font-bold focus:outline-none focus:border-sky-400"
                   >
                     {departmentsList.map(d => (
@@ -424,7 +590,7 @@ Diseña un BRIEF ESTRATÉGICO DE ALTO IMPACTO estructurado exactamente en los si
                   <label className="text-[11px] text-slate-300 font-semibold">Selecciona la Subregión (Antioquia):</label>
                   <select
                     value={selectedSubregId}
-                    onChange={(e) => setSelectedSubregId(e.target.value)}
+                    onChange={(e) => handleSelectSubreg(e.target.value)}
                     className="w-full px-3 py-2 rounded-2xl bg-white/10 border border-white/20 text-white text-xs font-bold focus:outline-none focus:border-emerald-400"
                   >
                     {subregionsList.map(s => (
@@ -442,7 +608,7 @@ Diseña un BRIEF ESTRATÉGICO DE ALTO IMPACTO estructurado exactamente en los si
                   <label className="text-[11px] text-slate-300 font-semibold">Selecciona el Municipio (125 de Antioquia):</label>
                   <select
                     value={selectedMuniId}
-                    onChange={(e) => setSelectedMuniId(e.target.value)}
+                    onChange={(e) => handleSelectMuni(e.target.value)}
                     className="w-full px-3 py-2 rounded-2xl bg-white/10 border border-white/20 text-white text-xs font-bold focus:outline-none focus:border-indigo-400"
                   >
                     {allMunicipalities.map(m => (
@@ -461,10 +627,7 @@ Diseña un BRIEF ESTRATÉGICO DE ALTO IMPACTO estructurado exactamente en los si
                     <label className="text-[10px] text-slate-300 font-semibold">Comuna / Corregimiento:</label>
                     <select
                       value={selectedComunaId}
-                      onChange={(e) => {
-                        setSelectedComunaId(e.target.value);
-                        setSelectedBarrioId('all-comuna');
-                      }}
+                      onChange={(e) => handleSelectComuna(e.target.value)}
                       className="w-full px-3 py-1.5 rounded-xl bg-white/10 border border-white/20 text-white text-xs font-bold focus:outline-none focus:border-purple-400"
                     >
                       {comunasList.map(c => (
@@ -479,7 +642,7 @@ Diseña un BRIEF ESTRATÉGICO DE ALTO IMPACTO estructurado exactamente en los si
                     <label className="text-[10px] text-slate-300 font-semibold">Barrio Específico:</label>
                     <select
                       value={selectedBarrioId}
-                      onChange={(e) => setSelectedBarrioId(e.target.value)}
+                      onChange={(e) => handleSelectBarrio(e.target.value)}
                       className="w-full px-3 py-1.5 rounded-xl bg-white/10 border border-white/20 text-white text-xs font-bold focus:outline-none focus:border-purple-400"
                     >
                       <option value="all-comuna" className="bg-slate-900 text-white">
@@ -497,18 +660,24 @@ Diseña un BRIEF ESTRATÉGICO DE ALTO IMPACTO estructurado exactamente en los si
             </div>
 
             {/* Micro-Data Badge of Selected Node */}
-            <div className="p-3 rounded-2xl bg-white/05 border border-white/10 space-y-1 text-xs">
+            <div className="p-3.5 rounded-2xl bg-white/05 border border-white/10 space-y-2 text-xs">
               <div className="flex items-center justify-between">
                 <span className="font-black text-amber-300">{currentTerritory.fullName}</span>
                 <span className="font-mono text-[10px] text-slate-400">
-                  {currentTerritory.electoralCensus ? `Censo: ${currentTerritory.electoralCensus.toLocaleString('es-CO')}` : ''}
+                  {currentTerritory.electoralCensus ? `Censo: ${currentTerritory.electoralCensus.toLocaleString('es-CO')} votantes` : ''}
                 </span>
               </div>
-              <div className="flex items-center gap-3 text-[10px] text-slate-300 font-mono">
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] text-slate-300 font-mono">
                 {currentTerritory.predominantStratum && <span>{currentTerritory.predominantStratum}</span>}
                 {currentTerritory.nbiPercentage && <span>NBI: {currentTerritory.nbiPercentage}%</span>}
                 {currentTerritory.subregionName && <span>Subregión: {currentTerritory.subregionName}</span>}
+                {activeTerritory.electedMayor && <span className="text-purple-300 font-bold">Alcaldía: {activeTerritory.electedMayor}</span>}
               </div>
+              {activeTerritory.securityDynamics.extortionRisk && (
+                <div className="text-[10px] text-rose-300/90 font-mono truncate">
+                  Seguridad: {activeTerritory.securityDynamics.extortionRisk}
+                </div>
+              )}
               {currentTerritory.keyIssues && currentTerritory.keyIssues[0] && (
                 <div className="text-[10px] text-slate-400 italic pt-1 border-t border-white/05 truncate">
                   Problemática clave: {currentTerritory.keyIssues[0]}

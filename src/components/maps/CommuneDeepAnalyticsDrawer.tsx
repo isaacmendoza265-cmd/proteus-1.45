@@ -16,7 +16,8 @@ import {
   Award,
   Landmark,
   CheckCircle2,
-  FileText
+  FileText,
+  Megaphone
 } from 'lucide-react';
 import { TerritoryGeoFeature, ZoomLevelId } from '../../data/geojson';
 import { MEDELLIN_COMUNAS_DATA, METROPOLITAN_MUNICIPALITIES_DATA } from '../../data/metropolitanAndMedellinData';
@@ -35,6 +36,8 @@ interface CommuneDeepAnalyticsDrawerProps {
   feature: TerritoryGeoFeature | null;
   onClose: () => void;
   onDrillDown?: (targetLevel: ZoomLevelId, featureId: string) => void;
+  onGenerateContent?: (feature: TerritoryGeoFeature) => void;
+  onSegmentVoters?: (feature: TerritoryGeoFeature) => void;
 }
 
 type DrawerTab = 'resumen' | 'e24' | 'ipm' | 'seguridad' | 'demografia' | 'alcaldia-concejo';
@@ -51,7 +54,9 @@ const CORREGIMIENTO_NUMBERS: Record<string, number> = {
 export const CommuneDeepAnalyticsDrawer: React.FC<CommuneDeepAnalyticsDrawerProps> = ({
   feature,
   onClose,
-  onDrillDown
+  onDrillDown,
+  onGenerateContent,
+  onSegmentVoters
 }) => {
   const [activeTab, setActiveTab] = useState<DrawerTab>('resumen');
   const [showReportModal, setShowReportModal] = useState<boolean>(false);
@@ -205,6 +210,30 @@ export const CommuneDeepAnalyticsDrawer: React.FC<CommuneDeepAnalyticsDrawerProp
         </div>
       )}
 
+      {/* Direct Bridge to Content Generation & Voter Segmentation */}
+      <div className="p-2.5 bg-gradient-to-r from-sky-500/15 via-blue-600/15 to-purple-600/15 border-b border-white/15 flex items-center gap-2">
+        {onGenerateContent && (
+          <button
+            onClick={() => onGenerateContent(feature)}
+            className="flex-1 py-2 px-3 rounded-2xl bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-black text-xs shadow-[0_0_20px_rgba(56,189,248,0.4),inset_0_1px_1px_rgba(255,255,255,0.4)] flex items-center justify-center gap-2 transition-all transform hover:scale-[1.01] active:scale-95 cursor-pointer"
+            title={`Abrir Director de Contenido con los datos territoriales de ${props.name}`}
+          >
+            <Megaphone className="w-3.5 h-3.5 text-sky-200" />
+            <span className="truncate">Generar Contenido con IA</span>
+          </button>
+        )}
+        {onSegmentVoters && (
+          <button
+            onClick={() => onSegmentVoters(feature)}
+            className="py-2 px-3 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/20 text-slate-200 hover:text-white font-bold text-xs flex items-center gap-1.5 transition cursor-pointer shrink-0"
+            title={`Segmentar votantes para ${props.name}`}
+          >
+            <Users className="w-3.5 h-3.5 text-emerald-400" />
+            <span className="hidden sm:inline">Segmentar</span>
+          </button>
+        )}
+      </div>
+
       {/* Navigation Sub-Tabs */}
       <div className="flex items-center gap-1 p-2 bg-black/30 border-b border-white/15 overflow-x-auto text-[11px] font-bold">
         <button
@@ -343,6 +372,31 @@ export const CommuneDeepAnalyticsDrawer: React.FC<CommuneDeepAnalyticsDrawerProp
                 </div>
                 <div className="text-[10px] text-slate-400">Semáforo operativo</div>
               </div>
+            </div>
+
+            {/* Quick Link Card to Content Generation */}
+            <div className="p-3.5 rounded-2xl bg-gradient-to-br from-sky-500/15 via-indigo-500/10 to-transparent border border-sky-400/30 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-mono font-bold uppercase text-sky-400 flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5 text-sky-400" />
+                  Estrategia & Contenido Hiperlocal
+                </span>
+                <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 border border-sky-400/30">
+                  Gemini IA
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-300">
+                Diseña al instante discursos de plaza pública, guiones de video corto (TikTok/Reels), mensajes de WhatsApp barrial y respuestas de debate anclados en los datos oficiales de <strong>{props.name}</strong>.
+              </p>
+              {onGenerateContent && (
+                <button
+                  onClick={() => onGenerateContent(feature)}
+                  className="w-full py-2 px-3 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 border border-sky-400/50 text-sky-200 font-bold text-xs flex items-center justify-center gap-2 transition cursor-pointer"
+                >
+                  <Megaphone className="w-3.5 h-3.5 text-sky-400" />
+                  <span>Crear Brief / Discurso para {props.name}</span>
+                </button>
+              )}
             </div>
 
             {/* If Municipality: Alcalde & Coalición Summary */}

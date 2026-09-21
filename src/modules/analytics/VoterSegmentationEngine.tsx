@@ -42,29 +42,44 @@ import {
   EducationLevelType 
 } from '../../services/voterDemographicsService';
 import { TerritoryHierarchyService } from '../../services/territoryHierarchyService';
+import { useActiveTerritory, activeTerritoryService } from '../../services/activeTerritoryContextService';
 
 interface VoterSegmentationEngineProps {
   candidateProfile: CandidateProfile;
   onSaveToDrive?: (title: string, data: any) => void;
+  onNavigateToZoom?: () => void;
 }
 
 export type CircumscriptionLevel = 'nacional' | 'departamental' | 'subregional' | 'municipal' | 'comuna-barrio';
 
 export const VoterSegmentationEngine: React.FC<VoterSegmentationEngineProps> = ({
   candidateProfile,
-  onSaveToDrive
+  onSaveToDrive,
+  onNavigateToZoom
 }) => {
+  const { activeTerritory } = useActiveTerritory();
   const allMunicipalities = useMemo(() => municipalRepository.getAll(), []);
   const departmentsList = useMemo(() => TerritoryHierarchyService.getDepartments(), []);
   const subregionsList = useMemo(() => TerritoryHierarchyService.getSubregions(), []);
   const comunasList = useMemo(() => TerritoryHierarchyService.getComunas(), []);
   
   // 1. Circumscription State across 5 scales
-  const [circumscriptionLevel, setCircumscriptionLevel] = useState<CircumscriptionLevel>('municipal');
-  const [selectedDeptId, setSelectedDeptId] = useState<string>('dept-antioquia');
-  const [selectedSubregId, setSelectedSubregId] = useState<string>('subreg-valle-de-aburra');
-  const [selectedMuniId, setSelectedMuniId] = useState<string>('mpio-05001'); // Medellín default
-  const [selectedComunaId, setSelectedComunaId] = useState<string>('comuna-11'); // Laureles default
+  const [circumscriptionLevel, setCircumscriptionLevel] = useState<CircumscriptionLevel>(activeTerritory.scale || 'municipal');
+  const [selectedDeptId, setSelectedDeptId] = useState<string>(activeTerritory.deptId || 'dept-antioquia');
+  const [selectedSubregId, setSelectedSubregId] = useState<string>(activeTerritory.subregId || 'subreg-valle-de-aburra');
+  const [selectedMuniId, setSelectedMuniId] = useState<string>(activeTerritory.muniId || 'mpio-05001'); // Medellín default
+  const [selectedComunaId, setSelectedComunaId] = useState<string>(activeTerritory.comunaId || 'comuna-11'); // Laureles default
+
+  // Synchronize state when activeTerritory changes (e.g. from GIS map navigation)
+  React.useEffect(() => {
+    if (activeTerritory) {
+      if (activeTerritory.scale) setCircumscriptionLevel(activeTerritory.scale);
+      if (activeTerritory.deptId) setSelectedDeptId(activeTerritory.deptId);
+      if (activeTerritory.subregId) setSelectedSubregId(activeTerritory.subregId);
+      if (activeTerritory.muniId) setSelectedMuniId(activeTerritory.muniId);
+      if (activeTerritory.comunaId) setSelectedComunaId(activeTerritory.comunaId);
+    }
+  }, [activeTerritory.updatedAt]);
 
   // 2. The 4 Demographic Variables State (with 'all' option)
   const [selectedGender, setSelectedGender] = useState<GenderType | 'all'>('all');
@@ -405,6 +420,51 @@ Elabora un DIAGNÓSTICO PSICOGRÁFICO Y GUÍA DE ACCIÓN DE MICRO-TARGETING en 4
             )}
           </div>
         </div>
+      </div>
+
+      {/* 1.5. Bioluminescent GIS Connection Banner */}
+      <div className="p-4 rounded-3xl bg-gradient-to-r from-sky-500/20 via-indigo-500/20 to-purple-500/20 border border-sky-400/50 backdrop-blur-2xl shadow-[0_0_30px_rgba(56,189,248,0.25)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 animate-fadeIn">
+        <div className="flex items-center gap-3">
+          <div className="p-2.5 rounded-2xl bg-sky-500/30 border border-sky-400/60 text-sky-300 shadow-[0_0_15px_rgba(56,189,248,0.4)] shrink-0">
+            <MapPin className="w-5 h-5" />
+          </div>
+          <div>
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-[10px] font-mono uppercase tracking-widest text-sky-300 font-black px-2 py-0.5 rounded-full bg-sky-500/25 border border-sky-400/40">
+                📍 VINCULADO AL ZOOM TERRITORIAL GIS
+              </span>
+              <span className="text-xs font-black text-white">
+                {activeTerritory.fullName}
+              </span>
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-400/30 uppercase font-bold">
+                Escala {activeTerritory.scale}
+              </span>
+            </div>
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-slate-300 mt-1 font-mono">
+              {activeTerritory.electoralCensus && (
+                <span>Censo: <strong className="text-emerald-300">{activeTerritory.electoralCensus.toLocaleString('es-CO')}</strong> votantes</span>
+              )}
+              {activeTerritory.population && (
+                <span>Población: <strong className="text-sky-300">{activeTerritory.population.toLocaleString('es-CO')}</strong> hab.</span>
+              )}
+              {activeTerritory.nbiPercentage && (
+                <span>NBI: <strong className="text-amber-300">{activeTerritory.nbiPercentage}%</strong></span>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {onNavigateToZoom && (
+          <button
+            type="button"
+            onClick={onNavigateToZoom}
+            className="shrink-0 px-3.5 py-2 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/25 hover:border-sky-400 text-sky-200 hover:text-white text-xs font-bold transition-all flex items-center gap-1.5 shadow-lg transform hover:scale-[1.02] active:scale-95 cursor-pointer"
+            title="Volver al mapa GIS interactivo"
+          >
+            <span>🗺️ Ver en Mapa GIS</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </button>
+        )}
       </div>
 
       {/* 2. Key Metrics Bar for Active Circumscription */}

@@ -24,11 +24,21 @@ import {
   ArrowRight,
   FileSpreadsheet,
   Network,
-  X
+  X,
+  Megaphone
 } from 'lucide-react';
 import { E24HistoricalViewer } from '../../components/maps/E24HistoricalViewer';
+import { activeTerritoryService } from '../../services/activeTerritoryContextService';
 
-export const TerritorialZoomHubView: React.FC = () => {
+interface TerritorialZoomHubViewProps {
+  onNavigateToContentDirector?: (feature?: TerritoryGeoFeature) => void;
+  onNavigateToVoterSegmentation?: (feature?: TerritoryGeoFeature) => void;
+}
+
+export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
+  onNavigateToContentDirector,
+  onNavigateToVoterSegmentation
+}) => {
   const [currentLevel, setCurrentLevel] = useState<ZoomLevelId>('municipal');
   const [activeLayer, setActiveLayer] = useState<ThematicMetricLayer>('electoral');
   const [searchQuery, setSearchQuery] = useState('');
@@ -37,6 +47,38 @@ export const TerritorialZoomHubView: React.FC = () => {
 
   const currentDataset = GEOJSON_LAYERS_BY_ZOOM[currentLevel];
   const currentLevelConfig = ZOOM_LEVELS_CONFIG[currentLevel];
+
+  // Bridge handlers to Content Director and Voter Segmentation
+  const handleGenerateContent = (feature: TerritoryGeoFeature) => {
+    activeTerritoryService.setFromGeoFeature(feature);
+    if (onNavigateToContentDirector) {
+      onNavigateToContentDirector(feature);
+    }
+  };
+
+  const handleSegmentVoters = (feature: TerritoryGeoFeature) => {
+    activeTerritoryService.setFromGeoFeature(feature);
+    if (onNavigateToVoterSegmentation) {
+      onNavigateToVoterSegmentation(feature);
+    }
+  };
+
+  // Handler for scale-level generation (when no specific feature is selected, or using selected feature)
+  const handleTriggerCurrentScaleContent = () => {
+    if (selectedFeature) {
+      handleGenerateContent(selectedFeature);
+    } else if (currentDataset && currentDataset.features.length > 0) {
+      handleGenerateContent(currentDataset.features[0]);
+    }
+  };
+
+  const handleTriggerCurrentScaleSegmentation = () => {
+    if (selectedFeature) {
+      handleSegmentVoters(selectedFeature);
+    } else if (currentDataset && currentDataset.features.length > 0) {
+      handleSegmentVoters(currentDataset.features[0]);
+    }
+  };
 
   // Handle drill down through scales
   const handleDrillDown = (targetLevel: ZoomLevelId, featureId: string) => {
@@ -150,6 +192,7 @@ export const TerritorialZoomHubView: React.FC = () => {
             selectedFeature={selectedFeature}
             onSelectFeature={setSelectedFeature}
             onDrillDown={handleDrillDown}
+            onGenerateContent={handleGenerateContent}
           />
         </div>
 
@@ -159,9 +202,53 @@ export const TerritorialZoomHubView: React.FC = () => {
               feature={selectedFeature}
               onClose={() => setSelectedFeature(null)}
               onDrillDown={handleDrillDown}
+              onGenerateContent={handleGenerateContent}
+              onSegmentVoters={handleSegmentVoters}
             />
           </div>
         )}
+      </div>
+
+      {/* 4.5. Fast Campaign Bridge Banner (Conexión Directa con Generador de Contenido y Segmentación) */}
+      <div className="p-4 sm:p-5 rounded-3xl bg-gradient-to-r from-amber-500/15 via-sky-500/15 to-purple-500/15 border border-amber-400/40 backdrop-blur-2xl shadow-[0_10px_30px_rgba(0,0,0,0.5)] flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="p-2.5 rounded-2xl bg-amber-500/30 border border-amber-400/60 text-amber-300 shadow-[0_0_15px_rgba(251,191,36,0.3)] shrink-0">
+            <Sparkles className="w-5 h-5" />
+          </div>
+          <div>
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-xs font-mono uppercase tracking-wider text-amber-300 font-bold">
+                Conexión Bidireccional Activa • GIS ➔ Inteligencia de Campaña
+              </span>
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 font-mono font-bold">
+                {selectedFeature ? selectedFeature.properties.name : currentLevelConfig.title}
+              </span>
+            </div>
+            <div className="text-xs text-slate-300 mt-0.5">
+              {selectedFeature 
+                ? `Transfiere inmediatamente los microdatos de ${selectedFeature.properties.name} (censo, DANE, NBI, liderazgo y problemáticas) al Director de Contenido.`
+                : `Explora o selecciona cualquier territorio en el mapa para redactar discursos hiperlocales y segmentar votantes con precisión quirúrgica.`
+              }
+            </div>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2.5 shrink-0 w-full md:w-auto">
+          <button
+            onClick={handleTriggerCurrentScaleContent}
+            className="flex-1 md:flex-none px-4 py-2.5 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black font-black text-xs shadow-[0_0_20px_rgba(251,191,36,0.4)] flex items-center justify-center gap-2 transition-all transform hover:scale-[1.02] active:scale-95 cursor-pointer"
+          >
+            <Megaphone className="w-4 h-4" />
+            <span>Generar Contenido con IA</span>
+          </button>
+          <button
+            onClick={handleTriggerCurrentScaleSegmentation}
+            className="flex-1 md:flex-none px-4 py-2.5 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold text-xs flex items-center justify-center gap-2 transition-all transform hover:scale-[1.02] active:scale-95 cursor-pointer"
+          >
+            <Users className="w-4 h-4 text-sky-400" />
+            <span>Segmentar Votantes</span>
+          </button>
+        </div>
       </div>
 
       {/* 5. Direct 5-Scale Cards Selector */}

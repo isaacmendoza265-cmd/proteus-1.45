@@ -107,7 +107,10 @@ export default function App() {
 
       {/* 1.5. ARQUITECTURA DE ZOOM MULTI-ESCALA (GIS CONTINUO) */}
       {currentView === 'territorial-zoom' && (
-        <TerritorialZoomHubView />
+        <TerritorialZoomHubView 
+          onNavigateToContentDirector={() => setCurrentView('content-director')}
+          onNavigateToVoterSegmentation={() => setCurrentView('voter-segmentation')}
+        />
       )}
 
       {/* 2. TRIPLE PROPÓSITO & ANALÍTICA INTEGRADA */}
@@ -119,6 +122,7 @@ export default function App() {
         <VoterSegmentationEngine
           candidateProfile={candidateProfile}
           onSaveToDrive={handleSaveToDrive}
+          onNavigateToZoom={() => setCurrentView('territorial-zoom')}
         />
       )}
 
@@ -126,6 +130,7 @@ export default function App() {
         <CampaignContentDirectorView
           candidateProfile={candidateProfile}
           onSaveToDrive={handleSaveToDrive}
+          onNavigateToZoom={() => setCurrentView('territorial-zoom')}
         />
       )}
 
