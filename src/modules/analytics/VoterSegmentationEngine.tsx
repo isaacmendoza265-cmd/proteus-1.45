@@ -41,23 +41,30 @@ import {
   EconomicLevelType,
   EducationLevelType 
 } from '../../services/voterDemographicsService';
+import { TerritoryHierarchyService } from '../../services/territoryHierarchyService';
 
 interface VoterSegmentationEngineProps {
   candidateProfile: CandidateProfile;
   onSaveToDrive?: (title: string, data: any) => void;
 }
 
-export type CircumscriptionLevel = 'nacional' | 'antioquia' | 'municipal';
+export type CircumscriptionLevel = 'nacional' | 'departamental' | 'subregional' | 'municipal' | 'comuna-barrio';
 
 export const VoterSegmentationEngine: React.FC<VoterSegmentationEngineProps> = ({
   candidateProfile,
   onSaveToDrive
 }) => {
   const allMunicipalities = useMemo(() => municipalRepository.getAll(), []);
+  const departmentsList = useMemo(() => TerritoryHierarchyService.getDepartments(), []);
+  const subregionsList = useMemo(() => TerritoryHierarchyService.getSubregions(), []);
+  const comunasList = useMemo(() => TerritoryHierarchyService.getComunas(), []);
   
-  // 1. Circumscription State
+  // 1. Circumscription State across 5 scales
   const [circumscriptionLevel, setCircumscriptionLevel] = useState<CircumscriptionLevel>('municipal');
+  const [selectedDeptId, setSelectedDeptId] = useState<string>('dept-antioquia');
+  const [selectedSubregId, setSelectedSubregId] = useState<string>('subreg-valle-de-aburra');
   const [selectedMuniId, setSelectedMuniId] = useState<string>('mpio-05001'); // Medellín default
+  const [selectedComunaId, setSelectedComunaId] = useState<string>('comuna-11'); // Laureles default
 
   // 2. The 4 Demographic Variables State (with 'all' option)
   const [selectedGender, setSelectedGender] = useState<GenderType | 'all'>('all');
@@ -76,7 +83,7 @@ export const VoterSegmentationEngine: React.FC<VoterSegmentationEngineProps> = (
     return municipalRepository.getMunicipality(selectedMuniId) || allMunicipalities[0];
   }, [selectedMuniId, allMunicipalities]);
 
-  // Context resolved for calculations
+  // Context resolved for calculations across 5 scales
   const activeContext: CircumscriptionContext = useMemo(() => {
     if (circumscriptionLevel === 'nacional') {
       return {
@@ -87,14 +94,35 @@ export const VoterSegmentationEngine: React.FC<VoterSegmentationEngineProps> = (
         nbiPercentage: 19.6,
         urbanPercentage: 77.0
       };
-    } else if (circumscriptionLevel === 'antioquia') {
+    } else if (circumscriptionLevel === 'departamental') {
+      const deptNode = departmentsList.find(d => d.id === selectedDeptId) || departmentsList[0];
       return {
-        id: 'antioquia',
+        id: deptNode.id,
         type: 'departamental',
-        name: 'Antioquia (Departamental)',
-        census: 5350000,
-        nbiPercentage: 16.5,
+        name: `${deptNode.name} (Departamental)`,
+        census: deptNode.electoralCensus || 5350000,
+        nbiPercentage: deptNode.nbiPercentage || 16.5,
         urbanPercentage: 79.5
+      };
+    } else if (circumscriptionLevel === 'subregional') {
+      const subregNode = subregionsList.find(s => s.id === selectedSubregId) || subregionsList[0];
+      return {
+        id: subregNode.id,
+        type: 'departamental',
+        name: `Subregión ${subregNode.name} (Antioquia)`,
+        census: subregNode.electoralCensus || 450000,
+        nbiPercentage: subregNode.nbiPercentage || 22.0,
+        urbanPercentage: 68.0
+      };
+    } else if (circumscriptionLevel === 'comuna-barrio') {
+      const comunaNode = comunasList.find(c => c.id === selectedComunaId) || comunasList[10];
+      return {
+        id: comunaNode.id,
+        type: 'municipal',
+        name: `${comunaNode.name} (Medellín)`,
+        census: comunaNode.electoralCensus || 85000,
+        nbiPercentage: comunaNode.nbiPercentage || 5.0,
+        urbanPercentage: 99.0
       };
     } else {
       return {
@@ -106,7 +134,7 @@ export const VoterSegmentationEngine: React.FC<VoterSegmentationEngineProps> = (
         urbanPercentage: currentMuni.population > 200000 ? 92.0 : 65.0
       };
     }
-  }, [circumscriptionLevel, currentMuni]);
+  }, [circumscriptionLevel, selectedDeptId, selectedSubregId, selectedMuniId, selectedComunaId, currentMuni, departmentsList, subregionsList, comunasList]);
 
   // Generate all 54 cohorts for this active context
   const all54Cohorts = useMemo(() => {
@@ -228,14 +256,14 @@ Elabora un DIAGNÓSTICO PSICOGRÁFICO Y GUÍA DE ACCIÓN DE MICRO-TARGETING en 4
           </div>
         </div>
 
-        {/* Circunscription Selector Tabs */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mt-6 pt-4 border-t border-white/10 text-xs">
-          <div className="flex items-center gap-2">
-            <span className="text-[10px] font-mono uppercase text-slate-400 font-bold flex items-center gap-1">
+        {/* Circunscription Selector Tabs across 5 Scales */}
+        <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-3 mt-6 pt-4 border-t border-white/10 text-xs">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-[10px] font-mono uppercase text-slate-400 font-bold flex items-center gap-1 shrink-0">
               <Globe className="w-3.5 h-3.5 text-sky-400" />
-              Circunscripción:
+              Escala Territorial:
             </span>
-            <div className="flex items-center gap-1 bg-black/40 p-1 rounded-2xl border border-white/10">
+            <div className="flex flex-wrap items-center gap-1 bg-black/40 p-1 rounded-2xl border border-white/10">
               <button
                 onClick={() => setCircumscriptionLevel('nacional')}
                 className={`px-3 py-1.5 rounded-xl font-bold transition flex items-center gap-1.5 ${
@@ -244,19 +272,30 @@ Elabora un DIAGNÓSTICO PSICOGRÁFICO Y GUÍA DE ACCIÓN DE MICRO-TARGETING en 4
                     : 'text-slate-400 hover:text-white'
                 }`}
               >
-                <span>Nacional</span>
+                <span>🇨🇴 Nacional</span>
                 <span className="text-[9px] font-mono text-slate-400">(39.2M)</span>
               </button>
               <button
-                onClick={() => setCircumscriptionLevel('antioquia')}
+                onClick={() => setCircumscriptionLevel('departamental')}
                 className={`px-3 py-1.5 rounded-xl font-bold transition flex items-center gap-1.5 ${
-                  circumscriptionLevel === 'antioquia'
+                  circumscriptionLevel === 'departamental'
                     ? 'bg-emerald-500/30 text-white border border-emerald-400/60 shadow-[0_0_10px_rgba(16,185,129,0.3)]'
                     : 'text-slate-400 hover:text-white'
                 }`}
               >
-                <span>Antioquia</span>
-                <span className="text-[9px] font-mono text-slate-400">(5.35M)</span>
+                <span>🏛️ Departamental</span>
+                <span className="text-[9px] font-mono text-slate-400">(33 Deptos)</span>
+              </button>
+              <button
+                onClick={() => setCircumscriptionLevel('subregional')}
+                className={`px-3 py-1.5 rounded-xl font-bold transition flex items-center gap-1.5 ${
+                  circumscriptionLevel === 'subregional'
+                    ? 'bg-indigo-500/30 text-white border border-indigo-400/60 shadow-[0_0_10px_rgba(99,102,241,0.3)]'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <span>🌲 Subregional</span>
+                <span className="text-[9px] font-mono text-slate-400">(9 Subreg)</span>
               </button>
               <button
                 onClick={() => setCircumscriptionLevel('municipal')}
@@ -266,32 +305,105 @@ Elabora un DIAGNÓSTICO PSICOGRÁFICO Y GUÍA DE ACCIÓN DE MICRO-TARGETING en 4
                     : 'text-slate-400 hover:text-white'
                 }`}
               >
-                <span>Municipal</span>
+                <span>🏙️ Municipal</span>
                 <span className="text-[9px] font-mono text-slate-400">(125 Mpios)</span>
+              </button>
+              <button
+                onClick={() => setCircumscriptionLevel('comuna-barrio')}
+                className={`px-3 py-1.5 rounded-xl font-bold transition flex items-center gap-1.5 ${
+                  circumscriptionLevel === 'comuna-barrio'
+                    ? 'bg-purple-500/30 text-white border border-purple-400/60 shadow-[0_0_10px_rgba(168,85,247,0.3)]'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <span>📍 Comuna / Barrio</span>
+                <span className="text-[9px] font-mono text-slate-400">(Medellín)</span>
               </button>
             </div>
           </div>
 
-          {/* Municipality Selector Dropdown (When municipal is active) */}
-          {circumscriptionLevel === 'municipal' && (
-            <div className="flex items-center gap-2">
-              <label className="text-[10px] font-mono uppercase text-slate-400 font-bold flex items-center gap-1 shrink-0">
-                <MapPin className="w-3.5 h-3.5 text-amber-400" />
-                Municipio:
-              </label>
-              <select
-                value={selectedMuniId}
-                onChange={(e) => setSelectedMuniId(e.target.value)}
-                className="w-full sm:w-64 px-3 py-1.5 rounded-2xl bg-white/10 hover:bg-white/15 border border-white/20 text-white text-xs font-bold focus:outline-none focus:border-amber-400 backdrop-blur-xl"
-              >
-                {allMunicipalities.map((m) => (
-                  <option key={m.id} value={m.id} className="bg-slate-900 text-white">
-                    {m.name} ({m.subregion}) - Censo: {m.electoralCensus?.toLocaleString()}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
+          {/* Cascading Specific Selector Dropdown */}
+          <div className="flex items-center gap-2">
+            {circumscriptionLevel === 'departamental' && (
+              <div className="flex items-center gap-2 w-full sm:w-auto">
+                <label className="text-[10px] font-mono uppercase text-slate-400 font-bold flex items-center gap-1 shrink-0">
+                  <Building2 className="w-3.5 h-3.5 text-emerald-400" />
+                  Departamento:
+                </label>
+                <select
+                  value={selectedDeptId}
+                  onChange={(e) => setSelectedDeptId(e.target.value)}
+                  className="w-full sm:w-64 px-3 py-1.5 rounded-2xl bg-white/10 hover:bg-white/15 border border-white/20 text-white text-xs font-bold focus:outline-none focus:border-emerald-400 backdrop-blur-xl"
+                >
+                  {departmentsList.map((d) => (
+                    <option key={d.id} value={d.id} className="bg-slate-900 text-white">
+                      {d.name} {d.electoralCensus ? `(Censo: ${d.electoralCensus.toLocaleString()})` : ''}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+
+            {circumscriptionLevel === 'subregional' && (
+              <div className="flex items-center gap-2 w-full sm:w-auto">
+                <label className="text-[10px] font-mono uppercase text-slate-400 font-bold flex items-center gap-1 shrink-0">
+                  <Layers className="w-3.5 h-3.5 text-indigo-400" />
+                  Subregión:
+                </label>
+                <select
+                  value={selectedSubregId}
+                  onChange={(e) => setSelectedSubregId(e.target.value)}
+                  className="w-full sm:w-64 px-3 py-1.5 rounded-2xl bg-white/10 hover:bg-white/15 border border-white/20 text-white text-xs font-bold focus:outline-none focus:border-indigo-400 backdrop-blur-xl"
+                >
+                  {subregionsList.map((s) => (
+                    <option key={s.id} value={s.id} className="bg-slate-900 text-white">
+                      {s.name} ({s.municipalityCount} mpios) - Censo: {s.electoralCensus?.toLocaleString()}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+
+            {circumscriptionLevel === 'municipal' && (
+              <div className="flex items-center gap-2 w-full sm:w-auto">
+                <label className="text-[10px] font-mono uppercase text-slate-400 font-bold flex items-center gap-1 shrink-0">
+                  <MapPin className="w-3.5 h-3.5 text-amber-400" />
+                  Municipio:
+                </label>
+                <select
+                  value={selectedMuniId}
+                  onChange={(e) => setSelectedMuniId(e.target.value)}
+                  className="w-full sm:w-64 px-3 py-1.5 rounded-2xl bg-white/10 hover:bg-white/15 border border-white/20 text-white text-xs font-bold focus:outline-none focus:border-amber-400 backdrop-blur-xl"
+                >
+                  {allMunicipalities.map((m) => (
+                    <option key={m.id} value={m.id} className="bg-slate-900 text-white">
+                      {m.name} ({m.subregion}) - Censo: {m.electoralCensus?.toLocaleString()}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+
+            {circumscriptionLevel === 'comuna-barrio' && (
+              <div className="flex items-center gap-2 w-full sm:w-auto">
+                <label className="text-[10px] font-mono uppercase text-slate-400 font-bold flex items-center gap-1 shrink-0">
+                  <MapPin className="w-3.5 h-3.5 text-purple-400" />
+                  Comuna:
+                </label>
+                <select
+                  value={selectedComunaId}
+                  onChange={(e) => setSelectedComunaId(e.target.value)}
+                  className="w-full sm:w-64 px-3 py-1.5 rounded-2xl bg-white/10 hover:bg-white/15 border border-white/20 text-white text-xs font-bold focus:outline-none focus:border-purple-400 backdrop-blur-xl"
+                >
+                  {comunasList.map((c) => (
+                    <option key={c.id} value={c.id} className="bg-slate-900 text-white">
+                      {c.name} {c.electoralCensus ? `(Censo: ${c.electoralCensus.toLocaleString()})` : ''}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 

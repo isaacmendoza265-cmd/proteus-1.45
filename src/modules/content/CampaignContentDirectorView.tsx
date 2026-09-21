@@ -18,12 +18,32 @@ import {
   Clock,
   Layers,
   CheckCircle2,
-  AlertCircle
+  AlertCircle,
+  Globe,
+  Building2,
+  Compass,
+  ChevronDown,
+  Target,
+  ArrowRight,
+  Filter,
+  Search,
+  BookOpen
 } from 'lucide-react';
 import { jsPDF } from 'jspdf';
-import { municipalRepository } from '../../services/municipalRepositoryService';
 import { CandidateProfile } from '../../components/CandidateProfileManager';
 import { callGeminiApi } from '../../services/geminiService';
+import { 
+  TerritoryHierarchyService, 
+  TerritorialScale, 
+  HierarchyTerritoryNode 
+} from '../../services/territoryHierarchyService';
+import { 
+  VOTER_AUDIENCE_CATALOG, 
+  VOTER_AUDIENCE_CATEGORIES, 
+  VoterAudienceService, 
+  VoterAudienceGroup,
+  VoterAudienceCategory
+} from '../../data/voterAudienceCatalog';
 
 interface CampaignContentDirectorViewProps {
   candidateProfile: CandidateProfile;
@@ -43,31 +63,84 @@ export const CampaignContentDirectorView: React.FC<CampaignContentDirectorViewPr
   candidateProfile,
   onSaveToDrive
 }) => {
-  const allMunicipalities = useMemo(() => municipalRepository.getAll(), []);
+  // =========================================================================
+  // 1. TERRITORIAL HIERARCHY STATE (5 ESCALAS JERÁRQUICAS)
+  // =========================================================================
+  const [selectedScale, setSelectedScale] = useState<TerritorialScale>('municipal');
+  const [selectedDeptId, setSelectedDeptId] = useState<string>('dept-antioquia');
+  const [selectedSubregId, setSelectedSubregId] = useState<string>('subreg-valle-de-aburra');
   const [selectedMuniId, setSelectedMuniId] = useState<string>('mpio-05001'); // Medellín default
-  const [targetAudience, setTargetAudience] = useState<string>('Jóvenes y Nuevos Votantes (18-28)');
+  const [selectedComunaId, setSelectedComunaId] = useState<string>('comuna-11'); // Laureles default
+  const [selectedBarrioId, setSelectedBarrioId] = useState<string>('all-comuna');
+
+  // Pre-load datasets for dropdowns
+  const departmentsList = useMemo(() => TerritoryHierarchyService.getDepartments(), []);
+  const subregionsList = useMemo(() => TerritoryHierarchyService.getSubregions(), []);
+  const allMunicipalities = useMemo(() => TerritoryHierarchyService.getMunicipalities(), []);
+  const comunasList = useMemo(() => TerritoryHierarchyService.getComunas(), []);
+  const barriosList = useMemo(() => TerritoryHierarchyService.getBarrios(selectedComunaId), [selectedComunaId]);
+
+  // Resolve active territory node with full micro-data
+  const currentTerritory = useMemo(() => {
+    return TerritoryHierarchyService.resolveNode(selectedScale, {
+      deptId: selectedDeptId,
+      subregId: selectedSubregId,
+      muniId: selectedMuniId,
+      comunaId: selectedComunaId,
+      barrioId: selectedBarrioId
+    });
+  }, [selectedScale, selectedDeptId, selectedSubregId, selectedMuniId, selectedComunaId, selectedBarrioId]);
+
+  // =========================================================================
+  // 2. AUDIENCE & VOTER SEGMENT STATE (CATÁLOGO COMPLETO)
+  // =========================================================================
+  const [selectedAudienceCategory, setSelectedAudienceCategory] = useState<string>('all');
+  const [selectedAudienceId, setSelectedAudienceId] = useState<string>('gen-jovenes-primerizos');
+  const [audienceSearchQuery, setAudienceSearchQuery] = useState<string>('');
+
+  // Filtered audience list
+  const filteredAudiences = useMemo(() => {
+    let list = VOTER_AUDIENCE_CATALOG;
+    if (selectedAudienceCategory !== 'all') {
+      list = list.filter(a => a.category === selectedAudienceCategory);
+    }
+    if (audienceSearchQuery.trim()) {
+      const q = audienceSearchQuery.toLowerCase();
+      list = list.filter(a => 
+        a.name.toLowerCase().includes(q) ||
+        a.description.toLowerCase().includes(q) ||
+        a.dominantPains.some(p => p.toLowerCase().includes(q))
+      );
+    }
+    return list;
+  }, [selectedAudienceCategory, audienceSearchQuery]);
+
+  const activeAudience = useMemo(() => {
+    return VoterAudienceService.getById(selectedAudienceId) || VOTER_AUDIENCE_CATALOG[0];
+  }, [selectedAudienceId]);
+
+  // =========================================================================
+  // 3. CONTENT PARAMETERS STATE
+  // =========================================================================
   const [contentFormat, setContentFormat] = useState<ContentFormat>('video-short');
   const [toneOfVoice, setToneOfVoice] = useState<string>('Firmeza, Autoridad y Esperanza');
   const [cognitiveFraming, setCognitiveFraming] = useState<CognitiveFraming>('gain-hope');
-  const [keyTopic, setKeyTopic] = useState<string>('Seguridad, empleo y freno a la extorsión');
+  const [keyTopic, setKeyTopic] = useState<string>('Seguridad territorial, empleo y freno a la extorsión');
   
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   const [generatedBrief, setGeneratedBrief] = useState<string | null>(null);
   const [copied, setCopied] = useState<boolean>(false);
   const [savedSuccess, setSavedSuccess] = useState<boolean>(false);
 
-  const currentMuni = useMemo(() => {
-    return municipalRepository.getMunicipality(selectedMuniId) || allMunicipalities[0];
-  }, [selectedMuniId, allMunicipalities]);
-
+  // =========================================================================
+  // 4. GENERATE STRATEGIC BRIEF VIA GEMINI
+  // =========================================================================
   const handleGenerateBrief = async () => {
     setIsGenerating(true);
     setCopied(false);
     setSavedSuccess(false);
 
     try {
-      const muniContext = municipalRepository.buildContextPrompt(currentMuni.id);
-
       const framingDescription = 
         cognitiveFraming === 'gain-hope'
           ? 'ENFOQUE DE GANANCIA Y ESPERANZA (Prospect Theory - Gain Framing): Centrado en oportunidades de futuro, crecimiento económico, bienestar familiar, optimismo movilizador y conquistas colectivas.'
@@ -76,7 +149,28 @@ export const CampaignContentDirectorView: React.FC<CampaignContentDirectorViewPr
           : 'ENFOQUE DE EQUILIBRIO PROSPECTIVO (Diagnóstico de Riesgo + Vía de Esperanza): Contraste cognitivo inmediato entre el costo de la inacción (pérdida) y la certeza del alivio y la victoria con Isaac Mendoza (ganancia).';
 
       const prompt = `Actúa como Director Creativo y Estratega de Campaña Principal de Proyecto Proteus.
-${muniContext}
+
+[CONTEXTO TERRITORIAL DETALLADO - ESCALA ${currentTerritory.scale.toUpperCase()}]:
+- Territorio Seleccionado: ${currentTerritory.fullName}
+- Nivel de Escala: ${currentTerritory.scale}
+- Censo Electoral: ${currentTerritory.electoralCensus ? currentTerritory.electoralCensus.toLocaleString('es-CO') + ' votantes' : 'Consolidado nacional'}
+- Población Estimada: ${currentTerritory.population ? currentTerritory.population.toLocaleString('es-CO') + ' habitantes' : 'Nacional'}
+- Índice NBI / Pobreza: ${currentTerritory.nbiPercentage ? currentTerritory.nbiPercentage + '%' : 'Variable'}
+- Estratificación Predominante: ${currentTerritory.predominantStratum || 'Mixta'}
+- Problemáticas Territoriales Clave:
+${currentTerritory.keyIssues.map(issue => `  * ${issue}`).join('\n')}
+- Perfil Estratégico del Territorio: ${currentTerritory.strategicContext}
+
+[AUDIENCIA OBJETIVO & SEGMENTO EXACTO]:
+- Nombre del Segmento: ${activeAudience.name}
+- Categoría: ${activeAudience.categoryLabel}
+- Definición y Psicografía: ${activeAudience.description}
+- Dolores Dominantes que le quitan el sueño:
+${activeAudience.dominantPains.map(p => `  * ${p}`).join('\n')}
+- Canales más Efectivos: ${activeAudience.effectiveChannels.join(', ')}
+- Gatillo Psicológico Motivador: ${activeAudience.psychologicalTrigger}
+- Argumento Ganador Base: "${activeAudience.winningArgument}"
+- Objeción Típica a Neutralizar: ${activeAudience.counterObjection}
 
 [PERFIL DEL CANDIDATO]:
 - Nombre: ${candidateProfile.nombre}
@@ -86,27 +180,25 @@ ${muniContext}
 - Fototipo y Colorimetría sugerida: ${candidateProfile.colorimetryData?.estacionCromatica || 'Contraste Alto'}
 
 [REQUERIMIENTO DEL BRIEF]:
-- Territorio: ${currentMuni.name} (${currentMuni.subregion}, Antioquia)
 - Formato: ${contentFormat}
-- Audiencia Objetivo: ${targetAudience}
 - Tono Solicitado: ${toneOfVoice}
 - Eje Temático: ${keyTopic}
 - [PROTOCOLO PA-003 • ENFOQUE DE PERSUASIÓN COGNITIVA]: ${framingDescription}
 
-Diseña un BRIEF ESTRATÉGICO DE ALTO IMPACTO estructurado exactamente en los siguientes puntos:
-1. OBJETIVO DE LA PIEZA: Qué queremos que el votante piense, sienta y haga tras escucharla (calibrado según el sesgo cognitivo seleccionado: ${cognitiveFraming}).
-2. EL GANCHO (HOOK DE LOS PRIMEROS 3-5 SEGUNDOS): Frase demoledora e irresistible que active el encuadre cognitivo.
-3. DATOS TERRITORIALES CONCRETOS: Cita al menos 2 cifras reales del municipio (población, censo, NBI o problemáticas locales de acueducto/seguridad) para demostrar arraigo.
-4. NÚCLEO DEL MENSAJE / PROPUESTA VALOR: La solución clara que ${candidateProfile.nombre} propone sin rodeos.
-5. LLAMADO A LA ACCIÓN (CTA): Convocatoria específica (unirse al equipo de WhatsApp, asistir al evento o compartir el video).
+Diseña un BRIEF ESTRATÉGICO DE ALTO IMPACTO estructurado exactamente en los siguientes 7 puntos:
+1. OBJETIVO DE LA PIEZA: Qué queremos que ${activeAudience.name} en ${currentTerritory.name} piense, sienta y haga tras escucharla (calibrado según el sesgo cognitivo ${cognitiveFraming}).
+2. EL GANCHO (HOOK DE LOS PRIMEROS 3-5 SEGUNDOS): Frase demoledora e irresistible dirigida directamente a los dolores de ${activeAudience.name} en ${currentTerritory.name}.
+3. DATOS TERRITORIALES HIPERLOCALES: Cita al menos 2 cifras reales del territorio (censo, población, estrato o problemáticas citadas arriba) para demostrar que el candidato conoce el territorio como la palma de su mano.
+4. NÚCLEO DEL MENSAJE / PROPUESTA VALOR: La solución clara y creíble que ${candidateProfile.nombre} propone para este segmento sin rodeos.
+5. LLAMADO A LA ACCIÓN (CTA): Convocatoria específica adaptada a los canales del segmento (${activeAudience.effectiveChannels[0] || 'WhatsApp'}).
 6. RECOMENDACIONES DE PUESTA EN ESCENA & SEMIÓTICA:
-   - Vestuario y color sugerido (acorde a su colorimetría).
+   - Vestuario y colorimetría sugerida acorde al fototipo de ${candidateProfile.nombre}.
    - Lenguaje corporal y encuadre recomendado.
-7. PREGUNTA INCÓMODA DE PRENSA / OPOSICIÓN Y CÓMO NOQUEARLA: Una objeción dura y la respuesta perfecta en 20 segundos.`;
+7. PREGUNTA INCÓMODA Y CÓMO NOQUEARLA: Anticipa la objeción más difícil que ${activeAudience.name} le haría al candidato y dale la respuesta exacta en 20 segundos.`;
 
       const response = await callGeminiApi({
         promptText: prompt,
-        systemInstruction: 'Eres el Director de Creación de Contenido de Proteus. Redacta briefs estratégicos accionables, profesionales, sin lugares comunes y con estricto anclaje territorial.',
+        systemInstruction: 'Eres el Director de Creación de Contenido de Proteus. Redacta briefs estratégicos accionables, de tono demoledor, profesionales, sin lugares comunes y con estricto anclaje microterritorial y psicográfico.',
         useSearch: true
       });
 
@@ -125,8 +217,9 @@ Diseña un BRIEF ESTRATÉGICO DE ALTO IMPACTO estructurado exactamente en los si
     setTimeout(() => setCopied(false), 2500);
   };
 
-  const handleExportPdf = () => {
+  const handleDownloadPdf = () => {
     if (!generatedBrief) return;
+
     const doc = new jsPDF({
       orientation: 'portrait',
       unit: 'mm',
@@ -138,29 +231,32 @@ Diseña un BRIEF ESTRATÉGICO DE ALTO IMPACTO estructurado exactamente en los si
     doc.rect(0, 0, 210, 32, 'F');
 
     doc.setTextColor(255, 255, 255);
-    doc.setFontSize(16);
+    doc.setFontSize(15);
     doc.setFont('helvetica', 'bold');
-    doc.text('PROTEUS • DIRECTOR DE CONTENIDO & BRIEFS', 14, 15);
+    doc.text('PROTEUS • DIRECTOR DE CONTENIDO & BRIEFS', 14, 14);
 
-    doc.setFontSize(9);
+    doc.setFontSize(8.5);
     doc.setFont('helvetica', 'normal');
-    doc.text(`CANDIDATO: ${candidateProfile.nombre.toUpperCase()} | MUNICIPIO: ${currentMuni.name.toUpperCase()} | FECHA: ${new Date().toLocaleDateString()}`, 14, 23);
+    doc.text(`CANDIDATO: ${candidateProfile.nombre.toUpperCase()} | ESCALA: ${currentTerritory.scale.toUpperCase()} | TERRITORIO: ${currentTerritory.name.toUpperCase()}`, 14, 22);
+    doc.text(`AUDIENCIA: ${activeAudience.name.toUpperCase()} | FECHA: ${new Date().toLocaleDateString()}`, 14, 27);
 
     doc.setTextColor(30, 41, 59);
-    doc.setFontSize(10);
+    doc.setFontSize(9.5);
     const splitText = doc.splitTextToSize(generatedBrief, 182);
-    doc.text(splitText, 14, 42);
+    doc.text(splitText, 14, 40);
 
-    doc.save(`Brief_${candidateProfile.nombre.replace(/\s+/g, '_')}_${currentMuni.name}_${Date.now()}.pdf`);
+    doc.save(`Brief_${candidateProfile.nombre.replace(/\s+/g, '_')}_${currentTerritory.name}_${Date.now()}.pdf`);
   };
 
   const handleSaveDrive = () => {
     if (!generatedBrief || !onSaveToDrive) return;
-    onSaveToDrive(`Brief_${candidateProfile.nombre}_${currentMuni.name}_${contentFormat}`, {
+    onSaveToDrive(`Brief_${candidateProfile.nombre}_${currentTerritory.name}_${contentFormat}`, {
       candidato: candidateProfile.nombre,
-      municipio: currentMuni.name,
+      escala: currentTerritory.scale,
+      territorio: currentTerritory.fullName,
       formato: contentFormat,
-      audiencia: targetAudience,
+      audiencia: activeAudience.name,
+      categoriaAudiencia: activeAudience.categoryLabel,
       contenido: generatedBrief,
       fecha: new Date().toISOString()
     });
@@ -177,17 +273,17 @@ Diseña un BRIEF ESTRATÉGICO DE ALTO IMPACTO estructurado exactamente en los si
             <div className="flex items-center gap-2 mb-2">
               <span className="px-3 py-1 rounded-full text-[10px] font-mono font-black uppercase tracking-wider bg-gradient-to-r from-amber-400/20 via-sky-400/20 to-purple-500/30 text-amber-300 border border-amber-400/50 shadow-[0_0_12px_rgba(251,191,36,0.3)] flex items-center gap-1.5">
                 <Megaphone className="w-3.5 h-3.5 text-amber-400" />
-                Propósito 3: Director de Creación de Contenido
+                Propósito 3: Director de Creación de Contenido & Briefs
               </span>
-              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-sky-500/20 text-sky-300 border border-sky-400/30">
-                Briefs Estratégicos Personalizados
+              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
+                5 Escalas Territoriales + 40 Segmentos
               </span>
             </div>
             <h1 className="text-2xl lg:text-3xl font-black tracking-tight text-white flex items-center gap-3">
               <span>DIRECTOR DE CONTENIDO & DISCURSOS DE CAMPAÑA</span>
             </h1>
             <p className="text-slate-300 text-xs sm:text-sm mt-1 max-w-3xl">
-              Genera briefs estratégicos, discursos de plaza, guiones para TikTok y respuestas a crisis. Cruza la información del <strong className="text-sky-300">Repositorio Municipal</strong> con los pilares del candidato <strong className="text-amber-300">{candidateProfile.nombre}</strong>.
+              Navega desde la escala <strong className="text-sky-300">Nacional</strong> hasta <strong className="text-amber-300">Comuna o Barrio</strong>. Selecciona con precisión quirúrgica el grupo de votantes y genera briefs respaldados por microdatos oficiales y persuasión cognitiva.
             </p>
           </div>
 
@@ -203,34 +299,331 @@ Diseña un BRIEF ESTRATÉGICO DE ALTO IMPACTO estructurado exactamente en los si
       {/* 2. Control Form Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
         {/* Controls Column */}
-        <div className="lg:col-span-5 space-y-4">
-          <div className="p-5 rounded-3xl bg-slate-950/40 backdrop-blur-2xl border border-white/15 shadow-[0_10px_30px_rgba(0,0,0,0.4)] space-y-4">
-            <h2 className="text-xs font-mono uppercase tracking-wider text-amber-400 font-bold flex items-center gap-1.5">
-              <Layers className="w-4 h-4" />
-              Parámetros del Brief Estratégico
-            </h2>
+        <div className="lg:col-span-6 space-y-4">
+          {/* =========================================================================
+              PANEL 1: NAVEGACIÓN TERRITORIAL EN 5 ESCALAS
+              ========================================================================= */}
+          <div className="p-5 rounded-3xl bg-slate-950/40 backdrop-blur-2xl border border-white/15 shadow-[0_10px_30px_rgba(0,0,0,0.4)] space-y-3.5">
+            <div className="flex items-center justify-between border-b border-white/10 pb-2.5">
+              <h2 className="text-xs font-mono uppercase tracking-wider text-sky-400 font-bold flex items-center gap-1.5">
+                <MapPin className="w-4 h-4 text-sky-400" />
+                Escala & Territorio Objetivo (5 Niveles Jerárquicos)
+              </h2>
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-400/30 uppercase font-black">
+                {selectedScale}
+              </span>
+            </div>
 
-            {/* Territory Selector */}
-            <div className="space-y-1">
-              <label className="text-xs text-slate-300 font-semibold flex items-center gap-1">
-                <MapPin className="w-3.5 h-3.5 text-sky-400" />
-                Municipio o Territorio Objetivo:
-              </label>
-              <select
-                value={selectedMuniId}
-                onChange={(e) => setSelectedMuniId(e.target.value)}
-                className="w-full px-3 py-2 rounded-2xl bg-white/10 border border-white/20 text-white text-xs font-bold focus:outline-none focus:border-sky-400 backdrop-blur-xl"
+            {/* 5-Scale Horizontal Selector Buttons */}
+            <div className="grid grid-cols-5 gap-1 p-1 rounded-2xl bg-black/40 border border-white/10 text-[11px] font-bold">
+              <button
+                type="button"
+                onClick={() => setSelectedScale('nacional')}
+                className={`py-1.5 px-1 rounded-xl transition text-center flex flex-col items-center gap-0.5 ${
+                  selectedScale === 'nacional'
+                    ? 'bg-amber-500/30 text-amber-200 border border-amber-400/60 shadow-[0_0_10px_rgba(251,191,36,0.3)] font-black'
+                    : 'text-slate-400 hover:text-white'
+                }`}
               >
-                {allMunicipalities.map((m) => (
-                  <option key={m.id} value={m.id} className="bg-slate-900 text-white">
-                    {m.name} ({m.subregion}) - Censo: {m.electoralCensus?.toLocaleString()}
-                  </option>
-                ))}
+                <span>🇨🇴</span>
+                <span className="text-[10px] truncate">1. Nacional</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setSelectedScale('departamental')}
+                className={`py-1.5 px-1 rounded-xl transition text-center flex flex-col items-center gap-0.5 ${
+                  selectedScale === 'departamental'
+                    ? 'bg-sky-500/30 text-sky-200 border border-sky-400/60 shadow-[0_0_10px_rgba(56,189,248,0.3)] font-black'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <span>🏛️</span>
+                <span className="text-[10px] truncate">2. Dptal.</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setSelectedScale('subregional')}
+                className={`py-1.5 px-1 rounded-xl transition text-center flex flex-col items-center gap-0.5 ${
+                  selectedScale === 'subregional'
+                    ? 'bg-emerald-500/30 text-emerald-200 border border-emerald-400/60 shadow-[0_0_10px_rgba(52,211,153,0.3)] font-black'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <span>🌲</span>
+                <span className="text-[10px] truncate">3. Subregión</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setSelectedScale('municipal')}
+                className={`py-1.5 px-1 rounded-xl transition text-center flex flex-col items-center gap-0.5 ${
+                  selectedScale === 'municipal'
+                    ? 'bg-indigo-500/30 text-indigo-200 border border-indigo-400/60 shadow-[0_0_10px_rgba(129,140,248,0.3)] font-black'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <span>🏙️</span>
+                <span className="text-[10px] truncate">4. Municipio</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setSelectedScale('comuna-barrio')}
+                className={`py-1.5 px-1 rounded-xl transition text-center flex flex-col items-center gap-0.5 ${
+                  selectedScale === 'comuna-barrio'
+                    ? 'bg-purple-500/30 text-purple-200 border border-purple-400/60 shadow-[0_0_10px_rgba(168,85,247,0.3)] font-black'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <span>📍</span>
+                <span className="text-[10px] truncate">5. Comuna/B.</span>
+              </button>
+            </div>
+
+            {/* Cascading Specific Dropdowns depending on selected scale */}
+            <div className="space-y-2 pt-1">
+              {/* Scale 1: Nacional */}
+              {selectedScale === 'nacional' && (
+                <div className="p-3 rounded-2xl bg-white/05 border border-white/10 flex items-center justify-between text-xs">
+                  <div className="flex items-center gap-2">
+                    <Globe className="w-4 h-4 text-amber-400" />
+                    <div>
+                      <div className="font-bold text-white">República de Colombia</div>
+                      <div className="text-[10px] text-slate-400">32 Departamentos + Bogotá D.C.</div>
+                    </div>
+                  </div>
+                  <div className="text-right font-mono text-[11px] text-sky-300 font-bold">
+                    Censo: 39.200.000
+                  </div>
+                </div>
+              )}
+
+              {/* Scale 2: Departamental */}
+              {selectedScale === 'departamental' && (
+                <div className="space-y-1">
+                  <label className="text-[11px] text-slate-300 font-semibold">Selecciona el Departamento:</label>
+                  <select
+                    value={selectedDeptId}
+                    onChange={(e) => setSelectedDeptId(e.target.value)}
+                    className="w-full px-3 py-2 rounded-2xl bg-white/10 border border-white/20 text-white text-xs font-bold focus:outline-none focus:border-sky-400"
+                  >
+                    {departmentsList.map(d => (
+                      <option key={d.id} value={d.id} className="bg-slate-900 text-white">
+                        {d.name} - Censo: {d.electoralCensus?.toLocaleString('es-CO')}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              {/* Scale 3: Subregional */}
+              {selectedScale === 'subregional' && (
+                <div className="space-y-1">
+                  <label className="text-[11px] text-slate-300 font-semibold">Selecciona la Subregión (Antioquia):</label>
+                  <select
+                    value={selectedSubregId}
+                    onChange={(e) => setSelectedSubregId(e.target.value)}
+                    className="w-full px-3 py-2 rounded-2xl bg-white/10 border border-white/20 text-white text-xs font-bold focus:outline-none focus:border-emerald-400"
+                  >
+                    {subregionsList.map(s => (
+                      <option key={s.id} value={s.id} className="bg-slate-900 text-white">
+                        {s.name} - Pob: {s.population?.toLocaleString('es-CO')}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              {/* Scale 4: Municipal */}
+              {selectedScale === 'municipal' && (
+                <div className="space-y-1">
+                  <label className="text-[11px] text-slate-300 font-semibold">Selecciona el Municipio (125 de Antioquia):</label>
+                  <select
+                    value={selectedMuniId}
+                    onChange={(e) => setSelectedMuniId(e.target.value)}
+                    className="w-full px-3 py-2 rounded-2xl bg-white/10 border border-white/20 text-white text-xs font-bold focus:outline-none focus:border-indigo-400"
+                  >
+                    {allMunicipalities.map(m => (
+                      <option key={m.id} value={m.id} className="bg-slate-900 text-white">
+                        {m.name} ({m.subregion}) - Censo: {m.electoralCensus?.toLocaleString('es-CO')}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              {/* Scale 5: Comuna o Barrio */}
+              {selectedScale === 'comuna-barrio' && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <div className="space-y-1">
+                    <label className="text-[10px] text-slate-300 font-semibold">Comuna / Corregimiento:</label>
+                    <select
+                      value={selectedComunaId}
+                      onChange={(e) => {
+                        setSelectedComunaId(e.target.value);
+                        setSelectedBarrioId('all-comuna');
+                      }}
+                      className="w-full px-3 py-1.5 rounded-xl bg-white/10 border border-white/20 text-white text-xs font-bold focus:outline-none focus:border-purple-400"
+                    >
+                      {comunasList.map(c => (
+                        <option key={c.id} value={c.id} className="bg-slate-900 text-white">
+                          {c.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-[10px] text-slate-300 font-semibold">Barrio Específico:</label>
+                    <select
+                      value={selectedBarrioId}
+                      onChange={(e) => setSelectedBarrioId(e.target.value)}
+                      className="w-full px-3 py-1.5 rounded-xl bg-white/10 border border-white/20 text-white text-xs font-bold focus:outline-none focus:border-purple-400"
+                    >
+                      <option value="all-comuna" className="bg-slate-900 text-white">
+                        Toda la Comuna (General)
+                      </option>
+                      {barriosList.map(b => (
+                        <option key={b.id} value={b.id} className="bg-slate-900 text-white">
+                          {b.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Micro-Data Badge of Selected Node */}
+            <div className="p-3 rounded-2xl bg-white/05 border border-white/10 space-y-1 text-xs">
+              <div className="flex items-center justify-between">
+                <span className="font-black text-amber-300">{currentTerritory.fullName}</span>
+                <span className="font-mono text-[10px] text-slate-400">
+                  {currentTerritory.electoralCensus ? `Censo: ${currentTerritory.electoralCensus.toLocaleString('es-CO')}` : ''}
+                </span>
+              </div>
+              <div className="flex items-center gap-3 text-[10px] text-slate-300 font-mono">
+                {currentTerritory.predominantStratum && <span>{currentTerritory.predominantStratum}</span>}
+                {currentTerritory.nbiPercentage && <span>NBI: {currentTerritory.nbiPercentage}%</span>}
+                {currentTerritory.subregionName && <span>Subregión: {currentTerritory.subregionName}</span>}
+              </div>
+              {currentTerritory.keyIssues && currentTerritory.keyIssues[0] && (
+                <div className="text-[10px] text-slate-400 italic pt-1 border-t border-white/05 truncate">
+                  Problemática clave: {currentTerritory.keyIssues[0]}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* =========================================================================
+              PANEL 2: SEGMENTACIÓN DE VOTANTES (CATÁLOGO COMPLETO)
+              ========================================================================= */}
+          <div className="p-5 rounded-3xl bg-slate-950/40 backdrop-blur-2xl border border-white/15 shadow-[0_10px_30px_rgba(0,0,0,0.4)] space-y-3.5">
+            <div className="flex items-center justify-between border-b border-white/10 pb-2.5">
+              <h2 className="text-xs font-mono uppercase tracking-wider text-amber-400 font-bold flex items-center gap-1.5">
+                <Users className="w-4 h-4 text-amber-400" />
+                Segmento / Audiencia Específica ({VOTER_AUDIENCE_CATALOG.length} Grupos)
+              </h2>
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-400/30 uppercase font-black">
+                {activeAudience.priority}
+              </span>
+            </div>
+
+            {/* Category Filter Pills */}
+            <div className="flex items-center gap-1 overflow-x-auto pb-1 text-[10px] font-mono">
+              <button
+                type="button"
+                onClick={() => setSelectedAudienceCategory('all')}
+                className={`px-2.5 py-1 rounded-lg shrink-0 transition ${
+                  selectedAudienceCategory === 'all'
+                    ? 'bg-amber-400/30 text-amber-200 border border-amber-400/60 font-bold'
+                    : 'text-slate-400 hover:text-white bg-white/05'
+                }`}
+              >
+                Todos ({VOTER_AUDIENCE_CATALOG.length})
+              </button>
+              {VOTER_AUDIENCE_CATEGORIES.map(cat => (
+                <button
+                  key={cat.id}
+                  type="button"
+                  onClick={() => setSelectedAudienceCategory(cat.id)}
+                  className={`px-2.5 py-1 rounded-lg shrink-0 transition ${
+                    selectedAudienceCategory === cat.id
+                      ? 'bg-amber-400/30 text-amber-200 border border-amber-400/60 font-bold'
+                      : 'text-slate-400 hover:text-white bg-white/05'
+                  }`}
+                >
+                  {cat.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Search Input for Audiences */}
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Buscar grupo por nombre, profesión, dolor o estrato..."
+                value={audienceSearchQuery}
+                onChange={(e) => setAudienceSearchQuery(e.target.value)}
+                className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-white/05 border border-white/15 text-white text-xs placeholder:text-slate-500 focus:outline-none focus:border-amber-400"
+              />
+              <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
+            </div>
+
+            {/* Audience Dropdown with Grouped Options */}
+            <div className="space-y-1">
+              <label className="text-[11px] text-slate-300 font-semibold">Grupo de Votantes Seleccionado:</label>
+              <select
+                value={selectedAudienceId}
+                onChange={(e) => setSelectedAudienceId(e.target.value)}
+                className="w-full px-3 py-2 rounded-2xl bg-white/10 border border-white/20 text-white text-xs font-bold focus:outline-none focus:border-amber-400"
+              >
+                {VOTER_AUDIENCE_CATEGORIES.map(cat => {
+                  const catAudiences = filteredAudiences.filter(a => a.category === cat.id);
+                  if (catAudiences.length === 0) return null;
+                  return (
+                    <optgroup key={cat.id} label={cat.label} className="bg-slate-900 text-amber-300 font-bold">
+                      {catAudiences.map(a => (
+                        <option key={a.id} value={a.id} className="bg-slate-900 text-white font-normal">
+                          {a.name} ({a.priority})
+                        </option>
+                      ))}
+                    </optgroup>
+                  );
+                })}
               </select>
             </div>
 
+            {/* Active Audience Insights Card */}
+            <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-400/25 space-y-2">
+              <div className="flex items-start justify-between gap-2">
+                <div>
+                  <div className="text-xs font-black text-amber-200">{activeAudience.name}</div>
+                  <div className="text-[10px] text-slate-300 italic">{activeAudience.tagline}</div>
+                </div>
+                <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-black/40 text-amber-300 border border-amber-400/30 shrink-0">
+                  ~{activeAudience.shareEstimatedNational}% Censo
+                </span>
+              </div>
+
+              <div className="text-[10px] text-slate-300">
+                <strong className="text-amber-300">Gatillo Psicológico:</strong> {activeAudience.psychologicalTrigger}
+              </div>
+
+              <div className="text-[10px] text-slate-400">
+                <strong className="text-slate-300">Canales Top:</strong> {activeAudience.effectiveChannels.join(', ')}
+              </div>
+            </div>
+          </div>
+
+          {/* =========================================================================
+              PANEL 3: FORMATO, TONO Y ENCUADRE COGNITIVO
+              ========================================================================= */}
+          <div className="p-5 rounded-3xl bg-slate-950/40 backdrop-blur-2xl border border-white/15 shadow-[0_10px_30px_rgba(0,0,0,0.4)] space-y-3.5">
             {/* Content Format Selector */}
-            <div className="space-y-1">
+            <div className="space-y-1.5">
               <label className="text-xs text-slate-300 font-semibold flex items-center gap-1">
                 <FileText className="w-3.5 h-3.5 text-amber-400" />
                 Formato del Contenido:
@@ -271,23 +664,16 @@ Diseña un BRIEF ESTRATÉGICO DE ALTO IMPACTO estructurado exactamente en los si
               </div>
             </div>
 
-            {/* Target Audience */}
+            {/* Key Topic */}
             <div className="space-y-1">
-              <label className="text-xs text-slate-300 font-semibold flex items-center gap-1">
-                <Users className="w-3.5 h-3.5 text-indigo-400" />
-                Segmento / Audiencia Específica:
-              </label>
-              <select
-                value={targetAudience}
-                onChange={(e) => setTargetAudience(e.target.value)}
+              <label className="text-xs text-slate-300 font-semibold">Eje Temático Principal:</label>
+              <input
+                type="text"
+                value={keyTopic}
+                onChange={(e) => setKeyTopic(e.target.value)}
+                placeholder="Ej. Seguridad, empleo juvenil, freno a la extorsión..."
                 className="w-full px-3 py-2 rounded-2xl bg-white/10 border border-white/20 text-white text-xs font-semibold focus:outline-none focus:border-sky-400"
-              >
-                <option value="Jóvenes y Nuevos Votantes (18-28)" className="bg-slate-900">Jóvenes y Nuevos Votantes (18-28)</option>
-                <option value="Madres Cabeza de Hogar y Familias Populares (E1-2)" className="bg-slate-900">Madres Cabeza de Hogar y Familias Populares (E1-2)</option>
-                <option value="Comerciantes y Pequeños Empresarios Afectados por Extorsión" className="bg-slate-900">Comerciantes y Pequeños Empresarios Afectados por Extorsión</option>
-                <option value="Comunidades Rurales, Veredas y Campesinos" className="bg-slate-900">Comunidades Rurales, Veredas y Campesinos</option>
-                <option value="Clases Medias Urbanas, Profesionales y Voto de Opinión" className="bg-slate-900">Clases Medias Urbanas, Profesionales y Voto de Opinión</option>
-              </select>
+              />
             </div>
 
             {/* Tone of Voice */}
@@ -318,145 +704,134 @@ Diseña un BRIEF ESTRATÉGICO DE ALTO IMPACTO estructurado exactamente en los si
                 <button
                   type="button"
                   onClick={() => setCognitiveFraming('gain-hope')}
-                  className={`p-2 rounded-xl text-center border text-xs transition ${
+                  className={`p-2 rounded-xl text-center border transition text-xs ${
                     cognitiveFraming === 'gain-hope'
-                      ? 'bg-emerald-500/25 border-emerald-400 text-white font-bold shadow-[0_0_10px_rgba(16,185,129,0.25)]'
+                      ? 'bg-emerald-500/25 border-emerald-400 text-emerald-200 font-bold shadow-[0_0_10px_rgba(52,211,153,0.3)]'
                       : 'bg-black/20 border-white/10 text-slate-400 hover:text-white'
                   }`}
                 >
-                  <div className="text-[11px] font-bold text-emerald-300">Ganancia</div>
-                  <div className="text-[9px] text-slate-400">Esperanza & Futuro</div>
+                  <div className="font-black">Ganancia</div>
+                  <div className="text-[9px] text-slate-400">Esperanza</div>
                 </button>
                 <button
                   type="button"
                   onClick={() => setCognitiveFraming('loss-protection')}
-                  className={`p-2 rounded-xl text-center border text-xs transition ${
+                  className={`p-2 rounded-xl text-center border transition text-xs ${
                     cognitiveFraming === 'loss-protection'
-                      ? 'bg-amber-500/25 border-amber-400 text-white font-bold shadow-[0_0_10px_rgba(245,158,11,0.25)]'
+                      ? 'bg-rose-500/25 border-rose-400 text-rose-200 font-bold shadow-[0_0_10px_rgba(244,63,94,0.3)]'
                       : 'bg-black/20 border-white/10 text-slate-400 hover:text-white'
                   }`}
                 >
-                  <div className="text-[11px] font-bold text-amber-300">Pérdida</div>
-                  <div className="text-[9px] text-slate-400">Defensa & Blindaje</div>
+                  <div className="font-black">Pérdida</div>
+                  <div className="text-[9px] text-slate-400">Blindaje</div>
                 </button>
                 <button
                   type="button"
                   onClick={() => setCognitiveFraming('balanced')}
-                  className={`p-2 rounded-xl text-center border text-xs transition ${
+                  className={`p-2 rounded-xl text-center border transition text-xs ${
                     cognitiveFraming === 'balanced'
-                      ? 'bg-sky-500/25 border-sky-400 text-white font-bold shadow-[0_0_10px_rgba(56,189,248,0.25)]'
+                      ? 'bg-sky-500/25 border-sky-400 text-sky-200 font-bold shadow-[0_0_10px_rgba(56,189,248,0.3)]'
                       : 'bg-black/20 border-white/10 text-slate-400 hover:text-white'
                   }`}
                 >
-                  <div className="text-[11px] font-bold text-sky-300">Equilibrio</div>
+                  <div className="font-black">Equilibrio</div>
                   <div className="text-[9px] text-slate-400">Riesgo + Victoria</div>
                 </button>
               </div>
-            </div>
-
-            {/* Key Topic */}
-            <div className="space-y-1">
-              <label className="text-xs text-slate-300 font-semibold">Eje Temático Principal:</label>
-              <input
-                type="text"
-                value={keyTopic}
-                onChange={(e) => setKeyTopic(e.target.value)}
-                placeholder="Ej. Empleo joven, vías terciarias, extorsión..."
-                className="w-full px-3 py-2 rounded-2xl bg-white/10 border border-white/20 text-white text-xs font-medium focus:outline-none focus:border-sky-400"
-              />
             </div>
 
             {/* Generate Button */}
             <button
               onClick={handleGenerateBrief}
               disabled={isGenerating}
-              className="w-full py-3 rounded-2xl bg-gradient-to-r from-amber-500 via-sky-500 to-blue-600 hover:from-amber-400 hover:to-blue-500 text-white text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 shadow-[0_0_25px_rgba(251,191,36,0.35),inset_0_1px_1px_rgba(255,255,255,0.4)] transition-all transform hover:scale-[1.01] active:scale-95 disabled:opacity-50"
+              className="w-full py-3 rounded-2xl bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-xs sm:text-sm shadow-[0_0_25px_rgba(251,191,36,0.4)] flex items-center justify-center gap-2 transition-all transform hover:scale-[1.01] active:scale-95 disabled:opacity-50 cursor-pointer"
             >
-              <Sparkles className={`w-4 h-4 text-amber-200 ${isGenerating ? 'animate-spin' : ''}`} />
-              <span>{isGenerating ? 'Generando Brief Territorial...' : 'Generar Brief con IA Gemini'}</span>
+              {isGenerating ? (
+                <>
+                  <Sparkles className="w-4 h-4 animate-spin" />
+                  <span>Sintetizando Microdatos y Perfil Cognitivo...</span>
+                </>
+              ) : (
+                <>
+                  <Sparkles className="w-4 h-4" />
+                  <span>Generar Brief Estratégico con IA</span>
+                </>
+              )}
             </button>
           </div>
         </div>
 
-        {/* Results Column */}
-        <div className="lg:col-span-7">
-          <div className="p-5 rounded-3xl bg-slate-950/45 backdrop-blur-3xl border border-white/20 shadow-[0_15px_40px_rgba(0,0,0,0.5)] min-h-[500px] flex flex-col justify-between space-y-4">
-            <div>
-              {/* Results Header */}
-              <div className="flex items-center justify-between border-b border-white/10 pb-3">
-                <div className="flex items-center gap-2">
-                  <FileText className="w-4 h-4 text-amber-400" />
-                  <span className="text-xs font-bold text-white uppercase tracking-wider">
-                    Brief Generado • {currentMuni.name}
-                  </span>
+        {/* Output Column (Brief Generated) */}
+        <div className="lg:col-span-6 space-y-4">
+          <div className="p-5 rounded-3xl bg-slate-950/40 backdrop-blur-2xl border border-white/15 shadow-[0_10px_30px_rgba(0,0,0,0.4)] flex flex-col min-h-[640px]">
+            <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-4">
+              <div className="flex items-center gap-2">
+                <FileText className="w-4 h-4 text-amber-400" />
+                <span className="text-xs font-mono uppercase text-white font-bold tracking-wider">
+                  Brief Estratégico Generado
+                </span>
+              </div>
+
+              {generatedBrief && (
+                <div className="flex items-center gap-1.5">
+                  <button
+                    onClick={handleCopy}
+                    className="p-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white transition flex items-center gap-1 text-xs"
+                    title="Copiar al portapapeles"
+                  >
+                    {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                    <span className="hidden sm:inline">{copied ? 'Copiado' : 'Copiar'}</span>
+                  </button>
+
+                  <button
+                    onClick={handleDownloadPdf}
+                    className="p-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white transition flex items-center gap-1 text-xs"
+                    title="Descargar en PDF Institucional"
+                  >
+                    <Download className="w-3.5 h-3.5 text-sky-400" />
+                    <span className="hidden sm:inline">PDF</span>
+                  </button>
+
+                  {onSaveToDrive && (
+                    <button
+                      onClick={handleSaveDrive}
+                      className="p-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white transition flex items-center gap-1 text-xs"
+                      title="Guardar en Google Drive"
+                    >
+                      <Save className="w-3.5 h-3.5 text-amber-400" />
+                      <span className="hidden sm:inline">{savedSuccess ? 'Guardado' : 'Drive'}</span>
+                    </button>
+                  )}
                 </div>
-                {generatedBrief && (
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={handleCopy}
-                      className="p-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-slate-300 hover:text-white transition flex items-center gap-1 text-[11px]"
-                      title="Copiar texto"
-                    >
-                      {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                      <span>{copied ? 'Copiado' : 'Copiar'}</span>
-                    </button>
-                    <button
-                      onClick={handleExportPdf}
-                      className="p-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-slate-300 hover:text-white transition flex items-center gap-1 text-[11px]"
-                      title="Descargar en PDF"
-                    >
-                      <Download className="w-3.5 h-3.5 text-sky-400" />
-                      <span>PDF</span>
-                    </button>
-                    {onSaveToDrive && (
-                      <button
-                        onClick={handleSaveDrive}
-                        className="p-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-slate-300 hover:text-white transition flex items-center gap-1 text-[11px]"
-                        title="Guardar en Google Drive"
-                      >
-                        <Save className="w-3.5 h-3.5 text-amber-400" />
-                        <span>{savedSuccess ? 'Guardado en Drive' : 'Drive'}</span>
-                      </button>
-                    )}
-                  </div>
-                )}
-              </div>
-
-              {/* Brief Content Body */}
-              <div className="mt-4">
-                {isGenerating ? (
-                  <div className="flex flex-col items-center justify-center py-24 space-y-3 text-center">
-                    <Sparkles className="w-8 h-8 text-amber-400 animate-spin" />
-                    <div className="text-sm font-bold text-white">
-                      Consultando Repositorio Proteus & Gemini...
-                    </div>
-                    <p className="text-xs text-slate-400 max-w-sm">
-                      Cruzando las estadísticas de {currentMuni.name} con el perfil discursivo de {candidateProfile.nombre} para crear un brief ganador.
-                    </p>
-                  </div>
-                ) : generatedBrief ? (
-                  <div className="text-xs sm:text-sm text-slate-200 whitespace-pre-line leading-relaxed bg-black/25 p-4 rounded-2xl border border-white/10 max-h-[550px] overflow-y-auto">
-                    {generatedBrief}
-                  </div>
-                ) : (
-                  <div className="flex flex-col items-center justify-center py-24 space-y-2 text-center text-slate-400">
-                    <Megaphone className="w-10 h-10 text-white/20 stroke-1" />
-                    <div className="text-sm font-bold text-slate-300">
-                      Ningún Brief Generado Aún
-                    </div>
-                    <p className="text-xs max-w-sm text-slate-400">
-                      Selecciona un municipio, formato y audiencia en el panel izquierdo y haz clic en "Generar Brief con IA Gemini" para obtener una pieza estratégica hiper-local.
-                    </p>
-                  </div>
-                )}
-              </div>
+              )}
             </div>
 
-            {/* Footer Notice */}
-            <div className="text-[10px] text-slate-400 pt-2 border-t border-white/10 flex items-center justify-between">
-              <span>Basado en el Repositorio de Información Municipal de Proteus 1.2</span>
-              <span>Motor IA: Gemini 3.8 Flash / Google Search Grounding</span>
+            {/* Content Area */}
+            <div className="flex-1 bg-black/30 rounded-2xl border border-white/10 p-4 overflow-y-auto max-h-[600px] font-sans text-xs sm:text-sm text-slate-200 leading-relaxed whitespace-pre-wrap">
+              {generatedBrief ? (
+                generatedBrief
+              ) : (
+                <div className="h-full flex flex-col items-center justify-center text-center p-8 text-slate-500 space-y-3">
+                  <div className="w-12 h-12 rounded-full bg-white/05 border border-white/10 flex items-center justify-center">
+                    <Sparkles className="w-6 h-6 text-amber-400/50" />
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-bold text-slate-300">Esperando Parámetros</h4>
+                    <p className="text-xs text-slate-400 max-w-sm mt-1">
+                      Selecciona la escala territorial (Nacional a Comuna/Barrio) y el grupo de votantes. Haz clic en "Generar Brief" para construir la estrategia.
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
+
+            {/* Footer Status */}
+            {generatedBrief && (
+              <div className="pt-3 border-t border-white/10 mt-3 flex items-center justify-between text-[11px] text-slate-400 font-mono">
+                <span>Territorio: {currentTerritory.name}</span>
+                <span>Audiencia: {activeAudience.name}</span>
+              </div>
+            )}
           </div>
         </div>
       </div>
