@@ -44,7 +44,7 @@ import { googleDriveService } from './services/googleDriveService';
 const STORAGE_PROFILE_KEY = "cmt_proteus_active_profile";
 
 export default function App() {
-  const [currentView, setCurrentView] = useState<NavViewId>('territorial-zoom');
+  const [currentView, setCurrentView] = useState<NavViewId>('national-candidates');
   const [candidateModalOpen, setCandidateModalOpen] = useState(false);
   
   // Manage candidate profile state
@@ -98,6 +98,7 @@ export default function App() {
         <CandidateProfilesView
           candidateProfile={candidateProfile}
           onSaveProfile={handleSaveProfile}
+          onNavigateToView={(view) => setCurrentView(view)}
         />
       )}
 

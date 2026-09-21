@@ -85,14 +85,35 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
 
       {/* Navigation Groups */}
       <div className="flex-1 overflow-y-auto py-4 px-2 space-y-5">
-        {/* GROUP 1: AMBITO NACIONAL */}
+        {/* GROUP 1: AMBITO NACIONAL & PERSONALIZACIÓN */}
         <div>
           {!collapsed && (
-            <div className="px-3 mb-1.5 text-[9px] font-mono uppercase tracking-widest text-sky-400 font-extrabold">
-              Ámbito Nacional
+            <div className="px-3 mb-1.5 flex items-center justify-between text-[9px] font-mono uppercase tracking-widest text-amber-400 font-extrabold">
+              <span>Personalización & Territorio</span>
+              <span className="px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-400/30 text-[8px] font-mono">
+                Núcleo
+              </span>
             </div>
           )}
           <div className="space-y-1">
+            <button
+              onClick={() => onSelectView('national-candidates')}
+              className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold transition-all duration-200 ${
+                currentView === 'national-candidates'
+                  ? 'bg-gradient-to-r from-amber-500/40 via-sky-500/30 to-blue-600/40 border border-amber-400/70 text-white shadow-[inset_0_1.5px_2px_0_rgba(255,255,255,0.5),0_4px_20px_rgba(251,191,36,0.35)]'
+                  : 'text-amber-200/90 hover:text-white hover:bg-white/10 border border-amber-400/20'
+              }`}
+              title="Centro de Personalización del Candidato"
+            >
+              <Users className="w-4 h-4 shrink-0 text-amber-400" />
+              {!collapsed && (
+                <div className="flex flex-col text-left">
+                  <span className="text-white font-black">Candidato & Perfil</span>
+                  <span className="text-[9px] text-amber-300/80 font-mono">Personalización Central</span>
+                </div>
+              )}
+            </button>
+
             <button
               onClick={() => onSelectView('national-overview')}
               className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold transition-all duration-200 ${
@@ -104,19 +125,6 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
             >
               <Globe className="w-4 h-4 shrink-0 text-sky-400" />
               {!collapsed && <span>Presidencia & Territorio</span>}
-            </button>
-
-            <button
-              onClick={() => onSelectView('national-candidates')}
-              className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold transition-all duration-200 ${
-                currentView === 'national-candidates'
-                  ? 'bg-gradient-to-r from-sky-400/35 to-blue-600/40 border border-sky-300/60 text-white shadow-[inset_0_1.5px_2px_0_rgba(255,255,255,0.5),0_4px_20px_rgba(14,165,233,0.4)]'
-                  : 'text-slate-300 hover:text-white hover:bg-white/10 border border-transparent'
-              }`}
-              title="Perfil del Candidato Activo"
-            >
-              <Users className="w-4 h-4 shrink-0 text-amber-400" />
-              {!collapsed && <span>Candidato & Perfil</span>}
             </button>
 
             <button

@@ -73,10 +73,23 @@ Para garantizar que ninguna mejora sea un capricho estético o una complicación
 
 ---
 
-### 4. ÍNDICE DE PROTOCOLOS ACTIVOS (SPRINT 1)
+### 4. ÍNDICE DE PROTOCOLOS ACTIVOS (SPRINTS 1 Y 2)
 
 - **[`PA-001-SIMULADOR-ELECTORAL-BAYESIANO.md`](PA-001-SIMULADOR-ELECTORAL-BAYESIANO.md)**: Simulador predictivo estocástico de Umbral Electoral, Cifra Repartidora D'Hondt y asignación de curules con elasticidad de participación (Nivel Nacional y Departamental).
 - **[`PA-002-EXTRACCION-MICRODATOS-REGISTRADURIA.md`](PA-002-EXTRACCION-MICRODATOS-REGISTRADURIA.md)**: Pipeline de ingesta y estandarización automática de formularios E-14 y E-24 históricos de la Registraduría para los 125 municipios.
 - **[`PA-003-MICROTARGETING-PSICOGRAFICO-TERRITORIAL.md`](PA-003-MICROTARGETING-PSICOGRAFICO-TERRITORIAL.md)**: Motor de hiper-segmentación psicográfica y matriz de persuasión narrativa personalizada por comuna y vereda.
 - **[`PA-004-OPTIMIZACION-ARQUITECTURA-GIS-WEBGL.md`](PA-004-OPTIMIZACION-ARQUITECTURA-GIS-WEBGL.md)**: Transición del renderizado SVG/DOM a capas vectoriales WebGL/Canvas para navegación hiper-rápida y soporte offline en territorio.
 - **[`PA-005-AUDITORIA-INTERNA-RAZONAMIENTO-Y-VALIDACION.md`](PA-005-AUDITORIA-INTERNA-RAZONAMIENTO-Y-VALIDACION.md)**: Protocolo de evaluación crítica, detección de falacias y validación metodológica interna de los protocolos de la unidad (Auditor Imparcial).
+- **[`PA-006-VERIFICACION-INCLUSION-APLICATIVOS-ORIGINALES.md`](PA-006-VERIFICACION-INCLUSION-APLICATIVOS-ORIGINALES.md)**: Auditoría forense e inventario comparativo de los 4 aplicativos originales integrados (Unidad UAIF - 7 Agentes).
+- **[`PA-007-INTEGRACION-ELEMENTOS-NO-INCLUIDOS.md`](PA-007-INTEGRACION-ELEMENTOS-NO-INCLUIDOS.md)**: Ingeniería e integración de elementos no incluidos: Congreso y Presidencia por comuna, pirámides poblacionales dinámicas 2018-2030 (Unidad UIIP - 7 Agentes).
+- **[`PA-008-EVALUACION-ARQUITECTURA-Y-PROPOSITO.md`](PA-008-EVALUACION-ARQUITECTURA-Y-PROPOSITO.md)**: Evaluación arquitectónica y correspondencia teleológica con el propósito supremo de personalización (Unidad UEAT - 7 Agentes).
+
+---
+
+### 5. ACTAS DE SESIONES CRÍTICAS COLEGIADAS
+
+- **[`SESION_CRITICA_001_SIMULADOR_DHONDT.md`](SESION_CRITICA_001_SIMULADOR_DHONDT.md)**: Aprobación del Simulador Electoral D'Hondt y Curul Marginal Residual (PA-001).
+- **[`SESION_CRITICA_002_VERIFICACION_APLICATIVOS.md`](SESION_CRITICA_002_VERIFICACION_APLICATIVOS.md)**: Auditoría forense y Matriz de Brechas (Gap Matrix) de los 4 aplicativos fuente (PA-006).
+- **[`SESION_CRITICA_003_PLAN_INTEGRACION.md`](SESION_CRITICA_003_PLAN_INTEGRACION.md)**: Plan técnico de reincorporación de Congreso/Presidencia por comuna y pirámides demográficas (PA-007).
+- **[`SESION_CRITICA_004_EVALUACION_ARQUITECTURA.md`](SESION_CRITICA_004_EVALUACION_ARQUITECTURA.md)**: Evaluación arquitectónica y dictamen de refactorización teleológica de la ventana inicial hacia la personalización (PA-008).
+
