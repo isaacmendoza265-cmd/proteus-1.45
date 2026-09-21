@@ -6,11 +6,13 @@ import { CandidateProfile } from '../../../components/CandidateProfileManager';
 interface AntioquiaExplorerViewProps {
   candidateProfile: CandidateProfile;
   onNavigateToBio?: () => void;
+  onNavigateToContentDirector?: () => void;
 }
 
 export const AntioquiaExplorerView: React.FC<AntioquiaExplorerViewProps> = ({
   candidateProfile,
-  onNavigateToBio
+  onNavigateToBio,
+  onNavigateToContentDirector
 }) => {
   return (
     <div className="space-y-6">
@@ -51,6 +53,7 @@ export const AntioquiaExplorerView: React.FC<AntioquiaExplorerViewProps> = ({
       <AntioquiaMunicipiosManager
         candidateProfile={candidateProfile}
         onNavigateToBio={onNavigateToBio}
+        onNavigateToContentDirector={onNavigateToContentDirector}
       />
     </div>
   );

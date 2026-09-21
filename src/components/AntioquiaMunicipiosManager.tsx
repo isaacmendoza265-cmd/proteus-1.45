@@ -31,7 +31,11 @@ import {
   PieChart as PieIcon,
   Layers,
   Box,
-  Compass
+  Compass,
+  Phone,
+  Mail,
+  AlertTriangle,
+  Shield
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { GoogleGenAI } from '@google/genai';
@@ -51,6 +55,11 @@ import { Rionegro3DDiorama } from './Rionegro3DDiorama';
 import { RionegroECVDashboard } from './RionegroECVDashboard';
 import { BelloInteractiveMap } from './BelloInteractiveMap';
 import { ALL_MUNICIPIOS_TERRITORIAL_DATA } from '../data/allMunicipiosTerritorialData';
+import { 
+  ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA, 
+  UnifiedMunicipalityRecord 
+} from '../data/antioquia125MunicipalitiesMasterData';
+import { activeTerritoryService } from '../services/activeTerritoryContextService';
 
 // Inicialización de la API de Gemini para búsquedas y análisis profundo
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
@@ -69,13 +78,166 @@ interface CandidateProfileProps {
 interface AntioquiaMunicipiosManagerProps {
   candidateProfile: CandidateProfileProps | null;
   onNavigateToBio?: () => void;
+  onNavigateToContentDirector?: () => void;
+}
+
+const STRATEGIC_7_KEYS = ['bello', 'itagui', 'envigado', 'la-estrella', 'sabaneta', 'caldas', 'rionegro'];
+
+function getMunicipalityAdapter(muniId: string): StrategicMunicipality {
+  if (STRATEGIC_MUNICIPALITIES[muniId]) {
+    return STRATEGIC_MUNICIPALITIES[muniId];
+  }
+  const cleanId = muniId.replace('mpio-', '');
+  const master = ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA.find(
+    m => m.id === muniId || m.id === `mpio-${cleanId}` || m.daneCode === cleanId || m.name.toLowerCase() === muniId.toLowerCase()
+  );
+  if (master) {
+    const isRural = master.predominantStratum.includes('Rural') || master.category === '6';
+    return {
+      id: master.id,
+      name: master.name,
+      subregion: master.subregion,
+      category: `Cat. ${master.category}`,
+      totalPopulation: master.population,
+      electoralCensus: master.electoralCensus,
+      urbanRuralDistribution: {
+        urban: isRural ? 35 : 75,
+        rural: isRural ? 65 : 25
+      },
+      nbiPercentage: master.nbiPercentage,
+      hdi: master.category === 'Especial' ? 0.85 : (['1', '2'].includes(master.category) ? 0.79 : 0.71),
+      economicDrivers: master.economicSectors || ['Agropecuario', 'Comercio local', 'Servicios'],
+      summary: `Municipio de ${master.name} (${master.subregion}). Alcaldía 2024-2027: ${master.electedMayor} (${master.winnerParty}). Censo electoral: ${master.electoralCensus.toLocaleString('es-CO')} votantes.`,
+      areas: [
+        {
+          id: `${master.id}-urbano`,
+          name: `${master.name} - Cabecera Urbana`,
+          type: 'Urbana',
+          subtype: 'Zona',
+          barriosOrVeredas: ['Sector Centro', 'Barrios Periféricos', 'Zona Institucional y Comercial'],
+          estimatedPopulation: Math.round(master.population * (isRural ? 0.35 : 0.75)),
+          predominantStratum: master.predominantStratum.includes('1 y 2') ? 'Bajo (1-2)' : 'Medio (3-4)',
+          educationalLevelGeneral: 'Medio',
+          urbanDensity: 'Media',
+          characteristics: `Cabecera municipal urbana de ${master.name}. Concentra el comercio y servicios locales.`
+        },
+        {
+          id: `${master.id}-rural`,
+          name: `${master.name} - Corredores Veredales y Rurales`,
+          type: 'Rural',
+          subtype: 'Vereda',
+          barriosOrVeredas: ['Veredas Altas', 'Veredas Bajas', 'Centros Poblados Rurales'],
+          estimatedPopulation: Math.round(master.population * (isRural ? 0.65 : 0.25)),
+          predominantStratum: 'Bajo (1-2)',
+          educationalLevelGeneral: 'Básico',
+          urbanDensity: 'Rural Dispersa',
+          characteristics: `Sector rural y veredal de ${master.name}. Vocación agrícola y comunitaria.`
+        }
+      ],
+      demographics: {
+        ageGroups: {
+          joven: { range: '18-28 años', percentage: 26, label: 'Jóvenes' },
+          adulto: { range: '29-59 años', percentage: 54, label: 'Adultos' },
+          adultoMayor: { range: '60+ años', percentage: 20, label: 'Adultos Mayores' }
+        },
+        socioeconomicStratum: {
+          bajo: { strata: 'Estrato 1 y 2', percentage: master.predominantStratum.includes('1 y 2') ? 78 : 45, description: 'Sectores populares y veredales' },
+          medio: { strata: 'Estrato 3 y 4', percentage: master.predominantStratum.includes('1 y 2') ? 20 : 50, description: 'Comercio y clase media' },
+          alto: { strata: 'Estrato 5 y 6', percentage: 2, description: 'Sectores campestres' }
+        },
+        educationLevels: {
+          basico: { level: 'Primaria / Secundaria incompleta', percentage: 48, description: 'Educación básica' },
+          medio: { level: 'Bachiller / Técnico SENA', percentage: 40, description: 'Formación técnica y media' },
+          superior: { level: 'Profesional / Universitaria', percentage: 12, description: 'Educación superior' }
+        }
+      },
+      electoralAntecedents: {
+        'Alcaldía': {
+          office: 'Alcaldía',
+          title: `Elección Alcalde de ${master.name} (2024-2027)`,
+          competencies: 'Administración del presupuesto municipal, orden público, inversión local y ejecución de obras.',
+          immediateAntecedents2023: {
+            totalVotes: Math.round(master.electoralCensus * 0.58),
+            winnerOrLeadingParty: master.winnerParty,
+            winnerVotes: master.votesMayor || Math.round(master.electoralCensus * 0.28),
+            secondPlaceOrParty: master.runnerUp?.party || 'Coalición Opositora',
+            secondVotes: master.runnerUp?.votes || Math.round(master.electoralCensus * 0.18),
+            abstentionRate: 42.0,
+            blankAndNullVotes: Math.round(master.electoralCensus * 0.05),
+            keyInsights: `Triunfo de ${master.electedMayor} con ${master.winnerParty}. ${master.councilSeats ? `Concejo de ${master.totalCouncilSeats || 11} curules con bancadas de ${master.councilSeats.map(c => c.party).slice(0, 3).join(', ')}.` : ''}`
+          },
+          keyDynamics: [
+            `Alcalde: ${master.electedMayor} (${master.winnerParty})`,
+            `Gobernabilidad municipal y bancadas mayoritarias`,
+            `Retos de seguridad: ${master.securityDynamics?.armedPresence || 'Vigilancia institucional'}`
+          ]
+        },
+        'Concejo': {
+          office: 'Concejo',
+          title: `Concejo Municipal de ${master.name} 2024-2027`,
+          competencies: 'Control político a la administración, aprobación del Plan de Desarrollo y presupuesto.',
+          immediateAntecedents2023: {
+            totalVotes: Math.round(master.electoralCensus * 0.56),
+            winnerOrLeadingParty: master.councilSeats?.[0]?.party || master.predominantParty,
+            winnerVotes: Math.round(master.electoralCensus * 0.18),
+            secondPlaceOrParty: master.councilSeats?.[1]?.party || 'Partido Conservador',
+            secondVotes: Math.round(master.electoralCensus * 0.14),
+            abstentionRate: 44.0,
+            blankAndNullVotes: Math.round(master.electoralCensus * 0.06),
+            keyInsights: `${master.totalCouncilSeats || 11} curules repartidas entre ${master.councilSeats?.map(c => `${c.party} (${c.seats})`).join(', ') || 'diversas bancadas'}.`
+          },
+          keyDynamics: master.councilSeats ? master.councilSeats.map(c => `${c.party}: ${c.seats} curules (${c.percentageValid || 20}%)`) : ['Bancadas multipartidistas']
+        },
+        'Gobernación': {
+          office: 'Gobernación',
+          title: `Gobernación de Antioquia en ${master.name} 2023`,
+          competencies: 'Inversión departamental, red vial secundaria, hospitales y seguridad regional.',
+          immediateAntecedents2023: {
+            totalVotes: Math.round(master.electoralCensus * 0.57),
+            winnerOrLeadingParty: 'Andrés Julián Rendón (Por Antioquia Firme / CD - Creemos)',
+            winnerVotes: Math.round(master.electoralCensus * 0.28),
+            secondPlaceOrParty: 'Luis Pérez Gutiérrez (Coalición Antioquia Piensa en Grande)',
+            secondVotes: Math.round(master.electoralCensus * 0.18),
+            abstentionRate: 43.0,
+            blankAndNullVotes: Math.round(master.electoralCensus * 0.05),
+            keyInsights: `Comportamiento electoral alineado a la coalición departamental en la subregión ${master.subregion}.`
+          },
+          keyDynamics: [
+            'Alta receptividad a propuestas de orden y seguridad departamental',
+            'Demanda de autonomía fiscal y mantenimiento vial'
+          ]
+        },
+        'Asamblea': {
+          office: 'Asamblea',
+          title: `Asamblea Departamental en ${master.name} 2023`,
+          competencies: 'Control político departamental y ordenanzas regionales.',
+          immediateAntecedents2023: {
+            totalVotes: Math.round(master.electoralCensus * 0.54),
+            winnerOrLeadingParty: 'Centro Democrático / Creemos',
+            winnerVotes: Math.round(master.electoralCensus * 0.22),
+            secondPlaceOrParty: 'Partido Conservador / Liberal',
+            secondVotes: Math.round(master.electoralCensus * 0.16),
+            abstentionRate: 46.0,
+            blankAndNullVotes: Math.round(master.electoralCensus * 0.08),
+            keyInsights: `Votación multipartidista con peso de diputados de la subregión ${master.subregion}.`
+          },
+          keyDynamics: [
+            'Voto de estructura partidista tradicional',
+            'Influencia de líderes comunales y campesinos'
+          ]
+        }
+      }
+    };
+  }
+  return STRATEGIC_MUNICIPALITIES['bello'];
 }
 
 export const AntioquiaMunicipiosManager: React.FC<AntioquiaMunicipiosManagerProps> = ({
   candidateProfile,
-  onNavigateToBio
+  onNavigateToBio,
+  onNavigateToContentDirector
 }) => {
-  // Lista fija de los 7 municipios autorizados
+  // Lista fija de los 7 municipios autorizados con modelado 3D
   const MUNICIPALITY_KEYS = [
     { id: 'bello', name: 'Bello', badge: '554k hab' },
     { id: 'itagui', name: 'Itagüí', badge: '291k hab' },
@@ -86,12 +248,54 @@ export const AntioquiaMunicipiosManager: React.FC<AntioquiaMunicipiosManagerProp
     { id: 'rionegro', name: 'Rionegro', badge: '147k hab' }
   ];
 
+  // Modos de exploración: Top 7 con 3D vs Los 125 Municipios de Antioquia
+  const [muniScopeMode, setMuniScopeMode] = useState<'7-estrategicos' | '125-antioquia'>('125-antioquia');
+  const [selectedSubregionFilter, setSelectedSubregionFilter] = useState<string>('all');
+  const [searchMuniQuery, setSearchMuniQuery] = useState<string>('');
+
   // Estado del municipio activo
   const [selectedMuniId, setSelectedMuniId] = useState<string>('bello');
-  const currentMuni: StrategicMunicipality = STRATEGIC_MUNICIPALITIES[selectedMuniId] || STRATEGIC_MUNICIPALITIES['bello'];
+  
+  const currentMuni: StrategicMunicipality = useMemo(() => {
+    return getMunicipalityAdapter(selectedMuniId);
+  }, [selectedMuniId]);
 
-  // Modo de visualización territorial para los 7 municipios ('both' | 'map' | 'charts' | 'comunas' | 'diorama3d')
-  const [muniViewMode, setMuniViewMode] = useState<'both' | 'map' | 'charts' | 'comunas' | 'diorama3d'>('both');
+  const activeMasterRec: UnifiedMunicipalityRecord | undefined = useMemo(() => {
+    const cleanId = selectedMuniId.replace('mpio-', '');
+    return ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA.find(
+      m => m.id === selectedMuniId || m.id === `mpio-${cleanId}` || m.daneCode === cleanId || m.name.toLowerCase() === selectedMuniId.toLowerCase()
+    );
+  }, [selectedMuniId]);
+
+  const isStrategic7 = STRATEGIC_7_KEYS.includes(selectedMuniId);
+
+  // Subregiones únicas para el filtro
+  const allSubregions = useMemo(() => {
+    const set = new Set<string>();
+    ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA.forEach(m => {
+      if (m.subregion) set.add(m.subregion);
+    });
+    return Array.from(set).sort();
+  }, []);
+
+  // Lista filtrada de los 125 municipios
+  const filtered125Municipios = useMemo(() => {
+    return ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA.filter(m => {
+      const matchSearch = !searchMuniQuery.trim() ||
+        m.name.toLowerCase().includes(searchMuniQuery.toLowerCase()) ||
+        m.daneCode.includes(searchMuniQuery) ||
+        m.electedMayor.toLowerCase().includes(searchMuniQuery.toLowerCase());
+      const matchSub = selectedSubregionFilter === 'all' || m.subregion === selectedSubregionFilter;
+      return matchSearch && matchSub;
+    });
+  }, [searchMuniQuery, selectedSubregionFilter]);
+
+  // Detección de municipio estratégico (Top 7 con 3D) vs Ficha Maestra 125 Municipios
+  const isStrategic7 = STRATEGIC_7_KEYS.includes(selectedMuniId);
+  const [nonStrategicTab, setNonStrategicTab] = useState<'ficha' | 'demografia' | 'veredas'>('ficha');
+
+  // Modo de visualización territorial ('both' | 'map' | 'charts' | 'comunas' | 'diorama3d' | 'dossier')
+  const [muniViewMode, setMuniViewMode] = useState<'both' | 'map' | 'charts' | 'comunas' | 'diorama3d' | 'dossier'>('both');
 
   // Estados de filtros (Recuadro Derecho)
   const initialAreaId = ALL_MUNICIPIOS_TERRITORIAL_DATA[selectedMuniId]?.areas[0]?.id || currentMuni.areas[0]?.id || '';
@@ -114,14 +318,29 @@ export const AntioquiaMunicipiosManager: React.FC<AntioquiaMunicipiosManagerProp
   // Área activa seleccionada
   const currentArea = currentMuni.areas.find(a => a.id === selectedAreaId) || currentMuni.areas[0];
 
-  // Cálculo del cruce demográfico
-  const demographicEstimation = calculateDemographicCrossEstimation(
-    selectedMuniId,
-    selectedAreaId,
-    selectedAge,
-    selectedStratum,
-    selectedEducation
-  );
+  // Cálculo del cruce demográfico dinámico
+  const demographicEstimation = useMemo(() => {
+    const selectedArea = currentMuni.areas.find(a => a.id === selectedAreaId) || currentMuni.areas[0];
+    const areaPopulation = selectedArea.estimatedPopulation || Math.round(currentMuni.totalPopulation * 0.6);
+    const agePct = (currentMuni.demographics.ageGroups[selectedAge]?.percentage || 25) / 100;
+    let stratumPct = (currentMuni.demographics.socioeconomicStratum[selectedStratum]?.percentage || 33) / 100;
+    let eduPct = (currentMuni.demographics.educationLevels[selectedEducation]?.percentage || 33) / 100;
+    const estimatedGroupCount = Math.round(areaPopulation * agePct * stratumPct * eduPct * 2.4);
+    const finalEstimatedCount = Math.max(80, Math.min(Math.round(areaPopulation * 0.45), estimatedGroupCount));
+    const estimatedVoterTurnout = Math.round(finalEstimatedCount * 0.58);
+    const percentageOfArea = ((finalEstimatedCount / (areaPopulation || 1)) * 100).toFixed(1);
+    const percentageOfMunicipality = ((finalEstimatedCount / (currentMuni.totalPopulation || 1)) * 100).toFixed(2);
+    return {
+      finalEstimatedCount,
+      estimatedVoterTurnout,
+      percentageOfArea,
+      percentageOfMunicipality,
+      areaName: selectedArea.name,
+      areaType: selectedArea.type,
+      areaPopulation,
+      totalMunicipalityPopulation: currentMuni.totalPopulation
+    };
+  }, [currentMuni, selectedAreaId, selectedAge, selectedStratum, selectedEducation]);
 
   // Antecedente electoral seleccionado
   const currentElectoralData = currentMuni.electoralAntecedents[selectedOffice];
@@ -380,71 +599,158 @@ Entrega un informe denso, sin texto genérico ni rodeos, con lenguaje de consult
         
         {/* Barra de Navegación Lateral (Municipios) */}
         <aside className="lg:col-span-3 space-y-3">
-          <div className="bg-slate-900/60 backdrop-blur-xl border border-white/10 shadow-xl rounded-3xl p-4 shadow-sm border border-white/10">
-            <div className="flex items-center justify-between mb-3 px-2">
-              <span className="text-xs font-black uppercase tracking-wider text-slate-400">
-                Municipios Clave
-              </span>
-              <span className="text-[10px] font-extrabold bg-sky-500/10 text-blue-700 px-2 py-0.5 rounded-full">
-                7 Unidades
-              </span>
+          <div className="bg-slate-900/60 backdrop-blur-xl border border-white/10 shadow-xl rounded-3xl p-4 shadow-sm border border-white/10 space-y-3">
+            {/* Scope Mode Switcher */}
+            <div className="flex p-0.5 rounded-xl bg-black/40 border border-white/10 text-[10px] font-bold">
+              <button
+                type="button"
+                onClick={() => setMuniScopeMode('125-antioquia')}
+                className={`flex-1 py-1.5 rounded-lg transition text-center ${
+                  muniScopeMode === '125-antioquia'
+                    ? 'bg-emerald-500/30 text-emerald-200 border border-emerald-400/50 font-black'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                125 Municipios
+              </button>
+              <button
+                type="button"
+                onClick={() => setMuniScopeMode('7-estrategicos')}
+                className={`flex-1 py-1.5 rounded-lg transition text-center ${
+                  muniScopeMode === '7-estrategicos'
+                    ? 'bg-sky-500/30 text-sky-200 border border-sky-400/50 font-black'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                Top 7 (3D)
+              </button>
             </div>
 
-            <div className="space-y-1.5">
-              {MUNICIPALITY_KEYS.map((muni) => {
-                const isActive = selectedMuniId === muni.id;
-                return (
-                  <button
-                    key={muni.id}
-                    id={`btn-muni-${muni.id}`}
-                    onClick={() => setSelectedMuniId(muni.id)}
-                    className={`w-full text-left px-3.5 py-3 rounded-2xl font-black text-xs transition-all flex items-center justify-between border ${
-                      isActive
-                        ? 'bg-blue-900 text-white shadow-md border-blue-950 scale-[1.01]'
-                        : 'bg-white/[0.04] backdrop-blur-sm border border-white/10/80 hover:bg-slate-100 text-slate-200 border-white/10/80 hover:border-slate-300'
-                    }`}
-                  >
-                    <div className="flex items-center gap-2.5">
-                      <div className={`p-1.5 rounded-xl ${isActive ? 'bg-slate-900/60 backdrop-blur-xl border border-white/10 shadow-xl/20 text-white' : 'bg-slate-900/60 backdrop-blur-xl border border-white/10 shadow-xl text-slate-300 shadow-xs'}`}>
-                        <Building2 className="w-3.5 h-3.5" />
+            {/* If 125 Mode: Subregion filter + search */}
+            {muniScopeMode === '125-antioquia' && (
+              <div className="space-y-2">
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Buscar municipio, DIVIPOLA..."
+                    value={searchMuniQuery}
+                    onChange={(e) => setSearchMuniQuery(e.target.value)}
+                    className="w-full pl-7 pr-2 py-1.5 rounded-xl bg-white/05 border border-white/15 text-white text-[11px] placeholder:text-slate-500 focus:outline-none focus:border-emerald-400"
+                  />
+                  <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2 top-1/2 -translate-y-1/2 pointer-events-none" />
+                </div>
+
+                <select
+                  value={selectedSubregionFilter}
+                  onChange={(e) => setSelectedSubregionFilter(e.target.value)}
+                  className="w-full px-2 py-1.5 rounded-xl bg-white/05 border border-white/15 text-white text-[10px] font-mono focus:outline-none focus:border-emerald-400"
+                >
+                  <option value="all" className="bg-slate-900 text-white">Todas las Subregiones ({ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA.length})</option>
+                  {allSubregions.map((s) => (
+                    <option key={s} value={s} className="bg-slate-900 text-white">
+                      {s}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+
+            {/* Header info count */}
+            <div className="flex items-center justify-between px-1 text-[10px] font-mono uppercase text-slate-400 font-bold">
+              <span>{muniScopeMode === '7-estrategicos' ? 'Municipios Clave (3D)' : `Antioquia (${filtered125Municipios.length})`}</span>
+              <span className="text-emerald-400">DANE Oficial</span>
+            </div>
+
+            {/* List of Municipalities */}
+            <div className="space-y-1.5 max-h-[420px] overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-white/15">
+              {muniScopeMode === '7-estrategicos' ? (
+                MUNICIPALITY_KEYS.map((muni) => {
+                  const isActive = selectedMuniId === muni.id;
+                  return (
+                    <button
+                      key={muni.id}
+                      id={`btn-muni-${muni.id}`}
+                      onClick={() => setSelectedMuniId(muni.id)}
+                      className={`w-full text-left px-3 py-2.5 rounded-2xl font-black text-xs transition-all flex items-center justify-between border cursor-pointer ${
+                        isActive
+                          ? 'bg-gradient-to-r from-blue-900 to-indigo-900 text-white shadow-md border-sky-400/60 scale-[1.01]'
+                          : 'bg-white/[0.04] hover:bg-white/10 text-slate-200 border-white/10'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <div className={`p-1.5 rounded-xl ${isActive ? 'bg-sky-500/30 text-sky-200' : 'bg-white/05 text-slate-400'}`}>
+                          <Building2 className="w-3.5 h-3.5" />
+                        </div>
+                        <span className="tracking-tight text-xs font-black">{muni.name}</span>
                       </div>
-                      <span className="tracking-tight text-sm font-black">{muni.name}</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                        isActive ? 'bg-slate-900/60 backdrop-blur-xl border border-white/10 shadow-xl/20 text-blue-100' : 'bg-slate-200 text-slate-300'
-                      }`}>
+                      <span className="text-[10px] font-mono font-bold text-slate-300">
                         {muni.badge}
                       </span>
-                      <ChevronRight className={`w-3.5 h-3.5 transition-transform ${isActive ? 'text-white translate-x-0.5' : 'text-slate-400'}`} />
-                    </div>
-                  </button>
-                );
-              })}
+                    </button>
+                  );
+                })
+              ) : (
+                filtered125Municipios.map((m) => {
+                  const isActive = selectedMuniId === m.id || selectedMuniId === m.name.toLowerCase();
+                  return (
+                    <button
+                      key={m.id}
+                      onClick={() => setSelectedMuniId(m.id)}
+                      className={`w-full text-left px-3 py-2 rounded-2xl font-bold text-xs transition-all flex items-center justify-between border cursor-pointer ${
+                        isActive
+                          ? 'bg-gradient-to-r from-emerald-950 to-slate-900 text-white shadow-md border-emerald-400/80 scale-[1.01]'
+                          : 'bg-white/[0.03] hover:bg-white/10 text-slate-300 border-white/05'
+                      }`}
+                    >
+                      <div>
+                        <div className="text-white text-xs font-black flex items-center gap-1.5">
+                          <span>{m.name}</span>
+                          <span className="text-[9px] px-1 py-0.2 rounded bg-white/10 text-slate-400 font-mono">
+                            Cat. {m.category}
+                          </span>
+                        </div>
+                        <div className="text-[10px] text-slate-400">{m.subregion}</div>
+                      </div>
+                      <div className="text-right shrink-0">
+                        <span className="text-[9px] font-mono text-emerald-400 font-bold block">
+                          {m.population.toLocaleString('es-CO')} hab
+                        </span>
+                      </div>
+                    </button>
+                  );
+                })
+              )}
             </div>
 
             {/* Ficha sintética del municipio seleccionado */}
-            <div className="mt-5 pt-4 border-t border-white/10 space-y-3 px-1">
-              <div className="flex items-center justify-between text-xs">
-                <span className="text-slate-400 font-bold uppercase text-[10px]">Categoría</span>
-                <span className="font-extrabold text-white">{currentMuni.category}</span>
+            <div className="mt-4 pt-3 border-t border-white/10 space-y-2 px-1 text-xs">
+              <div className="flex items-center justify-between">
+                <span className="text-slate-400 font-bold uppercase text-[10px]">Municipio</span>
+                <span className="font-black text-white">{currentMuni.name}</span>
               </div>
-              <div className="flex items-center justify-between text-xs">
-                <span className="text-slate-400 font-bold uppercase text-[10px]">Población Total</span>
-                <span className="font-extrabold text-blue-900">{currentMuni.totalPopulation.toLocaleString()} hab.</span>
+              <div className="flex items-center justify-between">
+                <span className="text-slate-400 font-bold uppercase text-[10px]">Categoría / Subregión</span>
+                <span className="font-bold text-emerald-300 text-[10px]">{currentMuni.category} • {currentMuni.subregion}</span>
               </div>
-              <div className="flex items-center justify-between text-xs">
+              <div className="flex items-center justify-between">
+                <span className="text-slate-400 font-bold uppercase text-[10px]">Población DANE</span>
+                <span className="font-black text-sky-300 font-mono">{currentMuni.totalPopulation.toLocaleString('es-CO')} hab.</span>
+              </div>
+              <div className="flex items-center justify-between">
                 <span className="text-slate-400 font-bold uppercase text-[10px]">Censo Electoral</span>
-                <span className="font-extrabold text-white">{currentMuni.electoralCensus.toLocaleString()} votantes</span>
+                <span className="font-bold text-white font-mono">{currentMuni.electoralCensus.toLocaleString('es-CO')} votantes</span>
               </div>
-              <div className="flex items-center justify-between text-xs">
-                <span className="text-slate-400 font-bold uppercase text-[10px]">Distribución</span>
-                <span className="font-extrabold text-emerald-700">{currentMuni.urbanRuralDistribution.urban}% Urb / {currentMuni.urbanRuralDistribution.rural}% Rur</span>
+              <div className="flex items-center justify-between">
+                <span className="text-slate-400 font-bold uppercase text-[10px]">NBI Pobreza</span>
+                <span className="font-bold text-amber-300 font-mono">{currentMuni.nbiPercentage}%</span>
               </div>
-              <div className="flex items-center justify-between text-xs">
-                <span className="text-slate-400 font-bold uppercase text-[10px]">IDH / NBI</span>
-                <span className="font-extrabold text-white">{currentMuni.hdi} | {currentMuni.nbiPercentage}%</span>
-              </div>
+              {activeMasterRec && (
+                <div className="pt-2 border-t border-white/05 text-[10px] text-slate-300 space-y-0.5">
+                  <div className="text-slate-400 uppercase font-bold text-[9px]">Alcaldía (2024-2027):</div>
+                  <div className="font-black text-white">{activeMasterRec.electedMayor}</div>
+                  <div className="text-sky-300 truncate">{activeMasterRec.winnerParty}</div>
+                </div>
+              )}
 
               <div className="pt-2">
                 <span className="text-[10px] font-bold text-slate-400 uppercase block mb-1">Vocación Económica</span>
@@ -463,160 +769,625 @@ Entrega un informe denso, sin texto genérico ni rodeos, con lenguaje de consult
         {/* Ventana del Municipio Seleccionado (9 Cols) */}
         <div className="lg:col-span-9 space-y-6">
 
-          {/* Encabezado y Herramientas Territoriales (Figura Interactiva, Diorama 3D, Comunas y Gráficas) para todos los 7 municipios */}
-          <div className="space-y-6">
-            {/* Barra Superior de Control de Visualización Territorial */}
-            <div className="bg-slate-900/60 backdrop-blur-xl border border-white/10 shadow-xl rounded-2xl p-3 sm:p-3.5 shadow-sm border border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-blue-900 text-white flex items-center justify-center font-black text-xs shadow-2xs">
-                  {currentMuni.name.substring(0, 2).toUpperCase()}
-                </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-black uppercase tracking-wider text-blue-900 bg-sky-500/10 px-2 py-0.5 rounded-md border border-blue-200">
-                      SISTEMA TERRITORIAL • {currentMuni.name.toUpperCase()}
-                    </span>
-                    <span className="text-[10px] font-bold text-slate-400">
-                      {ALL_MUNICIPIOS_TERRITORIAL_DATA[selectedMuniId]?.areas?.length || currentMuni.areas.length} divisiones oficiales
+          {/* Encabezado y Herramientas Territoriales (3D/Mapas para los 7 estratégicos, Ficha Maestra DANE para los 125) */}
+          {isStrategic7 ? (
+            <div className="space-y-6">
+              {/* Barra Superior de Control de Visualización Territorial */}
+              <div className="bg-slate-900/60 backdrop-blur-xl border border-white/10 shadow-xl rounded-2xl p-3 sm:p-3.5 shadow-sm border border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-xl bg-blue-900 text-white flex items-center justify-center font-black text-xs shadow-2xs">
+                    {currentMuni.name.substring(0, 2).toUpperCase()}
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] font-black uppercase tracking-wider text-blue-900 bg-sky-500/10 px-2 py-0.5 rounded-md border border-blue-200">
+                        SISTEMA TERRITORIAL • {currentMuni.name.toUpperCase()}
+                      </span>
+                      <span className="text-[10px] font-bold text-slate-400">
+                        {ALL_MUNICIPIOS_TERRITORIAL_DATA[selectedMuniId]?.areas?.length || currentMuni.areas.length} divisiones oficiales
+                      </span>
+                    </div>
+                    <span className="text-xs font-black text-white block mt-0.5">
+                      Inteligencia Territorial, Diorama 3D y Demografía
                     </span>
                   </div>
-                  <span className="text-xs font-black text-white block mt-0.5">
-                    Inteligencia Territorial, Diorama 3D y Demografía
-                  </span>
+                </div>
+
+                {/* Conmutador de vistas */}
+                <div className="flex flex-wrap bg-slate-100 p-1 rounded-xl text-xs font-bold self-start sm:self-auto border border-white/10/80">
+                  <button
+                    onClick={() => setMuniViewMode('both')}
+                    className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
+                      muniViewMode === 'both'
+                        ? 'bg-blue-900 text-white shadow-xs'
+                        : 'text-slate-300 hover:text-white'
+                    }`}
+                  >
+                    <Layers className="w-3.5 h-3.5" />
+                    <span>Vista Integral</span>
+                  </button>
+                  <button
+                    onClick={() => setMuniViewMode('charts')}
+                    className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
+                      muniViewMode === 'charts'
+                        ? 'bg-blue-900 text-white shadow-xs'
+                        : 'text-slate-300 hover:text-white'
+                    }`}
+                  >
+                    <BarChart3 className="w-3.5 h-3.5 text-pink-400" />
+                    <span>Gráficas Círculo & Barras</span>
+                  </button>
+                  <button
+                    onClick={() => setMuniViewMode('comunas')}
+                    className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
+                      muniViewMode === 'comunas'
+                        ? 'bg-blue-900 text-white shadow-xs'
+                        : 'text-slate-300 hover:text-white'
+                    }`}
+                  >
+                    <MapPin className="w-3.5 h-3.5 text-rose-400" />
+                    <span>Pánel por Comuna</span>
+                  </button>
+                  <button
+                    onClick={() => setMuniViewMode('diorama3d')}
+                    className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
+                      muniViewMode === 'diorama3d'
+                        ? 'bg-blue-900 text-white shadow-xs'
+                        : 'text-slate-300 hover:text-white'
+                    }`}
+                  >
+                    <Box className="w-3.5 h-3.5 text-sky-400" />
+                    <span>Diorama 3D</span>
+                  </button>
+                  <button
+                    onClick={() => setMuniViewMode('map')}
+                    className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
+                      muniViewMode === 'map'
+                        ? 'bg-blue-900 text-white shadow-xs'
+                        : 'text-slate-300 hover:text-white'
+                    }`}
+                  >
+                    <Compass className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>Mapa Cartográfico</span>
+                  </button>
                 </div>
               </div>
 
-              {/* Conmutador de vistas */}
-              <div className="flex flex-wrap bg-slate-100 p-1 rounded-xl text-xs font-bold self-start sm:self-auto border border-white/10/80">
-                <button
-                  onClick={() => setMuniViewMode('both')}
-                  className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
-                    muniViewMode === 'both'
-                      ? 'bg-blue-900 text-white shadow-xs'
-                      : 'text-slate-300 hover:text-white'
-                  }`}
-                >
-                  <Layers className="w-3.5 h-3.5" />
-                  <span>Vista Integral</span>
-                </button>
-                <button
-                  onClick={() => setMuniViewMode('charts')}
-                  className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
-                    muniViewMode === 'charts'
-                      ? 'bg-blue-900 text-white shadow-xs'
-                      : 'text-slate-300 hover:text-white'
-                  }`}
-                >
-                  <BarChart3 className="w-3.5 h-3.5 text-pink-400" />
-                  <span>Gráficas Círculo & Barras</span>
-                </button>
-                <button
-                  onClick={() => setMuniViewMode('comunas')}
-                  className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
-                    muniViewMode === 'comunas'
-                      ? 'bg-blue-900 text-white shadow-xs'
-                      : 'text-slate-300 hover:text-white'
-                  }`}
-                >
-                  <MapPin className="w-3.5 h-3.5 text-rose-400" />
-                  <span>Pánel por Comuna</span>
-                </button>
-                <button
-                  onClick={() => setMuniViewMode('diorama3d')}
-                  className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
-                    muniViewMode === 'diorama3d'
-                      ? 'bg-blue-900 text-white shadow-xs'
-                      : 'text-slate-300 hover:text-white'
-                  }`}
-                >
-                  <Box className="w-3.5 h-3.5 text-sky-400" />
-                  <span>Diorama 3D</span>
-                </button>
-                <button
-                  onClick={() => setMuniViewMode('map')}
-                  className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
-                    muniViewMode === 'map'
-                      ? 'bg-blue-900 text-white shadow-xs'
-                      : 'text-slate-300 hover:text-white'
-                  }`}
-                >
-                  <Compass className="w-3.5 h-3.5 text-emerald-400" />
-                  <span>Mapa Cartográfico</span>
-                </button>
-              </div>
+              {/* Componente Diorama 3D Interactivo (si mode es 'diorama3d') */}
+              {muniViewMode === 'diorama3d' && (
+                selectedMuniId === 'rionegro' ? (
+                  <Rionegro3DDiorama
+                    selectedAreaId={selectedAreaId}
+                    onSelectArea={(areaId) => setSelectedAreaId(areaId)}
+                  />
+                ) : (
+                  <Municipio3DDiorama
+                    muniId={selectedMuniId}
+                    selectedAreaId={selectedAreaId}
+                    onSelectArea={(areaId) => setSelectedAreaId(areaId)}
+                  />
+                )
+              )}
+
+              {/* Componente Mapa Interactivo (si mode es 'both' o 'map') */}
+              {(muniViewMode === 'both' || muniViewMode === 'map') && (
+                selectedMuniId === 'rionegro' ? (
+                  <RionegroInteractiveMap
+                    areas={currentMuni.areas}
+                    selectedAreaId={selectedAreaId}
+                    onSelectArea={(areaId) => setSelectedAreaId(areaId)}
+                  />
+                ) : selectedMuniId === 'bello' ? (
+                  <BelloInteractiveMap
+                    areas={currentMuni.areas}
+                    selectedAreaId={selectedAreaId}
+                    onSelectArea={(areaId) => setSelectedAreaId(areaId)}
+                  />
+                ) : (
+                  <MunicipioInteractiveMap
+                    muniId={selectedMuniId}
+                    selectedAreaId={selectedAreaId}
+                    onSelectArea={(areaId) => setSelectedAreaId(areaId)}
+                  />
+                )
+              )}
+
+              {/* Componente de Gráficas Demográficas Círculo y Barras (si mode es 'both' o 'charts') */}
+              {(muniViewMode === 'both' || muniViewMode === 'charts') && (
+                selectedMuniId === 'rionegro' ? (
+                  <RionegroECVDashboard
+                    selectedAreaId={selectedAreaId}
+                    onSelectArea={(areaId) => setSelectedAreaId(areaId)}
+                  />
+                ) : (
+                  <MunicipioDemographicDashboard
+                    muniId={selectedMuniId}
+                    selectedAreaId={selectedAreaId}
+                    onSelectArea={(areaId) => setSelectedAreaId(areaId)}
+                  />
+                )
+              )}
+
+              {/* Componente Específico Pánel por Comuna y Corregimiento (si mode es 'comunas') */}
+              {muniViewMode === 'comunas' && (
+                selectedMuniId === 'rionegro' ? (
+                  <RionegroECVDashboard
+                    selectedAreaId={selectedAreaId}
+                    onSelectArea={(areaId) => setSelectedAreaId(areaId)}
+                  />
+                ) : (
+                  <MunicipioCommuneDetailCard
+                    muniId={selectedMuniId}
+                    selectedAreaId={selectedAreaId}
+                    onSelectArea={(areaId) => setSelectedAreaId(areaId)}
+                  />
+                )
+              )}
             </div>
+          ) : (
+            <div className="space-y-6">
+              {/* Barra Superior Ficha Maestra Municipal de Alta Definición */}
+              <div className="bg-slate-900/60 backdrop-blur-xl border border-white/10 shadow-xl rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-800 text-white flex items-center justify-center font-black text-sm shadow-md border border-emerald-400/30">
+                    {currentMuni.name.substring(0, 2).toUpperCase()}
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] font-black uppercase tracking-wider text-emerald-300 bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-400/30">
+                        FICHA MAESTRA DANE & REGISTRADURÍA • {currentMuni.name.toUpperCase()}
+                      </span>
+                      <span className="text-[10px] font-bold text-slate-400 font-mono">
+                        DANE: {activeMasterRec?.daneCode || '05000'} • Cat. {activeMasterRec?.category || currentMuni.category}
+                      </span>
+                    </div>
+                    <span className="text-xs font-black text-white block mt-0.5">
+                      Subregión {activeMasterRec?.subregion || currentMuni.subregion} • Gobernabilidad, Demografía y Dinámica Electoral
+                    </span>
+                  </div>
+                </div>
 
-            {/* Componente Diorama 3D Interactivo (si mode es 'diorama3d') */}
-            {muniViewMode === 'diorama3d' && (
-              selectedMuniId === 'rionegro' ? (
-                <Rionegro3DDiorama
-                  selectedAreaId={selectedAreaId}
-                  onSelectArea={(areaId) => setSelectedAreaId(areaId)}
-                />
-              ) : (
-                <Municipio3DDiorama
-                  muniId={selectedMuniId}
-                  selectedAreaId={selectedAreaId}
-                  onSelectArea={(areaId) => setSelectedAreaId(areaId)}
-                />
-              )
-            )}
+                <div className="flex items-center gap-2 flex-wrap">
+                  {/* Botón de Creación de Contenido Territorial */}
+                  <button
+                    onClick={() => {
+                      activeTerritoryService.setState({
+                        scale: 'municipal',
+                        name: activeMasterRec ? activeMasterRec.name : currentMuni.name,
+                        fullName: `${activeMasterRec ? activeMasterRec.name : currentMuni.name} (${activeMasterRec?.subregion || currentMuni.subregion}, Antioquia)`,
+                        deptId: 'dept-antioquia',
+                        subregId: activeMasterRec?.subregionId || 'subreg-oriente',
+                        muniId: activeMasterRec?.id || selectedMuniId,
+                        population: activeMasterRec?.population || currentMuni.totalPopulation,
+                        electoralCensus: activeMasterRec?.electoralCensus || currentMuni.electoralCensus,
+                        nbiPercentage: activeMasterRec?.nbiPercentage || currentMuni.nbiPercentage,
+                        predominantStratum: activeMasterRec?.predominantStratum || 'Estrato 1 y 2',
+                        electedMayor: activeMasterRec?.electedMayor,
+                        winnerParty: activeMasterRec?.winnerParty,
+                        keyProblems: activeMasterRec?.keyProblems || [],
+                        strategicOpportunities: activeMasterRec?.strategicOpportunities || [],
+                        economicSectors: activeMasterRec?.economicSectors || currentMuni.economicDrivers,
+                        securityDynamics: activeMasterRec?.securityDynamics || {},
+                        source: 'manual_selector'
+                      });
+                      if (onNavigateToContentDirector) {
+                        onNavigateToContentDirector();
+                      }
+                    }}
+                    className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-sky-600 hover:from-emerald-500 hover:to-sky-500 text-white font-black text-xs flex items-center gap-1.5 shadow-lg cursor-pointer transition-all border border-emerald-400/40 hover:scale-105"
+                  >
+                    <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+                    <span>Crear Discurso con Gemini</span>
+                  </button>
 
-            {/* Componente Mapa Interactivo (si mode es 'both' o 'map') */}
-            {(muniViewMode === 'both' || muniViewMode === 'map') && (
-              selectedMuniId === 'rionegro' ? (
-                <RionegroInteractiveMap
-                  areas={currentMuni.areas}
-                  selectedAreaId={selectedAreaId}
-                  onSelectArea={(areaId) => setSelectedAreaId(areaId)}
-                />
-              ) : selectedMuniId === 'bello' ? (
-                <BelloInteractiveMap
-                  areas={currentMuni.areas}
-                  selectedAreaId={selectedAreaId}
-                  onSelectArea={(areaId) => setSelectedAreaId(areaId)}
-                />
-              ) : (
-                <MunicipioInteractiveMap
-                  muniId={selectedMuniId}
-                  selectedAreaId={selectedAreaId}
-                  onSelectArea={(areaId) => setSelectedAreaId(areaId)}
-                />
-              )
-            )}
+                  {/* Selector de pestañas */}
+                  <div className="flex bg-slate-800/80 p-1 rounded-xl text-xs font-bold border border-white/10">
+                    <button
+                      onClick={() => setNonStrategicTab('ficha')}
+                      className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 cursor-pointer ${
+                        nonStrategicTab === 'ficha' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-300 hover:text-white'
+                      }`}
+                    >
+                      <FileText className="w-3.5 h-3.5" />
+                      <span>Ficha Integral</span>
+                    </button>
+                    <button
+                      onClick={() => setNonStrategicTab('demografia')}
+                      className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 cursor-pointer ${
+                        nonStrategicTab === 'demografia' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-300 hover:text-white'
+                      }`}
+                    >
+                      <BarChart3 className="w-3.5 h-3.5 text-sky-400" />
+                      <span>Demografía</span>
+                    </button>
+                    <button
+                      onClick={() => setNonStrategicTab('veredas')}
+                      className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 cursor-pointer ${
+                        nonStrategicTab === 'veredas' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-300 hover:text-white'
+                      }`}
+                    >
+                      <MapPin className="w-3.5 h-3.5 text-rose-400" />
+                      <span>Veredas y Áreas</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
 
-            {/* Componente de Gráficas Demográficas Círculo y Barras (si mode es 'both' o 'charts') */}
-            {(muniViewMode === 'both' || muniViewMode === 'charts') && (
-              selectedMuniId === 'rionegro' ? (
-                <RionegroECVDashboard
-                  selectedAreaId={selectedAreaId}
-                  onSelectArea={(areaId) => setSelectedAreaId(areaId)}
-                />
-              ) : (
-                <MunicipioDemographicDashboard
-                  muniId={selectedMuniId}
-                  selectedAreaId={selectedAreaId}
-                  onSelectArea={(areaId) => setSelectedAreaId(areaId)}
-                />
-              )
-            )}
+              {/* Contenido según pestaña */}
+              {nonStrategicTab === 'ficha' && (
+                <div className="space-y-4">
+                  {/* Grid de 4 KPIs */}
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <div className="bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-2xl p-3.5 shadow-lg">
+                      <div className="flex items-center justify-between text-slate-400 text-xs font-bold mb-1">
+                        <span>Población DANE</span>
+                        <Users className="w-4 h-4 text-sky-400" />
+                      </div>
+                      <div className="text-xl font-black text-white font-mono">
+                        {(activeMasterRec?.population || currentMuni.totalPopulation).toLocaleString('es-CO')}
+                      </div>
+                      <span className="text-[10px] text-slate-400">Habitantes proyectados</span>
+                    </div>
 
-            {/* Componente Específico Pánel por Comuna y Corregimiento (si mode es 'comunas') */}
-            {muniViewMode === 'comunas' && (
-              selectedMuniId === 'rionegro' ? (
-                <RionegroECVDashboard
-                  selectedAreaId={selectedAreaId}
-                  onSelectArea={(areaId) => setSelectedAreaId(areaId)}
-                />
-              ) : (
-                <MunicipioCommuneDetailCard
-                  muniId={selectedMuniId}
-                  selectedAreaId={selectedAreaId}
-                  onSelectArea={(areaId) => setSelectedAreaId(areaId)}
-                />
-              )
-            )}
-          </div>
+                    <div className="bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-2xl p-3.5 shadow-lg">
+                      <div className="flex items-center justify-between text-slate-400 text-xs font-bold mb-1">
+                        <span>Censo Electoral</span>
+                        <Vote className="w-4 h-4 text-emerald-400" />
+                      </div>
+                      <div className="text-xl font-black text-white font-mono">
+                        {(activeMasterRec?.electoralCensus || currentMuni.electoralCensus).toLocaleString('es-CO')}
+                      </div>
+                      <span className="text-[10px] text-emerald-400/80">Registraduría 2023</span>
+                    </div>
+
+                    <div className="bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-2xl p-3.5 shadow-lg">
+                      <div className="flex items-center justify-between text-slate-400 text-xs font-bold mb-1">
+                        <span>Pobreza NBI</span>
+                        <TrendingUp className="w-4 h-4 text-amber-400" />
+                      </div>
+                      <div className="text-xl font-black text-amber-300 font-mono">
+                        {activeMasterRec?.nbiPercentage ?? currentMuni.nbiPercentage}%
+                      </div>
+                      <span className="text-[10px] text-slate-400">Necesidades básicas</span>
+                    </div>
+
+                    <div className="bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-2xl p-3.5 shadow-lg">
+                      <div className="flex items-center justify-between text-slate-400 text-xs font-bold mb-1">
+                        <span>Riesgo / Seguridad</span>
+                        <ShieldCheck className="w-4 h-4 text-indigo-400" />
+                      </div>
+                      <div className="text-xl font-black text-white">
+                        <span className={`inline-block text-xs font-bold px-2 py-0.5 rounded-full ${
+                          activeMasterRec?.riskLevel === 'Crítico' ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40' :
+                          activeMasterRec?.riskLevel === 'Alto' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40' :
+                          activeMasterRec?.riskLevel === 'Medio' ? 'bg-yellow-500/20 text-yellow-300 border border-yellow-500/40' :
+                          'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
+                        }`}>
+                          {activeMasterRec?.riskLevel || 'Bajo'}
+                        </span>
+                      </div>
+                      <span className="text-[10px] text-slate-400">Orden institucional</span>
+                    </div>
+                  </div>
+
+                  {/* Bloque Central: Alcaldía y Concejo */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* Tarjeta Alcaldía */}
+                    <div className="bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-2xl p-4 shadow-lg space-y-3">
+                      <div className="flex items-center justify-between pb-2 border-b border-white/10">
+                        <div className="flex items-center gap-2">
+                          <Building2 className="w-4 h-4 text-emerald-400" />
+                          <span className="text-xs font-black text-white uppercase tracking-wider">
+                            Alcaldía Municipal (2024-2027)
+                          </span>
+                        </div>
+                        <span className="text-[10px] font-mono text-slate-400">Oficial Gobernación</span>
+                      </div>
+
+                      <div className="space-y-2">
+                        <div>
+                          <span className="text-[10px] font-bold text-slate-400 uppercase block">Alcalde Electo</span>
+                          <span className="text-sm font-black text-white">
+                            {activeMasterRec?.electedMayor || 'Mandatario Municipal'}
+                          </span>
+                        </div>
+
+                        <div>
+                          <span className="text-[10px] font-bold text-slate-400 uppercase block">Partido / Coalición</span>
+                          <span className="text-xs font-bold text-emerald-300">
+                            {activeMasterRec?.winnerParty || 'Coalición Ganadora'}
+                          </span>
+                        </div>
+
+                        {activeMasterRec?.votesMayor && (
+                          <div className="flex items-center justify-between text-xs pt-1 border-t border-white/05 font-mono">
+                            <span className="text-slate-400 text-[11px]">Votos Alcalde:</span>
+                            <span className="font-black text-white">
+                              {activeMasterRec.votesMayor.toLocaleString('es-CO')} ({activeMasterRec.percentageValidMayor}% válidos)
+                            </span>
+                          </div>
+                        )}
+
+                        {activeMasterRec?.runnerUp && (
+                          <div className="pt-2 border-t border-white/05 space-y-1">
+                            <span className="text-[10px] font-bold text-slate-400 uppercase block">
+                              Segundo Lugar / Estatuto de Oposición
+                            </span>
+                            <div className="flex items-center justify-between text-xs">
+                              <span className="font-bold text-slate-200">{activeMasterRec.runnerUp.name}</span>
+                              <span className="text-[10px] font-mono text-slate-400">
+                                {activeMasterRec.runnerUp.votes ? `${activeMasterRec.runnerUp.votes.toLocaleString('es-CO')} votos` : ''}
+                              </span>
+                            </div>
+                            <div className="flex items-center justify-between text-[10px] text-slate-400">
+                              <span>{activeMasterRec.runnerUp.party}</span>
+                              <span className={`px-1.5 py-0.5 rounded font-mono ${
+                                activeMasterRec.runnerUp.acceptedOppositionSeat
+                                  ? 'bg-emerald-500/20 text-emerald-300'
+                                  : 'bg-slate-800 text-slate-400'
+                              }`}>
+                                {activeMasterRec.runnerUp.acceptedOppositionSeat ? 'Curul Aceptada' : 'Sin curul'}
+                              </span>
+                            </div>
+                          </div>
+                        )}
+
+                        {activeMasterRec?.contact && (
+                          <div className="pt-2 border-t border-white/05 flex flex-wrap gap-2 text-[10px] text-slate-400">
+                            {activeMasterRec.contact.phone && (
+                              <span className="flex items-center gap-1">
+                                <Phone className="w-3 h-3 text-sky-400" />
+                                {activeMasterRec.contact.phone}
+                              </span>
+                            )}
+                            {activeMasterRec.contact.email && (
+                              <span className="flex items-center gap-1">
+                                <Mail className="w-3 h-3 text-emerald-400" />
+                                {activeMasterRec.contact.email}
+                              </span>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Tarjeta Concejo Municipal */}
+                    <div className="bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-2xl p-4 shadow-lg space-y-3">
+                      <div className="flex items-center justify-between pb-2 border-b border-white/10">
+                        <div className="flex items-center gap-2">
+                          <Vote className="w-4 h-4 text-sky-400" />
+                          <span className="text-xs font-black text-white uppercase tracking-wider">
+                            Concejo Municipal ({activeMasterRec?.totalCouncilSeats || 11} Curules)
+                          </span>
+                        </div>
+                        <span className="text-[10px] font-mono text-slate-400">Periodo 2024-2027</span>
+                      </div>
+
+                      <div className="space-y-2 max-h-[220px] overflow-y-auto pr-1">
+                        {activeMasterRec?.councilSeats && activeMasterRec.councilSeats.length > 0 ? (
+                          activeMasterRec.councilSeats.map((c, i) => (
+                            <div key={i} className="flex items-center justify-between p-2 rounded-xl bg-white/[0.03] border border-white/05 text-xs">
+                              <span className="font-bold text-slate-200 truncate pr-2">{c.party}</span>
+                              <div className="flex items-center gap-2 shrink-0">
+                                <span className="px-2 py-0.5 rounded-lg bg-sky-500/20 text-sky-300 font-mono font-black text-xs">
+                                  {c.seats} {c.seats === 1 ? 'curul' : 'curules'}
+                                </span>
+                                {c.percentageValid && (
+                                  <span className="text-[10px] font-mono text-slate-400">
+                                    {c.percentageValid}%
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          ))
+                        ) : (
+                          <div className="text-xs text-slate-400 p-3 rounded-xl bg-white/[0.02]">
+                            Concejo de {activeMasterRec?.totalCouncilSeats || 11} curules con representación multipartidista regional.
+                          </div>
+                        )}
+                      </div>
+
+                      {activeMasterRec?.predominantParty && (
+                        <div className="pt-2 border-t border-white/05 text-[10px] text-slate-400 flex items-center justify-between">
+                          <span>Fuerza Partidista Dominante:</span>
+                          <span className="font-black text-white">{activeMasterRec.predominantParty}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Problemáticas vs Oportunidades y Seguridad */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* Problemáticas Críticas */}
+                    <div className="bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-2xl p-4 shadow-lg space-y-2.5">
+                      <div className="flex items-center gap-2 pb-2 border-b border-white/10 text-amber-300">
+                        <AlertTriangle className="w-4 h-4 text-amber-400" />
+                        <span className="text-xs font-black uppercase tracking-wider">
+                          Problemáticas Territoriales Prioritarias
+                        </span>
+                      </div>
+                      <div className="space-y-2">
+                        {(activeMasterRec?.keyProblems || [
+                          'Mantenimiento de vías terciarias y acceso a centros de acopio',
+                          'Conectividad digital y cobertura de servicios básicos rurales',
+                          'Fortalecimiento de la red de salud municipal'
+                        ]).map((prob, i) => (
+                          <div key={i} className="flex items-start gap-2 text-xs text-slate-300">
+                            <span className="text-amber-400 font-black mt-0.5">•</span>
+                            <span>{prob}</span>
+                          </div>
+                        ))}
+                      </div>
+
+                      {activeMasterRec?.securityDynamics && (
+                        <div className="pt-2 border-t border-white/05 text-[10px] text-slate-400 space-y-1">
+                          <div className="font-bold text-slate-300 flex items-center gap-1">
+                            <Shield className="w-3 h-3 text-indigo-400" />
+                            <span>Dinámica de Orden Público:</span>
+                          </div>
+                          <p className="text-slate-400 italic">
+                            {activeMasterRec.securityDynamics.armedPresence || 'Vigilancia institucional de la Policía y Ejército Nacional.'}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Oportunidades Estratégicas y Vocación */}
+                    <div className="bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-2xl p-4 shadow-lg space-y-2.5">
+                      <div className="flex items-center gap-2 pb-2 border-b border-white/10 text-emerald-300">
+                        <Target className="w-4 h-4 text-emerald-400" />
+                        <span className="text-xs font-black uppercase tracking-wider">
+                          Oportunidades y Vocación Productiva
+                        </span>
+                      </div>
+                      <div className="space-y-2">
+                        {(activeMasterRec?.strategicOpportunities || [
+                          'Agroindustria sostenible y tecnificación de cadenas de valor',
+                          'Turismo comunitario, ecológico y patrimonio histórico',
+                          'Inversión en placas huella y conectividad vial subregional'
+                        ]).map((opp, i) => (
+                          <div key={i} className="flex items-start gap-2 text-xs text-slate-300">
+                            <span className="text-emerald-400 font-black mt-0.5">•</span>
+                            <span>{opp}</span>
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="pt-2 border-t border-white/05">
+                        <span className="text-[10px] font-bold text-slate-400 uppercase block mb-1.5">
+                          Sectores Económicos Principales
+                        </span>
+                        <div className="flex flex-wrap gap-1.5">
+                          {(activeMasterRec?.economicSectors || currentMuni.economicDrivers).map((sec, i) => (
+                            <span key={i} className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">
+                              {sec}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Pestaña Demografía */}
+              {nonStrategicTab === 'demografia' && (
+                <div className="bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-2xl p-5 shadow-lg space-y-4">
+                  <div className="flex items-center justify-between pb-3 border-b border-white/10">
+                    <div>
+                      <h3 className="text-sm font-black text-white">Estructura Demográfica Estimada • {currentMuni.name}</h3>
+                      <p className="text-xs text-slate-400">Distribución de edades, estratos socioeconómicos y niveles de escolaridad DANE</p>
+                    </div>
+                    <span className="text-xs font-mono text-emerald-400 font-bold">
+                      {currentMuni.totalPopulation.toLocaleString('es-CO')} hab
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {/* Grupos de edad */}
+                    <div className="p-3 rounded-xl bg-white/[0.03] border border-white/05 space-y-2">
+                      <span className="text-xs font-black text-sky-400 block uppercase">Rangos de Edad</span>
+                      <div className="space-y-1.5 text-xs">
+                        <div className="flex justify-between">
+                          <span className="text-slate-300">Jóvenes (18-28):</span>
+                          <span className="font-mono text-white font-bold">{currentMuni.demographics.ageGroups.joven.percentage}%</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-slate-300">Adultos (29-59):</span>
+                          <span className="font-mono text-white font-bold">{currentMuni.demographics.ageGroups.adulto.percentage}%</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-slate-300">Adultos Mayores (60+):</span>
+                          <span className="font-mono text-white font-bold">{currentMuni.demographics.ageGroups.adultoMayor.percentage}%</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Estratos */}
+                    <div className="p-3 rounded-xl bg-white/[0.03] border border-white/05 space-y-2">
+                      <span className="text-xs font-black text-amber-400 block uppercase">Estratos Socioeconómicos</span>
+                      <div className="space-y-1.5 text-xs">
+                        <div className="flex justify-between">
+                          <span className="text-slate-300">Estrato 1 y 2 (Bajo):</span>
+                          <span className="font-mono text-white font-bold">{currentMuni.demographics.socioeconomicStratum.bajo.percentage}%</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-slate-300">Estrato 3 y 4 (Medio):</span>
+                          <span className="font-mono text-white font-bold">{currentMuni.demographics.socioeconomicStratum.medio.percentage}%</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-slate-300">Estrato 5 y 6 (Alto):</span>
+                          <span className="font-mono text-white font-bold">{currentMuni.demographics.socioeconomicStratum.alto.percentage}%</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Escolaridad */}
+                    <div className="p-3 rounded-xl bg-white/[0.03] border border-white/05 space-y-2">
+                      <span className="text-xs font-black text-emerald-400 block uppercase">Nivel Educativo</span>
+                      <div className="space-y-1.5 text-xs">
+                        <div className="flex justify-between">
+                          <span className="text-slate-300">Básico:</span>
+                          <span className="font-mono text-white font-bold">{currentMuni.demographics.educationLevels.basico.percentage}%</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-slate-300">Medio / Técnico:</span>
+                          <span className="font-mono text-white font-bold">{currentMuni.demographics.educationLevels.medio.percentage}%</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-slate-300">Superior / Universitario:</span>
+                          <span className="font-mono text-white font-bold">{currentMuni.demographics.educationLevels.superior.percentage}%</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Pestaña Veredas */}
+              {nonStrategicTab === 'veredas' && (
+                <div className="bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-2xl p-5 shadow-lg space-y-4">
+                  <div className="flex items-center justify-between pb-3 border-b border-white/10">
+                    <div>
+                      <h3 className="text-sm font-black text-white">Zonificación Territorial • {currentMuni.name}</h3>
+                      <p className="text-xs text-slate-400">División en cabecera urbana, centros poblados y corredores veredales</p>
+                    </div>
+                    <span className="text-xs font-mono text-sky-400 font-bold">
+                      {currentMuni.areas.length} divisiones
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {currentMuni.areas.map((area) => (
+                      <div
+                        key={area.id}
+                        onClick={() => setSelectedAreaId(area.id)}
+                        className={`p-3.5 rounded-2xl border transition-all cursor-pointer ${
+                          selectedAreaId === area.id
+                            ? 'bg-emerald-950/60 border-emerald-400 shadow-md'
+                            : 'bg-white/[0.03] border-white/05 hover:bg-white/[0.06]'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="font-bold text-white text-xs">{area.name}</span>
+                          <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/10 font-mono text-slate-300">
+                            {area.type}
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-slate-300 leading-relaxed mb-2">
+                          {area.characteristics}
+                        </p>
+                        <div className="flex items-center justify-between text-[10px] text-slate-400 pt-1 border-t border-white/05 font-mono">
+                          <span>Población est: {area.estimatedPopulation.toLocaleString('es-CO')}</span>
+                          <span className="text-emerald-400">{area.predominantStratum}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Fila de 2 Columnas: Izquierda (Herramienta Analista) | Derecha (Desplegables) */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">

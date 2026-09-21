@@ -168,6 +168,7 @@ export default function App() {
         <AntioquiaExplorerView
           candidateProfile={candidateProfile}
           onNavigateToBio={() => setCurrentView('national-candidates')}
+          onNavigateToContentDirector={() => setCurrentView('content-director')}
         />
       )}
 

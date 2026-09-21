@@ -71,13 +71,18 @@ export const CommuneDeepAnalyticsDrawer: React.FC<CommuneDeepAnalyticsDrawerProp
   const isSubregion = props.level === 'departamental' && !isMpio;
   const isDepartment = props.level === 'nacional';
 
-  // Corregimiento / Comuna number lookup
+  // Corregimiento / Comuna number lookup (supports Comunas, Corregimientos and Barrios)
+  const extractedFromProps = props.comunaId ? parseInt(props.comunaId.replace('med-c', '').replace('comuna-', ''), 10) : null;
+  const extractedFromName = props.comunaName ? parseInt((props.comunaName.match(/\d+/) || [])[0] || '', 10) : null;
+
   const comunaNumber = props.number || 
     CORREGIMIENTO_NUMBERS[feature.id] ||
-    (feature.id.startsWith('comuna-') ? parseInt(feature.id.replace('comuna-', '')) : null) ||
-    (isComuna && !feature.id.includes('correg') ? parseInt(feature.id.replace('med-c', '')) : null);
+    (feature.id.startsWith('comuna-') ? parseInt(feature.id.replace('comuna-', ''), 10) : null) ||
+    (isComuna && !feature.id.includes('correg') ? parseInt(feature.id.replace('med-c', ''), 10) : null) ||
+    (!isNaN(extractedFromProps as number) && extractedFromProps ? extractedFromProps : null) ||
+    (!isNaN(extractedFromName as number) && extractedFromName ? extractedFromName : null);
 
-  const comunaData = isComuna ? (
+  const comunaData = (isComuna || isBarrio) ? (
     MEDELLIN_COMUNAS_DATA[feature.id] || 
     MEDELLIN_COMUNAS_DATA[feature.id.replace('-de-prado', '')] ||
     (comunaNumber ? MEDELLIN_COMUNAS_DATA[`med-c${comunaNumber}`] : null) ||

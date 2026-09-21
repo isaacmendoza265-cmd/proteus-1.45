@@ -97,12 +97,13 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
         attributionControl: false
       });
 
-      // OpenStreetMap standard tiles (No API key required, reliable)
-      const tileUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+      // Futuristic Dark Basemap: CartoDB Dark Matter (High-contrast, elegant obsidian aesthetic)
+      const tileUrl = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
 
       L.tileLayer(tileUrl, {
+        subdomains: 'abcd',
         maxZoom: 19,
-        attribution: '&copy; OpenStreetMap'
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
       }).addTo(map);
 
       // Dedicated layer group for GeoJSON
@@ -127,11 +128,14 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
       }
     });
 
-    const tileUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+    const tileUrl = mapBaseTheme === 'dark' 
+      ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+      : 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
 
     L.tileLayer(tileUrl, {
+      subdomains: 'abcd',
       maxZoom: 19,
-      attribution: '&copy; OpenStreetMap'
+      attribution: '&copy; OpenStreetMap &copy; CARTO'
     }).addTo(map);
   }, [mapBaseTheme]);
 
@@ -174,10 +178,10 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
 
         return {
           fillColor: color,
-          fillOpacity: isSelected ? 0.65 : 0.35,
+          fillOpacity: isSelected ? 0.65 : 0.28,
           color: isSelected ? '#ffffff' : color,
-          weight: isSelected ? 3 : 1.5,
-          dashArray: isSelected ? '' : '2, 2',
+          weight: isSelected ? 3 : 1.2,
+          dashArray: '',
           opacity: 0.95
         };
       },
@@ -190,7 +194,7 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
           mouseover: (e: any) => {
             const l = e.target;
             l.setStyle({
-              fillOpacity: 0.7,
+              fillOpacity: 0.6,
               weight: 2.5,
               color: '#38bdf8'
             });
@@ -203,10 +207,10 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
             const color = getFeatureColor(feature);
             l.setStyle({
               fillColor: color,
-              fillOpacity: isSelected ? 0.65 : 0.35,
+              fillOpacity: isSelected ? 0.65 : 0.28,
               color: isSelected ? '#ffffff' : color,
-              weight: isSelected ? 3 : 1.5,
-              dashArray: isSelected ? '' : '2, 2'
+              weight: isSelected ? 3 : 1.2,
+              dashArray: ''
             });
             setHoveredFeature(null);
           },
