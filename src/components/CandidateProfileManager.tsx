@@ -194,24 +194,33 @@ export const formatNameFromEmail = (email: string): string => {
 };
 
 interface CandidateProfileManagerProps {
-  currentEmail: string | null;
-  onConnectGoogleDrive: (email: string) => void;
-  onDisconnectGoogleDrive: () => void;
-  activeProfile: CandidateProfile | null;
-  onSaveActiveProfile: (profile: CandidateProfile) => void;
-  allSavedProfiles: Record<string, CandidateProfile>;
+  currentEmail?: string | null;
+  onConnectGoogleDrive?: (email: string) => void;
+  onDisconnectGoogleDrive?: () => void;
+  activeProfile?: CandidateProfile | null;
+  candidateProfile?: CandidateProfile | null;
+  onSaveActiveProfile?: (profile: CandidateProfile) => void;
+  onSaveProfile?: (profile: CandidateProfile) => void;
+  allSavedProfiles?: Record<string, CandidateProfile>;
   onSelectSavedProfile?: (profile: CandidateProfile) => void;
+  onSelectCandidateProfile?: (profile: CandidateProfile) => void;
 }
 
 export const CandidateProfileManager: React.FC<CandidateProfileManagerProps> = ({
-  currentEmail,
-  onConnectGoogleDrive,
-  onDisconnectGoogleDrive,
-  activeProfile,
-  onSaveActiveProfile,
-  allSavedProfiles,
-  onSelectSavedProfile
+  currentEmail = null,
+  onConnectGoogleDrive = () => {},
+  onDisconnectGoogleDrive = () => {},
+  activeProfile: propActiveProfile,
+  candidateProfile,
+  onSaveActiveProfile: propOnSaveActiveProfile,
+  onSaveProfile,
+  allSavedProfiles = {},
+  onSelectSavedProfile: propOnSelectSavedProfile,
+  onSelectCandidateProfile
 }) => {
+  const activeProfile = propActiveProfile || candidateProfile || null;
+  const onSaveActiveProfile = propOnSaveActiveProfile || onSaveProfile || (() => {});
+  const onSelectSavedProfile = propOnSelectSavedProfile || onSelectCandidateProfile || (() => {});
   // Step state
   const isGoogleConnected = Boolean(currentEmail);
   const isMasterUser = currentEmail?.toLowerCase() === MASTER_EMAIL.toLowerCase();

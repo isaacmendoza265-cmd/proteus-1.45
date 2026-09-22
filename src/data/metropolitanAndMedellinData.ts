@@ -56,6 +56,7 @@ export interface MetroMunicipalityProfile {
     abstentionRate: number;
   };
   communesOrZonesSummary: string[];
+  keyDynamics?: string;
 }
 
 // 1. LOS 10 MUNICIPIOS DEL ÁREA METROPOLITANA DEL VALLE DE ABURRÁ
