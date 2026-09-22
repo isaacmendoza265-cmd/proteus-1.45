@@ -27,6 +27,7 @@ import { GobernacionExecutiveView } from './modules/antioquia/departamental/Gobe
 import { SubregionesView } from './modules/antioquia/subregiones/SubregionesView';
 import { AntioquiaExplorerView } from './modules/antioquia/municipios/AntioquiaExplorerView';
 import { PoliticalHousesGraphView } from './modules/observatorio/PoliticalHousesGraphView';
+import { ElectoralForensicsAuditView } from './modules/audit/ElectoralForensicsAuditView';
 
 // System & Agent Views
 import { AntigravityAgentConsole } from './components/AntigravityAgentConsole';
@@ -177,6 +178,13 @@ export default function App() {
         <PoliticalHousesGraphView
           candidateProfile={candidateProfile}
           onNavigateToContentDirector={() => setCurrentView('content-director')}
+        />
+      )}
+
+      {currentView === 'electoral-audit-forensics' && (
+        <ElectoralForensicsAuditView
+          candidateProfile={candidateProfile}
+          onNavigateToView={(view) => setCurrentView(view as NavViewId)}
         />
       )}
 

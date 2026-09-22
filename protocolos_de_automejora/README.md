@@ -83,6 +83,7 @@ Para garantizar que ninguna mejora sea un capricho estético o una complicación
 - **[`PA-006-VERIFICACION-INCLUSION-APLICATIVOS-ORIGINALES.md`](PA-006-VERIFICACION-INCLUSION-APLICATIVOS-ORIGINALES.md)**: Auditoría forense e inventario comparativo de los 4 aplicativos originales integrados (Unidad UAIF - 7 Agentes).
 - **[`PA-007-INTEGRACION-ELEMENTOS-NO-INCLUIDOS.md`](PA-007-INTEGRACION-ELEMENTOS-NO-INCLUIDOS.md)**: Ingeniería e integración de elementos no incluidos: Congreso y Presidencia por comuna, pirámides poblacionales dinámicas 2018-2030 (Unidad UIIP - 7 Agentes).
 - **[`PA-008-EVALUACION-ARQUITECTURA-Y-PROPOSITO.md`](PA-008-EVALUACION-ARQUITECTURA-Y-PROPOSITO.md)**: Evaluación arquitectónica y correspondencia teleológica con el propósito supremo de personalización (Unidad UEAT - 7 Agentes).
+- **[`PA-009-MAPEO-RELACIONAL-CASAS-POLITICAS-GRAFOS.md`](PA-009-MAPEO-RELACIONAL-CASAS-POLITICAS-GRAFOS.md)**: Mapeo relacional de casas políticas, articulación municipal-extramunicipal y grafos de poder 2D/3D con OSINT en tiempo real (Unidad UACP - 7 Agentes + SO-NEWS - 3 Agentes).
 
 ---
 
@@ -92,4 +93,6 @@ Para garantizar que ninguna mejora sea un capricho estético o una complicación
 - **[`SESION_CRITICA_002_VERIFICACION_APLICATIVOS.md`](SESION_CRITICA_002_VERIFICACION_APLICATIVOS.md)**: Auditoría forense y Matriz de Brechas (Gap Matrix) de los 4 aplicativos fuente (PA-006).
 - **[`SESION_CRITICA_003_PLAN_INTEGRACION.md`](SESION_CRITICA_003_PLAN_INTEGRACION.md)**: Plan técnico de reincorporación de Congreso/Presidencia por comuna y pirámides demográficas (PA-007).
 - **[`SESION_CRITICA_004_EVALUACION_ARQUITECTURA.md`](SESION_CRITICA_004_EVALUACION_ARQUITECTURA.md)**: Evaluación arquitectónica y dictamen de refactorización teleológica de la ventana inicial hacia la personalización (PA-008).
+- **[`SESION_CRITICA_005_CASAS_POLITICAS_GRAFOS.md`](SESION_CRITICA_005_CASAS_POLITICAS_GRAFOS.md)**: Aprobación del sistema de grafos relacionales de Casas Políticas 2D/3D y rastreo OSINT de redes con Google Search (PA-009).
+- **[`SESION_CRITICA_006_AUDITORIA_ELECTORAL_Y_BENFORD.md`](SESION_CRITICA_006_AUDITORIA_ELECTORAL_Y_BENFORD.md)**: Aprobación y ejecución del sistema de Auditoría Forense Electoral, Ley de Benford de 2º Dígito y Escrutinios E-14 vs E-24 (PA-002).
 
