@@ -5,11 +5,22 @@ import {
   ZoomLevelId, 
   ThematicMetricLayer, 
   TerritoryGeoFeature, 
+  TerritoryFeatureCollection,
   GEOJSON_LAYERS_BY_ZOOM, 
   ZOOM_LEVELS_CONFIG,
   ANTIOQUIA_125_MUNICIPIOS_GEOJSON
 } from '../../data/geojson';
-import { Maximize2, Layers, Compass, Sparkles, Map, Building, Megaphone } from 'lucide-react';
+import { Maximize2, Layers, Compass, Sparkles, Map, Building, Megaphone, ChevronDown, Check } from 'lucide-react';
+import { SubregionAggregationEngine } from '../../services/subregionAggregationEngine';
+import { ColombiaMunicipalitiesGeoService } from '../../services/colombiaMunicipalitiesGeoService';
+
+export const COLOMBIA_ALL_DEPARTMENTS = [
+  'Antioquia', 'Meta', 'Cundinamarca', 'Santander', 'Valle del Cauca', 'Boyacá',
+  'Atlántico', 'Bolívar', 'Caldas', 'Cauca', 'Cesar', 'Córdoba', 'Chocó',
+  'Huila', 'La Guajira', 'Magdalena', 'Nariño', 'Norte de Santander', 'Quindío',
+  'Risaralda', 'Sucre', 'Tolima', 'Arauca', 'Casanare', 'Putumayo',
+  'Archipiélago de San Andrés', 'Amazonas', 'Caquetá', 'Guainía', 'Guaviare', 'Vaupés', 'Vichada'
+];
 
 interface MultiLevelZoomMapProps {
   currentLevel: ZoomLevelId;
@@ -17,8 +28,10 @@ interface MultiLevelZoomMapProps {
   searchQuery: string;
   selectedFeature: TerritoryGeoFeature | null;
   onSelectFeature: (feature: TerritoryGeoFeature | null) => void;
-  onDrillDown: (targetLevel: ZoomLevelId, featureId: string) => void;
+  onDrillDown: (targetLevel: ZoomLevelId, featureId: string, departmentName?: string) => void;
   onGenerateContent?: (feature: TerritoryGeoFeature) => void;
+  selectedDepartmentName?: string;
+  onSelectDepartmentName?: (deptName: string) => void;
 }
 
 export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
@@ -28,14 +41,19 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
   selectedFeature,
   onSelectFeature,
   onDrillDown,
-  onGenerateContent
+  onGenerateContent,
+  selectedDepartmentName = 'Antioquia',
+  onSelectDepartmentName
 }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
   const geoJsonLayerGroupRef = useRef<L.LayerGroup | null>(null);
   const [hoveredFeature, setHoveredFeature] = useState<TerritoryGeoFeature | null>(null);
   const [mapBaseTheme, setMapBaseTheme] = useState<'dark' | 'voyager'>('dark');
-  const [antioquiaViewMode, setAntioquiaViewMode] = useState<'subregiones' | 'municipios'>('municipios');
+  const [antioquiaViewMode, setAntioquiaViewMode] = useState<'subregiones' | 'municipios'>('subregiones');
+  const [customDeptDataset, setCustomDeptDataset] = useState<TerritoryFeatureCollection | null>(null);
+  const [isLoadingDept, setIsLoadingDept] = useState<boolean>(false);
+  const [deptDropdownOpen, setDeptDropdownOpen] = useState<boolean>(false);
 
   // Helper: Color logic by layer
   const getFeatureColor = (feature: TerritoryGeoFeature): string => {
@@ -139,6 +157,34 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
     }).addTo(map);
   }, [mapBaseTheme]);
 
+  // Load department municipalities when selectedDepartmentName is not Antioquia
+  useEffect(() => {
+    if (currentLevel !== 'departamental') return;
+    const dept = selectedDepartmentName || 'Antioquia';
+    if (dept.toLowerCase() === 'antioquia') {
+      setCustomDeptDataset(null);
+      return;
+    }
+
+    let active = true;
+    setIsLoadingDept(true);
+    ColombiaMunicipalitiesGeoService.getDepartmentMunicipalities(dept)
+      .then((dataset) => {
+        if (active) {
+          setCustomDeptDataset(dataset);
+          setIsLoadingDept(false);
+        }
+      })
+      .catch((err) => {
+        console.error("Error fetching department municipalities:", err);
+        if (active) setIsLoadingDept(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [currentLevel, selectedDepartmentName]);
+
   // Synchronize GeoJSON features and camera transitions when currentLevel, activeLayer, or searchQuery changes
   useEffect(() => {
     const map = mapInstanceRef.current;
@@ -148,8 +194,17 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
     layerGroup.clearLayers();
 
     let dataset = GEOJSON_LAYERS_BY_ZOOM[currentLevel];
-    if (currentLevel === 'departamental' && antioquiaViewMode === 'municipios') {
-      dataset = ANTIOQUIA_125_MUNICIPIOS_GEOJSON;
+    if (currentLevel === 'departamental') {
+      const isAntioquia = !selectedDepartmentName || selectedDepartmentName.toLowerCase() === 'antioquia';
+      if (isAntioquia) {
+        if (antioquiaViewMode === 'subregiones') {
+          dataset = SubregionAggregationEngine.buildSubregionDataset();
+        } else {
+          dataset = ANTIOQUIA_125_MUNICIPIOS_GEOJSON;
+        }
+      } else if (customDeptDataset) {
+        dataset = customDeptDataset;
+      }
     }
     if (!dataset) return;
 
@@ -174,11 +229,39 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
       style: (feat: any) => {
         const feature = feat as TerritoryGeoFeature;
         const isSelected = selectedFeature?.id === feature.id;
-        const color = getFeatureColor(feature);
+
+        // 1. Medellín base municipal boundary (Option 3)
+        if (feature.id === 'medellin-base-outline') {
+          return {
+            fillColor: '#0284c7',
+            fillOpacity: 0.04,
+            color: '#38bdf8',
+            weight: 1.5,
+            dashArray: '4, 4',
+            opacity: 0.7
+          };
+        }
+
+        // 2. Corregimientos circulares (Option 3)
+        if ((feature.properties as any).isCorregimiento || feature.id.includes('correg')) {
+          return {
+            fillColor: isSelected ? '#fbbf24' : '#f59e0b',
+            fillOpacity: isSelected ? 0.75 : 0.42,
+            color: isSelected ? '#ffffff' : '#fbbf24',
+            weight: isSelected ? 3.5 : 2,
+            dashArray: '3, 3',
+            opacity: 0.95
+          };
+        }
+
+        // 3. Subregiones de Antioquia
+        const color = (currentLevel === 'departamental' && antioquiaViewMode === 'subregiones' && feature.properties.subregionColor)
+          ? feature.properties.subregionColor
+          : getFeatureColor(feature);
 
         return {
           fillColor: color,
-          fillOpacity: isSelected ? 0.65 : 0.28,
+          fillOpacity: isSelected ? 0.65 : 0.32,
           color: isSelected ? '#ffffff' : color,
           weight: isSelected ? 3 : 1.2,
           dashArray: '',
@@ -194,8 +277,8 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
           mouseover: (e: any) => {
             const l = e.target;
             l.setStyle({
-              fillOpacity: 0.6,
-              weight: 2.5,
+              fillOpacity: 0.65,
+              weight: 2.8,
               color: '#38bdf8'
             });
             l.bringToFront();
@@ -204,14 +287,37 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
           mouseout: (e: any) => {
             const l = e.target;
             const isSelected = selectedFeature?.id === feature.id;
-            const color = getFeatureColor(feature);
-            l.setStyle({
-              fillColor: color,
-              fillOpacity: isSelected ? 0.65 : 0.28,
-              color: isSelected ? '#ffffff' : color,
-              weight: isSelected ? 3 : 1.2,
-              dashArray: ''
-            });
+            const isCorreg = Boolean((feature.properties as any).isCorregimiento || feature.id.includes('correg'));
+            const isOutline = feature.id === 'medellin-base-outline';
+
+            if (isOutline) {
+              l.setStyle({
+                fillColor: '#0284c7',
+                fillOpacity: 0.04,
+                color: '#38bdf8',
+                weight: 1.5,
+                dashArray: '4, 4'
+              });
+            } else if (isCorreg) {
+              l.setStyle({
+                fillColor: isSelected ? '#fbbf24' : '#f59e0b',
+                fillOpacity: isSelected ? 0.75 : 0.42,
+                color: isSelected ? '#ffffff' : '#fbbf24',
+                weight: isSelected ? 3.5 : 2,
+                dashArray: '3, 3'
+              });
+            } else {
+              const color = (currentLevel === 'departamental' && antioquiaViewMode === 'subregiones' && feature.properties.subregionColor)
+                ? feature.properties.subregionColor
+                : getFeatureColor(feature);
+              l.setStyle({
+                fillColor: color,
+                fillOpacity: isSelected ? 0.65 : 0.32,
+                color: isSelected ? '#ffffff' : color,
+                weight: isSelected ? 3 : 1.2,
+                dashArray: ''
+              });
+            }
             setHoveredFeature(null);
           },
           click: (e: any) => {
@@ -230,8 +336,11 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
               });
             }
 
-            // Direct double click drill-down trigger if interactive
-            if (p.isInteractiveTarget) {
+            // Drill down:
+            if (currentLevel === 'nacional') {
+              // Direct drill down into ANY department in Colombia
+              onDrillDown('departamental', feature.id, p.name);
+            } else if (p.isInteractiveTarget) {
               const cfg = ZOOM_LEVELS_CONFIG[currentLevel];
               if (cfg.nextLevelId) {
                 onDrillDown(cfg.nextLevelId, feature.id);
@@ -240,7 +349,20 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
           }
         });
 
-        // Tooltip
+        // Medellín base boundary tooltip
+        if (feature.id === 'medellin-base-outline') {
+          layer.bindTooltip(
+            `<div style="font-family: system-ui, sans-serif; font-weight: 700; font-size: 11px;">
+              <div style="color: #38bdf8; font-size: 9px; text-transform: uppercase;">Límite Municipal Completo</div>
+              <div style="color: #ffffff; font-size: 12px; font-weight: 900;">Distrito de Medellín (374.8 km²)</div>
+              <div style="color: #cbd5e1; font-size: 10px;">Zona Rural (5 Corregimientos) y Zona Urbana (16 Comunas)</div>
+            </div>`,
+            { sticky: true, className: 'leaflet-glass-tooltip' }
+          );
+          return;
+        }
+
+        const isCorregimiento = Boolean((feature.properties as any).isCorregimiento || feature.id.includes('correg'));
         const metricDisplay = 
           activeLayer === 'electoral' ? `Ganador: ${p.predominantParty || p.winnerCandidate || 'Registrado'}` :
           activeLayer === 'demografico' ? `Pob: ${(p.population || 0).toLocaleString()} hab` :
@@ -248,7 +370,12 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
           `Riesgo: ${p.riskLevel || 'Normal'}`;
 
         const daneCodeHtml = (p as any).daneCode ? `<div style="color: #38bdf8; font-size: 9px; font-family: monospace;">DIVIPOLA DANE: ${(p as any).daneCode}</div>` : '';
-        const subregHtml = p.subregion ? `<div style="color: #94a3b8; font-size: 10px;">Subregión: ${p.subregion}</div>` : '';
+        const subregHtml = p.subregionCanonical 
+          ? `<div style="color: #38bdf8; font-size: 10px; font-weight: bold;">Subregión: ${p.subregionCanonical}</div>`
+          : (p.subregion ? `<div style="color: #94a3b8; font-size: 10px;">Subregión: ${p.subregion}</div>` : '');
+        const corregimientoHtml = isCorregimiento 
+          ? `<div style="color: #fbbf24; font-size: 10px; font-weight: 800; margin-top: 2px;">🏔️ Corregimiento Rural (Centroide Oficial DANE)</div>`
+          : '';
 
         layer.bindTooltip(
           `<div style="font-family: system-ui, sans-serif; font-weight: 700; font-size: 11px;">
@@ -256,8 +383,9 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
             <div style="color: #ffffff; font-size: 12px; font-weight: 900;">${p.name}</div>
             ${daneCodeHtml}
             ${subregHtml}
+            ${corregimientoHtml}
             <div style="color: #cbd5e1; margin-top: 2px;">${metricDisplay}</div>
-            ${p.isInteractiveTarget ? '<div style="color: #34d399; font-size: 9px; margin-top: 3px;">✨ Clic para hacer zoom</div>' : ''}
+            ${(p.isInteractiveTarget || currentLevel === 'nacional') ? '<div style="color: #34d399; font-size: 9px; margin-top: 3px;">✨ Clic para hacer zoom</div>' : ''}
           </div>`,
           { sticky: true, className: 'leaflet-glass-tooltip' }
         );
@@ -266,13 +394,26 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
 
     layerGroup.addLayer(leafletGeoJson);
 
-    // Smoothly fly camera to current level dataset default bounds
-    map.flyTo(dataset.center, dataset.defaultZoom, {
-      duration: 1.2,
-      easeLinearity: 0.25
-    });
+    // Smooth camera positioning
+    if (currentLevel === 'departamental' && selectedDepartmentName && selectedDepartmentName.toLowerCase() !== 'antioquia') {
+      try {
+        const bounds = leafletGeoJson.getBounds();
+        if (bounds.isValid()) {
+          map.flyToBounds(bounds, { duration: 1.2, padding: [40, 40] });
+        }
+      } catch (e) {
+        if (dataset.center) {
+          map.flyTo(dataset.center, dataset.defaultZoom || 8, { duration: 1.0 });
+        }
+      }
+    } else {
+      map.flyTo(dataset.center, dataset.defaultZoom, {
+        duration: 1.2,
+        easeLinearity: 0.25
+      });
+    }
 
-  }, [currentLevel, activeLayer, searchQuery, selectedFeature, antioquiaViewMode]);
+  }, [currentLevel, activeLayer, searchQuery, selectedFeature, antioquiaViewMode, selectedDepartmentName, customDeptDataset]);
 
   // Recenter helper
   const handleRecenter = () => {
@@ -291,31 +432,93 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
       {/* Map container DOM */}
       <div ref={mapContainerRef} className="w-full h-full z-0" />
 
-      {/* Antioquia Toggle: Subregiones vs 125 Municipios */}
+      {/* Antioquia Toggle / Department Selector */}
       {currentLevel === 'departamental' && (
-        <div className="absolute top-4 left-4 z-10 flex items-center p-1 rounded-2xl bg-slate-950/85 backdrop-blur-2xl border border-white/20 shadow-[0_8px_25px_rgba(0,0,0,0.5)] pointer-events-auto">
-          <button
-            onClick={() => setAntioquiaViewMode('subregiones')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${
-              antioquiaViewMode === 'subregiones'
-                ? 'bg-sky-500/35 text-white border border-sky-400/60 shadow-[0_0_12px_rgba(56,189,248,0.4)]'
-                : 'text-slate-400 hover:text-white'
-            }`}
-          >
-            <Map className="w-3.5 h-3.5 text-sky-400" />
-            9 Subregiones
-          </button>
-          <button
-            onClick={() => setAntioquiaViewMode('municipios')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${
-              antioquiaViewMode === 'municipios'
-                ? 'bg-emerald-500/35 text-emerald-200 border border-emerald-400/60 shadow-[0_0_12px_rgba(52,211,153,0.4)]'
-                : 'text-slate-400 hover:text-white'
-            }`}
-          >
-            <Building className="w-3.5 h-3.5 text-emerald-400" />
-            125 Municipios (DANE Oficial)
-          </button>
+        <div className="absolute top-4 left-4 z-10 flex flex-wrap items-center gap-2 p-1.5 rounded-2xl bg-slate-950/85 backdrop-blur-2xl border border-white/20 shadow-[0_8px_25px_rgba(0,0,0,0.5)] pointer-events-auto">
+          {(!selectedDepartmentName || selectedDepartmentName.toLowerCase() === 'antioquia') ? (
+            <>
+              <button
+                onClick={() => setAntioquiaViewMode('subregiones')}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${
+                  antioquiaViewMode === 'subregiones'
+                    ? 'bg-sky-500/35 text-white border border-sky-400/60 shadow-[0_0_12px_rgba(56,189,248,0.4)]'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <Map className="w-3.5 h-3.5 text-sky-400" />
+                9 Subregiones Agregadas
+              </button>
+              <button
+                onClick={() => setAntioquiaViewMode('municipios')}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${
+                  antioquiaViewMode === 'municipios'
+                    ? 'bg-emerald-500/35 text-emerald-200 border border-emerald-400/60 shadow-[0_0_12px_rgba(52,211,153,0.4)]'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <Building className="w-3.5 h-3.5 text-emerald-400" />
+                125 Municipios (DANE Oficial)
+              </button>
+            </>
+          ) : (
+            <div className="flex items-center gap-2 px-2 py-1">
+              <span className="text-xs font-black text-amber-300 flex items-center gap-1.5">
+                <Building className="w-3.5 h-3.5 text-amber-400" />
+                Dpto: {selectedDepartmentName} ({customDeptDataset?.features.length || '...'} Municipios DANE)
+              </span>
+              {onSelectDepartmentName && (
+                <button
+                  onClick={() => onSelectDepartmentName('Antioquia')}
+                  className="px-2 py-0.5 rounded-lg bg-sky-500/20 hover:bg-sky-500/40 text-sky-300 text-[10px] font-bold border border-sky-400/40 transition"
+                  title="Regresar a Antioquia"
+                >
+                  Volver a Antioquia
+                </button>
+              )}
+            </div>
+          )}
+
+          {/* Quick Department Selector Dropdown */}
+          <div className="relative">
+            <button
+              onClick={() => setDeptDropdownOpen(!deptDropdownOpen)}
+              className="px-2.5 py-1.5 rounded-xl text-xs font-bold bg-white/10 hover:bg-white/20 text-slate-200 border border-white/15 flex items-center gap-1 transition"
+              title="Cambiar de Departamento"
+            >
+              <span>{selectedDepartmentName || 'Antioquia'}</span>
+              <ChevronDown className="w-3 h-3 text-slate-400" />
+            </button>
+
+            {deptDropdownOpen && (
+              <div className="absolute top-full left-0 mt-1.5 w-52 max-h-60 overflow-y-auto rounded-2xl bg-slate-900/95 backdrop-blur-2xl border border-white/20 shadow-2xl p-1 z-30 space-y-0.5">
+                <div className="text-[9px] font-mono uppercase text-slate-400 px-2 py-1 font-bold">
+                  Seleccionar Departamento
+                </div>
+                {COLOMBIA_ALL_DEPARTMENTS.map((dept) => {
+                  const isCur = (selectedDepartmentName || 'Antioquia').toLowerCase() === dept.toLowerCase();
+                  return (
+                    <button
+                      key={dept}
+                      onClick={() => {
+                        if (onSelectDepartmentName) {
+                          onSelectDepartmentName(dept);
+                        }
+                        setDeptDropdownOpen(false);
+                      }}
+                      className={`w-full text-left px-2.5 py-1.5 rounded-xl text-xs flex items-center justify-between transition ${
+                        isCur
+                          ? 'bg-sky-500/30 text-sky-200 font-bold border border-sky-400/40'
+                          : 'text-slate-300 hover:bg-white/10 hover:text-white'
+                      }`}
+                    >
+                      <span>{dept}</span>
+                      {isCur && <Check className="w-3 h-3 text-sky-400" />}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
         </div>
       )}
 

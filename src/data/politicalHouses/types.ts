@@ -61,6 +61,8 @@ export interface GraphNodeActor {
   alias?: string;
   role: string;             // 'senador', 'alcalde', 'representante', 'concejal', 'patriarca', 'diputado', etc.
   roleLabel: string;        // 'Senador de la República (2022-2026)', etc.
+  partyId?: string;
+  partyName?: string;
   houseId: string;
   houseName: string;
   level: HierarchyLevel;

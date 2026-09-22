@@ -43,6 +43,7 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
   const [activeLayer, setActiveLayer] = useState<ThematicMetricLayer>('electoral');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFeature, setSelectedFeature] = useState<TerritoryGeoFeature | null>(null);
+  const [selectedDepartmentName, setSelectedDepartmentName] = useState<string>('Antioquia');
   const [e24ModalOpen, setE24ModalOpen] = useState(false);
 
   const currentDataset = GEOJSON_LAYERS_BY_ZOOM[currentLevel];
@@ -81,7 +82,10 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
   };
 
   // Handle drill down through scales
-  const handleDrillDown = (targetLevel: ZoomLevelId, featureId: string) => {
+  const handleDrillDown = (targetLevel: ZoomLevelId, featureId: string, departmentName?: string) => {
+    if (departmentName && targetLevel === 'departamental') {
+      setSelectedDepartmentName(departmentName);
+    }
     setCurrentLevel(targetLevel);
     // Find target feature if exists in new dataset
     const nextDataset = GEOJSON_LAYERS_BY_ZOOM[targetLevel];
@@ -101,6 +105,7 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
   const handleResetToNational = () => {
     setCurrentLevel('nacional');
     setSelectedFeature(null);
+    setSelectedDepartmentName('Antioquia');
     setSearchQuery('');
   };
 
@@ -170,6 +175,7 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
         currentLevel={currentLevel}
         onSelectLevel={handleSelectLevel}
         selectedFeatureName={selectedFeature ? selectedFeature.properties.name : null}
+        selectedDepartmentName={selectedDepartmentName}
         onResetToNational={handleResetToNational}
       />
 
@@ -193,6 +199,8 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
             onSelectFeature={setSelectedFeature}
             onDrillDown={handleDrillDown}
             onGenerateContent={handleGenerateContent}
+            selectedDepartmentName={selectedDepartmentName}
+            onSelectDepartmentName={setSelectedDepartmentName}
           />
         </div>
 
@@ -312,10 +320,10 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
                 Zoom Dptal
               </div>
               <div className="text-[10px] text-slate-300 font-medium mt-0.5">
-                Antioquia (9 Subr. / 125 Mpios)
+                {selectedDepartmentName === 'Antioquia' ? 'Antioquia (9 Subr. / 125 Mpios)' : `${selectedDepartmentName} (DANE Oficial)`}
               </div>
               <div className="text-[9px] text-slate-400 mt-1 font-mono">
-                Censo: 5.2M • 125 DANE
+                {selectedDepartmentName === 'Antioquia' ? 'Censo: 5.2M • 125 DANE' : `${selectedDepartmentName} • DANE Oficial`}
               </div>
             </div>
           </button>

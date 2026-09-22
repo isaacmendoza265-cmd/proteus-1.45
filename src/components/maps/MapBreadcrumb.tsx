@@ -6,6 +6,7 @@ interface MapBreadcrumbProps {
   currentLevel: ZoomLevelId;
   onSelectLevel: (level: ZoomLevelId) => void;
   selectedFeatureName?: string | null;
+  selectedDepartmentName?: string;
   onResetToNational: () => void;
 }
 
@@ -13,6 +14,7 @@ export const MapBreadcrumb: React.FC<MapBreadcrumbProps> = ({
   currentLevel,
   onSelectLevel,
   selectedFeatureName,
+  selectedDepartmentName,
   onResetToNational
 }) => {
   const levels = ORDERED_ZOOM_LEVELS;
@@ -75,7 +77,9 @@ export const MapBreadcrumb: React.FC<MapBreadcrumbProps> = ({
                 <span className={current ? 'text-amber-300 animate-pulse' : 'text-slate-400'}>
                   {getLevelIcon(lvl)}
                 </span>
-                <span>{config.shortLabel}</span>
+                <span>
+                  {lvl === 'departamental' && selectedDepartmentName ? selectedDepartmentName : config.shortLabel}
+                </span>
               </button>
             </React.Fragment>
           );
