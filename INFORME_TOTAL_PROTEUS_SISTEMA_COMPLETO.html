@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>INFORME TOTAL Y DEFINITIVO - PROYECTO PROTEUS v1.4.5</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap');
+
+    :root {
+      --bg-main: #0a0f1d;
+      --bg-card: #111827;
+      --border-card: rgba(255, 255, 255, 0.1);
+      --accent-gold: #f59e0b;
+      --accent-cyan: #06b6d4;
+      --accent-emerald: #10b981;
+      --accent-rose: #f43f5e;
+      --accent-purple: #8b5cf6;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      line-height: 1.65;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid var(--border-card);
+      border-radius: 24px;
+      padding: 60px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+    }
+
+    /* HEADER */
+    .header {
+      border-bottom: 2px solid rgba(245, 158, 11, 0.3);
+      padding-bottom: 30px;
+      margin-bottom: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .badge-protocol {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      background: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      padding: 4px 12px;
+      border-radius: 9999px;
+      font-weight: 700;
+    }
+    h1 {
+      font-size: 32px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      margin-top: 12px;
+      color: #ffffff;
+    }
+    .subtitle {
+      font-size: 16px;
+      color: var(--text-muted);
+      margin-top: 6px;
+      max-width: 750px;
+    }
+    .meta-box {
+      text-align: right;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* SECTIONS */
+    .section {
+      margin-bottom: 50px;
+      page-break-inside: avoid;
+    }
+    h2 {
+      font-size: 22px;
+      font-weight: 800;
+      color: #ffffff;
+      border-left: 4px solid var(--accent-gold);
+      padding-left: 14px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    h3 {
+      font-size: 17px;
+      font-weight: 700;
+      color: #e2e8f0;
+      margin: 22px 0 10px 0;
+    }
+    p {
+      margin-bottom: 14px;
+      color: #cbd5e1;
+      font-size: 14.5px;
+    }
+
+    /* CARDS & GRIDS */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px;
+      margin: 20px 0;
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+    .card {
+      background: rgba(30, 41, 59, 0.6);
+      border: 1px solid var(--border-card);
+      border-radius: 16px;
+      padding: 22px;
+      position: relative;
+    }
+    .card-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+
+    /* ARCHITECTURE DIAGRAM */
+    .arch-box {
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      border-radius: 18px;
+      padding: 25px;
+      margin: 25px 0;
+    }
+    .arch-layer-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+    .arch-output { color: #34d399; }
+    .arch-input { color: #38bdf8; }
+
+    /* TABLES */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 13px;
+    }
+    th {
+      background: rgba(30, 41, 59, 0.9);
+      color: #f1f5f9;
+      text-align: left;
+      padding: 12px 14px;
+      font-weight: 700;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.15);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      text-transform: uppercase;
+    }
+    td {
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      color: #cbd5e1;
+    }
+    tr:hover td {
+      background: rgba(255, 255, 255, 0.03);
+    }
+    .tag {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+    .tag-gold { background: rgba(245, 158, 11, 0.2); color: #fde68a; border: 1px solid rgba(245, 158, 11, 0.4); }
+    .tag-cyan { background: rgba(6, 182, 212, 0.2); color: #a5f3fc; border: 1px solid rgba(6, 182, 212, 0.4); }
+    .tag-emerald { background: rgba(16, 185, 129, 0.2); color: #a7f3d0; border: 1px solid rgba(16, 185, 129, 0.4); }
+    .tag-purple { background: rgba(139, 92, 246, 0.2); color: #ddd6fe; border: 1px solid rgba(139, 92, 246, 0.4); }
+
+    /* FORMULA BOX */
+    .formula-box {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px dashed rgba(56, 189, 248, 0.4);
+      border-radius: 12px;
+      padding: 18px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: #38bdf8;
+      margin: 15px 0;
+      line-height: 1.6;
+    }
+
+    /* FOOTER */
+    .footer {
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 25px;
+      margin-top: 50px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* PRINT STYLES FOR CRISP PDF */
+    @media print {
+      body {
+        background: #ffffff !important;
+        color: #0f172a !important;
+        padding: 0 !important;
+      }
+      .container {
+        border: none !important;
+        box-shadow: none !important;
+        padding: 20px !important;
+        background: #ffffff !important;
+        max-width: 100% !important;
+      }
+      .card, .arch-box, .formula-box, th {
+        background: #f8fafc !important;
+        border: 1px solid #cbd5e1 !important;
+        color: #0f172a !important;
+      }
+      h1, h2, h3, .card-title {
+        color: #0f172a !important;
+      }
+      p, td {
+        color: #334155 !important;
+      }
+      .tag {
+        border: 1px solid #94a3b8 !important;
+        color: #0f172a !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- HEADER -->
+  <header class="header">
+    <div>
+      <div class="badge-protocol">
+        <span>⚡ DOCUMENTO OFICIAL • PROTEUS v1.4.5</span>
+      </div>
+      <h1>INFORME TOTAL Y DEFINITIVO DE PROYECTO PROTEUS</h1>
+      <p class="subtitle">
+        Ecosistema Integral de Inteligencia Territorial, Redes de Poder, Auditoría Forense y Maximización Publicitaria Electoral.
+      </p>
+    </div>
+    <div class="meta-box">
+      <div><strong>Candidato:</strong> Isaac Mendoza</div>
+      <div><strong>Versión:</strong> 1.4.5 Stable</div>
+      <div><strong>Fecha:</strong> Septiembre 2026</div>
+      <div><strong>Protocolos:</strong> PA-001 a PA-011</div>
+    </div>
+  </header>
+
+  <!-- 1. MISIÓN Y MODELO ARQUITECTÓNICO -->
+  <section class="section">
+    <h2>1. Misión Teleológica y Filosofía Arquitectónica</h2>
+    <p>
+      Proyecto Proteus fue diseñado bajo un principio rector: <strong>la maximización de la eficacia de la publicidad electoral (la relación Publicidad / Votos)</strong> antes de que el ciudadano acuda a las urnas, utilizando la segmentación científica y la inteligencia territorial como armas determinantes.
+    </p>
+    <div class="arch-box">
+      <div class="arch-layer-title arch-output">▲ Capa de Salida: Conversión Publicitaria (Fin Supremo)</div>
+      <p style="margin-bottom: 8px; font-size: 13.5px;">
+        • Generación de creatividades multiformato con IA (Reels 15s, WhatsApp barrial, titulares de impacto).<br>
+        • Simulador de pacing presupuestal ($1M a $150M COP) y minimización del Costo por Votante Persuadido (CPVP).<br>
+        • Encuadre psicológico A/B (Framing de Ganancia/Esperanza vs. Pérdida/Protección de Kahneman & Tversky).
+      </p>
+      <div style="border-top: 1px solid rgba(255,255,255,0.1); margin: 12px 0;"></div>
+      <div class="arch-layer-title arch-input">▼ Capa de Entrada: Inteligencia Estratégica Territorial (Medios Necesarios)</div>
+      <p style="margin-bottom: 0; font-size: 13.5px;">
+        1. <strong>Grafos de Casas Políticas y Redes de Poder</strong>: Feudos municipales, caciques, operadores y fracturas.<br>
+        2. <strong>Mapas de Calor y Concentración Geoespacial</strong>: Zonas de alta densidad de votantes indecisos y volatilidad.<br>
+        3. <strong>Sistema Integrado de Variables</strong>: 54 Clusters DANE, NBI municipal, IPM y microdatos E-24/E-14.<br>
+        4. <strong>Monitoreo Multinivel en Tiempo Real</strong>: Seguimiento a 28 actores de la Gobernación de Antioquia y alertas locales.
+      </p>
+    </div>
+  </section>
+
+  <!-- 2. DATA LAKE -->
+  <section class="section">
+    <h2>2. Inventario Total de Datos Integrados (Data Lake)</h2>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">🗺️ Cartografía Vectorial GeoJSON (5 Escalas)</div>
+        <p style="font-size: 13px;">
+          • <strong>Nacional:</strong> 32 departamentos de Colombia.<br>
+          • <strong>Departamental:</strong> 125 municipios de Antioquia en 9 subregiones.<br>
+          • <strong>Metropolitana:</strong> 10 municipios conurbados del Valle de Aburrá.<br>
+          • <strong>Distrital:</strong> 16 comunas y 5 corregimientos de Medellín.<br>
+          • <strong>Hiperlocal:</strong> Manzanas censales y barrios oficiales.
+        </p>
+      </div>
+      <div class="card">
+        <div class="card-title">🗳️ Microdatos Electorales E-14 y E-24</div>
+        <p style="font-size: 13px;">
+          • <strong>Congreso 2022:</strong> Cámara por Antioquia y Senado desagregados mesa a mesa.<br>
+          • <strong>Territoriales 2019 / 2023:</strong> Alcaldía y Concejo de Medellín y Valle de Aburrá.<br>
+          • <strong>Histórico Trienal (2015-2023):</strong> Censo, participación, votos blancos y nulos.
+        </p>
+      </div>
+      <div class="card">
+        <div class="card-title">🕸️ Base Maestra de Casas Políticas (PA-009)</div>
+        <p style="font-size: 13px;">
+          • <strong>6 Casas Hegemónicas:</strong> Trujillo (Itagüí), Suárez Mira (Bello), Londoño (Envigado), Creemos (Medellín), Quintero y Centro Democrático.<br>
+          • <strong>40+ Actores Políticos:</strong> Senadores, alcaldes, concejales y contratistas.<br>
+          • <strong>80+ Relaciones de Red:</strong> Jerarquías, alianzas electorales y disputas.
+        </p>
+      </div>
+      <div class="card">
+        <div class="card-title">📊 Demografía Continua DANE y Vulnerabilidad</div>
+        <p style="font-size: 13px;">
+          • <strong>54 Clusters Demográficos:</strong> Cruce 4D de edad, estrato (1-6) y escolaridad.<br>
+          • <strong>Pobreza:</strong> IPM por comuna y NBI de 1.122 municipios de Colombia.<br>
+          • <strong>Seguridad:</strong> Estadísticas de extorsión y delitos barriales (CIEF EAFIT).
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. MÓDULOS -->
+  <section class="section">
+    <h2>3. Catálogo Exhaustivo de Herramientas y Módulos (17 Módulos)</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Nº</th>
+          <th>Módulo</th>
+          <th>ID de Vista</th>
+          <th>Función Operativa Principal</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>01</strong></td>
+          <td><span class="tag tag-gold">Inicio</span> Perfil & Launchpad</td>
+          <td><code>national-candidates</code></td>
+          <td>Ventana inicial. Configura identidad, tono, ejes de Isaac Mendoza y Launchpad.</td>
+        </tr>
+        <tr>
+          <td><strong>02</strong></td>
+          <td><span class="tag tag-gold">Propósito</span> Publicidad Segmentada</td>
+          <td><code>targeted-advertising</code></td>
+          <td>Optimiza creatividades A/B, simula pauta y calcula el retorno en votos (PA-010/PA-011).</td>
+        </tr>
+        <tr>
+          <td><strong>03</strong></td>
+          <td><span class="tag tag-cyan">Redes</span> Observatorio Casas Políticas</td>
+          <td><code>political-houses-graph</code></td>
+          <td>Grafos 2D y 3D interactivos de poder, feudos, dialéctica hegeliana y redes sociales.</td>
+        </tr>
+        <tr>
+          <td><strong>04</strong></td>
+          <td><span class="tag tag-rose">Forense</span> Auditoría Electoral & Benford</td>
+          <td><code>electoral-audit-forensics</code></td>
+          <td>Prueba Benford de 2do dígito (Chi-cuadrado) y comparador de discrepancias E-14/E-24.</td>
+        </tr>
+        <tr>
+          <td><strong>05</strong></td>
+          <td><span class="tag tag-cyan">GIS</span> Zoom Territorial 5 Escalas</td>
+          <td><code>territorial-zoom</code></td>
+          <td>Navegación espacial continua desde Colombia hasta barrios de Medellín.</td>
+        </tr>
+        <tr>
+          <td><strong>06</strong></td>
+          <td><span class="tag tag-purple">Datos</span> Repositorio Municipal 360°</td>
+          <td><code>municipal-repository</code></td>
+          <td>Directorio integral de los 125 municipios e inyección de contexto para Gemini.</td>
+        </tr>
+        <tr>
+          <td><strong>07</strong></td>
+          <td><span class="tag tag-emerald">Analítica</span> Segmentación & Votantes</td>
+          <td><code>voter-segmentation</code></td>
+          <td>Clustering de audiencias por cohorte, NBI y cálculo de Candidate Fit Score.</td>
+        </tr>
+        <tr>
+          <td><strong>08</strong></td>
+          <td><span class="tag tag-emerald">Contenido</span> Director de Contenido & Briefs</td>
+          <td><code>content-director</code></td>
+          <td>Generador de discursos, guiones estructurados en 7 puntos y exportador a PDF.</td>
+        </tr>
+        <tr>
+          <td><strong>09</strong></td>
+          <td><span class="tag tag-purple">Video</span> Estudio Multimedia & Semiótica</td>
+          <td><code>multimedia-studio</code></td>
+          <td>Auditoría de dicción, pausas, oratoria, fototipo y paleta de colorimetría política.</td>
+        </tr>
+        <tr>
+          <td><strong>10</strong></td>
+          <td><span class="tag tag-cyan">IA</span> Cuadrilla de 5 Agentes</td>
+          <td><code>agent-team</code></td>
+          <td>Despacho de misiones operativas a 5 agentes autónomos de campaña.</td>
+        </tr>
+        <tr>
+          <td><strong>11</strong></td>
+          <td><span class="tag tag-cyan">Nacional</span> Presidencia & Territorio</td>
+          <td><code>national-overview</code></td>
+          <td>Tablero de 32 departamentos con indicadores socioeconómicos e informes IA.</td>
+        </tr>
+        <tr>
+          <td><strong>12</strong></td>
+          <td><span class="tag tag-emerald">Encuestas</span> Herramientas de Campaña</td>
+          <td><code>national-tools</code></td>
+          <td>Procesador y comparador de encuestas electorales con análisis de tendencias.</td>
+        </tr>
+        <tr>
+          <td><strong>13</strong></td>
+          <td><span class="tag tag-gold">Gobierno</span> Sala Gobernación de Antioquia</td>
+          <td><code>antioquia-gobernacion</code></td>
+          <td>Seguimiento a 28 actores, 7 ejes de gobierno y lector de planes en PDF.</td>
+        </tr>
+        <tr>
+          <td><strong>14</strong></td>
+          <td><span class="tag tag-cyan">Región</span> 9 Subregiones Estratégicas</td>
+          <td><code>antioquia-subregiones</code></td>
+          <td>Inmersión subregional y Simulador de Alineación Política (Aliado / Opositor).</td>
+        </tr>
+        <tr>
+          <td><strong>15</strong></td>
+          <td><span class="tag tag-cyan">3D</span> Directorio 125 Municipios</td>
+          <td><code>antioquia-municipios</code></td>
+          <td>Directorio territorial con dioramas 3D interactivos y calidad de vida.</td>
+        </tr>
+        <tr>
+          <td><strong>16</strong></td>
+          <td><span class="tag tag-purple">Consola</span> Consola Antigravity</td>
+          <td><code>antigravity-console</code></td>
+          <td>Monitoreo de pipelines de datos, simulación D'Hondt y auditoría de código.</td>
+        </tr>
+        <tr>
+          <td><strong>17</strong></td>
+          <td><span class="tag tag-purple">Marca</span> Identidad Institucional</td>
+          <td><code>brand-manual</code></td>
+          <td>Manual de identidad CMT Proteus: isotipo SVG, Glassmorphism y tokens visuales.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 4. ALGORITMOS MATEMÁTICOS -->
+  <section class="section">
+    <h2>4. Algoritmos Matemáticos de Alta Precisión</h2>
+    
+    <h3>4.1. Índice de Retorno Publicidad/Votos (IRPV - PA-011)</h3>
+    <div class="formula-box">
+      IRPV = Base_Conversion × (1 + B_geopolitico) × (1 + B_fractura) × F_densidad
+    </div>
+    <p>
+      Eleva la conversión estándar de 75 votos/M COP en pauta ciega a <strong>139 - 165 votos netos por millón de COP</strong> (multiplicador de 1.85x), reduciendo el costo por voto en hasta un 46%.
+    </p>
+
+    <h3>4.2. Simulador D'Hondt y Umbral Electoral (Art. 263 Constitución)</h3>
+    <div class="formula-box">
+      Umbral = 0.5 × (Votos_Validos / Total_Curules)<br>
+      Cociente_D'Hondt = Votos_Lista / k,  donde k ∈ {1, 2, ..., N}
+    </div>
+    <p>
+      Calcula la cifra repartidora exacta para Cámara por Antioquia (17 curules) y Senado (108 curules), complementado con 10.000 iteraciones Monte Carlo para proyectar la probabilidad de éxito de la curul.
+    </p>
+
+    <h3>4.3. Auditoría Forense de Benford (2do Dígito) y Prueba Chi-Cuadrado</h3>
+    <div class="formula-box">
+      P(d2 = k) = ∑ [j=1..9] log10(1 + 1/(10j + k)),  k ∈ {0, 1, ..., 9}<br>
+      χ² = ∑ [k=0..9] ((O_k - E_k)² / E_k)
+    </div>
+    <p>
+      Evalúa si las actas E-14 y E-24 presentan adulteración humana de cifras electorales (anomalía detectada si p &lt; 0.05).
+    </p>
+  </section>
+
+  <!-- 5. LLMS Y MODELOS DE IA -->
+  <section class="section">
+    <h2>5. Modelos de Lenguaje (LLMs) y Motores de IA Utilizados</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Modelo / Motor</th>
+          <th>Régimen de Operación</th>
+          <th>Casos de Uso Principales en Proteus</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Google Gemini 3.8 Flash</strong></td>
+          <td><span class="tag tag-emerald">&lt; 1.2s Latencia</span> Inferencia Ultrarrápida</td>
+          <td>Generador multiformato de creatividades de pauta (TikTok, Reels, WhatsApp, Vallas), briefs de campaña en 7 puntos, síntesis discursiva y arquetipos psicográficos.</td>
+        </tr>
+        <tr>
+          <td><strong>Google Gemini 3.8 Pro / 1.5 Pro</strong></td>
+          <td><span class="tag tag-purple">Alta Capacidad</span> Razonamiento Lógico</td>
+          <td>Síntesis dialécticas de Casas Políticas (Tesis vs. Antítesis → Síntesis), análisis de redes de poder complejas, interpretación de anomalías forenses.</td>
+        </tr>
+        <tr>
+          <td><strong>Google Search Grounding</strong></td>
+          <td><span class="tag tag-cyan">Tiempo Real</span> Conexión Web en Vivo</td>
+          <td>Rastreo de redes sociales de actores políticos (X/Twitter, Facebook, IG), monitoreo de noticias de última hora municipales y blindaje anti-alucinaciones.</td>
+        </tr>
+        <tr>
+          <td><strong>Google Gemini Vision</strong></td>
+          <td><span class="tag tag-gold">Multimodal</span> Video e Imagen</td>
+          <td>Auditoría de video de oratoria: dicción, pausas, muletillas, gesticulación, postura y análisis de colorimetría política (Power Palette vs. Recorrido).</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 6. UNIDAD DE AUTOMEJORA -->
+  <section class="section">
+    <h2>6. Unidad Colegiada de Automejora (7 Agentes Autónomos)</h2>
+    <p>
+      El sistema evoluciona mediante un cuerpo colegiado gobernado por el método dialéctico:
+    </p>
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-title">👑 Dirección & Estrategia</div>
+        <p style="font-size: 12.5px;">
+          • <code>AGENT-ORCHESTRATOR</code>: Priorización estratégica y Órdenes de Investigación.<br>
+          • <code>AGENT-AUDITOR</code>: Control teleológico anti-desvío burocrático y filtro falacias.
+        </p>
+      </div>
+      <div class="card">
+        <div class="card-title">🔬 Investigación Científica</div>
+        <p style="font-size: 12.5px;">
+          • <code>AGENT-ACADEMIC-RES</code>: Neuromarketing, sesgos cognitivos y persuasión.<br>
+          • <code>AGENT-DATA-RES</code>: Minería demográfica DANE y algoritmos electorales.<br>
+          • <code>AGENT-LEX-ARTIS</code>: Benchmarking con AdTech mundial.
+        </p>
+      </div>
+      <div class="card">
+        <div class="card-title">⚙️ Ingeniería & Custodia</div>
+        <p style="font-size: 12.5px;">
+          • <code>AGENT-SOFTWARE-ENG</code>: Arquitectura en React 19 / TypeScript estricto.<br>
+          • <code>AGENT-ORGANIZER</code>: Custodia de actas y sincronización del repositorio.
+        </p>
+      </div>
+    </div>
+    <p style="font-size: 13px; margin-top: 15px;">
+      <strong>Historial:</strong> 8 Sesiones Críticas celebradas (001 a 008) y 11 Protocolos aprobados (PA-001 a PA-011).
+    </p>
+  </section>
+
+  <!-- 7. DESPLIEGUE -->
+  <section class="section">
+    <h2>7. Infraestructura y Despliegue en Producción</h2>
+    <p>
+      • <strong>Repositorio Oficial:</strong> GitHub <code>isaacmendoza265-cmd/proteus-1.45</code> (Rama <code>main</code>).<br>
+      • <strong>Verificación de Calidad:</strong> Script <code>verify_imports.py</code> ejecutado con <strong>0 errores</strong> de importación.<br>
+      • <strong>Paquete Desplegable:</strong> <code>PROTEUS_ACTUALIZADO_AI_STUDIO.zip</code> (2.97 MB), listo para Google AI Studio.<br>
+      • <strong>Persistencia:</strong> LocalStorage para perfiles y conector con Google Drive.
+    </p>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div>PROYECTO PROTEUS • CAMPAÑA ISAAC MENDOZA</div>
+    <div>DOCUMENTO CONFIDENCIAL DE ALTA ESTRATEGIA • 2026</div>
+  </footer>
+</div>
+
+</body>
+</html>
