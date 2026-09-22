@@ -7,8 +7,13 @@ import {
   AdTargetingOptimizerService, 
   GeneratedCreativeSet 
 } from '../../services/adTargetingOptimizerService';
+import { 
+  HolisticAdvertisingIntelligenceService,
+  TerritoryGeopoliticalIntelligence 
+} from '../../services/holisticAdvertisingIntelligenceService';
 import { AdCreativeVariantCard } from '../../components/advertising/AdCreativeVariantCard';
 import { BudgetPacingSimulator } from '../../components/advertising/BudgetPacingSimulator';
+import { TerritoryIntelligenceBridgeCard } from '../../components/advertising/TerritoryIntelligenceBridgeCard';
 import { CandidateProfile } from '../../components/CandidateProfileManager';
 import { useActiveTerritory } from '../../services/activeTerritoryContextService';
 import { 
@@ -23,7 +28,8 @@ import {
   ArrowRight,
   ShieldCheck,
   Zap,
-  RefreshCw
+  RefreshCw,
+  Layers
 } from 'lucide-react';
 
 interface TargetedAdvertisingOptimizerViewProps {
@@ -37,15 +43,36 @@ export const TargetedAdvertisingOptimizerView: React.FC<TargetedAdvertisingOptim
 }) => {
   const candidateName = candidateProfile?.nombre || 'Isaac Mendoza';
   const { activeTerritory } = useActiveTerritory();
-  const territoryName = activeTerritory?.name || 'Antioquia';
+  const initialTerritory = activeTerritory?.name || 'Itagüí';
 
+  const [selectedTerritory, setSelectedTerritory] = useState<string>(initialTerritory);
   const [selectedProfileId, setSelectedProfileId] = useState<string>(ADVERTISING_ARCHETYPES_DATA[0].id);
   const [creativeSet, setCreativeSet] = useState<GeneratedCreativeSet | null>(null);
   const [loadingAi, setLoadingAi] = useState<boolean>(false);
+  const [territoryIntelligence, setTerritoryIntelligence] = useState<TerritoryGeopoliticalIntelligence | null>(null);
 
+  const availableTerritories = HolisticAdvertisingIntelligenceService.getAvailableTerritories();
   const currentProfile = ADVERTISING_ARCHETYPES_DATA.find(p => p.id === selectedProfileId) || ADVERTISING_ARCHETYPES_DATA[0];
 
-  // Load / Generate creatives when profile changes
+  // Load Territory Intelligence when territory changes
+  useEffect(() => {
+    let isMounted = true;
+    async function loadTerritoryIntel() {
+      try {
+        const intel = await HolisticAdvertisingIntelligenceService.getTerritoryIntelligence(
+          selectedTerritory,
+          candidateName
+        );
+        if (isMounted) setTerritoryIntelligence(intel);
+      } catch (err) {
+        console.warn("Error al cargar inteligencia territorial:", err);
+      }
+    }
+    loadTerritoryIntel();
+    return () => { isMounted = false; };
+  }, [selectedTerritory, candidateName]);
+
+  // Load / Generate creatives when profile or territory changes
   useEffect(() => {
     let isMounted = true;
     async function loadCreatives() {
@@ -54,7 +81,7 @@ export const TargetedAdvertisingOptimizerView: React.FC<TargetedAdvertisingOptim
         const result = await AdTargetingOptimizerService.generateCreativesWithAI(
           currentProfile,
           candidateName,
-          territoryName
+          selectedTerritory
         );
         if (isMounted) setCreativeSet(result);
       } catch (e) {
@@ -65,7 +92,7 @@ export const TargetedAdvertisingOptimizerView: React.FC<TargetedAdvertisingOptim
     }
     loadCreatives();
     return () => { isMounted = false; };
-  }, [selectedProfileId, candidateName, territoryName]);
+  }, [selectedProfileId, candidateName, selectedTerritory]);
 
   const handleRegenerate = async () => {
     setLoadingAi(true);
@@ -73,7 +100,7 @@ export const TargetedAdvertisingOptimizerView: React.FC<TargetedAdvertisingOptim
       const result = await AdTargetingOptimizerService.generateCreativesWithAI(
         currentProfile,
         candidateName,
-        territoryName
+        selectedTerritory
       );
       setCreativeSet(result);
     } catch (e) {
@@ -90,16 +117,16 @@ export const TargetedAdvertisingOptimizerView: React.FC<TargetedAdvertisingOptim
         <div className="space-y-1">
           <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-amber-400 font-bold">
             <Target className="w-4 h-4" />
-            <span>Propósito Supremo • Protocolo PA-010 (Unidad de Automejora)</span>
+            <span>Propósito Supremo • Protocolos PA-010 y PA-011 (Unidad de Automejora)</span>
           </div>
           <h1 className="text-xl sm:text-2xl font-black tracking-tight text-white flex items-center gap-2.5">
             Optimizador de Publicidad Electoral Segmentada
             <span className="text-xs font-bold font-mono px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
-              Eficacia Publicitaria
+              Eficacia Publicitaria & Retorno Votos
             </span>
           </h1>
           <p className="text-xs sm:text-sm text-slate-400 max-w-3xl">
-            Maximiza el retorno persuasivo y la conversión en votos para la campaña de <strong>{candidateName}</strong> en <strong>{territoryName}</strong> mediante microtargeting, ganchos emocionales y variantes creativas A/B por segmento.
+            Maximiza el retorno persuasivo y la conversión en votos para la campaña de <strong>{candidateName}</strong> en <strong>{selectedTerritory}</strong> mediante el cruce de inteligencia territorial (casas políticas, monitoreo de Gobernación, mapas de calor) con microtargeting publicitario y variantes creativas A/B.
           </p>
         </div>
 
@@ -115,6 +142,17 @@ export const TargetedAdvertisingOptimizerView: React.FC<TargetedAdvertisingOptim
           )}
         </div>
       </div>
+
+      {/* Holistic Territory Intelligence Bridge (PA-011) */}
+      {territoryIntelligence && (
+        <TerritoryIntelligenceBridgeCard
+          intelligence={territoryIntelligence}
+          availableTerritories={availableTerritories}
+          selectedTerritory={selectedTerritory}
+          onSelectTerritory={(t) => setSelectedTerritory(t)}
+          onNavigateToView={onNavigateToView}
+        />
+      )}
 
       {/* Segment Selector Tabs */}
       <div className="space-y-2">

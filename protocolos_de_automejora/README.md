@@ -48,6 +48,7 @@ Para garantizar que ninguna mejora sea un capricho estético o una complicación
 - **[`PA-008-EVALUACION-ARQUITECTURA-Y-PROPOSITO.md`](PA-008-EVALUACION-ARQUITECTURA-Y-PROPOSITO.md)**: Centralidad de la personalización del candidato como emisor publicitario.
 - **[`PA-009-MAPEO-RELACIONAL-CASAS-POLITICAS-GRAFOS.md`](PA-009-MAPEO-RELACIONAL-CASAS-POLITICAS-GRAFOS.md)**: Observatorio de redes de poder y casas políticas para modular la pauta territorial.
 - **[`PA-010-OPTIMIZADOR-PUBLICIDAD-ELECTORAL-SEGMENTADA.md`](PA-010-OPTIMIZADOR-PUBLICIDAD-ELECTORAL-SEGMENTADA.md)**: Motor de optimización publicitaria, matriz de resonancia por cohorte, generador de creatividades A/B y simulador de inversión en pauta.
+- **[`PA-011-SISTEMA-HOLISTICO-INTELIGENCIA-Y-PUBLICIDAD-VOTOS.md`](PA-011-SISTEMA-HOLISTICO-INTELIGENCIA-Y-PUBLICIDAD-VOTOS.md)**: Pipeline holístico que articula grafos de poder, mapas de calor, variables demográfico-electorales y monitoreo multinivel con la maximización de la relación publicidad/votos.
 
 ---
 
@@ -58,5 +59,6 @@ Para garantizar que ninguna mejora sea un capricho estético o una complicación
 - **[`SESION_CRITICA_003_PLAN_INTEGRACION.md`](SESION_CRITICA_003_PLAN_INTEGRACION.md)**: Reincorporación de pirámides demográficas y audiencias de 5 escalas.
 - **[`SESION_CRITICA_004_EVALUACION_ARQUITECTURA.md`](SESION_CRITICA_004_EVALUACION_ARQUITECTURA.md)**: Refactorización hacia la personalización del candidato.
 - **[`SESION_CRITICA_005_CASAS_POLITICAS_GRAFOS.md`](SESION_CRITICA_005_CASAS_POLITICAS_GRAFOS.md)**: Grafos 2D/3D de Casas Políticas y rastreo OSINT con Google Search.
-- **[`SESION_CRITICA_007_MAXIMIZACION_PUBLICIDAD_ELECTORAL_SEGMENTACION.md`](SESION_CRITICA_007_MAXIMIZACION_PUBLICIDAD_ELECTORAL_SEGMENTACION.md)**: **Reorientación teleológica rectora** y aprobación del Optimizador de Publicidad Electoral Segmentada (PA-010).
+- **[`SESION_CRITICA_007_MAXIMIZACION_PUBLICIDAD_ELECTORAL_SEGMENTACION.md`](SESION_CRITICA_007_MAXIMIZACION_PUBLICIDAD_ELECTORAL_SEGMENTACION.md)**: Reorientación teleológica rectora y aprobación del Optimizador de Publicidad Segmentada (PA-010).
+- **[`SESION_CRITICA_008_ARQUITECTURA_HOLISTICA_PUBLICIDAD_VOTOS.md`](SESION_CRITICA_008_ARQUITECTURA_HOLISTICA_PUBLICIDAD_VOTOS.md)**: **Doctrina Holística Unificada**: Integración de Grafos, Mapas de Calor, Monitoreo 3 Niveles y Variables Multidimensionales para la Maximización de la Relación Publicidad/Votos (PA-011).
 
