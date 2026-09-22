@@ -3,61 +3,27 @@
 
 ---
 
-### 1. MISIÓN DE LA UNIDAD DE AUTOMEJORA
-La Unidad de Automejora de Proyecto Proteus es un cuerpo colegiado y autónomo de **7 agentes especializados**, constituido con el mandato explícito y vinculante de:
-> *"Maximizar la eficiencia (optimización estricta de tiempo, recursos económicos, mensajes y despliegue logístico) y la eficacia (conversión real de simpatías en votos en urna y obtención de curules o cargos ejecutivos) de las campañas electorales en las circunscripciones nacional, departamental y municipal."*
+### 1. MISIÓN SUPREMA DE LA UNIDAD DE AUTOMEJORA
+La Unidad de Automejora de Proyecto Proteus es un cuerpo colegiado y autónomo de **7 agentes especializados**, constituido con el mandato explícito, inviolable y vinculante de:
+> *"**Maximizar la eficacia y el retorno persuasivo de la publicidad electoral del candidato mediante la segmentación científica, territorial y psicográfica de las audiencias de votantes.**"*
 
 > [!IMPORTANT]
-> **Norma Constitucional de la Unidad**: Todas las operaciones, deliberaciones y fases de trabajo de los 7 agentes se rigen bajo el **[`PROTOCOLO_CRITICO.md`](PROTOCOLO_CRITICO.md)** (Código de Procedimiento, Investigación en Google Scholar/APIs, Casos de Éxito, Matriz de Priorización y Auditoría Epistemológica).
+> **Norma Constitucional y Prohibición de Desvío**:
+> Proteus **no es un software de administración o de gestión postelectoral** (conteo de votos o litigio de actas). Es un **motor predictivo y creativo de publicidad política segmentada**. Toda función debe incidir directamente en persuadir al votante antes de su voto mediante mensajes, formatos y pauta hiper-segmentada. Todas las deliberaciones se rigen por el **[`PROTOCOLO_CRITICO.md`](PROTOCOLO_CRITICO.md)**.
 
 ---
 
-### 2. ESTRUCTURA Y ROLES DE LOS 7 AGENTES
+### 2. ESTRUCTURA Y ROLES DE LOS 7 AGENTES PUBLICITARIOS
 
-```
-                          ┌────────────────────────────┐
-                          │      1. ORQUESTADOR        │
-                          │   (Director y Metodología) │
-                          └─────────────┬──────────────┘
-                                        │
-         ┌──────────────────────────────┼──────────────────────────────┐
-         │                              │                              │
-┌────────▼──────────────┐     ┌─────────▼────────────┐     ┌───────────▼───────────┐
-│ 2. INVESTIGADOR       │     │ 4. AUDITOR           │     │ 7. INVESTIGADOR       │
-│    ACADÉMICO          │     │    IMPARCIAL         │     │    LEX ARTIS          │
-│ (Ciencia Política,    │     │ (Auditoría Interna de│     │ (State-of-the-Art,    │
-│  Econometría del Voto)│     │  Unidad y Protocolos)│     │  Campaign Tech Global)│
-└────────┬──────────────┘     └─────────┬────────────┘     └───────────┬───────────┘
-         │                              │                              │
-         └──────────────────────────────┼──────────────────────────────┘
-                                        │
-         ┌──────────────────────────────┴──────────────────────────────┐
-         │                                                             │
-┌────────▼──────────────┐                                    ┌─────────▼───────────┐
-│ 5. INVESTIGADOR       │                                    │ 6. ANALISTA         │
-│    DE DATOS           │                                    │    DE SOFTWARE      │
-│ (Registraduría, DANE, │                                    │ (React 19, TS, GIS, │
-│  CIEF, Web Scraping)  │                                    │  Gemini 3.8 Flash)  │
-└────────┬──────────────┘                                    └─────────┬───────────┘
-         │                                                             │
-         └──────────────────────────────┬──────────────────────────────┘
-                                        │
-                          ┌─────────────▼──────────────┐
-                          │       3. ORGANIZADOR       │
-                          │ (Repositorio de Protocolos │
-                          │     de Automejora - PA)    │
-                          └────────────────────────────┘
-```
-
-| # | Agente | Código | Misión y Rol Operativo |
+| # | Agente | Código | Misión y Rol en Publicidad y Segmentación |
 |---|---|---|---|
-| **1** | **Orquestador** | `AGENT-ORCHESTRATOR` | **Director y ordenador del proceso**: Diseña la metodología de investigación general, arbitra prioridades, define fases de deliberación y garantiza la coherencia con el objetivo supremo de maximización electoral. |
-| **2** | **Investigador Académico** | `AGENT-ACADEMIC-RES` | **Sustentación científica y marcos teóricos**: Aporta modelos de ciencia política (Downs, Campbell, Kahneman & Tversky), econometría del voto, teoría de juegos, psicología social y sociología electoral cuantitativa. |
-| **3** | **Organizador** | `AGENT-ORGANIZER` | **Gestor de la memoria y protocolos**: Interpreta los análisis cruzados, clasifica las propuestas y las archiva sistemáticamente en este repositorio interno bajo el estándar estricto de 5 pilares. |
-| **4** | **Auditor** | `AGENT-AUDITOR` | **Verificador imparcial interno de la unidad**: Audita a los demás agentes de la unidad y a sus respectivos protocolos; identifica errores lógicos, falacias, debilidades metodológicas e inconsistencias en sus razonamientos antes de su adopción (no audita a la campaña). |
-| **5** | **Investigador de Datos** | `AGENT-DATA-RES` | **Minería y validación empírica**: Identifica fuentes autorizadas (DIVIPOLA DANE, Registraduría E-14/E-24, CIEF EAFIT, encuestas CNE), valida calidad de datos y diseña subprotocolos de extracción y estandarización. |
-| **6** | **Analista de Software** | `AGENT-SOFTWARE-ENG` | **Arquitectura y ejecución técnica**: Traduce las recomendaciones teóricas y empíricas en interfaces TypeScript, componentes React 19, algoritmos en memoria, optimizaciones WebGL y prompts estructurados para Gemini 3.8 Flash. |
-| **7** | **Investigador de Lex Artis** | `AGENT-LEX-ARTIS` | **Benchmarking del estado del arte**: Rastrea las tecnologías, librerías, algoritmos GIS y herramientas más avanzadas de la industria electoral global (microtargeting, modelado bayesiano, ruteo territorial) para su adopción inmediata. |
+| **1** | **Orquestador** | `AGENT-ORCHESTRATOR` | **Director de Estrategia Publicitaria**: Diseña la metodología de impacto publicitario, arbitra la distribución del presupuesto de pauta y prioriza audiencias para maximizar la conversión en simpatía y voto. |
+| **2** | **Investigador Académico** | `AGENT-ACADEMIC-RES` | **Neuromarketing y Psicología de la Persuasión**: Aporta modelos de sesgos cognitivos (Kahneman & Tversky), teoría de marcos (*framing* de ganancia vs. pérdida) y resonancia emocional del copy publicitario. |
+| **3** | **Organizador** | `AGENT-ORGANIZER` | **Gestor de Repositorio de Publicidad Segmentada**: Clasifica y custodia las matrices de audiencias, copys probados y protocolos de optimización publicitaria bajo el estándar estricto de 5 pilares. |
+| **4** | **Auditor** | `AGENT-AUDITOR` | **Guardián Teleológico y Anti-Desvío**: Veta cualquier iniciativa burocrática o postelectoral ajena a la persuasión publicitaria y audita la coherencia entre el perfil del votante y la promesa del candidato. |
+| **5** | **Investigador de Datos** | `AGENT-DATA-RES` | **Minería de Audiencias y Consumo de Medios**: Cruza datos sociodemográficos DANE con hábitos de consumo de medios (Meta, TikTok, WhatsApp, radio, vía pública) para identificar votantes indecisos persuadibles. |
+| **6** | **Analista de Software** | `AGENT-SOFTWARE-ENG` | **Arquitectura de Motores Creativos y AdTech**: Traduce los hallazgos en interfaces de variantes publicitarias A/B, simuladores de retorno de pauta e inyección de identidad en Gemini 3.8 Flash. |
+| **7** | **Investigador de Lex Artis** | `AGENT-LEX-ARTIS` | **Benchmarking de AdTech Global y Campañas de Éxito**: Rastrea herramientas de vanguardia en Meta Ads Library, TikTok Creative Center, pruebas A/B multivariadas y formatos publicitarios disruptivos. |
 
 ---
 
@@ -65,34 +31,32 @@ La Unidad de Automejora de Proyecto Proteus es un cuerpo colegiado y autónomo d
 
 Para garantizar que ninguna mejora sea un capricho estético o una complicación innecesaria, **cada Protocolo de Automejora (PA)** debe responder obligatoriamente a los siguientes 5 pilares:
 
-1. **QUÉ CAMBIAR**: Identificación quirúrgica del componente, función, flujo o modelo a transformar.
-2. **POR QUÉ CAMBIARLO**: Justificación causal basada en la maximización de la eficiencia (ahorro de recursos/tiempo) y eficacia (conversión de votos en urna).
+1. **QUÉ CAMBIAR**: Identificación quirúrgica del componente creativo, de segmentación o de pauta publicitaria a intervenir.
+2. **POR QUÉ CAMBIARLO**: Justificación causal demostrable en incremento de conversión publicitaria y reducción del costo por votante persuadido.
 3. **CÓMO CAMBIARLO**: Subprotocolo técnico de ejecución detallado paso a paso para su desarrollo.
-4. **RECURSOS NECESARIOS**: Dependencias, APIs, fuentes de datos, librerías, horas de cómputo y costos asociados.
-5. **ALTERNATIVAS AL CAMBIO**: Análisis de trade-offs, opciones conservadoras, opciones intermedias y riesgos de no actuar.
+4. **RECURSOS NECESARIOS**: Dependencias, modelos de IA, matrices de audiencias, horas de cómputo y costos asociados.
+5. **ALTERNATIVAS AL CAMBIO**: Análisis de trade-offs, costo de oportunidad y riesgos de mantener publicidad genérica.
 
 ---
 
-### 4. ÍNDICE DE PROTOCOLOS ACTIVOS (SPRINTS 1 Y 2)
+### 4. ÍNDICE DE PROTOCOLOS ACTIVOS
 
-- **[`PA-001-SIMULADOR-ELECTORAL-BAYESIANO.md`](PA-001-SIMULADOR-ELECTORAL-BAYESIANO.md)**: Simulador predictivo estocástico de Umbral Electoral, Cifra Repartidora D'Hondt y asignación de curules con elasticidad de participación (Nivel Nacional y Departamental).
-- **[`PA-002-EXTRACCION-MICRODATOS-REGISTRADURIA.md`](PA-002-EXTRACCION-MICRODATOS-REGISTRADURIA.md)**: Pipeline de ingesta y estandarización automática de formularios E-14 y E-24 históricos de la Registraduría para los 125 municipios.
-- **[`PA-003-MICROTARGETING-PSICOGRAFICO-TERRITORIAL.md`](PA-003-MICROTARGETING-PSICOGRAFICO-TERRITORIAL.md)**: Motor de hiper-segmentación psicográfica y matriz de persuasión narrativa personalizada por comuna y vereda.
-- **[`PA-004-OPTIMIZACION-ARQUITECTURA-GIS-WEBGL.md`](PA-004-OPTIMIZACION-ARQUITECTURA-GIS-WEBGL.md)**: Transición del renderizado SVG/DOM a capas vectoriales WebGL/Canvas para navegación hiper-rápida y soporte offline en territorio.
-- **[`PA-005-AUDITORIA-INTERNA-RAZONAMIENTO-Y-VALIDACION.md`](PA-005-AUDITORIA-INTERNA-RAZONAMIENTO-Y-VALIDACION.md)**: Protocolo de evaluación crítica, detección de falacias y validación metodológica interna de los protocolos de la unidad (Auditor Imparcial).
-- **[`PA-006-VERIFICACION-INCLUSION-APLICATIVOS-ORIGINALES.md`](PA-006-VERIFICACION-INCLUSION-APLICATIVOS-ORIGINALES.md)**: Auditoría forense e inventario comparativo de los 4 aplicativos originales integrados (Unidad UAIF - 7 Agentes).
-- **[`PA-007-INTEGRACION-ELEMENTOS-NO-INCLUIDOS.md`](PA-007-INTEGRACION-ELEMENTOS-NO-INCLUIDOS.md)**: Ingeniería e integración de elementos no incluidos: Congreso y Presidencia por comuna, pirámides poblacionales dinámicas 2018-2030 (Unidad UIIP - 7 Agentes).
-- **[`PA-008-EVALUACION-ARQUITECTURA-Y-PROPOSITO.md`](PA-008-EVALUACION-ARQUITECTURA-Y-PROPOSITO.md)**: Evaluación arquitectónica y correspondencia teleológica con el propósito supremo de personalización (Unidad UEAT - 7 Agentes).
-- **[`PA-009-MAPEO-RELACIONAL-CASAS-POLITICAS-GRAFOS.md`](PA-009-MAPEO-RELACIONAL-CASAS-POLITICAS-GRAFOS.md)**: Mapeo relacional de casas políticas, articulación municipal-extramunicipal y grafos de poder 2D/3D con OSINT en tiempo real (Unidad UACP - 7 Agentes + SO-NEWS - 3 Agentes).
+- **[`PA-001-SIMULADOR-ELECTORAL-BAYESIANO.md`](PA-001-SIMULADOR-ELECTORAL-BAYESIANO.md)**: Simulador de Umbral y Cifra Repartidora D'Hondt para fijar metas de persuasión publicitaria.
+- **[`PA-003-MICROTARGETING-PSICOGRAFICO-TERRITORIAL.md`](PA-003-MICROTARGETING-PSICOGRAFICO-TERRITORIAL.md)**: Motor de hiper-segmentación psicográfica y matriz de persuasión narrativa personalizada.
+- **[`PA-006-VERIFICACION-INCLUSION-APLICATIVOS-ORIGINALES.md`](PA-006-VERIFICACION-INCLUSION-APLICATIVOS-ORIGINALES.md)**: Auditoría e inventario comparativo de los módulos originales.
+- **[`PA-007-INTEGRACION-ELEMENTOS-NO-INCLUIDOS.md`](PA-007-INTEGRACION-ELEMENTOS-NO-INCLUIDOS.md)**: Pirámides poblacionales y taxonomía completa de audiencias en 5 escalas.
+- **[`PA-008-EVALUACION-ARQUITECTURA-Y-PROPOSITO.md`](PA-008-EVALUACION-ARQUITECTURA-Y-PROPOSITO.md)**: Centralidad de la personalización del candidato como emisor publicitario.
+- **[`PA-009-MAPEO-RELACIONAL-CASAS-POLITICAS-GRAFOS.md`](PA-009-MAPEO-RELACIONAL-CASAS-POLITICAS-GRAFOS.md)**: Observatorio de redes de poder y casas políticas para modular la pauta territorial.
+- **[`PA-010-OPTIMIZADOR-PUBLICIDAD-ELECTORAL-SEGMENTADA.md`](PA-010-OPTIMIZADOR-PUBLICIDAD-ELECTORAL-SEGMENTADA.md)**: Motor de optimización publicitaria, matriz de resonancia por cohorte, generador de creatividades A/B y simulador de inversión en pauta.
 
 ---
 
 ### 5. ACTAS DE SESIONES CRÍTICAS COLEGIADAS
 
-- **[`SESION_CRITICA_001_SIMULADOR_DHONDT.md`](SESION_CRITICA_001_SIMULADOR_DHONDT.md)**: Aprobación del Simulador Electoral D'Hondt y Curul Marginal Residual (PA-001).
-- **[`SESION_CRITICA_002_VERIFICACION_APLICATIVOS.md`](SESION_CRITICA_002_VERIFICACION_APLICATIVOS.md)**: Auditoría forense y Matriz de Brechas (Gap Matrix) de los 4 aplicativos fuente (PA-006).
-- **[`SESION_CRITICA_003_PLAN_INTEGRACION.md`](SESION_CRITICA_003_PLAN_INTEGRACION.md)**: Plan técnico de reincorporación de Congreso/Presidencia por comuna y pirámides demográficas (PA-007).
-- **[`SESION_CRITICA_004_EVALUACION_ARQUITECTURA.md`](SESION_CRITICA_004_EVALUACION_ARQUITECTURA.md)**: Evaluación arquitectónica y dictamen de refactorización teleológica de la ventana inicial hacia la personalización (PA-008).
-- **[`SESION_CRITICA_005_CASAS_POLITICAS_GRAFOS.md`](SESION_CRITICA_005_CASAS_POLITICAS_GRAFOS.md)**: Aprobación del sistema de grafos relacionales de Casas Políticas 2D/3D y rastreo OSINT de redes con Google Search (PA-009).
-- **[`SESION_CRITICA_006_AUDITORIA_ELECTORAL_Y_BENFORD.md`](SESION_CRITICA_006_AUDITORIA_ELECTORAL_Y_BENFORD.md)**: Aprobación y ejecución del sistema de Auditoría Forense Electoral, Ley de Benford de 2º Dígito y Escrutinios E-14 vs E-24 (PA-002).
+- **[`SESION_CRITICA_001_SIMULADOR_DHONDT.md`](SESION_CRITICA_001_SIMULADOR_DHONDT.md)**: Aprobación del Simulador Electoral D'Hondt.
+- **[`SESION_CRITICA_002_VERIFICACION_APLICATIVOS.md`](SESION_CRITICA_002_VERIFICACION_APLICATIVOS.md)**: Auditoría forense de los aplicativos fuente.
+- **[`SESION_CRITICA_003_PLAN_INTEGRACION.md`](SESION_CRITICA_003_PLAN_INTEGRACION.md)**: Reincorporación de pirámides demográficas y audiencias de 5 escalas.
+- **[`SESION_CRITICA_004_EVALUACION_ARQUITECTURA.md`](SESION_CRITICA_004_EVALUACION_ARQUITECTURA.md)**: Refactorización hacia la personalización del candidato.
+- **[`SESION_CRITICA_005_CASAS_POLITICAS_GRAFOS.md`](SESION_CRITICA_005_CASAS_POLITICAS_GRAFOS.md)**: Grafos 2D/3D de Casas Políticas y rastreo OSINT con Google Search.
+- **[`SESION_CRITICA_007_MAXIMIZACION_PUBLICIDAD_ELECTORAL_SEGMENTACION.md`](SESION_CRITICA_007_MAXIMIZACION_PUBLICIDAD_ELECTORAL_SEGMENTACION.md)**: **Reorientación teleológica rectora** y aprobación del Optimizador de Publicidad Electoral Segmentada (PA-010).
 

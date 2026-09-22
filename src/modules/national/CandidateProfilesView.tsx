@@ -254,18 +254,18 @@ export const CandidateProfilesView: React.FC<CandidateProfilesViewProps> = ({
 
               <button
                 type="button"
-                onClick={() => onNavigateToView('electoral-audit-forensics')}
+                onClick={() => onNavigateToView('targeted-advertising')}
                 className="p-3 rounded-2xl bg-white/05 hover:bg-amber-500/20 border border-white/10 hover:border-amber-400/50 text-left transition transform hover:scale-[1.02] active:scale-95 group cursor-pointer"
               >
                 <div className="flex items-center justify-between text-amber-400 mb-1.5">
-                  <Scale className="w-4 h-4" />
+                  <Target className="w-4 h-4" />
                   <ArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition" />
                 </div>
                 <div className="text-xs font-black text-white group-hover:text-amber-200">
-                  Auditoría E-14/E-24
+                  Publicidad Segmentada
                 </div>
                 <div className="text-[10px] text-slate-400 mt-0.5">
-                  Ley de Benford y CNE
+                  Creatividades y Pauta IA
                 </div>
               </button>
             </div>

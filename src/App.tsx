@@ -19,6 +19,7 @@ import { TerritorialZoomHubView } from './modules/territorial/TerritorialZoomHub
 import { MunicipalRepositoryExplorerView } from './modules/repository/MunicipalRepositoryExplorerView';
 import { VoterSegmentationEngine } from './modules/analytics/VoterSegmentationEngine';
 import { CampaignContentDirectorView } from './modules/content/CampaignContentDirectorView';
+import { TargetedAdvertisingOptimizerView } from './modules/advertising/TargetedAdvertisingOptimizerView';
 import { CandidateMultimediaStudioView } from './modules/multimedia/CandidateMultimediaStudioView';
 import { AgentTeamConsoleView } from './modules/agents/AgentTeamConsoleView';
 
@@ -134,6 +135,13 @@ export default function App() {
           candidateProfile={candidateProfile}
           onSaveToDrive={handleSaveToDrive}
           onNavigateToZoom={() => setCurrentView('territorial-zoom')}
+        />
+      )}
+
+      {currentView === 'targeted-advertising' && (
+        <TargetedAdvertisingOptimizerView
+          candidateProfile={candidateProfile}
+          onNavigateToView={(view) => setCurrentView(view as NavViewId)}
         />
       )}
 

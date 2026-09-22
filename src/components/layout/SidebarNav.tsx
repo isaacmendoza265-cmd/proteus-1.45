@@ -30,6 +30,7 @@ export type NavViewId =
   | 'municipal-repository'
   | 'voter-segmentation'
   | 'content-director'
+  | 'targeted-advertising'
   | 'multimedia-studio'
   | 'agent-team'
   | 'political-houses-graph'
@@ -210,6 +211,26 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
             >
               <Megaphone className="w-4 h-4 shrink-0 text-amber-400" />
               {!collapsed && <span>3. Director de Contenido</span>}
+            </button>
+
+            <button
+              onClick={() => onSelectView('targeted-advertising')}
+              className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold transition-all duration-200 ${
+                currentView === 'targeted-advertising'
+                  ? 'bg-gradient-to-r from-amber-500/35 to-rose-600/40 border border-amber-300/60 text-white shadow-[inset_0_1.5px_2px_0_rgba(255,255,255,0.5),0_4px_20px_rgba(245,158,11,0.4)]'
+                  : 'text-slate-300 hover:text-white hover:bg-white/10 border border-transparent'
+              }`}
+              title="Propósito Supremo: Publicidad Electoral Segmentada"
+            >
+              <Target className="w-4 h-4 shrink-0 text-amber-400" />
+              {!collapsed && (
+                <div className="flex items-center justify-between w-full">
+                  <span>Publicidad Segmentada</span>
+                  <span className="text-[9px] px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 font-mono font-bold">
+                    PA-010
+                  </span>
+                </div>
+              )}
             </button>
 
             <button
