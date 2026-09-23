@@ -104,19 +104,3 @@ export async function runGobernacionCycle(): Promise<RunCycleResponse> {
   }
   return data;
 }
-
-export const gobernacionService = {
-  getStatus: async () => {
-    const status = await getGobernacionStatus();
-    return {
-      status: status.connected ? 'online' : 'offline',
-      database: {
-        total_news: status.totalNoticias
-      },
-      ...status
-    };
-  },
-  getLatestReport: getLatestGobernacionReport,
-  getObjectives: getGobernacionObjectives,
-  runCycle: runGobernacionCycle,
-};

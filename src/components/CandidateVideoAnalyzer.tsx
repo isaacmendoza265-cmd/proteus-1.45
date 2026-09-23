@@ -120,7 +120,6 @@ interface CandidateVideoAnalyzerProps {
     quEvitar?: string;
     videoAnalysisResult: VideoAnalysisResult;
   }) => void;
-  onAnalysisComplete?: (res: any) => void;
   className?: string;
 }
 

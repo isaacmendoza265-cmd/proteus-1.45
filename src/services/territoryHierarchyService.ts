@@ -24,9 +24,7 @@ export interface HierarchyTerritoryNode {
   fullName: string;
   departmentName?: string;
   subregionName?: string;
-  subregion?: string;
   municipalityName?: string;
-  municipalityCount?: number;
   comunaName?: string;
   population?: number;
   electoralCensus?: number;
@@ -68,7 +66,7 @@ export class TerritoryHierarchyService {
       const p = f.properties;
       return {
         id: `dept-${p.id}`,
-        scale: 'departamental' as const,
+        scale: 'departamental',
         name: p.name,
         fullName: `Departamento de ${p.name}`,
         departmentName: p.name,
@@ -100,13 +98,11 @@ export class TerritoryHierarchyService {
 
       return {
         id: `subreg-${s.id}`,
-        scale: 'subregional' as const,
+        scale: 'subregional',
         name: s.name,
         fullName: `Subregión ${s.name} (Antioquia)`,
         departmentName: 'Antioquia',
         subregionName: s.name,
-        subregion: s.name,
-        municipalityCount: s.totalMunicipalities,
         population: s.demographics.totalPopulation,
         electoralCensus: Math.round(s.demographics.totalPopulation * 0.72),
         nbiPercentage: s.demographics.nbiAverage,
@@ -127,12 +123,11 @@ export class TerritoryHierarchyService {
 
     return filtered.map(m => ({
       id: m.id,
-      scale: 'municipal' as const,
+      scale: 'municipal',
       name: m.name,
       fullName: `${m.name} (${m.subregion}, Antioquia)`,
       departmentName: 'Antioquia',
       subregionName: m.subregion,
-      subregion: m.subregion,
       municipalityName: m.name,
       population: m.population,
       electoralCensus: m.electoralCensus,
@@ -159,7 +154,7 @@ export class TerritoryHierarchyService {
 
       return {
         id: `comuna-${c.id}`,
-        scale: 'comuna-barrio' as const,
+        scale: 'comuna-barrio',
         name: `${c.comunaName} - ${c.officialName}`,
         fullName: `${c.comunaName} (${c.officialName}), Medellín`,
         departmentName: 'Antioquia',
@@ -193,7 +188,7 @@ export class TerritoryHierarchyService {
       const p = f.properties;
       return {
         id: p.id,
-        scale: 'comuna-barrio' as const,
+        scale: 'comuna-barrio',
         name: p.name,
         fullName: `${p.name} (${p.comunaName || 'Medellín'})`,
         departmentName: 'Antioquia',

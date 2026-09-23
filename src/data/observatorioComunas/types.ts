@@ -66,7 +66,6 @@ export interface HousingRecord {
 export interface IPMRecord {
   year: number;
   ipmGlobal: number;
-  ipm?: number;
   bajoLogroEducativo: number;
   analfabetismo: number;
   inasistenciaEscolar: number;
@@ -91,7 +90,6 @@ export interface CriminalityRecord {
   extorsionNegociosPct: number; // Encuesta CIEF 2019 / PDF Tabla 2
   extorsionAlcaldiaPct: number; // Encuesta victimización Alcaldía 2019 (Tabla 2)
   extorsionDenunciasPct: number; // Denuncias registradas SISC 2018 (Tabla 2)
-  cifraNegraPct?: number;
   extorsionLevel: 'Muy Alto' | 'Alto' | 'Moderado' | 'Bajo' | 'Mínimo';
   
   indiceGobiernoCombo: number; // 0.0 a 1.0 (PDF CIEF)

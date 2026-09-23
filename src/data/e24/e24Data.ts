@@ -26,14 +26,6 @@ import {
   TerritorialYear
 } from './territorialData';
 import {
-  CAMARA_PARTIES,
-  CAMARA_CANDIDATES,
-  MUNICIPAL_SUMMARY_CAMARA,
-  COMUNA_AGGREGATIONS_CAMARA,
-  RAW_ZONE_VOTES_CAMARA,
-  getZonePartySummaryCamara
-} from './camaraData';
-import {
   CAMARA_2022_PARTIES,
   CAMARA_2022_CANDIDATES,
   CAMARA_2022_COMUNA_AGGREGATIONS,

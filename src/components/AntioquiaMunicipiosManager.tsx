@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Building2, 
   MapPin, 
@@ -291,6 +291,7 @@ export const AntioquiaMunicipiosManager: React.FC<AntioquiaMunicipiosManagerProp
   }, [searchMuniQuery, selectedSubregionFilter]);
 
   // Detección de municipio estratégico (Top 7 con 3D) vs Ficha Maestra 125 Municipios
+  const isStrategic7 = STRATEGIC_7_KEYS.includes(selectedMuniId);
   const [nonStrategicTab, setNonStrategicTab] = useState<'ficha' | 'demografia' | 'veredas'>('ficha');
 
   // Modo de visualización territorial ('both' | 'map' | 'charts' | 'comunas' | 'diorama3d' | 'dossier')

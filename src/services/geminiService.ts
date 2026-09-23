@@ -4,13 +4,10 @@ const apiKey = process.env.GEMINI_API_KEY || "";
 export const ai = new GoogleGenAI({ apiKey });
 
 export interface GeminiCallOptions {
-  promptText?: string;
-  prompt?: string;
+  promptText: string;
   model?: string;
   systemInstruction?: string;
   useSearch?: boolean;
-  temperature?: number;
-  maxTokens?: number;
 }
 
 export const formatAiError = (error: any): string => {
@@ -46,14 +43,13 @@ export const formatAiError = (error: any): string => {
 
 export const callGeminiApi = async (options: GeminiCallOptions): Promise<string> => {
   const modelName = options.model || "gemini-3.8-flash";
-  const prompt = options.promptText || options.prompt || "";
   
   // Try with Google Search grounding tool if requested
   if (options.useSearch) {
     try {
       const response = await ai.models.generateContent({
         model: modelName,
-        contents: [{ role: 'user', parts: [{ text: prompt }] }],
+        contents: [{ role: 'user', parts: [{ text: options.promptText }] }],
         config: {
           ...(options.systemInstruction ? { systemInstruction: options.systemInstruction } : {}),
           tools: [{ googleSearch: {} }]
@@ -68,7 +64,7 @@ export const callGeminiApi = async (options: GeminiCallOptions): Promise<string>
   // Fallback to standard generation
   const response = await ai.models.generateContent({
     model: modelName,
-    contents: [{ role: 'user', parts: [{ text: prompt }] }],
+    contents: [{ role: 'user', parts: [{ text: options.promptText }] }],
     ...(options.systemInstruction ? { config: { systemInstruction: options.systemInstruction } } : {})
   });
   

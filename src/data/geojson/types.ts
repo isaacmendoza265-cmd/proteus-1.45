@@ -19,8 +19,8 @@ export interface TerritoryGeoFeature<T = Record<string, any>> {
   properties: T & {
     id: string;
     name: string;
-    level?: ZoomLevelId;
-    centroid?: [number, number]; // [lat, lng] for Leaflet camera
+    level: ZoomLevelId;
+    centroid: [number, number]; // [lat, lng] for Leaflet camera
     bounds?: [[number, number], [number, number]]; // [[south, west], [north, east]]
     population?: number;
     electoralCensus?: number;
