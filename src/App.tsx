@@ -6,6 +6,7 @@
 import React, { useState, lazy, Suspense } from 'react';
 import { AppShell } from './components/layout/AppShell';
 import { NavViewId } from './components/layout/SidebarNav';
+import { ErrorBoundary } from './components/ui/ErrorBoundary';
 
 // National Views
 const NationalDashboardView = lazy(() => import('./modules/national/NationalDashboardView').then((m) => ({ default: m.NationalDashboardView })));
@@ -93,6 +94,7 @@ export default function App() {
       onOpenCandidateModal={() => setCandidateModalOpen(true)}
     >
       {/* Cada módulo se descarga solo cuando se abre (carga diferida) */}
+      <ErrorBoundary resetKey={currentView}>
       <Suspense fallback={<ViewLoading />}>
       {/* 1. ÁMBITO NACIONAL */}
       {currentView === 'national-overview' && (
@@ -217,6 +219,7 @@ export default function App() {
         />
       )}
       </Suspense>
+      </ErrorBoundary>
     </AppShell>
   );
 }

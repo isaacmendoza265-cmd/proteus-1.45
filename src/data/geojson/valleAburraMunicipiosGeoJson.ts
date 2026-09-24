@@ -1,7 +1,10 @@
 import { TerritoryFeatureCollection } from './types';
 import { METROPOLITAN_MUNICIPALITIES_DATA } from '../metropolitanAndMedellinData';
+import REAL_GEOMETRIES from './valleAburraMunicipios.geometry.geo.json';
 
-export const VALLE_ABURRA_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
+// Atributos de cada municipio. Las geometrías de este objeto eran rectángulos aproximados;
+// se reemplazan abajo por los límites municipales reales.
+const VALLE_ABURRA_BASE: TerritoryFeatureCollection = {
   type: 'FeatureCollection',
   name: 'Área Metropolitana del Valle de Aburrá - 10 Municipios Conurbados',
   level: 'metropolitano',
@@ -236,9 +239,9 @@ export const VALLE_ABURRA_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         subregion: 'Valle de Aburrá Sur',
         centroid: [6.1578, -75.6431],
         bounds: [[6.125, -75.67], [6.18, -75.625]],
-        population: METROPOLITAN_MUNICIPALITIES_DATA['la-estrella'].population,
-        electoralCensus: METROPOLITAN_MUNICIPALITIES_DATA['la-estrella'].electoralCensus,
-        nbiPercentage: METROPOLITAN_MUNICIPALITIES_DATA['la-estrella'].nbiPercentage,
+        population: METROPOLITAN_MUNICIPALITIES_DATA['la_estrella'].population,
+        electoralCensus: METROPOLITAN_MUNICIPALITIES_DATA['la_estrella'].electoralCensus,
+        nbiPercentage: METROPOLITAN_MUNICIPALITIES_DATA['la_estrella'].nbiPercentage,
         predominantParty: 'Liberal / Conservador',
         riskLevel: 'Bajo',
         colorCode: '#14b8a6'
@@ -281,4 +284,13 @@ export const VALLE_ABURRA_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
       }
     }
   ]
+};
+
+// Límites municipales reales: los mismos polígonos DANE de la capa de 125 municipios
+// (antioquia125Municipios.geo.json). Si falta alguno, se conserva la geometría anterior.
+const geometries = REAL_GEOMETRIES as Record<string, TerritoryFeatureCollection['features'][number]['geometry']>;
+
+export const VALLE_ABURRA_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
+  ...VALLE_ABURRA_BASE,
+  features: VALLE_ABURRA_BASE.features.map((f) => ({ ...f, geometry: geometries[f.id] ?? f.geometry })),
 };

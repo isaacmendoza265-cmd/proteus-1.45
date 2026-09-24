@@ -55,6 +55,10 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
   const [isLoadingDept, setIsLoadingDept] = useState<boolean>(false);
   const [deptDropdownOpen, setDeptDropdownOpen] = useState<boolean>(false);
 
+  // Cámara: última escala encuadrada y límites de la capa visible
+  const lastCameraKeyRef = useRef<string>('');
+  const lastLayerBoundsRef = useRef<L.LatLngBounds | null>(null);
+
   // Helper: Color logic by layer
   const getFeatureColor = (feature: TerritoryGeoFeature): string => {
     const p = feature.properties;
@@ -131,7 +135,10 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
     }
 
     return () => {
-      // Cleanup on full unmount
+      // Liberar el mapa de Leaflet al salir de la vista (antes quedaba en memoria)
+      mapInstanceRef.current?.remove();
+      mapInstanceRef.current = null;
+      geoJsonLayerGroupRef.current = null;
     };
   }, []);
 
@@ -394,23 +401,26 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
 
     layerGroup.addLayer(leafletGeoJson);
 
-    // Smooth camera positioning
-    if (currentLevel === 'departamental' && selectedDepartmentName && selectedDepartmentName.toLowerCase() !== 'antioquia') {
-      try {
-        const bounds = leafletGeoJson.getBounds();
-        if (bounds.isValid()) {
-          map.flyToBounds(bounds, { duration: 1.2, padding: [40, 40] });
-        }
-      } catch (e) {
-        if (dataset.center) {
-          map.flyTo(dataset.center, dataset.defaultZoom || 8, { duration: 1.0 });
-        }
+    // Cámara: encuadrar los polígonos reales de la capa, y SOLO cuando cambia la escala
+    // o el territorio. Antes volaba a un centro/zoom fijo en cada cambio de capa,
+    // búsqueda o selección (cortaba Colombia y deshacía el zoom al elegir un territorio).
+    let layerBounds: L.LatLngBounds | null = null;
+    try {
+      const b = leafletGeoJson.getBounds();
+      if (b.isValid()) layerBounds = b;
+    } catch {
+      layerBounds = null;
+    }
+    lastLayerBoundsRef.current = layerBounds;
+
+    const cameraKey = [currentLevel, antioquiaViewMode, selectedDepartmentName, customDeptDataset?.name].join('|');
+    if (cameraKey !== lastCameraKeyRef.current) {
+      lastCameraKeyRef.current = cameraKey;
+      if (layerBounds) {
+        map.flyToBounds(layerBounds, { duration: 1.2, padding: [30, 30] });
+      } else if (dataset.center) {
+        map.flyTo(dataset.center, dataset.defaultZoom || 8, { duration: 1.2, easeLinearity: 0.25 });
       }
-    } else {
-      map.flyTo(dataset.center, dataset.defaultZoom, {
-        duration: 1.2,
-        easeLinearity: 0.25
-      });
     }
 
   }, [currentLevel, activeLayer, searchQuery, selectedFeature, antioquiaViewMode, selectedDepartmentName, customDeptDataset]);
@@ -422,7 +432,9 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
     const dataset = (currentLevel === 'departamental' && antioquiaViewMode === 'municipios')
       ? ANTIOQUIA_125_MUNICIPIOS_GEOJSON
       : GEOJSON_LAYERS_BY_ZOOM[currentLevel];
-    if (dataset) {
+    if (lastLayerBoundsRef.current) {
+      map.flyToBounds(lastLayerBoundsRef.current, { duration: 0.8, padding: [30, 30] });
+    } else if (dataset) {
       map.flyTo(dataset.center, dataset.defaultZoom, { duration: 0.8 });
     }
   };
