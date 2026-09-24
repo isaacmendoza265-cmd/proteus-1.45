@@ -3,36 +3,36 @@
  * Modular Architecture Root
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, lazy, Suspense } from 'react';
 import { AppShell } from './components/layout/AppShell';
 import { NavViewId } from './components/layout/SidebarNav';
 
 // National Views
-import { NationalDashboardView } from './modules/national/NationalDashboardView';
+const NationalDashboardView = lazy(() => import('./modules/national/NationalDashboardView').then((m) => ({ default: m.NationalDashboardView })));
 import { CandidateProfilesView } from './modules/national/CandidateProfilesView';
-import { CampaignToolsView } from './modules/national/CampaignToolsView';
+const CampaignToolsView = lazy(() => import('./modules/national/CampaignToolsView').then((m) => ({ default: m.CampaignToolsView })));
 
 // Multi-Scale Territorial Zoom (GIS Continuo 5 Escalas)
-import { TerritorialZoomHubView } from './modules/territorial/TerritorialZoomHubView';
+const TerritorialZoomHubView = lazy(() => import('./modules/territorial/TerritorialZoomHubView').then((m) => ({ default: m.TerritorialZoomHubView })));
 
 // Triple Purpose & Intelligence Modules
-import { MunicipalRepositoryExplorerView } from './modules/repository/MunicipalRepositoryExplorerView';
-import { VoterSegmentationEngine } from './modules/analytics/VoterSegmentationEngine';
-import { CampaignContentDirectorView } from './modules/content/CampaignContentDirectorView';
-import { TargetedAdvertisingOptimizerView } from './modules/advertising/TargetedAdvertisingOptimizerView';
-import { CandidateMultimediaStudioView } from './modules/multimedia/CandidateMultimediaStudioView';
-import { AgentTeamConsoleView } from './modules/agents/AgentTeamConsoleView';
+const MunicipalRepositoryExplorerView = lazy(() => import('./modules/repository/MunicipalRepositoryExplorerView').then((m) => ({ default: m.MunicipalRepositoryExplorerView })));
+const VoterSegmentationEngine = lazy(() => import('./modules/analytics/VoterSegmentationEngine').then((m) => ({ default: m.VoterSegmentationEngine })));
+const CampaignContentDirectorView = lazy(() => import('./modules/content/CampaignContentDirectorView').then((m) => ({ default: m.CampaignContentDirectorView })));
+const TargetedAdvertisingOptimizerView = lazy(() => import('./modules/advertising/TargetedAdvertisingOptimizerView').then((m) => ({ default: m.TargetedAdvertisingOptimizerView })));
+const CandidateMultimediaStudioView = lazy(() => import('./modules/multimedia/CandidateMultimediaStudioView').then((m) => ({ default: m.CandidateMultimediaStudioView })));
+const AgentTeamConsoleView = lazy(() => import('./modules/agents/AgentTeamConsoleView').then((m) => ({ default: m.AgentTeamConsoleView })));
 
 // Antioquia Views (Special 3-Tier Hierarchy)
-import { GobernacionExecutiveView } from './modules/antioquia/departamental/GobernacionExecutiveView';
-import { SubregionesView } from './modules/antioquia/subregiones/SubregionesView';
-import { AntioquiaExplorerView } from './modules/antioquia/municipios/AntioquiaExplorerView';
-import { PoliticalHousesGraphView } from './modules/observatorio/PoliticalHousesGraphView';
-import { ElectoralForensicsAuditView } from './modules/audit/ElectoralForensicsAuditView';
+const GobernacionExecutiveView = lazy(() => import('./modules/antioquia/departamental/GobernacionExecutiveView').then((m) => ({ default: m.GobernacionExecutiveView })));
+const SubregionesView = lazy(() => import('./modules/antioquia/subregiones/SubregionesView').then((m) => ({ default: m.SubregionesView })));
+const AntioquiaExplorerView = lazy(() => import('./modules/antioquia/municipios/AntioquiaExplorerView').then((m) => ({ default: m.AntioquiaExplorerView })));
+const PoliticalHousesGraphView = lazy(() => import('./modules/observatorio/PoliticalHousesGraphView').then((m) => ({ default: m.PoliticalHousesGraphView })));
+const ElectoralForensicsAuditView = lazy(() => import('./modules/audit/ElectoralForensicsAuditView').then((m) => ({ default: m.ElectoralForensicsAuditView })));
 
 // System & Agent Views
-import { AntigravityAgentConsole } from './components/AntigravityAgentConsole';
-import { BrandIdentityView } from './modules/system/BrandIdentityView';
+const AntigravityAgentConsole = lazy(() => import('./components/AntigravityAgentConsole').then((m) => ({ default: m.AntigravityAgentConsole })));
+const BrandIdentityView = lazy(() => import('./modules/system/BrandIdentityView').then((m) => ({ default: m.BrandIdentityView })));
 
 // Candidate Profile Types & Defaults
 import { 
@@ -92,6 +92,8 @@ export default function App() {
       candidateName={candidateProfile.nombre}
       onOpenCandidateModal={() => setCandidateModalOpen(true)}
     >
+      {/* Cada módulo se descarga solo cuando se abre (carga diferida) */}
+      <Suspense fallback={<ViewLoading />}>
       {/* 1. ÁMBITO NACIONAL */}
       {currentView === 'national-overview' && (
         <NationalDashboardView />
@@ -214,6 +216,15 @@ export default function App() {
           onClose={() => setCandidateModalOpen(false)}
         />
       )}
+      </Suspense>
     </AppShell>
+  );
+}
+
+function ViewLoading() {
+  return (
+    <div className="flex items-center justify-center py-24 text-sm text-slate-400">
+      Cargando módulo…
+    </div>
   );
 }
