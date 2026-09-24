@@ -1,42 +1,46 @@
+"""Empaqueta Proteus para Google AI Studio (PROTEUS_ACTUALIZADO_AI_STUDIO.zip).
+
+Uso:  python scripts/make_aistudio_zip.py
+Toma los archivos desde la raiz del proyecto (la carpeta que contiene /scripts).
+"""
 import os
 import zipfile
+from pathlib import Path
 
-src_dir = r"c:\Users\isaac\OneDrive\Documentos\Proyecto Proteus"
-output_zip = os.path.join(src_dir, "PROTEUS_ACTUALIZADO_AI_STUDIO.zip")
+ROOT = Path(__file__).resolve().parent.parent
+OUTPUT_ZIP = ROOT / "PROTEUS_ACTUALIZADO_AI_STUDIO.zip"
 
-include_dirs = ["src", "scripts"]
-include_files = [
+INCLUDE_DIRS = ["src", "scripts", "public", "protocolos_de_automejora", "docs"]
+INCLUDE_FILES = [
     "package.json",
+    "package-lock.json",
     "tsconfig.json",
     "vite.config.ts",
     "server.ts",
     "index.html",
     "metadata.json",
-    ".env.example"
+    ".env.example",
+    "README.md",
 ]
+EXCLUDE_EXTS = (".pyc", ".zip", ".pdf", ".backup.tsx")
+EXCLUDE_DIRS = {"__pycache__", "node_modules", ".git"}
 
-# Excluded extensions and patterns
-exclude_exts = [".pyc", ".zip", ".backup.tsx"]
-
-with zipfile.ZipFile(output_zip, "w", zipfile.ZIP_DEFLATED) as zipf:
-    # Add root files
-    for fname in include_files:
-        fpath = os.path.join(src_dir, fname)
-        if os.path.exists(fpath):
+with zipfile.ZipFile(OUTPUT_ZIP, "w", zipfile.ZIP_DEFLATED) as zipf:
+    for fname in INCLUDE_FILES:
+        fpath = ROOT / fname
+        if fpath.exists():
             zipf.write(fpath, fname)
-            print(f"Added file: {fname}")
+    for dname in INCLUDE_DIRS:
+        dpath = ROOT / dname
+        if not dpath.exists():
+            continue
+        for current, dirs, files in os.walk(dpath):
+            dirs[:] = [d for d in dirs if d not in EXCLUDE_DIRS and not d.startswith("_")]
+            for f in files:
+                if f.endswith(EXCLUDE_EXTS):
+                    continue
+                full = Path(current) / f
+                zipf.write(full, full.relative_to(ROOT).as_posix())
 
-    # Add directories
-    for dname in include_dirs:
-        dpath = os.path.join(src_dir, dname)
-        if os.path.exists(dpath):
-            for root, dirs, files in os.walk(dpath):
-                for f in files:
-                    if any(f.endswith(ext) for ext in exclude_exts):
-                        continue
-                    full_path = os.path.join(root, f)
-                    rel_path = os.path.relpath(full_path, src_dir)
-                    zipf.write(full_path, rel_path)
-
-print(f"\nZIP package created successfully at: {output_zip}")
-print(f"Size: {os.path.getsize(output_zip) / (1024 * 1024):.2f} MB")
+print(f"ZIP creado: {OUTPUT_ZIP}")
+print(f"Tamano: {OUTPUT_ZIP.stat().st_size / (1024 * 1024):.2f} MB")
