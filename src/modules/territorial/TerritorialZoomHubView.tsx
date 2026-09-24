@@ -229,7 +229,7 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
                 Conexión Bidireccional Activa • GIS ➔ Inteligencia de Campaña
               </span>
               <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 font-mono font-bold">
-                {selectedFeature ? selectedFeature.properties.name : currentLevelConfig.title}
+                {selectedFeature ? selectedFeature.properties.name : currentLevelConfig.label}
               </span>
             </div>
             <div className="text-xs text-slate-300 mt-0.5">

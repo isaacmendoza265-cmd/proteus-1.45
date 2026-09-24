@@ -23,6 +23,7 @@ import {
 import { CandidateProfileModal } from '../../components/CandidateProfileModal';
 import { Button } from '../../components/ui/Button';
 import { NavViewId } from '../../components/layout/SidebarNav';
+import { googleDriveService } from '../../services/googleDriveService';
 
 interface CandidateProfilesViewProps {
   candidateProfile: CandidateProfile;
@@ -36,6 +37,7 @@ export const CandidateProfilesView: React.FC<CandidateProfilesViewProps> = ({
   onNavigateToView
 }) => {
   const [modalOpen, setModalOpen] = useState(false);
+  const [driveAccount, setDriveAccount] = useState(() => googleDriveService.getAccount());
 
   return (
     <div className="space-y-6 pb-12 animate-fadeIn">
@@ -275,9 +277,19 @@ export const CandidateProfilesView: React.FC<CandidateProfilesViewProps> = ({
 
       {/* 3. GESTOR INTEGRAL DE PERFILES Y PERSONALIZACIÓN */}
       <CandidateProfileManager
-        candidateProfile={candidateProfile}
-        onSaveProfile={onSaveProfile}
-        onSelectCandidateProfile={(prof) => onSaveProfile(prof)}
+        currentEmail={driveAccount.isConnected ? driveAccount.email : null}
+        onConnectGoogleDrive={(email) => {
+          googleDriveService.connectAccount(email);
+          setDriveAccount(googleDriveService.getAccount());
+        }}
+        onDisconnectGoogleDrive={() => {
+          googleDriveService.disconnectAccount();
+          setDriveAccount(googleDriveService.getAccount());
+        }}
+        activeProfile={candidateProfile}
+        onSaveActiveProfile={onSaveProfile}
+        allSavedProfiles={{ [candidateProfile.id || candidateProfile.email || candidateProfile.nombre]: candidateProfile }}
+        onSelectSavedProfile={onSaveProfile}
       />
 
       {/* Quick Modal Editor */}

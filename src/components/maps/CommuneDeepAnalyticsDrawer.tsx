@@ -426,9 +426,9 @@ export const CommuneDeepAnalyticsDrawer: React.FC<CommuneDeepAnalyticsDrawerProp
                     <strong className="font-mono text-white">{muniMatch.mayor.votes.toLocaleString()} votos ({muniMatch.mayor.percentageOfValidVotes}%)</strong>
                   </div>
                 )}
-                {metroData?.keyDynamics && (
+                {metroData?.predominantEconomicActivity && (
                   <div className="text-[10px] text-slate-300 italic pt-1 border-t border-white/10">
-                    {metroData.keyDynamics}
+                    {metroData.predominantEconomicActivity}
                   </div>
                 )}
               </div>

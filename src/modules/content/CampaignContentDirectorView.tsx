@@ -613,7 +613,7 @@ Diseña un BRIEF ESTRATÉGICO DE ALTO IMPACTO estructurado exactamente en los si
                   >
                     {allMunicipalities.map(m => (
                       <option key={m.id} value={m.id} className="bg-slate-900 text-white">
-                        {m.name} ({m.subregion}) - Censo: {m.electoralCensus?.toLocaleString('es-CO')}
+                        {m.name} ({m.subregionName}) - Censo: {m.electoralCensus?.toLocaleString('es-CO')}
                       </option>
                     ))}
                   </select>

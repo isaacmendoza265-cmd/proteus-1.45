@@ -294,12 +294,12 @@ class ActiveTerritoryManager {
           keyProblems.push(`Extorsión a negocios del sector: ${crime.extorsionNegociosPct}%`);
           securityDynamics = {
             homicideRate: `Prioridad territorial en monitoreo CIEF`,
-            extortionRisk: `Extorsión a comercios: ${crime.extorsionNegociosPct}% • Cifra negra: ${crime.cifraNegraPct}%`,
+            extortionRisk: `Extorsión a comercios: ${crime.extorsionNegociosPct}% • Extorsión a hogares: ${crime.extorsionHogaresPct}%`,
             armedPresence: crime.bandasDominantes?.join(', ') || 'Combos delincuenciales locales'
           };
         }
         if (ipmList && ipmList.length > 0) {
-          nbiPercentage = ipmList[ipmList.length - 1].ipm;
+          nbiPercentage = ipmList[ipmList.length - 1].ipmGlobal; // IPM global (no es NBI)
         }
         strategicOpportunities = [
           `Articulación barrial con líderes comunales y comerciantes de ${name}`,

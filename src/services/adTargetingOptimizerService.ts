@@ -164,9 +164,7 @@ Responde ÚNICAMENTE con el bloque JSON válido, sin introducciones ni marcas ma
 
     try {
       const responseText = await callGeminiApi({
-        prompt,
-        temperature: 0.7,
-        maxTokens: 1200
+        promptText: prompt
       });
 
       // Parse JSON from response
