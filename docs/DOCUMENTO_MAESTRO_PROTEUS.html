@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DOCUMENTO MAESTRO - PROYECTO PROTEUS v1.4.5</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap');
+    
+    :root {
+      --bg-body: #060913;
+      --bg-card: rgba(15, 23, 42, 0.85);
+      --border-card: rgba(255, 255, 255, 0.12);
+      --accent-gold: #f59e0b;
+      --accent-sky: #38bdf8;
+      --accent-emerald: #10b981;
+      --accent-rose: #f43f5e;
+      --accent-purple: #a855f7;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: radial-gradient(circle at 50% 0%, #1e1b4b 0%, #060913 70%);
+      color: var(--text-main);
+      line-height: 1.7;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      background: var(--bg-card);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-card);
+      border-radius: 24px;
+      padding: 60px 50px;
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.8), inset 0 1px 1px 0 rgba(255,255,255,0.2);
+    }
+
+    .top-banner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 25px;
+      margin-bottom: 35px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .badge-master {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--accent-gold);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      padding: 6px 14px;
+      border-radius: 9999px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .doc-h1 {
+      font-size: 32px;
+      font-weight: 900;
+      color: #ffffff;
+      line-height: 1.25;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 50%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .doc-h2 {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--accent-gold);
+      margin-top: 45px;
+      margin-bottom: 18px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(245, 158, 11, 0.25);
+      letter-spacing: -0.5px;
+    }
+
+    .doc-h3 {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--accent-sky);
+      margin-top: 35px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .doc-h4 {
+      font-size: 14px;
+      font-weight: 700;
+      color: #e2e8f0;
+      margin-top: 20px;
+      margin-bottom: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .doc-p {
+      color: #cbd5e1;
+      font-size: 15px;
+      margin-bottom: 16px;
+      text-align: justify;
+    }
+
+    .doc-ul, .doc-ol {
+      margin-left: 24px;
+      margin-bottom: 20px;
+      color: #cbd5e1;
+      font-size: 14.5px;
+    }
+
+    .doc-ul li, .doc-ol li {
+      margin-bottom: 8px;
+      padding-left: 6px;
+    }
+
+    .inline-code {
+      font-family: 'JetBrains Mono', monospace;
+      background: rgba(255, 255, 255, 0.08);
+      color: #38bdf8;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-size: 13px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .code-box {
+      font-family: 'JetBrains Mono', monospace;
+      background: #090d16;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      padding: 18px;
+      margin: 20px 0;
+      overflow-x: auto;
+      font-size: 13px;
+      color: #38bdf8;
+      line-height: 1.5;
+    }
+
+    .doc-hr {
+      border: none;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      margin: 40px 0;
+    }
+
+    .tool-card {
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 30px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+    }
+
+    @media print {
+      body { background: #ffffff !important; color: #0f172a !important; padding: 0 !important; }
+      .container { max-width: 100% !important; border: none !important; box-shadow: none !important; background: transparent !important; padding: 20px !important; }
+      .doc-h1 { -webkit-text-fill-color: #0f172a !important; color: #0f172a !important; }
+      .doc-h2 { color: #b45309 !important; border-bottom-color: #cbd5e1 !important; }
+      .doc-h3 { color: #0369a1 !important; }
+      .doc-h4 { color: #1e293b !important; }
+      .doc-p, .doc-ul, .doc-ol { color: #334155 !important; }
+      .code-box { background: #f8fafc !important; color: #0f172a !important; border-color: #cbd5e1 !important; }
+      .inline-code { background: #f1f5f9 !important; color: #0284c7 !important; border-color: #cbd5e1 !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="top-banner">
+      <span class="badge-master">Documento Maestro Oficial • Proteus v1.4.5</span>
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-muted);">CMT Proteus Intelligence Core</span>
+    </div>
+    
+    <h1 class="doc-h1">DOCUMENTO MAESTRO: SISTEMA DE INTELIGENCIA ELECTORAL PROYECTO PROTEUS v1.4.5</h1>
+<h2 class="doc-h2">Centro Estratégico de Campaña, Modelado Territorial y Conversión Publicitaria</h2>
+<strong>Autoría Institucional</strong>: CMT Proteus Research Group & Unidad de Automejora Estratégica  
+<strong>Versión de Sistema</strong>: 1.4.5 (Edición Nacional y Departamental)  
+<strong>Propósito Supremo</strong>: Maximización de la Eficacia Publicitaria (Relación Publicidad / Votos) mediante Inteligencia Territorial y Micro-Targeting
+<hr class="doc-hr">
+<h2 class="doc-h2">1. INTRODUCCIÓN GENERAL: QUÉ HACE PROTEUS, CÓMO LO HACE Y CÓMO SE VE</h2>
+<h3 class="doc-h3">1.1. ¿Qué hace Proyecto Proteus?</h3>
+<strong>Proyecto Proteus</strong> es un sistema integral de <strong>estrategia, inteligencia territorial, analítica predictiva y optimización de conversión publicitaria</strong> concebido para campañas electorales contemporáneas en Colombia.
+<p class="doc-p">A diferencia de las herramientas tradicionales de gestión de campaña (que se limitan a ser agendas de eventos o gestores de gastos postelectorales), el <strong>Propósito Supremo</strong> de Proteus es <strong>maximizar la eficacia de la publicidad electoral</strong>, lo que matemáticamente equivale a <strong>maximizar la relación Publicidad / Votos (reducir el costo por voto persuadido y multiplicar los sufragios netos captados por cada peso invertido en pauta)</strong>.</p>
+<p class="doc-p">Para alcanzar este propósito supremo, Proteus no trata la pauta digital como una compra masiva y ciega de impresiones, sino como la punta de lanza de una maquinaria de inteligencia previa en dos estratos:<br>1. <strong>Estrato de Inteligencia y Dominio del Terreno (El Medio Indispensable)</strong>:<br>   - Modela las redes de poder hegemónicas y las casas políticas tradicionales mediante grafos 2D y 3D.<br>   - Audita e integra micro-redes de concejales de base y releva cambios de curules oficiales.<br>   - Despliega cartografía GIS continua en 5 escalas desde el mapa nacional hasta barrios y comunas.<br>   - Analiza variables multidimensionales (censos electorales, NBI, IPM, criminalidad y demografía de votantes).<br>   - Ejecuta auditoría forense electoral de actas E-14 y E-24 mediante la Ley de Benford.<br>   - Mantiene monitoreo multinivel de coyunturas críticas y proyectos de infraestructura regional.<br>2. <strong>Estrato de Conversión y Persuasión Cognitiva (El Fin Supremo)</strong>:<br>   - Transforma los datos duros de cada comuna, vereda o departamento en <strong>Ganchos Geopolíticos Hiperlocales</strong> que apelan a las angustias e intereses reales del ciudadano.<br>   - Aplica modelos de persuasión cognitiva basados en la <em>Teoría de las Perspectivas</em> de Daniel Kahneman y Amos Tversky (<em>Framing</em> de Ganancia vs. Pérdida).<br>   - Genera creatividades de pauta A/B con inteligencia artificial (Gemini 3.8 Flash con Grounding) orientadas a 5 arquetipos de votantes.<br>   - Calcula el <strong>Índice de Retorno Publicidad/Votos (IRPV)</strong> y simula la distribución presupuestal óptima entre canales digitales y de proximidad.</p>
+<hr class="doc-hr">
+<h3 class="doc-h3">1.2. ¿Cómo lo hace Proteus? (Arquitectura Algorítmica y de Datos)</h3>
+Proteus opera mediante una arquitectura cliente-servidor de alto rendimiento construida en <strong>React 18, TypeScript estricto, Tailwind CSS y Node.js</strong>, apoyada en motores analíticos matemáticos en el navegador y modelos de lenguaje de última generación:
+<pre class="code-box"><code>                                  ┌────────────────────────────────────────────────────────┐
+                                  │           PROPÓSITO SUPREMO: CONVERSIÓN                │
+                                  │   Targeted Advertising Optimizer &amp; ROI Simulator       │
+                                  └───────────────────────────▲────────────────────────────┘
+                                                              │
+                                     Inyección Dinámica de Contexto e Inteligencia (PA-011/012)
+                                                              │
+               ┌──────────────────────────────────────────────┴──────────────────────────────────────────────┐
+               │                                                                                            │
+  ┌────────────┴─────────────┐                                                             ┌────────────────┴───────────┐
+  │   CAPA GEOESPACIAL GIS   │                                                             │   REDES DE PODER &amp; GRAFOS  │
+  │ • 33 Entidades (Depts)   │                                                             │ • 7 Casas Políticas        │
+  │ • 1.122 Municipios DANE  │                                                             │ • 71 Concejales de Base    │
+  │ • 16 Comunas + 5 Correg. │                                                             │ • Relevos de Curules 2026  │
+  └────────────┬─────────────┘                                                             └────────────────┬───────────┘
+               │                                                                                            │
+               └──────────────────────────────────────┬─────────────────────────────────────────────────────┘
+                                                      │
+                                    ┌─────────────────┴─────────────────┐
+                                    │     MOTORES MATEMÁTICOS &amp; IA      │
+                                    │ • Gemini 3.8 Flash + Web Grounding│
+                                    │ • Simulador D'Hondt &amp; Cifra Rep.  │
+                                    │ • Forense Benford (1º y 2º dígito)│
+                                    │ • Repositorio Municipal (NBI/IPM) │
+                                    └───────────────────────────────────┘
+</code></pre>
+<ol class="doc-ol"><li><strong>Ingesta y Normalización de Datos</strong>:</li><li>   - Geometrías vectoriales oficiales del DANE (<code class="inline-code">colombia_municipios_completo.geojson</code> con 1.122 municipios) y de la Alcaldía de Medellín (<code class="inline-code">medellin16ComunasOfficial.geo.json</code>).</li><li>   - Algoritmo de normalización canónica de cadenas (<code class="inline-code">clean_dept</code> y <code class="inline-code">normalizeText</code>) que elimina diacríticos, resuelve homónimos y previene superposiciones entre departamentos y municipios.</li><li><strong>Motores Matemáticos Deterministas en Memoria</strong>:</li><li>   - Algoritmo analítico de asignación de escaños de <strong>Victor D'Hondt</strong> (Art. 263 Constitución Política de Colombia), con cálculo en tiempo real del déficit marginal de votos en sub-milisegundos.</li><li>   - Motor de análisis forense digital basado en la <strong>Distribución Logarítmica de Benford</strong> ($P(d) = \log_{10}(1 + 1/d)$) para detectar fraude o manipulación en escrutinios.</li><li><strong>Orquestación Cognitiva con Gemini 3.8 Flash</strong>:</li><li>   - Inyección previa de datos duros territoriales (<em>Grounding Contextual</em>) en el prompt de la IA antes de cualquier consulta en Google Search, garantizando que el modelo razone sobre realidades del censo, índices de pobreza y concejales reales sin alucinar.</li><li><strong>Almacenamiento y Persistencia</strong>:</li><li>   - Persistencia de estados en <code class="inline-code">localStorage</code> y exportación / respaldo estructurado en <strong>Google Drive</strong> con categorización automática de análisis, briefs, pautas y multimedia.</li></ol>
+<hr class="doc-hr">
+<h3 class="doc-h3">1.3. ¿Cómo se ve Proteus cuando lo hace? (Estética y Experiencia Visual)</h3>
+La interfaz de Proteus ha sido diseñada bajo una dirección de arte denominada <strong>"Glassmorphism Táctico Ciber-Electoral (Slate 950 / Cyber-Command)"</strong>:
+- <strong>Fondo y Profundidad</strong>: Fondo ultra-oscuro en tonalidades <code class="inline-code">slate-950</code> con gradientes radiales sutiles en ámbar, zafiro y esmeralda. Las ventanas y tarjetas utilizan desenfoque de cristal (<code class="inline-code">backdrop-blur-2xl</code>) con bordes micro-iluminados (<code class="inline-code">border-white/10</code> a <code class="inline-code">border-amber-500/30</code>), transmitiendo la sensación de un centro de mando militar de alta seguridad.
+- <strong>Jerarquía Cromática Táctica</strong>:
+  - <strong>Ámbar / Oro Táctico (<code class="inline-code">#f59e0b</code>)</strong>: Utilizado para destacar el Propósito Supremo (Publicidad/Votos), advertencias electorales, relevos de curules y el candidato activo.
+  - <strong>Azul Cielo / Zafiro (<code class="inline-code">#38bdf8</code>)</strong>: Utilizado para datos geoespaciales, navegación territorial, códigos DANE e interactividad.
+  - <strong>Verde Esmeralda (<code class="inline-code">#10b981</code>)</strong>: Utilizado para victorias proyectadas, curules aseguradas, índices de eficiencia ROI y confirmación de enlaces.
+  - <strong>Rosa / Carmesí (<code class="inline-code">#f43f5e</code>)</strong>: Utilizado para alertas de anomalías en Benford, casas políticas rivales y zonas de alta criminalidad o tensión.
+- <strong>Tipografía y Telemetría</strong>: Combinación de tipografía de interfaz limpia e hiper-legible con bloques de telemetría en fuentes monoespaciadas (<code class="inline-code">font-mono</code>), etiquetas en mayúsculas sostenidas y chips con micropuntos pulsantes (<code class="inline-code">animate-pulse</code>) que reflejan el estado vivo de los sensores del sistema.
+- <strong>Rendimiento a 60 FPS</strong>: Mapas interactivos vectoriales con transiciones de zoom suaves, grafos con simulación de fuerzas elásticas en WebGL y modales instantáneos.
+<hr class="doc-hr">
+<h2 class="doc-h2">2. CATÁLOGO MAESTRO: ANÁLISIS HERRAMIENTA POR HERRAMIENTA</h2>
+<p class="doc-p">A continuación se detalla cada una de las 18 herramientas y módulos de Proyecto Proteus.</p>
+<pre class="code-box"><code>========================================================================================
+ÍNDICE DE HERRAMIENTAS:
+1.  Optimizador de Publicidad Electoral Segmentada (Targeted Advertising Optimizer)
+2.  Director de Creación de Contenido &amp; Briefs Estratégicos (Content Director)
+3.  Motor de Inteligencia &amp; Segmentación de Votantes (Voter Segmentation Engine)
+4.  Zoom Territorial Continuo GIS en 5 Escalas (Territorial Zoom Hub)
+5.  Repositorio Municipal Universal &amp; Pipeline de Contexto (Municipal Repository)
+6.  Observatorio Electoral de Casas Políticas y Redes de Poder (Political Houses Graph 2D/3D)
+7.  Auditoría Forense Electoral, Ley de Benford y Escrutinios (Electoral Forensics Audit)
+8.  Simulador Matemático D'Hondt &amp; Curul Marginal (Campaign Tools - D'Hondt Simulator)
+9.  Procesador Demoscópico Inteligente de Encuestas (Campaign Tools - Survey Processor)
+10. Comparador Político y Análisis Cruzado Nacional (Campaign Tools - Strategic Comparator)
+11. Tablero Presidencia &amp; Cobertura Departamental Universal (National Dashboard Overview)
+12. Centro de Personalización del Candidato Activo (Candidate Profiles View)
+13. Analista Multimedia: Estudio de Imagen &amp; Video del Candidato (Multimedia Studio)
+14. Sala Ejecutiva de Gobernación de Antioquia &amp; Monitoreo Multinivel (Gobernacion Executive)
+15. Motor de Agregación Geoespacial de 9 Subregiones (Antioquia Subregiones View)
+16. Directorio &amp; Sensor de 125 Municipios de Antioquia (Antioquia Explorer View)
+17. Cuadrilla de 5 Agentes IA Especializados (Agent Team Console View)
+18. Consola de la Unidad de Automejora Estratégica (7 Agentes / Protocolo Crítico)
+========================================================================================
+</code></pre>
+<hr class="doc-hr">
+<h3 class="doc-h3">HERRAMIENTA 1: OPTIMIZADOR DE PUBLICIDAD ELECTORAL SEGMENTADA</h3>
+<em>Propósito Supremo • Protocolos PA-010, PA-011 y PA-012</em>
+<h4 class="doc-h4">1. ¿Qué hace la herramienta?</h4>
+Es el cerebro de conversión de Proteus. Toma la inteligencia acumulada sobre casas políticas, mapas de calor, concejales de proximidad y coyunturas institucionales para <strong>diseñar, simular y optimizar campañas de publicidad digital y territorial</strong>, proyectando cuántos votos netos generará cada millón de pesos invertido y redactando anuncios hiper-segmentados con ganchos contextuales irrefutables.
+<h4 class="doc-h4">2. ¿Por qué es útil?</h4>
+En una campaña tradicional, más del 70% del presupuesto de pauta digital se desperdicia en audiencias ciegas que ignoran el mensaje porque no conecta con su cotidianidad. Esta herramienta multiplica la efectividad del gasto:
+- Elimina el gasto en pauta genérica e ineficaz.
+- Permite atacar las vulnerabilidades institucionales de las maquinarias dominantes.
+- Capitaliza los relevos de curules (ej. la salida de Sebastián López y Claudia Carrasquilla en el Concejo de Medellín).
+- Proporciona un desglose presupuestal exacto por canal para no malgastar recursos.
+<h4 class="doc-h4">3. ¿Cómo lo hace?</h4>
+- <strong>Algoritmo IRPV (Índice de Retorno Publicidad/Votos)</strong>: Calcula el multiplicador de eficiencia territorial ($\text{IRPV} = 1.35x - 1.95x$) en función de la postura táctica (<em>Confrontación Directa</em>, <em>Capitalización de Fractura</em>, <em>Cooptación de Base</em> o <em>Consolidación de Bastión</em>).
+- <strong>Ingesta Dinámica de Concejales</strong>: Filtra en memoria los 71 concejales registrados en <code class="inline-code">GRAPH_NODES_DATA</code> para el municipio seleccionado, extrayendo sus bancadas y votación histórica para alimentar los copys de pauta.
+- <strong>Detector de Relevos de Curules</strong>: Identifica vacantes y posesiones recientes (como el ingreso del médico Dr. Jorge Julián Osorio para pautar en el gremio de la salud de Metrosalud, o Milton Vasco para pautar en seguridad ciudadana).
+- <strong>Simulador Presupuestal</strong>: Calcula votos base esperados vs. votos holísticos con Proteus, costo por voto persuadido y ahorro porcentual, dividiendo el presupuesto recomendado en Meta Ads (45%), TikTok Ads (30%), WhatsApp Micro-Barrial (15%) y Pauta Hiperlocal/Radial (10%).
+<h4 class="doc-h4">4. ¿Cómo se ve cuando lo hace?</h4>
+- <strong>Encabezado con Selector Territorial Universal</strong>: Un menú desplegable estilizado que permite alternar instantáneamente entre los 10 municipios del Valle de Aburrá, Rionegro y cualquiera de los 32 departamentos + Bogotá D.C.
+- <strong>Medidor IRPV</strong>: Una tarjeta con reborde dorado/esmeralda que muestra el multiplicador (ej. <code class="inline-code">1.85x</code>) y la métrica destacada de sufragios estimados por millón de pesos.
+- <strong>Tarjeta de Inteligencia Puente (<code class="inline-code">TerritoryIntelligenceBridgeCard</code>)</strong>:
+  - Columna 1: Casa política dominante con su color oficial y vulnerabilidad crítica.
+  - Columna 2: Mapa de calor con porcentaje de jóvenes indecisos y zonas de alta densidad electoral.
+  - Columna 3: Monitoreo multinivel con agendas calientes y alertas auditadas.
+  - Banner de Relevos de Curules: Muestra visualmente las transiciones de poder (ej. <em>Sebastián López ➜ Milton Vasco</em>) con badges interactivos y botón "Usar Gancho de Relevo".
+  - Grid de Concejales Locales: Tarjetas compactas con el nombre del concejal, partido, votos y tema central de agenda.
+- <strong>Selector de Arquetipos y Variantes A/B</strong>: Pestañas de 5 perfiles de votantes que despliegan tres variantes creativas (Copy A: Emocional/Identitario, Copy B: Racional/Beneficio Concreto, Copy C: Confrontativo/Anti-Maquinaria) con vestuario recomendado y botón de copiado.
+- <strong>Simulador de Presupuesto Interactivo</strong>: Slider numérico en pesos colombianos que calcula en tiempo real los votos ganados adicionales y la reducción del costo por voto.
+<hr class="doc-hr">
+<h3 class="doc-h3">HERRAMIENTA 2: DIRECTOR DE CREACIÓN DE CONTENIDO & BRIEFS ESTRATÉGICOS</h3>
+<em>Propósito 3 • Persuasión Cognitiva & Framing Prospectivo (PA-003)</em>
+<h4 class="doc-h4">1. ¿Qué hace la herramienta?</h4>
+Genera briefs estratégicos ultra-precisos y discursos listos para producción audiovisual, intervenciones en plaza pública, cadenas de micro-WhatsApp barrial o intervenciones en debates televisados, adaptados milimétricamente al candidato activo y al territorio seleccionado.
+<h4 class="doc-h4">2. ¿Por qué es útil?</h4>
+Impide que los candidatos cometan errores comunes como emitir discursos vacíos, usar lenguaje desconectado de la región o llegar desprevenidos a preguntas difíciles de periodistas y opositores. Transforma al candidato en una figura informada, empática y dialécticamente sólida.
+<h4 class="doc-h4">3. ¿Cómo lo hace?</h4>
+- <strong>Inyección de Contexto Municipal DANE</strong>: Antes de redactar, el servicio extrae automáticamente la población, el NBI, las tasas de criminalidad y las principales actividades económicas del territorio desde el repositorio central.
+- <strong>Motor de Encuadre Cognitivo (<em>Prospect Theory</em>)</strong>: Permite al estratega elegir el sesgo cognitivo a activar:
+  - <em>Ganancia & Esperanza</em>: Narrativa de progreso, futuro y atracción de inversiones.
+  - <em>Pérdida & Protección</em>: Aversión a la pérdida, seguridad, preservación del empleo y defensa institucional.
+  - <em>Equilibrio Prospectivo</em>: Contraste riguroso entre el costo del continuismo y las soluciones del candidato.
+- <strong>Estructura Hexagonal del Brief</strong>:
+  1. Gancho inicial (Hook) para retener en los primeros 3 segundos.
+  2. Datos territoriales duros para generar autoridad.
+  3. Propuesta programática concreta adaptada a la subregión.
+  4. Llamado a la Acción (CTA) enfocado en la movilización electoral.
+  5. Preguntas difíciles anticipadas con respuestas blindadas.
+  6. Recomendación de vestuario y colorimetría basada en psicología del color.
+<h4 class="doc-h4">4. ¿Cómo se ve cuando lo hace?</h4>
+- <strong>Panel Superior de Parámetros</strong>: Selectores de formato (Discurso de Plaza, Video TikTok/Reels de 15s-60s, Mensaje de WhatsApp, Intervención en Debate), territorio objetivo y selector de sesgo prospectivo con botones brillantes.
+- <strong>Editor de Brief Estilizado</strong>: Área de visualización tipográfica estructurada con bloques de advertencia, citas destacadas, cajas de preguntas difíciles con fondo carmesí sutil y paletas de color con muestras visuales (swatches).
+- <strong>Acciones Rápidas</strong>: Botón de "Generar con Gemini 3.8 Flash", botón de "Copiar al Portapapeles", botón de "Exportar a PDF Editorial" y botón de "Guardar en Google Drive".
+<hr class="doc-hr">
+<h3 class="doc-h3">HERRAMIENTA 3: MOTOR DE INTELIGENCIA & SEGMENTACIÓN DE VOTANTES</h3>
+<em>Propósito 2 • Analítica Multidimensional & Psicografía</em>
+<h4 class="doc-h4">1. ¿Qué hace la herramienta?</h4>
+Cruza bases de datos demográficas, socioeconómicas y electorales para segmentar el censo electoral de cualquier municipio en grupos psicográficos homogéneos, detallando cómo piensan, qué medios consumen, qué les preocupa y qué argumentos neutralizan sus objeciones.
+<h4 class="doc-h4">2. ¿Por qué es útil?</h4>
+Tratar al electorado como una masa uniforme es la causa principal del fracaso publicitario. Esta herramienta identifica exactamente a qué nichos dirigirse, cuál es el volumen de votos en juego en cada segmento y cómo articular la narrativa del candidato para conquistarlos sin alienar a otras bases.
+<h4 class="doc-h4">3. ¿Cómo lo hace?</h4>
+- <strong>Matriz de Intersección de Variables</strong>: Cruza tres ejes:
+  - Eje Etario: Jóvenes (18-28), Adultos Productivos (29-59), Adultos Mayores (60+).
+  - Eje Estratificado: Estratos Populares (1-2), Clase Media (3-4), Estratos Altos (5-6).
+  - Eje Territorial/Económico: Urbano-Comercial, Industrial-Maquila, Rural-Campesino.
+- <strong>Modelado de 4 Arquetipos Clave por Territorio</strong>:
+  1. <em>Jóvenes Digitales e Indecisos</em>: Priorizan empleo tecnológico, libertades individuales y rechazan la política tradicional.
+  2. <em>Madres Cabeza de Hogar y Cuidadoras</em>: Sensibles a programas de nutrición infantil, subsidios y seguridad barrial.
+  3. <em>Comerciantes y Emprendedores Independientes</em>: Preocupados por extorsiones, microtráfico, impuestos y facilidad de créditos.
+  4. <em>Comunidad Campesina y Productores Rurales</em>: Enfocados en vías terciarias, precios de insumos agrícolas y peajes.
+- <strong>Diagnóstico Psicográfico Asistido por Gemini</strong>: Activa un análisis de causas profundas de desafección electoral con Google Search Grounding.
+<h4 class="doc-h4">4. ¿Cómo se ve cuando lo hace?</h4>
+- <strong>Matriz Visual de Distribución</strong>: Gráficos de barra segmentados que muestran el peso relativo de cada grupo etario y estrato en el municipio.
+- <strong>Carrusel de Arquetipos</strong>: Fichas visuales con avatares cromáticos, etiquetas de nivel de riesgo y potencial de conversión en porcentaje.
+- <strong>Ficha Desplegable de Microtargeting</strong>: Al seleccionar un arquetipo, se despliegan canales recomendados (ej. <em>TikTok Reels de 9pm a 11pm</em> o <em>Grupos barriales de WhatsApp</em>), disparadores emocionales y objeciones frecuentes con contra-argumentos estructurados.
+<hr class="doc-hr">
+<h3 class="doc-h3">HERRAMIENTA 4: ZOOM TERRITORIAL CONTINUO GIS EN 5 ESCALAS</h3>
+<em>Arquitectura Cartográfica Multi-Escala • GeoJSON Vectorial</em>
+<h4 class="doc-h4">1. ¿Qué hace la herramienta?</h4>
+Proporciona un visor cartográfico interactivo que navega sin cortes ni recargas a través de <strong>5 niveles jerárquicos de división político-administrativa</strong>:
+1. Nivel Nacional: 32 Departamentos + Bogotá D.C.
+2. Nivel Departamental: Antioquia y los departamentos de Colombia con sus municipios oficiales.
+3. Nivel Subregional: Las 9 subregiones de Antioquia calculadas por motor de agregación.
+4. Nivel Municipal: Los 125 municipios de Antioquia y 1.122 municipios de Colombia.
+5. Nivel Local / Barrial: Las 16 comunas y 5 corregimientos oficiales de Medellín con división barrial.
+<h4 class="doc-h4">2. ¿Por qué es útil?</h4>
+Permite al estratega tener una vista de "ojo de halcón" de todo el país y, en tres clics, hacer zoom hasta la comuna o barrio específico donde el candidato tiene programada una caminata o pauta geocercada, cargando en el acto las estadísticas del territorio.
+<h4 class="doc-h4">3. ¿Cómo lo hace?</h4>
+- <strong>Motor Leaflet Vectorial</strong>: Renderizado de polígonos GeoJSON optimizados en memoria para alta tasa de refresco.
+- <strong>Opción 3 de Cartografía de Medellín</strong>: Resuelve la delimitación histórica de los corregimientos combinando el polígono base del municipio, los 5 centros geográficos corregimentales (Palmitas, San Cristóbal, Altavista, San Antonio de Prado y Santa Elena) con círculos proporcionales y las 16 comunas urbanas sin solapamiento.
+- <strong>Sincronización Bidireccional de Contexto</strong>: Al hacer clic en cualquier polígono, el <code class="inline-code">activeTerritoryContextService</code> actualiza globalmente la memoria del aplicativo, propagando el territorio seleccionado a las herramientas de publicidad, contenido y segmentación.
+<h4 class="doc-h4">4. ¿Cómo se ve cuando lo hace?</h4>
+- <strong>Lienzo Cartográfico en Dark Mode</strong>: Mapa con fondo antracita de alto contraste, fronteras iluminadas en azul neón y sombreados poligonales reactivos al puntero (<em>hover effects</em>).
+- <strong>Controlador Flotante de Escalas</strong>: Barra superior con botones estilo chip que indican la escala actual (<code class="inline-code">[Nacional] ➔ [Departamental] ➔ [Subregional] ➔ [Municipal] ➔ [Comunas/Barrios]</code>) con flechas indicadoras de migas de pan (<em>breadcrumbs</em>).
+- <strong>Tarjeta Flotante de Telemetría</strong>: Al pasar el ratón o hacer clic en un municipio o comuna, aparece una tarjeta semitransparente con el nombre oficial, código DANE, censo electoral, porcentaje de NBI y alcalde electo.
+<hr class="doc-hr">
+<h3 class="doc-h3">HERRAMIENTA 5: REPOSITORIO MUNICIPAL UNIVERSAL & PIPELINE DE CONTEXTO</h3>
+<em>Propósito 1 • Repositorio Abierto e Inyección IA</em>
+<h4 class="doc-h4">1. ¿Qué hace la herramienta?</h4>
+Es el almacén centralizado de datos duros de los <strong>1.122 municipios de Colombia y los 125 municipios de Antioquia</strong>. Consolida censos electorales, NBI, Índice de Pobreza Multidimensional (IPM), composición de concejos, alcaldes y factores de riesgo en una base unificada.
+<h4 class="doc-h4">2. ¿Por qué es útil?</h4>
+Garantiza que toda la inteligencia del aplicativo provenga de datos institucionales contrastados (DANE, Registraduría, DNP) y permite a cualquier analista o desarrollador copiar en un solo clic el bloque de contexto necesario para alimentar modelos de IA externos o herramientas internas.
+<h4 class="doc-h4">3. ¿Cómo lo hace?</h4>
+- <strong>Método <code class="inline-code">buildContextPrompt(queryOrId)</code></strong>: Compila en tiempo real un prompt estructurado en Markdown con todas las variables del municipio para inyectarlo en la ventana de contexto de Gemini.
+- <strong>Pipeline Abierto <code class="inline-code">ingest(records)</code></strong>: Interfaz tipada en TypeScript que permite la carga de nuevos registros municipales o actualización de datos electorales en caliente sin necesidad de recompilar la suite.
+- <strong>Motor de Búsqueda Predictiva</strong>: Búsqueda instantánea por nombre, código DANE o subregión mediante normalización fonética y de acentos.
+<h4 class="doc-h4">4. ¿Cómo se ve cuando lo hace?</h4>
+- <strong>Buscador Inteligente</strong>: Barra de búsqueda con icono de lupa y filtros rápidos por subregión o rango de población.
+- <strong>Tabla de Registros de Alta Densidad</strong>: Vista en tarjetas o filas con badges de colores para el nivel de NBI (Bajo, Medio, Alto, Crítico) y censo electoral.
+- <strong>Modal de Contexto para IA</strong>: Ventana emergente con el bloque de texto formateado listo para copiar con un botón de подтверждение ("Copiado al portapapeles").
+- <strong>Modal de Ingesta JSON</strong>: Formulario para pegar objetos JSON con validación de esquema en tiempo real.
+<hr class="doc-hr">
+<h3 class="doc-h3">HERRAMIENTA 6: OBSERVATORIO ELECTORAL DE CASAS POLÍTICAS Y REDES DE PODER</h3>
+<em>Modelado Topológico de Redes • Grafos 2D y 3D en WebGL</em>
+<h4 class="doc-h4">1. ¿Qué hace la herramienta?</h4>
+Modela las estructuras de poder político real en Antioquia y el Valle de Aburrá. Representa a las <strong>7 grandes casas políticas hegemónicas</strong> (Casa Trujillo, Casa Suárez Mira, Casa Federico Gutiérrez / Creemos, Casa Uribe / Rendón CD, Casa Julián Bedoya, Casa John Jairo Roldán y Casa Germán Blanco), a más de <strong>71 concejales reales</strong> y sus relaciones de subordinación, alianzas de gobierno o disputas abiertas mediante grafos de fuerza dirigida en 2D y 3D.
+<h4 class="doc-h4">2. ¿Por qué es útil?</h4>
+Permite al estratega ver "los hilos invisibles" de la política: quién responde a qué senador, qué concejales controlan la contratación municipal, dónde hay fracturas internas que el candidato puede explotar y cómo se distribuyen los feudos barriales.
+<h4 class="doc-h4">3. ¿Cómo lo hace?</h4>
+- <strong>Motor Force-Directed en WebGL</strong>: Simula fuerzas físicas (repulsión entre nodos, atracción por resortes en aristas y gravedad central) para organizar visualmente los actores políticos según su jerarquía (Nivel 1: Patriarca/Barón, Nivel 2: Congreso Nacional, Nivel 3: Departamental/Asamblea, Nivel 4: Concejales y Alcaldes).
+- <strong>Tipología de Aristas</strong>: Modela 4 tipos de relaciones con pesos numéricos:
+  - <em>Jerarquía Directa</em> (fuerza 5/5): Subordinación orgánica dentro de la casa.
+  - <em>Alianza Electoral</em> (fuerza 4/5): Acuerdos pragmáticos de coalición.
+  - <em>Pacto de Bancada</em> (fuerza 3/5): Trámite conjunto en corporaciones públicas.
+  - <em>Tensión o Disputa</em> (aristas discontinuas carmesí): Rupturas, traiciones o competencia de feudo.
+- <strong>Filtros por Partido y Territorio</strong>: Permite aislar en un clic la bancada de concejales de cualquier colectividad (CD, Creemos, Liberal, Conservador, Pacto Histórico, Verde) o de cualquier municipio metropolitano.
+<h4 class="doc-h4">4. ¿Cómo se ve cuando lo hace?</h4>
+- <strong>Espacio Tridimensional Interactivo</strong>: Lienzo negro estelar donde los nodos orbitan como esferas policromáticas luminosas (con los colores oficiales de cada partido o casa).
+- <strong>Controles de Cámara</strong>: Permite rotar en 360 grados, hacer zoom orbital, alternar entre proyección 2D y 3D, y activar o desactivar la física de partículas.
+- <strong>Panel Lateral de Inteligencia OSINT</strong>: Al hacer clic en cualquier actor (ej. Carlos Andrés Trujillo, Federico Gutiérrez, Milton Vasco o Jorge Julián Osorio), se despliega una ficha completa con:
+  - Fotografía oficial y rol.
+  - Votación 2023 y cédula.
+  - Enlace extramunicipal (conexión con Bogotá) y anclaje municipal (feudo de votos).
+  - Enlaces a perfiles sociales oficiales verificados.
+  - Resumen de noticias de fuentes abiertas (OSINT) con análisis de sentimiento (positivo, neutro, crítico, judicial).
+<hr class="doc-hr">
+<h3 class="doc-h3">HERRAMIENTA 7: AUDITORÍA FORENSE ELECTORAL, LEY DE BENFORD Y ESCRUTINIOS</h3>
+<em>Prevención de Fraude & Control Electoral E-14 vs E-24</em>
+<h4 class="doc-h4">1. ¿Qué hace la herramienta?</h4>
+Es el módulo de integridad electoral. Analiza las distribuciones numéricas de sufragios en actas de mesa (E-14) y formularios de escrutinio (E-24) mediante pruebas estadísticas avanzadas (<strong>Ley de Benford en primer y segundo dígito, test Chi-cuadrado $\chi^2$ y Z-score</strong>) para identificar mesas o zonas donde hubo manipulación antinatural de votos, mesas espejo o alteraciones artificiales.
+<h4 class="doc-h4">2. ¿Por qué es útil?</h4>
+Blindar el triunfo en las urnas es tan crucial como ganar la simpatía en la calle. Esta herramienta permite a los abogados y testigos electorales presentar reclamaciones fundadas con evidencia estadística matemática ante los jueces escrutadores y comisiones escrutadoras de la Registraduría.
+<h4 class="doc-h4">3. ¿Cómo lo hace?</h4>
+- <strong>Prueba Benfordiana</strong>: Evalúa si el primer dígito significativo de la votación por mesa cumple con la ley logarítmica universal:
+  $$P(d) = \log_{10}\left(1 + \frac{1}{d}\right)$$
+  Las desviaciones estadísticamente anómalas (p-valor $< 0.05$ o picos en dígitos no esperados) son marcadas como alertas de manipulación deliberada o relleno de urnas.
+- <strong>Comparador Forense E-14 vs E-24</strong>: Detecta discrepancias de transcripción entre el acta de jurados y el resultado computado en comisiones escrutadoras.
+- <strong>Protocolo de Testigos y Cadena de Custodia</strong>: Genera hojas de ruta para el Día D con puntos críticos de vigilancia en mesas históricamente atípicas.
+<h4 class="doc-h4">4. ¿Cómo se ve cuando lo hace?</h4>
+- <strong>Gráfico de Barras Benfordiano</strong>: Curva teórica ideal (línea azul) superpuesta a las barras de frecuencia real de la votación observada (barras verdes para concordantes, barras carmesí para picos anómalos).
+- <strong>Semáforo Forense</strong>: Tarjeta con indicador general (<em>"Riesgo Estadístico Bajo"</em>, <em>"Discrepancia Moderada"</em> o <em>"Alerta Crítica de Intervención"</em>).
+- <strong>Tabla de Mesas Auditadas</strong>: Listado de mesas con códigos de puesto, número de votantes y valor de desviación estándar, con botón para descargar el informe pericial.
+<hr class="doc-hr">
+<h3 class="doc-h3">HERRAMIENTA 8: SIMULADOR MATEMÁTICO D'HONDT & CURUL MARGINAL</h3>
+<em>Cálculo Analítico de Escaños & Umbral Constitucional (PA-001)</em>
+<h4 class="doc-h4">1. ¿Qué hace la herramienta?</h4>
+Calcula con exactitud matemática instantánea (<2ms en el cliente) la distribución de curules para cuerpos colegiados (Senado, Cámara de Representantes, Asambleas y Concejos) aplicando el <strong>sistema D'Hondt con cifra repartidora y umbral del 3%</strong> (Art. 263 C.P.), identificando cuántos votos le faltan a la lista del candidato para conquistar la siguiente curul residual ("Curul Marginal") o cuántos votos necesita para defender la suya del competidor más cercano.
+<h4 class="doc-h4">2. ¿Por qué es útil?</h4>
+En listas de voto preferente o cerradas, miles de millones de pesos se pierden persiguiendo metas ilusorias. El simulador indica el número exacto de sufragios que separan la victoria de la derrota (el "gap marginal"), permitiendo concentrar el esfuerzo publicitario y logístico en los últimos 21 días exclusivamente en los votos necesarios para asegurar el escaño.
+<h4 class="doc-h4">3. ¿Cómo lo hace?</h4>
+- <strong>Motor D'Hondt Vectorial</strong>: Ordena los cocientes decrecientes resultantes de dividir los votos de cada lista que superó el umbral por la serie natural de enteros ($1, 2, 3, \dots, N$). El enésimo cociente define la Cifra Repartidora.
+- <strong>Algoritmo de Curul Marginal</strong>: Determina la distancia euclidiana en votos entre el último cociente ganador y el primer cociente no asignado, calculando la meta residual.
+- <strong>Desglose Subregional de Metas</strong>: Distribuye la meta de votos marginales por subregiones con ponderadores empíricos de rendimiento (Valle de Aburrá 48%, Oriente 24%, Urabá 15%, etc.).
+- <strong>Generador de Planes de Choque con IA</strong>: Invoca a Gemini 3.8 Flash para transformar ese déficit matemático en un plan de acción para el Día D.
+<h4 class="doc-h4">4. ¿Cómo se ve cuando lo hace?</h4>
+- <strong>Barra de Escaños Policromática</strong>: Barra horizontal interactiva dividida en segmentos proporcionales con los colores de cada partido que obtiene representación.
+- <strong>Controles Deslizantes (Sliders)</strong>: Deslizadores en tiempo real para ajustar la participación electoral general, el porcentaje de voto en blanco y la votación estimada de cada colectividad.
+- <strong>Tarjeta Alerta de Curul Marginal</strong>: Banner dorado que anuncia: <em>"Curul Marginal #17 en Disputa: Faltan 4.820 votos para asegurar el escaño frente a la lista rival más cercana"</em>.
+- <strong>Matriz Subregional de Votos</strong>: Tabla con la meta de votos a buscar por cada municipio cabecera.
+<hr class="doc-hr">
+<h3 class="doc-h3">HERRAMIENTA 9: PROCESADOR DEMOSCÓPICO INTELIGENTE DE ENCUESTAS</h3>
+<em>Extracción Inteligente de Datos de Encuestas con IA</em>
+<h4 class="doc-h4">1. ¿Qué hace la herramienta?</h4>
+Procesa textos libres, comunicados de prensa o reportes en PDF de firmas encuestadoras reconocidas (Invamer, Cifras & Conceptos, Centro Nacional de Consultoría, GAD3, YanHaas) y <strong>extrae automáticamente en una estructura limpia de datos JSON</strong> las intenciones de voto para primera y segunda vuelta, cruces por región, género y fichas técnicas metodológicas.
+<h4 class="doc-h4">2. ¿Por qué es útil?</h4>
+Ahorra horas de transcripción manual a los asesores de campaña y elimina errores humanos al consolidar encuestas dispares en una matriz homogénea que alimenta las predicciones del sistema.
+<h4 class="doc-h4">3. ¿Cómo lo hace?</h4>
+- <strong>Prompt Especializado de Extracción</strong>: Envía el texto a Gemini 3.8 Flash configurado como experto en demoscopia política, con un esquema estricto de salida en formato JSON.
+- <strong>Mapeo de Atributos</strong>: Extrae márgenes de error, tamaño muestral, fechas de campo, porcentajes de voto espontáneo o guiado y los almacena en el estado del aplicativo.
+<h4 class="doc-h4">4. ¿Cómo se ve cuando lo hace?</h4>
+- <strong>Área de Entrada Dual</strong>: Cuadro de texto para pegar fragmentos de encuestas y botón de carga de archivos.
+- <strong>Visor de Ficha Técnica Extraída</strong>: Tarjetas ordenadas que desglosan la intención de voto por candidato con barras porcentuales y cuadro de metodología con tamaño de muestra y fechas de campo.
+<hr class="doc-hr">
+<h3 class="doc-h3">HERRAMIENTA 10: COMPARADOR POLÍTICO Y ANÁLISIS CRUZADO NACIONAL</h3>
+<em>Análisis Prospectivo Multifuente Asistido por Google Search</em>
+<h4 class="doc-h4">1. ¿Qué hace la herramienta?</h4>
+Ejecuta búsquedas profundas y análisis comparativos en tiempo real sobre el clima de opinión pública, alianzas de última hora entre precandidatos, tendencias en redes sociales y movimientos en el Congreso a nivel nacional.
+<h4 class="doc-h4">2. ¿Por qué es útil?</h4>
+Brinda a la mesa directiva de la campaña una visión panorámica de la coyuntura del país en minutos, detectando temas emergentes (ej. crisis en el sector salud, peajes, debates de reformas) antes de que la competencia reaccione.
+<h4 class="doc-h4">3. ¿Cómo lo hace?</h4>
+- Utiliza <strong>Google Search Grounding</strong> integrado en Gemini para consultar las fuentes periodísticas más recientes, sintetizar debates y contrastar las posturas de los diferentes bloques políticos frente al candidato activo.
+<h4 class="doc-h4">4. ¿Cómo se ve cuando lo hace?</h4>
+- Tres botones tácticos: <code class="inline-code">[ Contexto Político Nacional ]</code>, <code class="inline-code">[ Análisis Regional Cruzado ]</code> y <code class="inline-code">[ Dinámicas de Alianzas ]</code>.
+- Al hacer clic, se despliega un reporte ejecutivo con citas a fuentes periodísticas, viñetas analíticas y recomendaciones de posicionamiento mediático.
+<hr class="doc-hr">
+<h3 class="doc-h3">HERRAMIENTA 11: TABLERO PRESIDENCIA & COBERTURA DEPARTAMENTAL UNIVERSAL</h3>
+<em>Visión Macro-Territorial de los 32 Departamentos de Colombia + Bogotá D.C.</em>
+<h4 class="doc-h4">1. ¿Qué hace la herramienta?</h4>
+Ofrece un panel de mando macro-electoral que consolida los <strong>32 departamentos de Colombia y el Distrito Capital de Bogotá</strong>, organizados por regiones geográficas (Andina, Caribe, Pacífica, Orinoquía, Amazonía). Permite consultar censos, escaños de Cámara, promedios de NBI y generar diagnósticos departamentales e hiperlocales con IA.
+<h4 class="doc-h4">2. ¿Por qué es útil?</h4>
+Es esencial para candidatos al Senado de la República (circunscripción nacional) o campañas presidenciales que requieren balancear su agenda y presupuesto publicitario entre diferentes regiones del país sin perder el foco en los bastiones electorales clave.
+<h4 class="doc-h4">3. ¿Cómo lo hace?</h4>
+- Consulta las bases de datos de <code class="inline-code">COLOMBIA_REGIONS</code>, <code class="inline-code">DEPARTMENT_NBI_SUMMARY</code> y <code class="inline-code">NATIONAL_MUNICIPALITIES</code>.
+- Genera en caliente reportes departamentales con Gemini evaluando fortalezas de los liderazgos locales y prioridades económicas.
+<h4 class="doc-h4">4. ¿Cómo se ve cuando lo hace?</h4>
+- <strong>Selector de Regiones Naturales</strong>: Pestañas superiores para filtrar por región geográfica.
+- <strong>Grilla de Departamentos</strong>: Tarjetas con banderas o escudos, capital departamental, población, escaños legislativos y nivel de NBI.
+- <strong>Desglose Municipal</strong>: Al seleccionar un departamento, se despliegan todos sus municipios oficiales con buscador interactivo y botón de reporte por municipio.
+<hr class="doc-hr">
+<h3 class="doc-h3">HERRAMIENTA 12: CENTRO DE PERSONALIZACIÓN DEL CANDIDATO ACTIVO</h3>
+<em>Gestión Global de Identidad, Ideología y Colorimetría</em>
+<h4 class="doc-h4">1. ¿Qué hace la herramienta?</h4>
+Es el centro de configuración del candidato. Permite definir o modificar el nombre, rol de campaña (Senado, Cámara Antioquia, Alcaldía, Concejo, etc.), partido, ideología central, tono comunicativo (Confrontativo, Técnico, Empático, Inspirador), ejes programáticos y código cromático distintivo.
+<h4 class="doc-h4">2. ¿Por qué es útil?</h4>
+Permite que Proteus sea una suite completamente multi-candidato. Con solo cambiar o personalizar el perfil activo, <strong>todo el sistema adapta en tiempo real</strong> sus discursos, pautas publicitarias, sugerencias de vestuario y análisis de rivales al nuevo candidato seleccionado.
+<h4 class="doc-h4">3. ¿Cómo lo hace?</h4>
+- Almacena el perfil en <code class="inline-code">localStorage</code> bajo un esquema tipado <code class="inline-code">CandidateProfile</code>.
+- Propaga el contexto a través de React Context a todos los módulos y componentes de la aplicación.
+<h4 class="doc-h4">4. ¿Cómo se ve cuando lo hace?</h4>
+- <strong>Tarjeta de Identidad del Candidato</strong>: Muestra la fotografía oficial, nombre en tipografía destacada, partido y lema de campaña.
+- <strong>Modal de Edición Completo</strong>: Campos para editar biografía, propuestas bandera, color primario y secundario en selector hexadecimal, y configuración de prioridades subregionales.
+- <strong>Barra Superior Global (<code class="inline-code">TopStatusBar</code>)</strong>: Muestra permanentemente en toda la aplicación el nombre del candidato activo con su color oficial y botón de acceso rápido al perfil.
+<hr class="doc-hr">
+<h3 class="doc-h3">HERRAMIENTA 13: ANALISTA MULTIMEDIA: ESTUDIO DE IMAGEN & VIDEO DEL CANDIDATO</h3>
+<em>Semiótica del Poder, Fototipo y Entrenamiento Escénico</em>
+<h4 class="doc-h4">1. ¿Qué hace la herramienta?</h4>
+Es el asesor de imagen y media training automatizado. Evalúa intervenciones audiovisuales del candidato en tres dimensiones fundamentales:
+1. Desempeño en video (oratoria, pausas, muletillas, micro-expresiones y dicción).
+2. Colorimetría y fototipo estacional (definición de swatches Hex de trajes y vestuario de poder vs. cercanía).
+3. Semiótica del liderazgo (matriz de percepción de autoridad vs. empatía).
+<h4 class="doc-h4">2. ¿Por qué es útil?</h4>
+El 85% de la persuasión política en formatos cortos (TikTok, Reels) y televisión entra por los ojos y los primeros micro-segundos de audio. Un candidato con vestuario discordante o dicción insegura pierde votos instantáneamente. Esta herramienta proporciona una hoja de ruta técnica de entrenamiento para maximizar el impacto visual y escénico.
+<h4 class="doc-h4">3. ¿Cómo lo hace?</h4>
+- Algoritmos de análisis semiótico y principios de colorimetría estacional (Primavera, Verano, Otoño, Invierno).
+- Generación de plan de entrenamiento estructurado en 4 semanas para perfeccionar el delivery discursivo y el contacto visual con la cámara.
+<h4 class="doc-h4">4. ¿Cómo se ve cuando lo hace?</h4>
+- <strong>Pestaña de Video</strong>: Métricas en barras de progreso de Ritmo, Contacto Visual, Claridad y Control de Muletillas, con recomendaciones de edición técnica de audio/video.
+- <strong>Pestaña de Imagen</strong>: Identificación del fototipo con muestras de color Hex interactivas para <em>Traje de Autoridad</em> (ej. Azul Medianoche <code class="inline-code">#1B2A4A</code>), <em>Vestuario de Cercanía Comunitaria</em> y <em>Colores Prohibidos en Pantalla</em>.
+- <strong>Pestaña Semiótica</strong>: Plan de 4 semanas con ejercicios vocales y de postura corporal paso a paso.
+<hr class="doc-hr">
+<h3 class="doc-h3">HERRAMIENTA 14: SALA EJECUTIVA DE GOBERNACIÓN DE ANTIOQUIA & MONITOREO MULTINIVEL</h3>
+<em>Radar de Coyuntura Departamental & Sensor de Proyectos</em>
+<h4 class="doc-h4">1. ¿Qué hace la herramienta?</h4>
+Monitorea la dinámica institucional del departamento de Antioquia, evaluando la gobernabilidad, la tensión fiscal de transferencias del SGP, el estado de las megaobras viales (Vías 4G, Túnel del Toyo, Túnel de Oriente) y rastreando noticias regionales de fuentes abiertas en tiempo real.
+<h4 class="doc-h4">2. ¿Por qué es útil?</h4>
+Permite al candidato conectar sus propuestas con los temas que dominan los titulares de los medios locales y departamentales (ej. El Colombiano, Teleantioquia), aprovechando las coyunturas de descontento o las demandas de autonomía regional.
+<h4 class="doc-h4">3. ¿Cómo lo hace?</h4>
+- Bridge con servicio de scraping y agregación de noticias (<code class="inline-code">gobernacion_bridge.py</code> / <code class="inline-code">gobernacionService.ts</code>).
+- Semáforo de riesgo y categorización temática (Finanzas, Seguridad, Infraestructura, Salud).
+<h4 class="doc-h4">4. ¿Cómo se ve cuando lo hace?</h4>
+- <strong>Panel de Estado de Sincronización</strong>: Indicador de conexión en verde con el número total de alertas y noticias auditadas (ej. 142 eventos).
+- <strong>Radar de Megaobras</strong>: Tarjetas de seguimiento a vías 4G con porcentajes de avance y cuellos de botella identificados.
+- <strong>Feed de Noticias</strong>: Lista cronológica de titulares regionales con etiquetas de sentimiento y relevancia electoral.
+<hr class="doc-hr">
+<h3 class="doc-h3">HERRAMIENTA 15: MOTOR DE AGREGACIÓN GEOESPACIAL DE 9 SUBREGIONES</h3>
+<em>Cálculo Topológico de las Subregiones de Antioquia</em>
+<h4 class="doc-h4">1. ¿Qué hace la herramienta?</h4>
+Agrupa los 125 municipios oficiales de Antioquia en sus <strong>9 subregiones geográficas y políticas</strong> (Valle de Aburrá, Oriente, Suroeste, Occidente, Norte, Bajo Cauca, Magdalena Medio, Nordeste y Urabá), calculando de forma agregada el peso del censo, la concentración del voto, la vocación económica y los cacicazgos dominantes.
+<h4 class="doc-h4">2. ¿Por qué es útil?</h4>
+La campaña no se puede planificar municipio a municipio de forma aislada; las subregiones comparten economías comunes (café en el Suroeste, banano y logística en Urabá, agroindustria y tecnología en Oriente). Esta herramienta permite diseñar giras y mensajes regionales coherentes.
+<h4 class="doc-h4">3. ¿Cómo lo hace?</h4>
+- Servicio <code class="inline-code">subregionAggregationEngine.ts</code>: Realiza la unión geométrica en memoria y la sumatoria ponderada de variables demográficas y electorales de los municipios pertenecientes a cada subregión oficial.
+<h4 class="doc-h4">4. ¿Cómo se ve cuando lo hace?</h4>
+- <strong>Selector de Subregiones en Cuícula</strong>: 9 tarjetas visuales con fotografías representativas y códigos de color asignados.
+- <strong>Ficha Agregada</strong>: Al seleccionar una subregión, se resalta en el mapa su contorno completo y se despliega la lista de municipios integrantes, censo total y padrinazgos en la Asamblea Departamental.
+<hr class="doc-hr">
+<h3 class="doc-h3">HERRAMIENTA 16: DIRECTORIO & SENSOR DE 125 MUNICIPIOS DE ANTIOQUIA</h3>
+<em>Explorador Exhaustivo Municipal de Antioquia</em>
+<h4 class="doc-h4">1. ¿Qué hace la herramienta?</h4>
+Proporciona fichas técnicas individuales y comparativas para <strong>cada uno de los 125 municipios de Antioquia</strong>, detallando el alcalde en funciones (2024-2027), partido ganador, conformación del concejo municipal, tasa de homicidios, extorsión y NBI.
+<h4 class="doc-h4">2. ¿Por qué es útil?</h4>
+Es el "manual de bolsillo" indispensable para cuando el candidato visita cualquier municipio antioqueño (desde Vigía del Fuerte hasta Yondó o Arboletes), permitiéndole saber quién manda, quién hace oposición y cuáles son las principales obras inconclusas.
+<h4 class="doc-h4">3. ¿Cómo lo hace?</h4>
+- Dataset <code class="inline-code">METROPOLITAN_MUNICIPALITIES_DATA</code> y <code class="inline-code">antioquiaData.ts</code>.
+- Botón directo de enlace con el Director de Contenido: Al hacer clic, pasa los datos del municipio al generador de discursos sin salir de la vista.
+<h4 class="doc-h4">4. ¿Cómo se ve cuando lo hace?</h4>
+- <strong>Grilla de Búsqueda con Filtros</strong>: Filtros por subregión, categoría municipal (1 a 6) y partido del alcalde.
+- <strong>Ficha Técnica Expandible</strong>: Muestra el nombre del mandatario, coalición vencedora, composición de las curules del concejo y gráficos de barras de criminalidad y pobreza.
+<hr class="doc-hr">
+<h3 class="doc-h3">HERRAMIENTA 17: CUADRILLA DE 5 AGENTES IA ESPECIALIZADOS</h3>
+<em>Agentes Autónomos de Inteligencia de Campaña</em>
+<h4 class="doc-h4">1. ¿Qué hace la herramienta?</h4>
+Es una consola de despacho de misiones donde interactúan 5 agentes de inteligencia artificial especializados en tareas críticas de la campaña:
+1. <code class="inline-code">SENTINEL-TERRITORY</code>: Monitoreo y exploración de datos territoriales y alertas tempranas.
+2. <code class="inline-code">STRAT-SEGMENT</code>: Analista de nichos psicográficos y polarización electoral.
+3. <code class="inline-code">CREATIVE-DIRECTOR</code>: Redacción de briefs, piezas creativas y ganchos de persuasión.
+4. <code class="inline-code">MEDIA-VISION</code>: Auditoría de imagen, semiótica y dicción en piezas multimedia.
+5. <code class="inline-code">SYNC-NEXUS</code>: Síntesis de Google Search Grounding y persistencia en Google Drive.
+<h4 class="doc-h4">2. ¿Por qué es útil?</h4>
+Permite al equipo de campaña delegar investigaciones complejas a agentes paralelos que ejecutan búsquedas, analizan documentos y redactan informes ejecutivos mientras el equipo humano se concentra en la toma de decisiones políticas.
+<h4 class="doc-h4">3. ¿Cómo lo hace?</h4>
+- Definiciones modulares en <code class="inline-code">proteusAgentTeam.ts</code>.
+- Despacho asíncrono con telemetría en tiempo real y registro de auditoría en la consola.
+<h4 class="doc-h4">4. ¿Cómo se ve cuando lo hace?</h4>
+- <strong>Consola Estilo Terminal Táctica</strong>: Interfaz con tarjetas de estado de cada agente (Activo, En Misión, En Espera), botón para asignar misiones y ventana de terminal donde desfilan los logs de ejecución en verde fósforo.
+<hr class="doc-hr">
+<h3 class="doc-h3">HERRAMIENTA 18: CONSOLA DE LA UNIDAD DE AUTOMEJORA ESTRATÉGICA</h3>
+<em>Cuerpo Colegiado de los 7 Agentes • Protocolo Crítico PC-001 y PA-001 a PA-012</em>
+<h4 class="doc-h4">1. ¿Qué hace la herramienta?</h4>
+Es el órgano epistemológico y de gobernanza interna de Proyecto Proteus. Alberga al <strong>Cuerpo Colegiado de los 7 Agentes de Autoperfeccionamiento Continuo</strong>:
+1. <code class="inline-code">AGENT-ORCHESTRATOR</code>: Apertura de sesiones, cálculo de Prioridad Estratégica (PE) y balance global.
+2. <code class="inline-code">AGENT-ACADEMIC-RES</code>: Sustentación científica, sociológica y bibliográfica de cada decisión.
+3. <code class="inline-code">AGENT-DATA-RES</code>: Auditoría y diseño de arquitecturas de bases de datos y algoritmos.
+4. <code class="inline-code">AGENT-LEX-ARTIS</code>: Aseguramiento de estándares de campaña moderna y micro-targeting internacional.
+5. <code class="inline-code">AGENT-AUDITOR</code>: Guardián del Mandato Supremo; impide la fuga hacia la gestión administrativa y garantiza el enfoque en Publicidad/Votos.
+6. <code class="inline-code">AGENT-SOFTWARE-ENG</code>: Ejecución de código limpio, tipado estricto y cero latencia.
+7. <code class="inline-code">AGENT-ORGANIZER</code>: Protocolización, actas oficiales y bitácora de automejora.
+<h4 class="doc-h4">2. ¿Por qué es útil?</h4>
+Garantiza que el aplicativo no se desvíe jamás de su propósito rector, no acumule deuda técnica y mantenga una rigurosa trazabilidad de cada protocolo implementado (desde el PA-001 del simulador D'Hondt hasta el PA-012 de inyección de concejales de proximidad).
+<h4 class="doc-h4">3. ¿Cómo lo hace?</h4>
+- Ciclos dialécticos de 6 fases: Convocatoria ➔ Investigación Tripartita ➔ Mesa Redonda Dialéctica (Tesis vs Antítesis) ➔ Auditoría Epistemológica ➔ Especificación Técnica en 5 Pilares ➔ Protocolización y Despliegue en Código.
+<h4 class="doc-h4">4. ¿Cómo se ve cuando lo hace?</h4>
+- <strong>Repositorio de Actas y Protocolos</strong>: Acceso a los documentos normativos en Markdown (<code class="inline-code">protocolos_de_automejora/</code>).
+- <strong>Bitácora de Sesiones Críticas</strong>: Historial documentado con veredictos, fórmulas de cálculo de prioridad y actas unánimes aprobadas.
+<hr class="doc-hr">
+<h2 class="doc-h2">3. SÍNTESIS DE FLUJO INTEGRADO: EL VIAJE DEL DATO HACIA EL VOTO</h2>
+<p class="doc-p">El valor diferencial de Proyecto Proteus radica en la <strong>sinergia absoluta entre todas sus herramientas</strong>. No son módulos aislados, sino un engranaje continuo:</p>
+<p class="doc-p">$$\boxed{\text{GIS / Repositorio Municipal}} \longrightarrow \boxed{\text{Grafos de Casas Políticas & Concejales}} \longrightarrow \boxed{\text{Segmentación Psicográfica}} \longrightarrow \boxed{\text{Director de Contenido}} \longrightarrow \boxed{\text{Optimizador Publicitario (IRPV)}} \Longrightarrow \mathbf{\text{VOTOS}}$$</p>
+<ol class="doc-ol"><li>El estratega selecciona en el <strong>Zoom Territorial</strong> la Comuna 10 (La Candelaria) de Medellín.</li><li>El <strong>Repositorio Municipal</strong> inyecta automáticamente los datos de estratos, población flotante y problemas de seguridad.</li><li>El <strong>Observatorio de Casas Políticas</strong> identifica la presencia de los concejales del Centro Democrático y Creemos, y detecta el relevo de curul del Dr. Jorge Julián Osorio Gómez (exrector CES).</li><li>El <strong>Motor de Segmentación</strong> señala que el gremio médico y los comerciantes independientes de la zona exigen una solución urgente para Metrosalud y orden barrial.</li><li>El <strong>Director de Contenido</strong> redacta un brief con encuadre de <em>Pérdida & Protección</em> blindando al candidato ante preguntas sobre presupuesto.</li><li>El <strong>Optimizador de Publicidad</strong> formula anuncios A/B con el gancho del Dr. Osorio y Metrosalud, calcula un retorno IRPV de <code class="inline-code">1.85x</code> y distribuye el presupuesto geocercado en Meta Ads y TikTok.</li><li>El <strong>Simulador D'Hondt</strong> verifica cómo estos sufragios adicionales recortan la distancia para asegurar la curul marginal residual.</li></ol>
+<p class="doc-p">Este es el funcionamiento integral de <strong>Proyecto Proteus</strong>: ciencia de datos, rigor geoespacial y psicología cognitiva puestos al servicio exclusivo de la victoria electoral.</p>
+    
+    <div style="margin-top: 50px; padding-top: 25px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">
+      <span>Proyecto Proteus — Inteligencia Electoral & Conversión</span>
+      <span>Impreso / Generado: Septiembre 2026</span>
+    </div>
+  </div>
+</body>
+</html>
