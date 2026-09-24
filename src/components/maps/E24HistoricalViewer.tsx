@@ -86,7 +86,7 @@ interface DisplayCandidate {
 
 function parseComunaId(id?: string | number, name?: string): number {
   if (typeof id === 'number') {
-    if ((id >= 1 && id <= 16) || id === 90) return id;
+    if ((id >= 1 && id <= 16) || id === 99) return id;
   }
   if (typeof id === 'string') {
     if (id.startsWith('med-c')) {
@@ -97,9 +97,9 @@ function parseComunaId(id?: string | number, name?: string): number {
       const n = parseInt(id.replace('comuna-', ''), 10);
       if (!isNaN(n) && n >= 1 && n <= 16) return n;
     }
-    if (id.includes('correg')) return 90;
+    if (id.includes('correg')) return 99; // zona 99 = corregimientos
     const parsed = parseInt(id, 10);
-    if (!isNaN(parsed) && ((parsed >= 1 && parsed <= 16) || parsed === 90)) return parsed;
+    if (!isNaN(parsed) && ((parsed >= 1 && parsed <= 16) || parsed === 99)) return parsed;
   }
   if (name) {
     const match = name.match(/comuna\s*(\d+)/i) || name.match(/^(\d+)/);

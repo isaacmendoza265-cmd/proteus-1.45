@@ -62,7 +62,10 @@ import {
 import { activeTerritoryService } from '../services/activeTerritoryContextService';
 
 // Inicialización de la API de Gemini para búsquedas y análisis profundo
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+// Se crea al usarla: sin clave de Gemini, el constructor lanzaba un error al importar el módulo
+// y el Directorio de 125 Municipios quedaba en blanco.
+let aiClient: GoogleGenAI | null = null;
+const getAi = () => (aiClient ??= new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' }));
 
 interface CandidateProfileProps {
   nombre?: string;
@@ -377,7 +380,7 @@ export const AntioquiaMunicipiosManager: React.FC<AntioquiaMunicipiosManagerProp
 
       let text = '';
       try {
-        const response = await ai.models.generateContent({
+        const response = await getAi().models.generateContent({
           model: 'gemini-3.8-flash',
           contents: [{ role: 'user', parts: [{ text: prompt }] }],
           config: {
@@ -387,7 +390,7 @@ export const AntioquiaMunicipiosManager: React.FC<AntioquiaMunicipiosManagerProp
         text = response.text || '';
       } catch (err) {
         // Fallback estándar
-        const fallbackRes = await ai.models.generateContent({
+        const fallbackRes = await getAi().models.generateContent({
           model: 'gemini-3.8-flash',
           contents: [{ role: 'user', parts: [{ text: prompt }] }]
         });
@@ -481,7 +484,7 @@ Entrega un informe denso, sin texto genérico ni rodeos, con lenguaje de consult
     try {
       let result = '';
       try {
-        const response = await ai.models.generateContent({
+        const response = await getAi().models.generateContent({
           model: 'gemini-3.8-flash',
           contents: [{ role: 'user', parts: [{ text: promptText }] }],
           config: {
@@ -490,7 +493,7 @@ Entrega un informe denso, sin texto genérico ni rodeos, con lenguaje de consult
         });
         result = response.text || '';
       } catch (e) {
-        const fallbackRes = await ai.models.generateContent({
+        const fallbackRes = await getAi().models.generateContent({
           model: 'gemini-3.8-flash',
           contents: [{ role: 'user', parts: [{ text: promptText }] }]
         });

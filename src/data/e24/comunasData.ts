@@ -17,7 +17,9 @@ export const COMUNAS_INFO: ComunaInfo[] = [
   { id: 14, comunaName: 'Comuna 14', officialName: 'El Poblado', zones: ['27', '28'], type: 'comuna', description: 'Zona Suroriental (Barrios El Poblado, Milla de Oro, Las Lomas, Castropol, Patio Bonito)', coordinates: { x: 3, y: 5 } },
   { id: 15, comunaName: 'Comuna 15', officialName: 'Guayabal', zones: ['29', '30'], type: 'comuna', description: 'Zona Suroccidental (Barrios Guayabal, Cristo Rey, Santa Fe, Campo Amor)', coordinates: { x: 2, y: 5 } },
   { id: 16, comunaName: 'Comuna 16', officialName: 'Belén', zones: ['31', '32'], type: 'comuna', description: 'Zona Suroccidental (Barrios Belén, San Bernardo, Los Alpes, Rosales, La Gloria)', coordinates: { x: 1, y: 6 } },
-  { id: 90, comunaName: 'Zona 90', officialName: 'Área Rural (Corregimientos)', zones: ['90'], type: 'rural', description: 'San Cristóbal, San Antonio de Prado, Altavista, Santa Elena, San Sebastián de Palmitas' },
+  // Zona 90 = puesto censo y zona 99 = corregimientos, según los códigos de puesto del censo oficial
+  // de la Registraduría (corte 30-abr-2026). Antes estaban invertidas.
+  { id: 90, comunaName: 'Zona 90', officialName: 'Puesto Censo', zones: ['90'], type: 'censo', description: 'Puesto censo: Estadio Atanasio Girardot y Plaza Mayor (ciudadanos inscritos sin puesto en su barrio)' },
   { id: 98, comunaName: 'Zona 98', officialName: 'Centros Carcelarios', zones: ['98'], type: 'carcelario', description: 'Establecimientos penitenciarios y carcelarios de Medellín (Bellavista, Pedregal)' },
-  { id: 99, comunaName: 'Zona 99', officialName: 'Puesto Censo', zones: ['99'], type: 'censo', description: 'Puesto único de censo electoral en Plaza Mayor y Centro Administrativo La Alpujarra' },
+  { id: 99, comunaName: 'Zona 99', officialName: 'Área Rural (Corregimientos)', zones: ['99'], type: 'rural', description: 'San Cristóbal, San Antonio de Prado, Altavista, Santa Elena, San Sebastián de Palmitas' },
 ];
