@@ -68,3 +68,5 @@ yarn.lock
 pnpm-lock.yaml
 # Muestras de diseño (imágenes pesadas, solo locales)
 muestras_diseno/
+# Archivos que la app de Claude guarda al enviar resultados al chat
+Claude outputs/
