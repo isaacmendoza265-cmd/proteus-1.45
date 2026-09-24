@@ -14,6 +14,15 @@ import { municipalRepository, UnifiedMunicipalityRecord } from './municipalRepos
 import { COMUNAS_INFO } from '../data/e24/comunasData';
 import { MEDELLIN_COMUNAS_DATA } from '../data/metropolitanAndMedellinData';
 import { MEDELLIN_BARRIOS_GEOJSON } from '../data/geojson/medellinBarriosGeoJson';
+import {
+  NATIONAL_CENSUS,
+  ABROAD_CENSUS,
+  CENSUS_SOURCE_LABEL,
+  formatCensus,
+  getDepartmentCensus,
+  getMedellinComunaCensus,
+  getMedellinZoneCensus,
+} from './electoralCensusService';
 
 export type TerritorialScale = 'nacional' | 'departamental' | 'subregional' | 'municipal' | 'comuna-barrio';
 
@@ -27,6 +36,7 @@ export interface HierarchyTerritoryNode {
   municipalityName?: string;
   comunaName?: string;
   population?: number;
+  /** Censo electoral oficial; undefined si no hay dato (nunca se estima) */
   electoralCensus?: number;
   nbiPercentage?: number;
   predominantStratum?: string;
@@ -47,7 +57,7 @@ export class TerritoryHierarchyService {
       fullName: 'República de Colombia (32 Departamentos y Distrito Capital)',
       departmentName: 'Nacional',
       population: 52215000,
-      electoralCensus: 39200000,
+      electoralCensus: NATIONAL_CENSUS.total,
       nbiPercentage: 19.6,
       keyIssues: [
         'Crecimiento económico, inflación de alimentos y empleo formal',
@@ -55,7 +65,7 @@ export class TerritoryHierarchyService {
         'Sostenibilidad pensional y reformas a la salud',
         'Confianza inversionista, seguridad jurídica y libre empresa'
       ],
-      strategicContext: 'Ámbito electoral de orden nacional (Presidencia y Senado de la República). Discurso de visión de país, unidad democrática y reactivación integral.'
+      strategicContext: `Ámbito electoral de orden nacional (Presidencia y Senado de la República). Censo de ${formatCensus(NATIONAL_CENSUS.total)} habilitados en Colombia y ${formatCensus(ABROAD_CENSUS.total)} en el exterior (${CENSUS_SOURCE_LABEL}). Discurso de visión de país, unidad democrática y reactivación integral.`
     };
   }
 
@@ -72,7 +82,7 @@ export class TerritoryHierarchyService {
         fullName: `Departamento de ${p.name}`,
         departmentName: p.name,
         population: p.population || 1200000,
-        electoralCensus: p.electoralCensus || 850000,
+        electoralCensus: getDepartmentCensus(p.id)?.total,
         nbiPercentage: p.nbiPercentage || 22.0,
         keyIssues: [
           `Competitividad y desarrollo productivo en ${p.name}`,
@@ -105,7 +115,10 @@ export class TerritoryHierarchyService {
         departmentName: 'Antioquia',
         subregionName: s.name,
         population: s.demographics.totalPopulation,
-        electoralCensus: Math.round(s.demographics.totalPopulation * 0.72),
+        electoralCensus: municipalRepository
+          .getAll()
+          .filter((m) => m.subregionId === s.id)
+          .reduce((sum, m) => sum + m.electoralCensus, 0),
         nbiPercentage: s.demographics.nbiAverage,
         municipalityCount: s.totalMunicipalities,
         keyIssues: issues,
@@ -151,7 +164,8 @@ export class TerritoryHierarchyService {
       const comunaKey = `med-c${c.id}`;
       const deepData = MEDELLIN_COMUNAS_DATA[comunaKey];
       const pop = deepData?.population || 135000;
-      const censo = Math.round(pop * 0.78);
+      // Censo oficial: comunas 1-16 por sus zonas; 90 (puesto censo), 98 y 99 son zonas completas
+      const censo = c.id <= 16 ? getMedellinComunaCensus(c.id)?.total : getMedellinZoneCensus(c.zones[0])?.total;
       const stratum = deepData?.predominantStratum || (c.id === 14 ? 'Estrato 6' : c.id >= 11 ? 'Estrato 4-5' : 'Estrato 1-2');
 
       return {
@@ -198,7 +212,7 @@ export class TerritoryHierarchyService {
         municipalityName: 'Medellín',
         comunaName: p.comunaName,
         population: p.population || 18000,
-        electoralCensus: p.electoralCensus || 15000,
+        electoralCensus: p.electoralCensus,
         predominantStratum: p.predominantStratum || 'Estrato 3',
         nbiPercentage: p.nbiPercentage || 4.5,
         keyIssues: [

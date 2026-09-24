@@ -2,20 +2,22 @@ import { Party, Candidate, ZoneVotes, ZoneId, ComunaPartySummary, ComunaVotesAgg
 import { COMUNAS_INFO } from './comunasData';
 import { buildOfficialConcejo2019Dataset } from './officialConcejo2019';
 import { buildOfficialAlcaldia2019Dataset } from './officialAlcaldia2019';
+import { getMedellinZoneCensus } from '../../services/electoralCensusService';
 
 export const TERRITORIAL_YEARS = [2023, 2019, 2015] as const;
 export type TerritorialYear = typeof TERRITORIAL_YEARS[number];
 
-// Zone distribution weight profiles for realistic demographic simulation in Medellin
-// Normalized zone weights summing to ~1.0
-export const ZONE_POPULATION_WEIGHTS: Record<ZoneId, number> = {
-  '01': 0.038, '02': 0.035, '03': 0.034, '04': 0.032, '05': 0.036, '06': 0.033,
-  '07': 0.039, '08': 0.037, '09': 0.042, '10': 0.038, '11': 0.037, '12': 0.034,
-  '13': 0.045, '14': 0.041, '15': 0.035, '16': 0.033, '17': 0.038, '18': 0.035,
-  '19': 0.026, '20': 0.024, '21': 0.048, '22': 0.045, '23': 0.036, '24': 0.034,
-  '25': 0.041, '26': 0.039, '27': 0.052, '28': 0.050, '29': 0.028, '30': 0.027,
-  '31': 0.046, '32': 0.044, '90': 0.062, '98': 0.003, '99': 0.015
-};
+// Peso de cada zona electoral de Medellín = su participación en el censo oficial
+// (Registraduría, corte 30-abr-2026). Antes eran pesos estimados a mano.
+const ZONE_IDS: ZoneId[] = [
+  '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16',
+  '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32',
+  '90', '98', '99',
+];
+const MEDELLIN_CENSUS_TOTAL = ZONE_IDS.reduce((sum, z) => sum + (getMedellinZoneCensus(z)?.total ?? 0), 0);
+export const ZONE_POPULATION_WEIGHTS: Record<ZoneId, number> = Object.fromEntries(
+  ZONE_IDS.map((z) => [z, (getMedellinZoneCensus(z)?.total ?? 0) / MEDELLIN_CENSUS_TOTAL]),
+) as Record<ZoneId, number>;
 
 // Socio-political skew per zone: higher Poblado/Laureles skew (zones 21,22,27,28), higher Popular/SanJavier skew (01-06, 25,26)
 export const ZONE_AFFINITY_PROFILE: Record<ZoneId, { centerRight: number; alternativo: number; tradicional: number }> = {

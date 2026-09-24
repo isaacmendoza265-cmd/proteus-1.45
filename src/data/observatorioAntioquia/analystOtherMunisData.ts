@@ -1,3 +1,4 @@
+import { CENSUS_SOURCE_LABEL, formatCensus, officialCensusOr } from '../../services/electoralCensusService';
 import { MunicipalityAnalystItem, ComunaAnalysisData } from './analystTypes';
 
 const SOURCE_WEB = '(información obtenida de la web)';
@@ -609,7 +610,7 @@ export const BELLO_ANALYST: MunicipalityAnalystItem = {
   subregion: 'Valle de Aburrá (Norte)',
   badgeColor: 'blue',
   poblacionEstimada: 560000,
-  censoElectoral: 350000,
+  censoElectoral: officialCensusOr('Bello', 350000),
   tieneComunas: true,
   cantidadComunas: 11,
   detalleComunasOBarrios: '1. París, 2. La Madera, 3. Santa Ana, 4. Suárez, 5. La Cumbre, 6. Bellavista, 7. Altos de Niquía, 8. Niquía, 9. Guasimalito / Navarra, 10. Fontidueño, 11. Zamora.',
@@ -617,7 +618,7 @@ export const BELLO_ANALYST: MunicipalityAnalystItem = {
   panelGeneral: {
     censoPoblacional: {
       poblacionTotal: '560.000 habitantes (DANE)',
-      censoElectoral: '350.000 ciudadanos habilitados',
+      censoElectoral: `${formatCensus(officialCensusOr('Bello', 350000))} ciudadanos habilitados (${CENSUS_SOURCE_LABEL})`,
       distribucionSexo: { hombres: '47.8%', mujeres: '52.2%' },
       distribucionEdades: { rango0_14: '19.8%', rango15_29: '26.2%', rango30_59: '39.4%', rango60_mas: '14.6%' },
       fuenteNota: SOURCE_WEB,

@@ -4,6 +4,13 @@
  * - Distrito de Medellín (16 Comunas Urbanas y 5 Corregimientos)
  */
 
+import {
+  getMunicipalCensus,
+  getMedellinComunaCensus,
+  getMedellinCorregimientoCensus,
+  type CensusFigures,
+} from '../services/electoralCensusService';
+
 export interface ComunaElectoralProfile {
   id: string;
   number: number;
@@ -11,6 +18,8 @@ export interface ComunaElectoralProfile {
   zone: 'Urbana' | 'Rural';
   population: number;
   electoralCensus: number;
+  /** 'oficial' = Registraduría (corte 30-abr-2026); 'estimado' = sin dato oficial */
+  electoralCensusSource?: 'oficial' | 'estimado';
   votingStations: number;
   votingTables: number;
   predominantStratum: string;
@@ -42,6 +51,8 @@ export interface MetroMunicipalityProfile {
   subregion: 'Valle de Aburrá Norte' | 'Valle de Aburrá Centro' | 'Valle de Aburrá Sur';
   population: number;
   electoralCensus: number;
+  /** 'oficial' = Registraduría (corte 30-abr-2026); 'estimado' = sin dato oficial */
+  electoralCensusSource?: 'oficial' | 'estimado';
   votingStations: number;
   votingTables: number;
   urbanDivisionsCount: number;
@@ -849,3 +860,24 @@ export const MEDELLIN_COMUNAS_DATA: Record<string, ComunaElectoralProfile> = {
     barriosList: ['Palmitas Central', 'La Suiza', 'La Aldea', 'La Sucia', 'Potrera Miserenga', 'La Frisola']
   }
 };
+
+// 3. CENSO OFICIAL (Registraduría, corte 30-abr-2026): reemplaza las cifras escritas a mano.
+// Puestos y mesas también salen del censo. Altavista y Palmitas quedan con su cifra previa
+// marcada como 'estimado' porque comparten puestos de la zona 99 que aún no se separan.
+const applyCensus = (
+  rec: { electoralCensus: number; votingStations: number; votingTables: number; electoralCensusSource?: 'oficial' | 'estimado' },
+  official: CensusFigures | undefined,
+) => {
+  if (official) {
+    rec.electoralCensus = official.total;
+    rec.votingStations = official.puestos;
+    rec.votingTables = official.mesas;
+    rec.electoralCensusSource = 'oficial';
+  } else {
+    rec.electoralCensusSource = 'estimado';
+  }
+};
+for (const m of Object.values(METROPOLITAN_MUNICIPALITIES_DATA)) applyCensus(m, getMunicipalCensus(m.name));
+for (const c of Object.values(MEDELLIN_COMUNAS_DATA)) {
+  applyCensus(c, c.zone === 'Urbana' ? getMedellinComunaCensus(c.number) : getMedellinCorregimientoCensus(c.id));
+}

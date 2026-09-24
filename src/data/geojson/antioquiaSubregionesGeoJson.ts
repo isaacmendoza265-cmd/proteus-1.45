@@ -1,4 +1,5 @@
 import { TerritoryFeatureCollection } from './types';
+import { ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA } from '../antioquia125MunicipalitiesMasterData';
 
 export const ANTIOQUIA_SUBREGIONES_GEOJSON: TerritoryFeatureCollection = {
   type: 'FeatureCollection',
@@ -263,3 +264,9 @@ export const ANTIOQUIA_SUBREGIONES_GEOJSON: TerritoryFeatureCollection = {
     }
   ]
 };
+
+// Censo electoral oficial por subregión = suma de sus municipios (Registraduría, corte 30-abr-2026)
+for (const f of ANTIOQUIA_SUBREGIONES_GEOJSON.features) {
+  const munis = ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA.filter((m) => m.subregionId === f.id);
+  if (munis.length) f.properties.electoralCensus = munis.reduce((sum, m) => sum + m.electoralCensus, 0);
+}

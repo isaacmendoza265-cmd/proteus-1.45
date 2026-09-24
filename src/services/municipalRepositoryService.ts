@@ -20,6 +20,7 @@ import {
   RunnerUpCandidate
 } from '../data/antioquia125MunicipalitiesMasterData';
 import { callGeminiApi } from './geminiService';
+import { CENSUS_SOURCE_LABEL, formatCensus, getDepartmentCensus, getMunicipalCensus } from './electoralCensusService';
 
 export type { UnifiedMunicipalityRecord, CouncilPartySeat, RunnerUpCandidate };
 
@@ -99,7 +100,12 @@ class MunicipalRepositoryRegistry {
         subregionId: rec.subregionId || existing?.subregionId || 'general',
         category: rec.category || existing?.category || '6',
         population: rec.population || existing?.population || 10000,
-        electoralCensus: rec.electoralCensus || existing?.electoralCensus || 7000,
+        // El censo oficial prevalece sobre lo que se ingrese a mano
+        electoralCensus:
+          getMunicipalCensus(rec.daneCode || existing?.daneCode || rec.name || existing?.name || '')?.total ??
+          rec.electoralCensus ??
+          existing?.electoralCensus ??
+          0,
         nbiPercentage: rec.nbiPercentage || existing?.nbiPercentage || 12.0,
         areaKm2: rec.areaKm2 || existing?.areaKm2 || 100.0,
         predominantStratum: rec.predominantStratum || existing?.predominantStratum || 'Estrato 1 y 2',
@@ -140,7 +146,7 @@ class MunicipalRepositoryRegistry {
   public buildContextPrompt(queryOrId: string): string {
     const muni = this.getMunicipality(queryOrId);
     if (!muni) {
-      return `[CONTEXTO TERRITORIAL: Antioquia General - 125 Municipios, 9 Subregiones, Censo Electoral ~5.1M votantes]`;
+      return `[CONTEXTO TERRITORIAL: Antioquia General - 125 Municipios, 9 Subregiones, Censo Electoral ${formatCensus(getDepartmentCensus('antioquia')?.total ?? 0)} votantes (${CENSUS_SOURCE_LABEL})]`;
     }
 
     const councilSummary = muni.councilSeats && muni.councilSeats.length > 0
@@ -160,7 +166,7 @@ class MunicipalRepositoryRegistry {
 - Municipio: ${muni.name} (Código DIVIPOLA DANE: ${muni.daneCode})
 - Departamento: ${muni.department} | Subregión: ${muni.subregion} (Categoría: ${muni.category})
 - Población Oficial DANE: ${muni.population.toLocaleString()} habitantes
-- Censo Electoral Registraduría: ${muni.electoralCensus.toLocaleString()} sufragantes
+- Censo Electoral Registraduría: ${muni.electoralCensus.toLocaleString('es-CO')} sufragantes (${CENSUS_SOURCE_LABEL})
 - Incidencia de Pobreza / NBI: ${muni.nbiPercentage}%
 - Extensión Territorial: ${muni.areaKm2 ? `${muni.areaKm2} km²` : 'N/D'}
 - Estrato Predominante: ${muni.predominantStratum}

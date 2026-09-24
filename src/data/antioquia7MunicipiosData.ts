@@ -1,3 +1,5 @@
+
+import { getMunicipalCensus } from '../services/electoralCensusService';
 // Datos político-administrativos, demográficos y electorales consolidados
 // para los 7 municipios estratégicos de Antioquia:
 // Bello, Itagüí, Envigado, La Estrella, Sabaneta, Caldas y Rionegro.
@@ -63,6 +65,8 @@ export interface StrategicMunicipality {
   category: string;
   totalPopulation: number;
   electoralCensus: number;
+  /** 'oficial' = Registraduría (corte 30-abr-2026); 'estimado' = sin dato oficial */
+  electoralCensusSource?: 'oficial' | 'estimado';
   urbanRuralDistribution: { urban: number; rural: number };
   nbiPercentage: number;
   hdi: number;
@@ -1416,4 +1420,11 @@ export function calculateDemographicCrossEstimation(
     areaPopulation,
     totalMunicipalityPopulation: muni.totalPopulation
   };
+}
+
+// Censo oficial (Registraduría, corte 30-abr-2026) en lugar de las cifras redondeadas previas
+for (const m of Object.values(STRATEGIC_MUNICIPALITIES)) {
+  const official = getMunicipalCensus(m.name);
+  if (official) m.electoralCensus = official.total;
+  m.electoralCensusSource = official ? 'oficial' : 'estimado';
 }

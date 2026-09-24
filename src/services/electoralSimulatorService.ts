@@ -6,6 +6,8 @@
  * para elecciones legislativas y corporaciones públicas en Colombia.
  */
 
+import { getDepartmentCensus } from './electoralCensusService';
+
 export interface SimulatorParty {
   id: string;
   name: string;
@@ -54,7 +56,8 @@ export const ANTIOQUIA_CAMARA_2026_BASELINE: {
   totalSeats: number;
   parties: SimulatorParty[];
 } = {
-  census: 5350000,
+  // Censo oficial de Antioquia (Registraduría, corte 30-abr-2026)
+  census: getDepartmentCensus('antioquia')?.total ?? 0,
   totalSeats: 17,
   parties: [
     {
