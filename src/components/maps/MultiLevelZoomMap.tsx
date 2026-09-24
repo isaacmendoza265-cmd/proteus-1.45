@@ -425,6 +425,13 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
 
   }, [currentLevel, activeLayer, searchQuery, selectedFeature, antioquiaViewMode, selectedDepartmentName, customDeptDataset]);
 
+  // Leyenda honesta: cuántos territorios de la escala actual no tienen dato de partido
+  // (se pintan con el color de su agrupación territorial, no con un color de partido)
+  const legendFeatures = GEOJSON_LAYERS_BY_ZOOM[currentLevel]?.features || [];
+  const featuresWithoutParty = legendFeatures.filter(
+    (f) => !f.properties.winnerParty && !f.properties.predominantParty
+  ).length;
+
   // Recenter helper
   const handleRecenter = () => {
     const map = mapInstanceRef.current;
@@ -566,6 +573,13 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
                 <span className="w-3 h-3 rounded-full bg-purple-500 inline-block" />
                 <span>Pacto Histórico / Mov. Sociales</span>
               </div>
+              {featuresWithoutParty > 0 && (
+                <div className="pt-1 mt-1 border-t border-white/10 text-[10px] leading-snug text-slate-400">
+                  {currentLevel === 'comunas-barrios'
+                    ? 'Sin datos electorales por barrio: el color indica la comuna o el corregimiento.'
+                    : `${featuresWithoutParty} territorios sin dato de partido: se pintan con el color de su agrupación territorial.`}
+                </div>
+              )}
             </>
           )}
 
