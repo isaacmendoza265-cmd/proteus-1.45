@@ -43,6 +43,8 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
   const [activeLayer, setActiveLayer] = useState<ThematicMetricLayer>('electoral');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFeature, setSelectedFeature] = useState<TerritoryGeoFeature | null>(null);
+  // Municipio de los niveles 4 y 5 (ver src/data/geojson/municipalDivisions.ts)
+  const [selectedMunicipalityId, setSelectedMunicipalityId] = useState<string>('medellin');
   const [selectedDepartmentName, setSelectedDepartmentName] = useState<string>('Antioquia');
   const [e24ModalOpen, setE24ModalOpen] = useState(false);
 
@@ -201,6 +203,11 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
             onGenerateContent={handleGenerateContent}
             selectedDepartmentName={selectedDepartmentName}
             onSelectDepartmentName={setSelectedDepartmentName}
+            selectedMunicipalityId={selectedMunicipalityId}
+            onSelectMunicipality={(id) => {
+              setSelectedMunicipalityId(id);
+              setSelectedFeature(null);
+            }}
           />
         </div>
 
