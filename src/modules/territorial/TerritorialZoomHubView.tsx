@@ -410,6 +410,7 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
                 Barrios & Puestos 2015-2023
               </div>
             </div>
+          </button>
         </div>
       </div>
 
