@@ -170,8 +170,8 @@ export const METROPOLITAN_MUNICIPALITIES_DATA: Record<string, MetroMunicipalityP
     },
     communesOrZonesSummary: ['Zona Centro', 'Zona Norte', 'Zona Sur', 'Veredas del Sur']
   },
-  'la_estrella': {
-    id: 'la_estrella',
+  'la-estrella': {
+    id: 'la-estrella',
     name: 'La Estrella',
     subregion: 'Valle de Aburrá Sur',
     population: 78910,

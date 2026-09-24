@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ShieldCheck, Cpu, Database, Activity, RefreshCw, HardDrive, User, CheckCircle2 } from 'lucide-react';
-import { gobernacionService } from '../../services/gobernacionService';
+import { getGobernacionStatus } from '../../services/gobernacionService';
 import { googleDriveService } from '../../services/googleDriveService';
 
 interface TopStatusBarProps {
@@ -24,10 +24,10 @@ export const TopStatusBar: React.FC<TopStatusBarProps> = ({
   const checkStatus = async () => {
     try {
       setLoading(true);
-      const res = await gobernacionService.getStatus();
+      const res = await getGobernacionStatus();
       setDbStatus({
-        connected: res.status === 'online',
-        totalNews: res.database?.total_news || 0
+        connected: res.connected,
+        totalNews: res.totalNoticias || 0
       });
       setDriveAccount(googleDriveService.getAccount());
     } catch {

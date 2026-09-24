@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { 
   Building2, 
   MapPin, 
@@ -62,7 +62,7 @@ import {
 import { activeTerritoryService } from '../services/activeTerritoryContextService';
 
 // Inicialización de la API de Gemini para búsquedas y análisis profundo
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' });
 
 interface CandidateProfileProps {
   nombre?: string;
@@ -290,8 +290,7 @@ export const AntioquiaMunicipiosManager: React.FC<AntioquiaMunicipiosManagerProp
     });
   }, [searchMuniQuery, selectedSubregionFilter]);
 
-  // Detección de municipio estratégico (Top 7 con 3D) vs Ficha Maestra 125 Municipios
-  const isStrategic7 = STRATEGIC_7_KEYS.includes(selectedMuniId);
+  // Pestaña activa para la Ficha Maestra de municipios no estratégicos
   const [nonStrategicTab, setNonStrategicTab] = useState<'ficha' | 'demografia' | 'veredas'>('ficha');
 
   // Modo de visualización territorial ('both' | 'map' | 'charts' | 'comunas' | 'diorama3d' | 'dossier')
