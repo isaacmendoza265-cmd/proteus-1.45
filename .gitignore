@@ -66,3 +66,5 @@ temp_*/
 bun.lock
 yarn.lock
 pnpm-lock.yaml
+# Muestras de diseño (imágenes pesadas, solo locales)
+muestras_diseno/

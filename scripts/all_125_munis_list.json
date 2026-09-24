@@ -1,0 +1,877 @@
+[
+  {
+    "id": "mpio-05002",
+    "name": "Abejorral",
+    "daneCode": "05002",
+    "subregion": "Oriente",
+    "areaKm2": 507.1
+  },
+  {
+    "id": "mpio-05004",
+    "name": "Abriaquí",
+    "daneCode": "05004",
+    "subregion": "Occidente",
+    "areaKm2": 297.0
+  },
+  {
+    "id": "mpio-05021",
+    "name": "Alejandría",
+    "daneCode": "05021",
+    "subregion": "Oriente",
+    "areaKm2": 128.9
+  },
+  {
+    "id": "mpio-05030",
+    "name": "Amagá",
+    "daneCode": "05030",
+    "subregion": "Suroeste",
+    "areaKm2": 84.1
+  },
+  {
+    "id": "mpio-05031",
+    "name": "Amalfi",
+    "daneCode": "05031",
+    "subregion": "Nordeste",
+    "areaKm2": 1209.1
+  },
+  {
+    "id": "mpio-05034",
+    "name": "Andes",
+    "daneCode": "05034",
+    "subregion": "Suroeste",
+    "areaKm2": 402.5
+  },
+  {
+    "id": "mpio-05036",
+    "name": "Angelópolis",
+    "daneCode": "05036",
+    "subregion": "Suroeste",
+    "areaKm2": 81.9
+  },
+  {
+    "id": "mpio-05038",
+    "name": "Angostura",
+    "daneCode": "05038",
+    "subregion": "Nordeste",
+    "areaKm2": 338.7
+  },
+  {
+    "id": "mpio-05040",
+    "name": "Anorí",
+    "daneCode": "05040",
+    "subregion": "Norte",
+    "areaKm2": 1413.8
+  },
+  {
+    "id": "mpio-05044",
+    "name": "Anzá",
+    "daneCode": "05044",
+    "subregion": "Occidente",
+    "areaKm2": 255.9
+  },
+  {
+    "id": "mpio-05045",
+    "name": "Apartadó",
+    "daneCode": "05045",
+    "subregion": "Urabá",
+    "areaKm2": 535.2
+  },
+  {
+    "id": "mpio-05051",
+    "name": "Arboletes",
+    "daneCode": "05051",
+    "subregion": "Urabá",
+    "areaKm2": 754.3
+  },
+  {
+    "id": "mpio-05055",
+    "name": "Argelia",
+    "daneCode": "05055",
+    "subregion": "Occidente",
+    "areaKm2": 245.3
+  },
+  {
+    "id": "mpio-05059",
+    "name": "Armenia",
+    "daneCode": "05059",
+    "subregion": "Oriente",
+    "areaKm2": 110.4
+  },
+  {
+    "id": "mpio-05079",
+    "name": "Barbosa",
+    "daneCode": "05079",
+    "subregion": "Valle de Aburrá",
+    "areaKm2": 205.7
+  },
+  {
+    "id": "mpio-05088",
+    "name": "Bello",
+    "daneCode": "05088",
+    "subregion": "Valle de Aburrá",
+    "areaKm2": 147.8
+  },
+  {
+    "id": "mpio-05086",
+    "name": "Belmira",
+    "daneCode": "05086",
+    "subregion": "Norte",
+    "areaKm2": 296.2
+  },
+  {
+    "id": "mpio-05091",
+    "name": "Betania",
+    "daneCode": "05091",
+    "subregion": "Suroeste",
+    "areaKm2": 180.5
+  },
+  {
+    "id": "mpio-05093",
+    "name": "Betulia",
+    "daneCode": "05093",
+    "subregion": "Suroeste",
+    "areaKm2": 262.4
+  },
+  {
+    "id": "mpio-05107",
+    "name": "Briceño",
+    "daneCode": "05107",
+    "subregion": "Norte",
+    "areaKm2": 376.3
+  },
+  {
+    "id": "mpio-05113",
+    "name": "Buriticá",
+    "daneCode": "05113",
+    "subregion": "Occidente",
+    "areaKm2": 355.2
+  },
+  {
+    "id": "mpio-05125",
+    "name": "Caicedo",
+    "daneCode": "05125",
+    "subregion": "Antioquia",
+    "areaKm2": 200.1
+  },
+  {
+    "id": "mpio-05129",
+    "name": "Caldas",
+    "daneCode": "05129",
+    "subregion": "Valle de Aburrá",
+    "areaKm2": 132.8
+  },
+  {
+    "id": "mpio-05134",
+    "name": "Campamento",
+    "daneCode": "05134",
+    "subregion": "Norte",
+    "areaKm2": 206.3
+  },
+  {
+    "id": "mpio-05142",
+    "name": "Caracolí",
+    "daneCode": "05142",
+    "subregion": "Magdalena Medio",
+    "areaKm2": 262.8
+  },
+  {
+    "id": "mpio-05145",
+    "name": "Caramanta",
+    "daneCode": "05145",
+    "subregion": "Suroeste",
+    "areaKm2": 92.1
+  },
+  {
+    "id": "mpio-05147",
+    "name": "Carepa",
+    "daneCode": "05147",
+    "subregion": "Urabá",
+    "areaKm2": 387.3
+  },
+  {
+    "id": "mpio-05150",
+    "name": "Carolina",
+    "daneCode": "05150",
+    "subregion": "Antioquia",
+    "areaKm2": 149.6
+  },
+  {
+    "id": "mpio-05154",
+    "name": "Caucasia",
+    "daneCode": "05154",
+    "subregion": "Bajo Cauca",
+    "areaKm2": 1429.1
+  },
+  {
+    "id": "mpio-05138",
+    "name": "Cañasgordas",
+    "daneCode": "05138",
+    "subregion": "Occidente",
+    "areaKm2": 364.8
+  },
+  {
+    "id": "mpio-05172",
+    "name": "Chigorodó",
+    "daneCode": "05172",
+    "subregion": "Urabá",
+    "areaKm2": 721.7
+  },
+  {
+    "id": "mpio-05190",
+    "name": "Cisneros",
+    "daneCode": "05190",
+    "subregion": "Nordeste",
+    "areaKm2": 46.9
+  },
+  {
+    "id": "mpio-05101",
+    "name": "Ciudad Bolívar",
+    "daneCode": "05101",
+    "subregion": "Antioquia",
+    "areaKm2": 260.4
+  },
+  {
+    "id": "mpio-05197",
+    "name": "Cocorná",
+    "daneCode": "05197",
+    "subregion": "Oriente",
+    "areaKm2": 241.8
+  },
+  {
+    "id": "mpio-05206",
+    "name": "Concepción",
+    "daneCode": "05206",
+    "subregion": "Oriente",
+    "areaKm2": 202.1
+  },
+  {
+    "id": "mpio-05209",
+    "name": "Concordia",
+    "daneCode": "05209",
+    "subregion": "Suroeste",
+    "areaKm2": 247.9
+  },
+  {
+    "id": "mpio-05212",
+    "name": "Copacabana",
+    "daneCode": "05212",
+    "subregion": "Valle de Aburrá",
+    "areaKm2": 67.8
+  },
+  {
+    "id": "mpio-05120",
+    "name": "Cáceres",
+    "daneCode": "05120",
+    "subregion": "Bajo Cauca",
+    "areaKm2": 1873.8
+  },
+  {
+    "id": "mpio-05234",
+    "name": "Dabeiba",
+    "daneCode": "05234",
+    "subregion": "Suroeste",
+    "areaKm2": 1957.3
+  },
+  {
+    "id": "mpio-05237",
+    "name": "Donmatías",
+    "daneCode": "05237",
+    "subregion": "Occidente",
+    "areaKm2": 203.3
+  },
+  {
+    "id": "mpio-05240",
+    "name": "Ebéjico",
+    "daneCode": "05240",
+    "subregion": "Occidente",
+    "areaKm2": 237.8
+  },
+  {
+    "id": "mpio-05250",
+    "name": "El Bagre",
+    "daneCode": "05250",
+    "subregion": "Norte",
+    "areaKm2": 1560.2
+  },
+  {
+    "id": "mpio-05148",
+    "name": "El Carmen de Viboral",
+    "daneCode": "05148",
+    "subregion": "Oriente",
+    "areaKm2": 423.6
+  },
+  {
+    "id": "mpio-05697",
+    "name": "El Santuario",
+    "daneCode": "05697",
+    "subregion": "Antioquia",
+    "areaKm2": 83.5
+  },
+  {
+    "id": "mpio-05264",
+    "name": "Entrerríos",
+    "daneCode": "05264",
+    "subregion": "Norte",
+    "areaKm2": 214.2
+  },
+  {
+    "id": "mpio-05266",
+    "name": "Envigado",
+    "daneCode": "05266",
+    "subregion": "Valle de Aburrá",
+    "areaKm2": 78.0
+  },
+  {
+    "id": "mpio-05282",
+    "name": "Fredonia",
+    "daneCode": "05282",
+    "subregion": "Suroeste",
+    "areaKm2": 258.1
+  },
+  {
+    "id": "mpio-05284",
+    "name": "Frontino",
+    "daneCode": "05284",
+    "subregion": "Occidente",
+    "areaKm2": 1384.1
+  },
+  {
+    "id": "mpio-05306",
+    "name": "Giraldo",
+    "daneCode": "05306",
+    "subregion": "Occidente",
+    "areaKm2": 93.5
+  },
+  {
+    "id": "mpio-05308",
+    "name": "Girardota",
+    "daneCode": "05308",
+    "subregion": "Valle de Aburrá",
+    "areaKm2": 82.9
+  },
+  {
+    "id": "mpio-05313",
+    "name": "Granada",
+    "daneCode": "05313",
+    "subregion": "Oriente",
+    "areaKm2": 190.2
+  },
+  {
+    "id": "mpio-05315",
+    "name": "Guadalupe",
+    "daneCode": "05315",
+    "subregion": "Oriente",
+    "areaKm2": 118.2
+  },
+  {
+    "id": "mpio-05318",
+    "name": "Guarne",
+    "daneCode": "05318",
+    "subregion": "Oriente",
+    "areaKm2": 151.8
+  },
+  {
+    "id": "mpio-05321",
+    "name": "Guatapé",
+    "daneCode": "05321",
+    "subregion": "Antioquia",
+    "areaKm2": 83.3
+  },
+  {
+    "id": "mpio-05310",
+    "name": "Gómez Plata",
+    "daneCode": "05310",
+    "subregion": "Norte",
+    "areaKm2": 332.2
+  },
+  {
+    "id": "mpio-05347",
+    "name": "Heliconia",
+    "daneCode": "05347",
+    "subregion": "Occidente",
+    "areaKm2": 114.8
+  },
+  {
+    "id": "mpio-05353",
+    "name": "Hispania",
+    "daneCode": "05353",
+    "subregion": "Suroeste",
+    "areaKm2": 57.5
+  },
+  {
+    "id": "mpio-05360",
+    "name": "Itagüí",
+    "daneCode": "05360",
+    "subregion": "Valle de Aburrá",
+    "areaKm2": 19.6
+  },
+  {
+    "id": "mpio-05361",
+    "name": "Ituango",
+    "daneCode": "05361",
+    "subregion": "Norte",
+    "areaKm2": 2841.1
+  },
+  {
+    "id": "mpio-05364",
+    "name": "Jardín",
+    "daneCode": "05364",
+    "subregion": "Suroeste",
+    "areaKm2": 201.2
+  },
+  {
+    "id": "mpio-05368",
+    "name": "Jericó",
+    "daneCode": "05368",
+    "subregion": "Suroeste",
+    "areaKm2": 205.0
+  },
+  {
+    "id": "mpio-05376",
+    "name": "La Ceja",
+    "daneCode": "05376",
+    "subregion": "Oriente",
+    "areaKm2": 132.7
+  },
+  {
+    "id": "mpio-05380",
+    "name": "La Estrella",
+    "daneCode": "05380",
+    "subregion": "Valle de Aburrá",
+    "areaKm2": 36.5
+  },
+  {
+    "id": "mpio-05390",
+    "name": "La Pintada",
+    "daneCode": "05390",
+    "subregion": "Suroeste",
+    "areaKm2": 54.3
+  },
+  {
+    "id": "mpio-05400",
+    "name": "La Unión",
+    "daneCode": "05400",
+    "subregion": "Oriente",
+    "areaKm2": 167.7
+  },
+  {
+    "id": "mpio-05411",
+    "name": "Liborina",
+    "daneCode": "05411",
+    "subregion": "Occidente",
+    "areaKm2": 216.4
+  },
+  {
+    "id": "mpio-05425",
+    "name": "Maceo",
+    "daneCode": "05425",
+    "subregion": "Magdalena Medio",
+    "areaKm2": 387.1
+  },
+  {
+    "id": "mpio-05440",
+    "name": "Marinilla",
+    "daneCode": "05440",
+    "subregion": "Oriente",
+    "areaKm2": 114.9
+  },
+  {
+    "id": "mpio-05001",
+    "name": "Medellín",
+    "daneCode": "05001",
+    "subregion": "Valle de Aburrá",
+    "areaKm2": 374.8
+  },
+  {
+    "id": "mpio-05467",
+    "name": "Montebello",
+    "daneCode": "05467",
+    "subregion": "Suroeste",
+    "areaKm2": 76.0
+  },
+  {
+    "id": "mpio-05475",
+    "name": "Murindó",
+    "daneCode": "05475",
+    "subregion": "Urabá",
+    "areaKm2": 1266.2
+  },
+  {
+    "id": "mpio-05480",
+    "name": "Mutatá",
+    "daneCode": "05480",
+    "subregion": "Urabá",
+    "areaKm2": 1075.2
+  },
+  {
+    "id": "mpio-05483",
+    "name": "Nariño",
+    "daneCode": "05483",
+    "subregion": "Oriente",
+    "areaKm2": 316.8
+  },
+  {
+    "id": "mpio-05495",
+    "name": "Nechí",
+    "daneCode": "05495",
+    "subregion": "Bajo Cauca",
+    "areaKm2": 937.3
+  },
+  {
+    "id": "mpio-05490",
+    "name": "Necoclí",
+    "daneCode": "05490",
+    "subregion": "Urabá",
+    "areaKm2": 1255.5
+  },
+  {
+    "id": "mpio-05501",
+    "name": "Olaya",
+    "daneCode": "05501",
+    "subregion": "Occidente",
+    "areaKm2": 87.0
+  },
+  {
+    "id": "mpio-05543",
+    "name": "Peque",
+    "daneCode": "05543",
+    "subregion": "Occidente",
+    "areaKm2": 434.1
+  },
+  {
+    "id": "mpio-05541",
+    "name": "Peñol",
+    "daneCode": "05541",
+    "subregion": "Antioquia",
+    "areaKm2": 118.3
+  },
+  {
+    "id": "mpio-05576",
+    "name": "Pueblorrico",
+    "daneCode": "05576",
+    "subregion": "Suroeste",
+    "areaKm2": 75.4
+  },
+  {
+    "id": "mpio-05579",
+    "name": "Puerto Berrío",
+    "daneCode": "05579",
+    "subregion": "Magdalena Medio",
+    "areaKm2": 1220.1
+  },
+  {
+    "id": "mpio-05585",
+    "name": "Puerto Nare",
+    "daneCode": "05585",
+    "subregion": "Magdalena Medio",
+    "areaKm2": 669.3
+  },
+  {
+    "id": "mpio-05591",
+    "name": "Puerto Triunfo",
+    "daneCode": "05591",
+    "subregion": "Oriente",
+    "areaKm2": 369.6
+  },
+  {
+    "id": "mpio-05604",
+    "name": "Remedios",
+    "daneCode": "05604",
+    "subregion": "Nordeste",
+    "areaKm2": 1989.2
+  },
+  {
+    "id": "mpio-05607",
+    "name": "Retiro",
+    "daneCode": "05607",
+    "subregion": "Oriente",
+    "areaKm2": 243.6
+  },
+  {
+    "id": "mpio-05615",
+    "name": "Rionegro",
+    "daneCode": "05615",
+    "subregion": "Oriente",
+    "areaKm2": 195.9
+  },
+  {
+    "id": "mpio-05628",
+    "name": "Sabanalarga",
+    "daneCode": "05628",
+    "subregion": "Occidente",
+    "areaKm2": 265.8
+  },
+  {
+    "id": "mpio-05631",
+    "name": "Sabaneta",
+    "daneCode": "05631",
+    "subregion": "Valle de Aburrá",
+    "areaKm2": 16.0
+  },
+  {
+    "id": "mpio-05642",
+    "name": "Salgar",
+    "daneCode": "05642",
+    "subregion": "Suroeste",
+    "areaKm2": 288.2
+  },
+  {
+    "id": "mpio-05647",
+    "name": "San Andrés de Cuerquía",
+    "daneCode": "05647",
+    "subregion": "Norte",
+    "areaKm2": 218.7
+  },
+  {
+    "id": "mpio-05649",
+    "name": "San Carlos",
+    "daneCode": "05649",
+    "subregion": "Oriente",
+    "areaKm2": 717.8
+  },
+  {
+    "id": "mpio-05652",
+    "name": "San Francisco",
+    "daneCode": "05652",
+    "subregion": "Oriente",
+    "areaKm2": 356.3
+  },
+  {
+    "id": "mpio-05656",
+    "name": "San Jerónimo",
+    "daneCode": "05656",
+    "subregion": "Occidente",
+    "areaKm2": 161.3
+  },
+  {
+    "id": "mpio-05658",
+    "name": "San José de la Montaña",
+    "daneCode": "05658",
+    "subregion": "Norte",
+    "areaKm2": 126.1
+  },
+  {
+    "id": "mpio-05659",
+    "name": "San Juan de Urabá",
+    "daneCode": "05659",
+    "subregion": "Urabá",
+    "areaKm2": 252.0
+  },
+  {
+    "id": "mpio-05660",
+    "name": "San Luis",
+    "daneCode": "05660",
+    "subregion": "Oriente",
+    "areaKm2": 425.6
+  },
+  {
+    "id": "mpio-05665",
+    "name": "San Pedro de Urabá",
+    "daneCode": "05665",
+    "subregion": "Urabá",
+    "areaKm2": 602.5
+  },
+  {
+    "id": "mpio-05664",
+    "name": "San Pedro de los Milagros",
+    "daneCode": "05664",
+    "subregion": "Oriente",
+    "areaKm2": 220.9
+  },
+  {
+    "id": "mpio-05667",
+    "name": "San Rafael",
+    "daneCode": "05667",
+    "subregion": "Antioquia",
+    "areaKm2": 363.9
+  },
+  {
+    "id": "mpio-05670",
+    "name": "San Roque",
+    "daneCode": "05670",
+    "subregion": "Suroeste",
+    "areaKm2": 424.9
+  },
+  {
+    "id": "mpio-05674",
+    "name": "San Vicente Ferrer",
+    "daneCode": "05674",
+    "subregion": "Oriente",
+    "areaKm2": 230.5
+  },
+  {
+    "id": "mpio-05679",
+    "name": "Santa Bárbara",
+    "daneCode": "05679",
+    "subregion": "Antioquia",
+    "areaKm2": 196.2
+  },
+  {
+    "id": "mpio-05042",
+    "name": "Santa Fé de Antioquia",
+    "daneCode": "05042",
+    "subregion": "Occidente",
+    "areaKm2": 525.6
+  },
+  {
+    "id": "mpio-05686",
+    "name": "Santa Rosa de Osos",
+    "daneCode": "05686",
+    "subregion": "Norte",
+    "areaKm2": 864.8
+  },
+  {
+    "id": "mpio-05690",
+    "name": "Santo Domingo",
+    "daneCode": "05690",
+    "subregion": "Nordeste",
+    "areaKm2": 266.0
+  },
+  {
+    "id": "mpio-05736",
+    "name": "Segovia",
+    "daneCode": "05736",
+    "subregion": "Nordeste",
+    "areaKm2": 1127.3
+  },
+  {
+    "id": "mpio-05756",
+    "name": "Sonsón",
+    "daneCode": "05756",
+    "subregion": "Oriente",
+    "areaKm2": 1346.4
+  },
+  {
+    "id": "mpio-05761",
+    "name": "Sopetrán",
+    "daneCode": "05761",
+    "subregion": "Occidente",
+    "areaKm2": 219.1
+  },
+  {
+    "id": "mpio-05790",
+    "name": "Tarazá",
+    "daneCode": "05790",
+    "subregion": "Suroeste",
+    "areaKm2": 1149.0
+  },
+  {
+    "id": "mpio-05792",
+    "name": "Tarso",
+    "daneCode": "05792",
+    "subregion": "Bajo Cauca",
+    "areaKm2": 120.5
+  },
+  {
+    "id": "mpio-05809",
+    "name": "Titiribí",
+    "daneCode": "05809",
+    "subregion": "Suroeste",
+    "areaKm2": 140.3
+  },
+  {
+    "id": "mpio-05819",
+    "name": "Toledo",
+    "daneCode": "05819",
+    "subregion": "Norte",
+    "areaKm2": 122.6
+  },
+  {
+    "id": "mpio-05837",
+    "name": "Turbo",
+    "daneCode": "05837",
+    "subregion": "Suroeste",
+    "areaKm2": 2919.5
+  },
+  {
+    "id": "mpio-05789",
+    "name": "Támesis",
+    "daneCode": "05789",
+    "subregion": "Suroeste",
+    "areaKm2": 252.2
+  },
+  {
+    "id": "mpio-05842",
+    "name": "Uramita",
+    "daneCode": "05842",
+    "subregion": "Occidente",
+    "areaKm2": 265.9
+  },
+  {
+    "id": "mpio-05847",
+    "name": "Urrao",
+    "daneCode": "05847",
+    "subregion": "Suroeste",
+    "areaKm2": 2563.4
+  },
+  {
+    "id": "mpio-05854",
+    "name": "Valdivia",
+    "daneCode": "05854",
+    "subregion": "Norte",
+    "areaKm2": 567.7
+  },
+  {
+    "id": "mpio-05856",
+    "name": "Valparaíso",
+    "daneCode": "05856",
+    "subregion": "Nordeste",
+    "areaKm2": 126.2
+  },
+  {
+    "id": "mpio-05858",
+    "name": "Vegachí",
+    "daneCode": "05858",
+    "subregion": "Suroeste",
+    "areaKm2": 525.0
+  },
+  {
+    "id": "mpio-05861",
+    "name": "Venecia",
+    "daneCode": "05861",
+    "subregion": "Antioquia",
+    "areaKm2": 139.7
+  },
+  {
+    "id": "mpio-05873",
+    "name": "Vigía del Fuerte",
+    "daneCode": "05873",
+    "subregion": "Urabá",
+    "areaKm2": 1661.9
+  },
+  {
+    "id": "mpio-05885",
+    "name": "Yalí",
+    "daneCode": "05885",
+    "subregion": "Norte",
+    "areaKm2": 440.9
+  },
+  {
+    "id": "mpio-05887",
+    "name": "Yarumal",
+    "daneCode": "05887",
+    "subregion": "Nordeste",
+    "areaKm2": 738.3
+  },
+  {
+    "id": "mpio-05890",
+    "name": "Yolombó",
+    "daneCode": "05890",
+    "subregion": "Nordeste",
+    "areaKm2": 1012.5
+  },
+  {
+    "id": "mpio-05893",
+    "name": "Yondó",
+    "daneCode": "05893",
+    "subregion": "Magdalena Medio",
+    "areaKm2": 1895.0
+  },
+  {
+    "id": "mpio-05895",
+    "name": "Zaragoza",
+    "daneCode": "05895",
+    "subregion": "Bajo Cauca",
+    "areaKm2": 1167.4
+  }
+]

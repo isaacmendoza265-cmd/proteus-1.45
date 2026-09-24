@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>PROTEUS 1.2 — Informe Final Técnico y Operativo</title>
+<style>
+  @page {
+    size: A4 landscape;
+    margin: 0;
+  }
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: #030712;
+    color: #f8fafc;
+    font-size: 11px;
+    line-height: 1.35;
+  }
+  .font-mono {
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  }
+
+  .slide {
+    width: 297mm;
+    height: 210mm;
+    max-height: 210mm;
+    position: relative;
+    page-break-after: always;
+    break-after: page;
+    overflow: hidden;
+    padding: 10mm 14mm;
+    background: radial-gradient(circle at 85% 15%, rgba(14, 165, 233, 0.15) 0%, transparent 45%),
+                radial-gradient(circle at 15% 85%, rgba(99, 102, 241, 0.12) 0%, transparent 45%),
+                radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.08) 0%, transparent 55%),
+                #030712;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  /* Grid overlay */
+  .grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image: 
+      linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 30px 30px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .slide-header {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 7px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
+  .slide-title-group h1 {
+    font-size: 18px;
+    font-weight: 900;
+    color: #ffffff;
+    letter-spacing: -0.3px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .slide-title-group p {
+    font-size: 10px;
+    color: #94a3b8;
+    margin-top: 1px;
+  }
+
+  .slide-content {
+    position: relative;
+    z-index: 10;
+    flex: 1;
+    margin: 8px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .slide-footer {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 5px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 9px;
+    font-family: monospace;
+    color: #64748b;
+  }
+
+  /* Glassmorphism Cards */
+  .glass-card {
+    background: rgba(15, 23, 42, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    padding: 10px 12px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), inset 0 1px 1px 0 rgba(255, 255, 255, 0.15);
+  }
+
+  .glass-card-accent {
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid rgba(56, 189, 248, 0.35);
+    border-radius: 12px;
+    padding: 10px 12px;
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.12), inset 0 1px 1px 0 rgba(255, 255, 255, 0.25);
+  }
+
+  /* Badges */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 7px;
+    border-radius: 9999px;
+    font-size: 8.5px;
+    font-family: monospace;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .badge-sky { background: rgba(14, 165, 233, 0.2); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4); }
+  .badge-amber { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(251, 191, 36, 0.4); }
+  .badge-emerald { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(52, 211, 153, 0.4); }
+  .badge-indigo { background: rgba(99, 102, 241, 0.2); color: #818cf8; border: 1px solid rgba(129, 140, 248, 0.4); }
+  .badge-pink { background: rgba(244, 63, 94, 0.2); color: #fb7185; border: 1px solid rgba(251, 113, 133, 0.4); }
+
+  /* Structured tool layout: Qué Hace vs Cómo lo Hace */
+  .tool-block {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    height: 100%;
+  }
+  .tool-title {
+    font-size: 11.5px;
+    font-weight: 800;
+    color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding-bottom: 4px;
+  }
+  .section-tag {
+    font-size: 8.5px;
+    font-family: monospace;
+    font-weight: 800;
+    text-transform: uppercase;
+    padding: 1px 5px;
+    border-radius: 4px;
+  }
+  .tag-what { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); }
+  .tag-how { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+  .tag-ui { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+
+  .text-box {
+    font-size: 9.8px;
+    color: #cbd5e1;
+    line-height: 1.35;
+  }
+  .text-box strong {
+    color: #ffffff;
+  }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px; }
+</style>
+</head>
+<body>
+
+<!-- SLIDE 1: PORTADA Y RESUMEN ARQUITECTÓNICO -->
+<div class="slide">
+  <div class="grid-bg"></div>
+  <div class="slide-header">
+    <div class="slide-title-group">
+      <h1>CMT PROTEUS 1.2 — CENTRO ESTRATÉGICO DE CAMPAÑAS</h1>
+      <p>Informe Técnico Final y Manual de Funcionamiento Integral de la Suite</p>
+    </div>
+    <div style="display: flex; gap: 6px;">
+      <span class="badge badge-sky">Proteus v1.2</span>
+      <span class="badge badge-amber">Gemini 3.8 Flash</span>
+      <span class="badge badge-emerald">DANE / Registraduría</span>
+    </div>
+  </div>
+
+  <div class="slide-content">
+    <!-- Top Summary Banner -->
+    <div class="glass-card-accent" style="display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <div style="font-size: 13px; font-weight: 900; color: #38bdf8;">
+          OBJETIVO GENERAL: Maximización de la Eficacia y Eficiencia Electoral
+        </div>
+        <div style="font-size: 10px; color: #cbd5e1; max-width: 820px; margin-top: 2px;">
+          Proteus 1.2 integra inteligencia geoespacial continua (5 escalas GeoJSON), segmentación demográfica 4D (54 cohortes combinatorias), dirección de contenido basada en sesgos cognitivos (Teoría de las Perspectivas), consultoría multimedia/semiótica y una cuadrilla de 5 agentes autónomos con memoria persistente.
+        </div>
+      </div>
+      <div style="text-align: right; font-family: monospace;">
+        <div style="font-size: 10px; color: #94a3b8;">Circunscripciones:</div>
+        <div style="font-size: 11px; font-weight: 800; color: #34d399;">Nacional &bull; Departamental &bull; Municipal</div>
+      </div>
+    </div>
+
+    <!-- 3 Core Architectural Pillars -->
+    <div class="grid-3">
+      <div class="glass-card">
+        <div class="tool-title">
+          <span>1. PRINCIPIO DE PERSONALIZACIÓN UNIVERSAL</span>
+          <span class="badge badge-amber">Cualquier Perfil</span>
+        </div>
+        <div class="text-box" style="margin-top: 6px;">
+          <div style="margin-bottom: 4px;">
+            <span class="section-tag tag-what">QUÉ HACE</span>
+            Permite que el aplicativo se adapte instantáneamente a <strong>cualquier candidato, partido o ideología</strong>, reemplazando el perfil de muestra por defecto.
+          </div>
+          <div>
+            <span class="section-tag tag-how">CÓMO LO HACE</span>
+            Opera bajo dos vías: <strong>Vía Automatizada</strong> mediante Google Search Grounding con Gemini 3.8 Flash (búsqueda web en vivo de trayectoria pública) y <strong>Vía Manual Directa</strong> donde el estratega edita los 10 parámetros canónicos de campaña.
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-card">
+        <div class="tool-title">
+          <span>2. ARQUITECTURA GIS MULTI-ESCALA CONTINUA</span>
+          <span class="badge badge-emerald">5 Escalas DANE</span>
+        </div>
+        <div class="text-box" style="margin-top: 6px;">
+          <div style="margin-bottom: 4px;">
+            <span class="section-tag tag-what">QUÉ HACE</span>
+            Elimina los silos cartográficos tradicionales, permitiendo descender desde el país completo hasta la mesa de votación de un barrio sin cambiar de aplicación.
+          </div>
+          <div>
+            <span class="section-tag tag-how">CÓMO LO HACE</span>
+            Motor Leaflet vectorial con capas GeoJSON locales (0 dependencias de pago): Colombia (32 Dptos) &rarr; Antioquia &rarr; Valle de Aburrá &rarr; Medellín (16 Comunas + 5 Correg) &rarr; Microdatos E-24 históricos 2015-2023.
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-card">
+        <div class="tool-title">
+          <span>3. TRIPLE PROPÓSITO ESTRATÉGICO DE CAMPAÑA</span>
+          <span class="badge badge-indigo">Data + Cohortes + IA</span>
+        </div>
+        <div class="text-box" style="margin-top: 6px;">
+          <div style="margin-bottom: 4px;">
+            <span class="section-tag tag-what">QUÉ HACE</span>
+            Conecta la base fáctica territorial con la psicología del electorado y la producción discursiva de alto impacto para radio, redes y plaza pública.
+          </div>
+          <div>
+            <span class="section-tag tag-how">CÓMO LO HACE</span>
+            <strong>P1:</strong> Repositorio de 125 municipios antioqueños. <strong>P2:</strong> Motor matricial de 54 cohortes con cálculo de urnas reales. <strong>P3:</strong> Director de contenido calibrado con encuadres cognitivos de ganancia/pérdida.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pipeline Strip -->
+    <div class="glass-card" style="padding: 7px 12px; display: flex; justify-content: space-between; align-items: center; background: rgba(15, 23, 42, 0.45);">
+      <span style="font-family: monospace; font-weight: 800; color: #94a3b8; font-size: 9px;">FLUJO DE DATOS INTEGRADO:</span>
+      <span style="font-size: 9.5px; color: #38bdf8; font-weight: 700;">1. ADN Candidato &rarr;</span>
+      <span style="font-size: 9.5px; color: #34d399; font-weight: 700;">2. Diagnóstico GIS & Censo &rarr;</span>
+      <span style="font-size: 9.5px; color: #818cf8; font-weight: 700;">3. Cohorte 4D & Turnout &rarr;</span>
+      <span style="font-size: 9.5px; color: #fbbf24; font-weight: 700;">4. Briefs & Framing Persuasivo &rarr;</span>
+      <span style="font-size: 9.5px; color: #fb7185; font-weight: 700;">5. Cuadrilla Multi-Agente & Cloud Drive</span>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <div>PROYECTO PROTEUS 1.2 • INFORME TÉCNICO MAESTRO</div>
+    <div>PÁGINA 1 DE 8 • ARQUITECTURA INTEGRAL</div>
+  </div>
+</div>
+
+<!-- SLIDE 2: ÁMBITO NACIONAL Y PERSONALIZACIÓN UNIVERSAL -->
+<div class="slide">
+  <div class="grid-bg"></div>
+  <div class="slide-header">
+    <div class="slide-title-group">
+      <h1>DIMENSIÓN 1 — ÁMBITO NACIONAL, CANDIDATO Y DEMOSCOPIA</h1>
+      <p>Consolidación macro, herramientas de personalización universal y cálculo de curules</p>
+    </div>
+    <div style="display: flex; gap: 6px;">
+      <span class="badge badge-sky">NationalDashboardView</span>
+      <span class="badge badge-amber">CandidateProfileModal</span>
+      <span class="badge badge-emerald">D'Hondt Simulator</span>
+    </div>
+  </div>
+
+  <div class="slide-content">
+    <div class="grid-3" style="height: 100%;">
+      
+      <!-- Tool 1.1 -->
+      <div class="glass-card">
+        <div class="tool-block">
+          <div class="tool-title">
+            <span>Presidencia & 32 Departamentos</span>
+            <span class="badge badge-sky">Macro Territorial</span>
+          </div>
+          <div class="text-box">
+            <span class="section-tag tag-what">QUÉ HACE</span>
+            Monitor macro de los 39.2M de votantes del Censo Electoral colombiano. Agrupa los 32 departamentos en 6 macrorregiones estratégicas (Caribe, Centro, Pacífico, Eje Cafetero, Orinoquía, Amazonía) y mapea índices de gobernabilidad, participación y abstención histórica.
+          </div>
+          <div class="text-box">
+            <span class="section-tag tag-how">CÓMO LO HACE</span>
+            Almacena bases consolidadas de las elecciones 2018 y 2022. Cruza el caudal de votos urbanos vs. rurales y calcula la tasa de elasticidad electoral por departamento.
+          </div>
+          <div class="text-box" style="margin-top: auto; padding-top: 4px; border-top: 1px dashed rgba(255,255,255,0.1);">
+            <span class="section-tag tag-ui">REPRESENTACIÓN GRÁFICA</span>
+            Diales numéricos con retroiluminación cian/esmeralda, mapa vectorial SVG de Colombia con selector de departamentos y barras apiladas de bloques ideológicos.
+          </div>
+        </div>
+      </div>
+
+      <!-- Tool 1.2 -->
+      <div class="glass-card">
+        <div class="tool-block">
+          <div class="tool-title">
+            <span>Gestor de Perfil del Candidato</span>
+            <span class="badge badge-amber">Google Search + Manual</span>
+          </div>
+          <div class="text-box">
+            <span class="section-tag tag-what">QUÉ HACE</span>
+            Garantiza que Proteus sirva para <strong>cualquier persona</strong>. Administra el ADN político del candidato activo: nombre, afiliación partidista, pilares, tono narrativo, estilo oratorio y reporte fisonómico/colorimétrico.
+          </div>
+          <div class="text-box">
+            <span class="section-tag tag-how">CÓMO LO HACE</span>
+            1) <strong>Localizador Google Search</strong>: Invoca Gemini 3.8 Flash con <code>tools: [{ googleSearch: {} }]</code> para rastrear trayectoria pública y extraer 10 campos JSON. 2) <strong>Edición Manual</strong>: Formulario reactivo con persistencia inmediata en <code>localStorage</code> (clave <code>cmt_proteus_active_profile</code>).
+          </div>
+          <div class="text-box" style="margin-top: auto; padding-top: 4px; border-top: 1px dashed rgba(255,255,255,0.1);">
+            <span class="section-tag tag-ui">REPRESENTACIÓN GRÁFICA</span>
+            Píldora interactiva en la barra superior (accesible desde cualquier módulo), tarjeta pasaporte con avatar y modal Glassmorphic de 3 pestañas.
+          </div>
+        </div>
+      </div>
+
+      <!-- Tool 1.3 -->
+      <div class="glass-card">
+        <div class="tool-block">
+          <div class="tool-title">
+            <span>Simulador D'Hondt & Demoscopia</span>
+            <span class="badge badge-emerald">Algoritmo Legal</span>
+          </div>
+          <div class="text-box">
+            <span class="section-tag tag-what">QUÉ HACE</span>
+            1) Extrae y procesa encuestas políticas en PDF/texto mediante OCR con IA. 2) Simula matemáticamente la cifra repartidora y el umbral electoral del 50% para listas a Senado, Cámara, Asamblea y Concejo.
+          </div>
+          <div class="text-box">
+            <span class="section-tag tag-how">CÓMO LO HACE</span>
+            Aplica el algoritmo D'Hondt dividiendo los votos de listas cerradas/abiertas entre divisores enteros sucesivos {1, 2, 3... N}. Determina el cociente de corte y descarta listas que no superan el umbral legal colombiano.
+          </div>
+          <div class="text-box" style="margin-top: auto; padding-top: 4px; border-top: 1px dashed rgba(255,255,255,0.1);">
+            <span class="section-tag tag-ui">REPRESENTACIÓN GRÁFICA</span>
+            Sliders de votación en tiempo real, barra de umbral con semáforo verde/rojo y tabla interactiva con celdas de curul destacadas en esmeralda.
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <div>PROYECTO PROTEUS 1.2 • INFORME TÉCNICO MAESTRO</div>
+    <div>PÁGINA 2 DE 8 • ÁMBITO NACIONAL Y CANDIDATOS</div>
+  </div>
+</div>
+
+<!-- SLIDE 3: ARQUITECTURA GIS MULTI-ESCALA -->
+<div class="slide">
+  <div class="grid-bg"></div>
+  <div class="slide-header">
+    <div class="slide-title-group">
+      <h1>DIMENSIÓN 2 — ARQUITECTURA GIS MULTI-ESCALA (5 ESCALAS GEOJSON)</h1>
+      <p>Navegación espacial fluida, polígonos locales y coropletas temáticas en tiempo real</p>
+    </div>
+    <div style="display: flex; gap: 6px;">
+      <span class="badge badge-emerald">MultiLevelZoomMap</span>
+      <span class="badge badge-sky">Leaflet Vector Engine</span>
+      <span class="badge badge-amber">4 Capas Temáticas</span>
+    </div>
+  </div>
+
+  <div class="slide-content">
+    <div class="grid-2" style="height: 100%;">
+      
+      <!-- Left: How the 5 Scales Work -->
+      <div class="glass-card">
+        <div class="tool-title">
+          <span>JERARQUÍA DE LAS 5 ESCALAS CARTOGRÁFICAS</span>
+          <span class="badge badge-emerald">Local GeoJSON</span>
+        </div>
+        <div class="text-box" style="margin-top: 6px; display: flex; flex-direction: column; gap: 6px;">
+          <div>
+            <strong style="color: #38bdf8;">Escala 1 — Nacional (Colombia):</strong> 32 Departamentos y Bogotá D.C. Centroides y bounds calibrados para visión de conjunto nacional.
+          </div>
+          <div>
+            <strong style="color: #34d399;">Escala 2 — Departamental (Antioquia):</strong> Permite alternar entre sus 9 Subregiones o el mapa granular de los 125 Municipios oficiales DIVIPOLA.
+          </div>
+          <div>
+            <strong style="color: #818cf8;">Escala 3 — Metropolitana (Valle de Aburrá):</strong> Los 10 municipios conurbados (Medellín, Bello, Itagüí, Envigado, Sabaneta, Caldas, La Estrella, Copacabana, Girardota, Barbosa).
+          </div>
+          <div>
+            <strong style="color: #fbbf24;">Escala 4 — Municipal (Medellín / AMVA):</strong> División interna en 16 Comunas oficiales urbanas + 5 Corregimientos rurales (21 polígonos validados).
+          </div>
+          <div>
+            <strong style="color: #fb7185;">Escala 5 — Hiperlocal (Comunas & Barrios):</strong> Desagregación a nivel de barrios con enlace directo a las mesas de votación y formularios E-24.
+          </div>
+          <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); padding: 5px 8px; border-radius: 8px; font-size: 9px;">
+            <strong>CÓMO FUNCIONA TÉCNICAMENTE:</strong> Utiliza <code>L.geoJSON</code> sobre Leaflet con capas locales en TypeScript (sin costos de Mapbox ni Google Maps). Los eventos <code>mouseover</code> iluminan el polígono en cian neón (<code>#38bdf8</code>) y <code>click</code> ejecuta una animación de cámara <code>map.flyToBounds</code> con ajuste dinámico de zoom.
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: The 4 Thematic Metric Layers -->
+      <div class="glass-card">
+        <div class="tool-title">
+          <span>LAS 4 CAPAS MÉTRICAS TEMÁTICAS (COROPLETAS)</span>
+          <span class="badge badge-amber">Filtros en Vivo</span>
+        </div>
+        <div class="text-box" style="margin-top: 6px; display: flex; flex-direction: column; gap: 6px;">
+          <div style="background: rgba(14, 165, 233, 0.08); border: 1px solid rgba(14, 165, 233, 0.25); padding: 5px 8px; border-radius: 8px;">
+            <strong style="color: #38bdf8;">1. Capa Electoral (Predominio Partidista):</strong>
+            Colorea cada entidad según la fuerza ganadora: Creemos/Centro Democrático (azul cian/marino), Liberal (rojo), Conservador (azul), Pacto Histórico (púrpura), Alianza Verde (verde).
+          </div>
+          <div style="background: rgba(99, 102, 241, 0.08); border: 1px solid rgba(99, 102, 241, 0.25); padding: 5px 8px; border-radius: 8px;">
+            <strong style="color: #818cf8;">2. Capa Demográfica (Población & Estrato):</strong>
+            Clasifica por volumen de votantes y estrato preponderante: Alto (Estratos 5-6 en verde esmeralda), Medio (Estratos 3-4 en cian) y Bajo (Estratos 1-2 en ámbar).
+          </div>
+          <div style="background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.25); padding: 5px 8px; border-radius: 8px;">
+            <strong style="color: #f87171;">3. Capa NBI (Pobreza Multidimensional):</strong>
+            Semáforo de vulnerabilidad social según DANE: Crítico >40% (rojo), Alto 25-40% (naranja), Medio 15-25% (ámbar), Consolidado <10% (verde esmeralda).
+          </div>
+          <div style="background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.25); padding: 5px 8px; border-radius: 8px;">
+            <strong style="color: #fbbf24;">4. Capa de Riesgo Electoral:</strong>
+            Mapea alertas de orden público, abstención extrema y alertas institucionales (Bajo, Medio, Alto, Crítico).
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <div>PROYECTO PROTEUS 1.2 • INFORME TÉCNICO MAESTRO</div>
+    <div>PÁGINA 3 DE 8 • ARQUITECTURA CARTOGRÁFICA GIS</div>
+  </div>
+</div>
+
+<!-- SLIDE 4: MICRODATOS E-24 Y DIORAMAS 3D -->
+<div class="slide">
+  <div class="grid-bg"></div>
+  <div class="slide-header">
+    <div class="slide-title-group">
+      <h1>DIMENSIÓN 2B — MICRODATOS E-24 HISTÓRICOS Y DIORAMAS 3D URBANOS</h1>
+      <p>Auditoría de urnas mesa a mesa 2015-2023 y volumetría urbana tridimensional</p>
+    </div>
+    <div style="display: flex; gap: 6px;">
+      <span class="badge badge-amber">E24HistoricalViewer</span>
+      <span class="badge badge-purple">Municipio3DDiorama</span>
+      <span class="badge badge-sky">CommuneDeepAnalyticsDrawer</span>
+    </div>
+  </div>
+
+  <div class="slide-content">
+    <div class="grid-3" style="height: 100%;">
+      
+      <!-- Tool 2B.1 -->
+      <div class="glass-card">
+        <div class="tool-block">
+          <div class="tool-title">
+            <span>Visor Histórico de Formularios E-24</span>
+            <span class="badge badge-amber">Registraduría</span>
+          </div>
+          <div class="text-box">
+            <span class="section-tag tag-what">QUÉ HACE</span>
+            Permite inspeccionar los votos oficiales de los comicios electorales 2015, 2018, 2019, 2022 y 2023 desglosados <strong>puesto por puesto y mesa por mesa</strong> para cualquier comuna o municipio seleccionado.
+          </div>
+          <div class="text-box">
+            <span class="section-tag tag-how">CÓMO LO HACE</span>
+            Indexa bases de datos tabulares de la Registraduría. Calcula la volatilidad del voto entre elecciones, detecta "mesas bisagra" con alto voto indeciso y alerta sobre mesas con picos anómalos de abstención.
+          </div>
+          <div class="text-box" style="margin-top: auto; padding-top: 4px; border-top: 1px dashed rgba(255,255,255,0.1);">
+            <span class="section-tag tag-ui">REPRESENTACIÓN GRÁFICA</span>
+            Tabla interactiva dentro del drawer lateral, semáforos de fidelidad electoral y gráficos comparativos de evolución de caudal por partido.
+          </div>
+        </div>
+      </div>
+
+      <!-- Tool 2B.2 -->
+      <div class="glass-card">
+        <div class="tool-block">
+          <div class="tool-title">
+            <span>Cajón Analítico Deslizante</span>
+            <span class="badge badge-sky">Deep Analytics Drawer</span>
+          </div>
+          <div class="text-box">
+            <span class="section-tag tag-what">QUÉ HACE</span>
+            Se despliega automáticamente al hacer clic sobre cualquier polígono comunal o municipal para mostrar una radiografía integral sin tapar la visión general del mapa.
+          </div>
+          <div class="text-box">
+            <span class="section-tag tag-how">CÓMO LO HACE</span>
+            Consolida: 1) Censo electoral y puestos; 2) Índice de Pobreza Multidimensional (IPM); 3) Tasa de homicidios y delitos por 100k hab; 4) Acceso directo al visor de E-24 y al diorama 3D.
+          </div>
+          <div class="text-box" style="margin-top: auto; padding-top: 4px; border-top: 1px dashed rgba(255,255,255,0.1);">
+            <span class="section-tag tag-ui">REPRESENTACIÓN GRÁFICA</span>
+            Panel lateral derecho con ancho de 550px, desenfoque <code>backdrop-blur-3xl</code>, badges de estado y botones de acción rápida.
+          </div>
+        </div>
+      </div>
+
+      <!-- Tool 2B.3 -->
+      <div class="glass-card">
+        <div class="tool-block">
+          <div class="tool-title">
+            <span>Dioramas 3D Territoriales</span>
+            <span class="badge badge-purple">Three.js / CSS 3D</span>
+          </div>
+          <div class="text-box">
+            <span class="section-tag tag-what">QUÉ HACE</span>
+            Representa volumétricamente la topografía, cuencas viales y concentración urbana vertical en municipios de alta densidad como Medellín, Rionegro y Bello.
+          </div>
+          <div class="text-box">
+            <span class="section-tag tag-how">CÓMO LO HACE</span>
+            Renderiza una malla tridimensional axonométrica con sombreado dinámico, permitiendo rotar, inclinar y analizar la distribución de electores según la cota de altura y laderas urbanas.
+          </div>
+          <div class="text-box" style="margin-top: auto; padding-top: 4px; border-top: 1px dashed rgba(255,255,255,0.1);">
+            <span class="section-tag tag-ui">REPRESENTACIÓN GRÁFICA</span>
+            Lienzo 3D con perspectiva isométrica interactiva, pines flotantes con datos censales y efectos de iluminación ambiental.
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <div>PROYECTO PROTEUS 1.2 • INFORME TÉCNICO MAESTRO</div>
+    <div>PÁGINA 4 DE 8 • MICRODATOS Y VISUALIZACIÓN 3D</div>
+  </div>
+</div>
+
+<!-- SLIDE 5: PROPÓSITO 1 & 2: REPOSITORIO Y SEGMENTACIÓN 4D -->
+<div class="slide">
+  <div class="grid-bg"></div>
+  <div class="slide-header">
+    <div class="slide-title-group">
+      <h1>DIMENSIÓN 3A — REPOSITORIO MUNICIPAL Y SEGMENTACIÓN DEMOGRÁFICA 4D</h1>
+      <p>Base fáctica territorial y matriz matemática exacta de 54 cohortes combinatorias</p>
+    </div>
+    <div style="display: flex; gap: 6px;">
+      <span class="badge badge-sky">MunicipalRepository</span>
+      <span class="badge badge-indigo">VoterDemographicsService</span>
+      <span class="badge badge-amber">54 Cohortes Exactas</span>
+    </div>
+  </div>
+
+  <div class="slide-content">
+    <div class="grid-2" style="height: 100%;">
+      
+      <!-- Tool 3.1 -->
+      <div class="glass-card">
+        <div class="tool-block">
+          <div class="tool-title">
+            <span>PROPÓSITO 1: Repositorio Municipal Universal</span>
+            <span class="badge badge-sky">125 Municipios</span>
+          </div>
+          <div class="text-box">
+            <span class="section-tag tag-what">QUÉ HACE</span>
+            Almacena fichas socioeconómicas y políticas estandarizadas para los 125 municipios de Antioquia. Sirve como el "cerebro factual" que alimenta todas las respuestas discursivas de Gemini.
+          </div>
+          <div class="text-box">
+            <span class="section-tag tag-how">CÓMO LO HACE</span>
+            Gestionado por <code>municipalRepositoryService.ts</code>. Registra: censo, mesas, NBI, tasa de criminalidad, actividad económica dominante, estado de servicios públicos y actores políticos vigentes. Genera el contexto territorial (<code>buildContextPrompt</code>) inyectado en cada consulta de IA.
+          </div>
+          <div class="text-box" style="margin-top: auto; padding-top: 4px; border-top: 1px dashed rgba(255,255,255,0.1);">
+            <span class="section-tag tag-ui">REPRESENTACIÓN GRÁFICA</span>
+            Explorador en grid con filtros por subregión, barra de búsqueda con autocomplete, tarjetas municipales con badges de prioridad y modal de ficha técnica en profundidad.
+          </div>
+        </div>
+      </div>
+
+      <!-- Tool 3.2 -->
+      <div class="glass-card">
+        <div class="tool-block">
+          <div class="tool-title">
+            <span>PROPÓSITO 2: Motor de Segmentación 4D (54 Cohortes)</span>
+            <span class="badge badge-indigo">Espacio Muestral 2x3x3x3</span>
+          </div>
+          <div class="text-box">
+            <span class="section-tag tag-what">QUÉ HACE</span>
+            Cuantifica con exactitud matemática el universo electoral en cualquier circunscripción cruzando las 4 variables solicitadas: <strong>Sexo (2) &times; Edad (3) &times; Estrato (3) &times; Educación (3) = 54 cohortes demográficas mutuamente excluyentes</strong>.
+          </div>
+          <div class="text-box">
+            <span class="section-tag tag-how">CÓMO LO HACE</span>
+            1) Pondera el censo local con matrices DANE ajustadas por NBI territorial. 2) Modela el <em>Turnout</em> (propensión real a votar en urnas). 3) Calcula votos esperados (<code>Censo &times; Turnout</code>). 4) Asigna afinidad con el candidato activo y activa micro-targeting con Gemini 3.8 Flash.
+          </div>
+          <div class="text-box" style="margin-top: auto; padding-top: 4px; border-top: 1px dashed rgba(255,255,255,0.1);">
+            <span class="section-tag tag-ui">REPRESENTACIÓN GRÁFICA</span>
+            Panel de 4 cuadrantes interactivos con pills, barra de resumen cuantitativo en tiempo real, tarjeta de diagnóstico con dial de afinidad y tabla completa de 54 filas.
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <div>PROYECTO PROTEUS 1.2 • INFORME TÉCNICO MAESTRO</div>
+    <div>PÁGINA 5 DE 8 • REPOSITORIO Y SEGMENTACIÓN 4D</div>
+  </div>
+</div>
+
+<!-- SLIDE 6: PROPÓSITO 3: DIRECTOR DE CONTENIDO & SESGOS COGNITIVOS -->
+<div class="slide">
+  <div class="grid-bg"></div>
+  <div class="slide-header">
+    <div class="slide-title-group">
+      <h1>DIMENSIÓN 3B — DIRECTOR DE CONTENIDO Y PERSUASIÓN COGNITIVA</h1>
+      <p>Generación de discursos y briefs hiperlocales calibrados con la Teoría de las Perspectivas</p>
+    </div>
+    <div style="display: flex; gap: 6px;">
+      <span class="badge badge-amber">CampaignContentDirectorView</span>
+      <span class="badge badge-sky">Kahneman & Tversky Framing</span>
+      <span class="badge badge-emerald">PDF & Drive Export</span>
+    </div>
+  </div>
+
+  <div class="slide-content">
+    <div class="grid-2" style="height: 100%;">
+      
+      <!-- Content Director Logic -->
+      <div class="glass-card">
+        <div class="tool-block">
+          <div class="tool-title">
+            <span>PROPÓSITO 3: Director de Contenido Estratégico</span>
+            <span class="badge badge-amber">Briefs de Campaña</span>
+          </div>
+          <div class="text-box">
+            <span class="section-tag tag-what">QUÉ HACE</span>
+            Genera piezas de comunicación política hiperlocales adaptadas a 5 formatos clave: <strong>Video Corto (TikTok/Reels), Discurso de Plaza Pública, Mensaje de WhatsApp Comunitario, Comunicado de Prensa y Réplica de Debate</strong>.
+          </div>
+          <div class="text-box">
+            <span class="section-tag tag-how">CÓMO LO HACE</span>
+            Construye un prompt de alta ingeniería combinando: el municipio seleccionado, los datos del censo y NBI, el perfil del candidato activo (nombre, tono, estilo), la audiencia objetivo y el encuadre cognitivo. Genera un brief estructurado en: 1) Objetivo; 2) Hook de 3 segundos; 3) 2 Cifras DANE locales; 4) Propuesta de valor; 5) Manejo de objeción.
+          </div>
+          <div class="text-box" style="margin-top: auto; padding-top: 4px; border-top: 1px dashed rgba(255,255,255,0.1);">
+            <span class="section-tag tag-ui">REPRESENTACIÓN GRÁFICA</span>
+            Formulario con selects Glassmorphic, visualizador de brief en Markdown con citas locales resaltadas y botones para copiar, descargar en PDF (`jsPDF`) o respaldar en Google Drive.
+          </div>
+        </div>
+      </div>
+
+      <!-- Cognitive Framing Protocols -->
+      <div class="glass-card">
+        <div class="tool-title">
+          <span>ENCUADRES DE LA TEORÍA DE LAS PERSPECTIVAS (PA-003)</span>
+          <span class="badge badge-sky">Sesgos Psicológicos</span>
+        </div>
+        <div class="text-box" style="display: flex; flex-direction: column; gap: 6px;">
+          <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25); padding: 6px 8px; border-radius: 8px;">
+            <strong style="color: #34d399;">1. Enfoque de Ganancia y Esperanza (Gain Framing):</strong>
+            Apela al optimismo movilizador, crecimiento económico, bienestar familiar y conquistas colectivas de futuro. Ideal para votantes jóvenes y sectores productivos.
+          </div>
+          <div style="background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.25); padding: 6px 8px; border-radius: 8px;">
+            <strong style="color: #f87171;">2. Enfoque de Pérdida y Protección (Loss Aversion Framing):</strong>
+            Basado en la aversión a la pérdida: centra el mensaje en lo que las familias pueden perder si gana la improvisación (seguridad, patrimonio, empleo). Muy efectivo en adultos mayores y comerciantes.
+          </div>
+          <div style="background: rgba(56, 189, 248, 0.08); border: 1px solid rgba(56, 189, 248, 0.25); padding: 6px 8px; border-radius: 8px;">
+            <strong style="color: #38bdf8;">3. Enfoque de Equilibrio Prospectivo (Diagnóstico + Esperanza):</strong>
+            Contraste cognitivo inmediato: evidencia el costo de la inacción o del deterioro actual (pérdida) y acto seguido presenta la solución del candidato como la salida certera (ganancia).
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <div>PROYECTO PROTEUS 1.2 • INFORME TÉCNICO MAESTRO</div>
+    <div>PÁGINA 6 DE 8 • DIRECTOR DE CONTENIDO Y COGNICIÓN</div>
+  </div>
+</div>
+
+<!-- SLIDE 7: MULTIMEDIA Y SEMIÓTICA VISUAL -->
+<div class="slide">
+  <div class="grid-bg"></div>
+  <div class="slide-header">
+    <div class="slide-title-group">
+      <h1>DIMENSIÓN 4 — ESTUDIO MULTIMEDIA Y SEMIÓTICA POLÍTICA</h1>
+      <p>Auditoría de video/oratoria con visión IA, colorimetría fisonómica y lenguaje corporal</p>
+    </div>
+    <div style="display: flex; gap: 6px;">
+      <span class="badge badge-pink">CandidateMultimediaStudioView</span>
+      <span class="badge badge-purple">CandidateVideoAnalyzer</span>
+      <span class="badge badge-amber">Colorimetría Política</span>
+    </div>
+  </div>
+
+  <div class="slide-content">
+    <div class="grid-3" style="height: 100%;">
+      
+      <!-- Tool 4.1 -->
+      <div class="glass-card">
+        <div class="tool-block">
+          <div class="tool-title">
+            <span>Analizador de Video & Oratoria</span>
+            <span class="badge badge-pink">Visión Multimodal</span>
+          </div>
+          <div class="text-box">
+            <span class="section-tag tag-what">QUÉ HACE</span>
+            Evalúa discursos grabados en video del candidato para auditar la cadencia verbal, dicción, muletillas, pausas enfáticas, gesticulación de manos y contacto visual con la cámara.
+          </div>
+          <div class="text-box">
+            <span class="section-tag tag-how">CÓMO LO HACE</span>
+            Procesa fragmentos de video con modelos multimodales Gemini. Calcula palabras por minuto (PPM) recomendadas (130-150 PPM) y genera un radar de efectividad en 5 ejes: Claridad, Energía, Empatía, Autoridad y Emoción.
+          </div>
+          <div class="text-box" style="margin-top: auto; padding-top: 4px; border-top: 1px dashed rgba(255,255,255,0.1);">
+            <span class="section-tag tag-ui">REPRESENTACIÓN GRÁFICA</span>
+            Reproductor integrado, gráfico de radar, lista de muletillas detectadas con marcas de tiempo y recomendaciones de entonación.
+          </div>
+        </div>
+      </div>
+
+      <!-- Tool 4.2 -->
+      <div class="glass-card">
+        <div class="tool-block">
+          <div class="tool-title">
+            <span>Colorimetría y Fototipo</span>
+            <span class="badge badge-purple">Estaciones Cromáticas</span>
+          </div>
+          <div class="text-box">
+            <span class="section-tag tag-what">QUÉ HACE</span>
+            Determina la estación cromática del candidato (Invierno, Verano, Otoño, Primavera) y prescribe paletas de vestuario con códigos HEX exactos.
+          </div>
+          <div class="text-box">
+            <span class="section-tag tag-how">CÓMO LO HACE</span>
+            Analiza el contraste piel-cabello-ojos. Recomienda: 1) <strong>Colores de Autoridad</strong> (#0F172A, #1E3A8A) para debates y TV; 2) <strong>Colores de Cercanía</strong> (#0284C7, beige) para visitas a barrios; 3) Tonos a evitar por lavar el rostro ante cámaras.
+          </div>
+          <div class="text-box" style="margin-top: auto; padding-top: 4px; border-top: 1px dashed rgba(255,255,255,0.1);">
+            <span class="section-tag tag-ui">REPRESENTACIÓN GRÁFICA</span>
+            Muestrario de swatches de color con códigos HEX copiables, semáforo de vestuario (verde/rojo) y esquema de iluminación de 3 puntos.
+          </div>
+        </div>
+      </div>
+
+      <!-- Tool 4.3 -->
+      <div class="glass-card">
+        <div class="tool-block">
+          <div class="tool-title">
+            <span>Semiótica Visual y Postura</span>
+            <span class="badge badge-amber">Lenguaje No Verbal</span>
+          </div>
+          <div class="text-box">
+            <span class="section-tag tag-what">QUÉ HACE</span>
+            Audita los códigos no verbales de la puesta en escena política: posición de hombros, posición de manos (cúpula de poder de Merkel vs. brazos abiertos) y encuadres de cámara.
+          </div>
+          <div class="text-box">
+            <span class="section-tag tag-how">CÓMO LO HACE</span>
+            Evalúa la relación del sujeto con el entorno: fondos institucionales vs comunitarios, planos de cámara (primer plano para empatía, plano medio para propuestas) y distribución de banderas.
+          </div>
+          <div class="text-box" style="margin-top: auto; padding-top: 4px; border-top: 1px dashed rgba(255,255,255,0.1);">
+            <span class="section-tag tag-ui">REPRESENTACIÓN GRÁFICA</span>
+            Checklist interactivo de auditoría con badges aprobatorio/crítico y reporte descargable de semiótica visual.
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <div>PROYECTO PROTEUS 1.2 • INFORME TÉCNICO MAESTRO</div>
+    <div>PÁGINA 7 DE 8 • MULTIMEDIA Y SEMIÓTICA POLÍTICA</div>
+  </div>
+</div>
+
+<!-- SLIDE 8: COMMAND CENTER, MULTI-AGENTE Y DRIVE -->
+<div class="slide">
+  <div class="grid-bg"></div>
+  <div class="slide-header">
+    <div class="slide-title-group">
+      <h1>DIMENSIÓN 5, 6 Y 7 — COMMAND CENTER, MULTI-AGENTE Y PERSISTENCIA</h1>
+      <p>Sala de Gobernación, cuadrilla de 5 agentes IA autónomos y enlace cloud con Google Drive</p>
+    </div>
+    <div style="display: flex; gap: 6px;">
+      <span class="badge badge-emerald">Gobernación Antioquia</span>
+      <span class="badge badge-teal">5 Agentes Autónomos</span>
+      <span class="badge badge-sky">Google Drive Sync</span>
+    </div>
+  </div>
+
+  <div class="slide-content">
+    <div class="grid-3" style="height: 100%;">
+      
+      <!-- Command Center Antioquia -->
+      <div class="glass-card">
+        <div class="tool-block">
+          <div class="tool-title">
+            <span>Command Center Antioquia</span>
+            <span class="badge badge-emerald">Gobernación & Subregiones</span>
+          </div>
+          <div class="text-box">
+            <span class="section-tag tag-what">QUÉ HACE</span>
+            Cuartel general departamental. Modela la meta de victoria (1.2M - 1.4M de votos), el monitor de las 9 subregiones y el directorio de 125 municipios.
+          </div>
+          <div class="text-box">
+            <span class="section-tag tag-how">CÓMO LO HACE</span>
+            Consolida alianzas con casas políticas subregionales, calcula el peso electoral del Valle de Aburrá (55% de la votación departamental) frente a las regiones periféricas y monitorea riesgos de orden público.
+          </div>
+          <div class="text-box" style="margin-top: auto; padding-top: 4px; border-top: 1px dashed rgba(255,255,255,0.1);">
+            <span class="section-tag tag-ui">REPRESENTACIÓN GRÁFICA</span>
+            Tablero de control militar, velocímetro de meta electoral alcanzada y carrusel de tarjetas de las 9 subregiones con mini-mapas vectoriales.
+          </div>
+        </div>
+      </div>
+
+      <!-- Cuadrilla Multi-Agente -->
+      <div class="glass-card">
+        <div class="tool-block">
+          <div class="tool-title">
+            <span>Cuadrilla de 5 Agentes IA</span>
+            <span class="badge badge-teal">Autonomía Operativa</span>
+          </div>
+          <div class="text-box">
+            <span class="section-tag tag-what">QUÉ HACE</span>
+            5 agentes autónomos especializados: <strong>SENTINEL-TERRITORY</strong> (datos DANE/E-24), <strong>STRAT-SEGMENT</strong> (clusters), <strong>CHRONOS-CONTENT</strong> (discursos), <strong>VISION-SEMIOTIC</strong> (imagen) y <strong>ORION-SYNC</strong> (web/Drive).
+          </div>
+          <div class="text-box">
+            <span class="section-tag tag-how">CÓMO LO HACE</span>
+            Cada agente posee un <code>systemInstruction</code> con su rol y herramientas. Reciben misiones del estratega y entregan informes estructurados con cifras y recomendaciones operativas.
+          </div>
+          <div class="text-box" style="margin-top: auto; padding-top: 4px; border-top: 1px dashed rgba(255,255,255,0.1);">
+            <span class="section-tag tag-ui">REPRESENTACIÓN GRÁFICA</span>
+            Consola tipo terminal de ciberseguridad con luces LED de estado (Online/Idle), caja de prompt y stream de log ejecutivo estructurado.
+          </div>
+        </div>
+      </div>
+
+      <!-- Google Drive & Persistencia -->
+      <div class="glass-card">
+        <div class="tool-block">
+          <div class="tool-title">
+            <span>Enlace Cloud Google Drive</span>
+            <span class="badge badge-sky">googleDriveService</span>
+          </div>
+          <div class="text-box">
+            <span class="section-tag tag-what">QUÉ HACE</span>
+            Garantiza la persistencia bidireccional y el respaldo de toda la producción del comando de campaña (briefs, análisis territoriales, segmentaciones y perfiles) en Google Drive.
+          </div>
+          <div class="text-box" style="margin-top: auto; padding-top: 4px; border-top: 1px dashed rgba(255,255,255,0.1);">
+            <span class="section-tag tag-how">CÓMO LO HACE</span>
+            Gestionado por <code>googleDriveService.ts</code>. Guarda los elementos categorizados en carpetas cloud asociadas al nombre del candidato y provee enlaces directos de apertura.
+          </div>
+          <div class="text-box" style="margin-top: auto; padding-top: 4px; border-top: 1px dashed rgba(255,255,255,0.1);">
+            <span class="section-tag tag-ui">REPRESENTACIÓN GRÁFICA</span>
+            Modal interactivo accesible desde la barra superior y lateral, indicador de cuota usada y listado de archivos guardados.
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <div>PROYECTO PROTEUS 1.2 • INFORME TÉCNICO MAESTRO</div>
+    <div>PÁGINA 8 DE 8 • COMMAND CENTER, MULTI-AGENTE Y DRIVE</div>
+  </div>
+</div>
+
+</body>
+</html>

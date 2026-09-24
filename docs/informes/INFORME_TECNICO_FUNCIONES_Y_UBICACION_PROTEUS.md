@@ -21,21 +21,21 @@ A continuación se desglosa cada función del sistema, su propósito operativo, 
 
 | Vista / Sección | Identificador (`NavViewId`) | Componente Raíz | Ubicación en UI | Propósito Central |
 |---|---|---|---|---|
-| **Zoom Territorial (5 Escalas)** | `'territorial-zoom'` | [`TerritorialZoomHubView.tsx`](src/modules/territorial/TerritorialZoomHubView.tsx) | Grupo *Triple Propósito* > Botón *"Zoom Territorial"* | GIS continuo jerárquico de 5 niveles con analítica E-24 e IPM |
-| **1. Repositorio Municipal** | `'municipal-repository'` | [`MunicipalRepositoryExplorerView.tsx`](src/modules/repository/MunicipalRepositoryExplorerView.tsx) | Grupo *Triple Propósito* > Botón *"1. Repositorio Municipal"* | Base de datos territorial 360°, contexto para Gemini e ingesta JSON |
-| **2. Segmentación & Votantes** | `'voter-segmentation'` | [`VoterSegmentationEngine.tsx`](src/modules/analytics/VoterSegmentationEngine.tsx) | Grupo *Triple Propósito* > Botón *"2. Segmentación & Votantes"* | Clustering demográfico, arquetipos de votantes y fit de candidato |
-| **3. Director de Contenido** | `'content-director'` | [`CampaignContentDirectorView.tsx`](src/modules/content/CampaignContentDirectorView.tsx) | Grupo *Triple Propósito* > Botón *"3. Director de Contenido"* | Generador de briefs estratégicos, discursos y exportador a PDF |
-| **Analista Multimedia** | `'multimedia-studio'` | [`CandidateMultimediaStudioView.tsx`](src/modules/multimedia/CandidateMultimediaStudioView.tsx) | Grupo *Triple Propósito* > Botón *"Analista Multimedia"* | Auditoría de oratoria en video, colorimetría y semiótica visual |
-| **Cuadrilla de 5 Agentes** | `'agent-team'` | [`AgentTeamConsoleView.tsx`](src/modules/agents/AgentTeamConsoleView.tsx) | Grupo *Triple Propósito* > Botón *"Cuadrilla de 5 Agentes"* | Despacho de misiones operativas a los 5 agentes IA |
-| **Presidencia & Territorio** | `'national-overview'` | [`NationalDashboardView.tsx`](src/modules/national/NationalDashboardView.tsx) | Grupo *Ámbito Nacional* > Botón *"Presidencia & Territorio"* | Tablero de 32 departamentos de Colombia y mapas de NBI |
-| **Candidato & Perfil** | `'national-candidates'` | [`CandidateProfilesView.tsx`](src/modules/national/CandidateProfilesView.tsx) | Grupo *Ámbito Nacional* > Botón *"Candidato & Perfil"* | Biografía, tono narrativo, ejes programáticos y colorimetría |
-| **Herramientas de Campaña** | `'national-tools'` | [`CampaignToolsView.tsx`](src/modules/national/CampaignToolsView.tsx) | Grupo *Ámbito Nacional* > Botón *"Herramientas de Campaña"* | Procesador y comparador de encuestas demoscópicas |
-| **Sala Gobernación** | `'antioquia-gobernacion'` | [`GobernacionExecutiveView.tsx`](src/modules/antioquia/departamental/GobernacionExecutiveView.tsx) | Grupo *Command Center Antioquia* > *"Sala Gobernación"* | 28 actores políticos, 7 ejes de gobierno y lector de planes PDF |
-| **9 Subregiones** | `'antioquia-subregiones'` | [`SubregionesView.tsx`](src/modules/antioquia/subregiones/SubregionesView.tsx) | Grupo *Command Center Antioquia* > *"9 Subregiones"* | Análisis geoestratégico, NBI y simulador de alineación política |
-| **125 Municipios** | `'antioquia-municipios'` | [`AntioquiaExplorerView.tsx`](src/modules/antioquia/municipios/AntioquiaExplorerView.tsx) | Grupo *Command Center Antioquia* > *"125 Municipios"* | Directorio municipal, dioramas 3D, mapas vectoriales y ECV |
-| **Enlace Google Drive** | Modal Global | [`GoogleDriveSyncModal.tsx`](src/components/drive/GoogleDriveSyncModal.tsx) | Grupo *Sistema & Persistencia* > *"Enlace Google Drive"* | Conexión OAuth/Email, respaldo y sincronización en la nube |
-| **Identidad Institucional** | `'brand-manual'` | [`BrandIdentityView.tsx`](src/modules/system/BrandIdentityView.tsx) | Grupo *Sistema & Persistencia* > *"Identidad Institucional"* | Manual de identidad CMT Proteus, isotipo y tokens visuales |
-| **Consola Antigravity** | `'antigravity-console'` | [`AntigravityAgentConsole.tsx`](src/components/AntigravityAgentConsole.tsx) | Accesible por consola/desarrollo | Pipeline de datos, optimizador D'Hondt y auditorías de código |
+| **Zoom Territorial (5 Escalas)** | `'territorial-zoom'` | [`TerritorialZoomHubView.tsx`](../../src/modules/territorial/TerritorialZoomHubView.tsx) | Grupo *Triple Propósito* > Botón *"Zoom Territorial"* | GIS continuo jerárquico de 5 niveles con analítica E-24 e IPM |
+| **1. Repositorio Municipal** | `'municipal-repository'` | [`MunicipalRepositoryExplorerView.tsx`](../../src/modules/repository/MunicipalRepositoryExplorerView.tsx) | Grupo *Triple Propósito* > Botón *"1. Repositorio Municipal"* | Base de datos territorial 360°, contexto para Gemini e ingesta JSON |
+| **2. Segmentación & Votantes** | `'voter-segmentation'` | [`VoterSegmentationEngine.tsx`](../../src/modules/analytics/VoterSegmentationEngine.tsx) | Grupo *Triple Propósito* > Botón *"2. Segmentación & Votantes"* | Clustering demográfico, arquetipos de votantes y fit de candidato |
+| **3. Director de Contenido** | `'content-director'` | [`CampaignContentDirectorView.tsx`](../../src/modules/content/CampaignContentDirectorView.tsx) | Grupo *Triple Propósito* > Botón *"3. Director de Contenido"* | Generador de briefs estratégicos, discursos y exportador a PDF |
+| **Analista Multimedia** | `'multimedia-studio'` | [`CandidateMultimediaStudioView.tsx`](../../src/modules/multimedia/CandidateMultimediaStudioView.tsx) | Grupo *Triple Propósito* > Botón *"Analista Multimedia"* | Auditoría de oratoria en video, colorimetría y semiótica visual |
+| **Cuadrilla de 5 Agentes** | `'agent-team'` | [`AgentTeamConsoleView.tsx`](../../src/modules/agents/AgentTeamConsoleView.tsx) | Grupo *Triple Propósito* > Botón *"Cuadrilla de 5 Agentes"* | Despacho de misiones operativas a los 5 agentes IA |
+| **Presidencia & Territorio** | `'national-overview'` | [`NationalDashboardView.tsx`](../../src/modules/national/NationalDashboardView.tsx) | Grupo *Ámbito Nacional* > Botón *"Presidencia & Territorio"* | Tablero de 32 departamentos de Colombia y mapas de NBI |
+| **Candidato & Perfil** | `'national-candidates'` | [`CandidateProfilesView.tsx`](../../src/modules/national/CandidateProfilesView.tsx) | Grupo *Ámbito Nacional* > Botón *"Candidato & Perfil"* | Biografía, tono narrativo, ejes programáticos y colorimetría |
+| **Herramientas de Campaña** | `'national-tools'` | [`CampaignToolsView.tsx`](../../src/modules/national/CampaignToolsView.tsx) | Grupo *Ámbito Nacional* > Botón *"Herramientas de Campaña"* | Procesador y comparador de encuestas demoscópicas |
+| **Sala Gobernación** | `'antioquia-gobernacion'` | [`GobernacionExecutiveView.tsx`](../../src/modules/antioquia/departamental/GobernacionExecutiveView.tsx) | Grupo *Command Center Antioquia* > *"Sala Gobernación"* | 28 actores políticos, 7 ejes de gobierno y lector de planes PDF |
+| **9 Subregiones** | `'antioquia-subregiones'` | [`SubregionesView.tsx`](../../src/modules/antioquia/subregiones/SubregionesView.tsx) | Grupo *Command Center Antioquia* > *"9 Subregiones"* | Análisis geoestratégico, NBI y simulador de alineación política |
+| **125 Municipios** | `'antioquia-municipios'` | [`AntioquiaExplorerView.tsx`](../../src/modules/antioquia/municipios/AntioquiaExplorerView.tsx) | Grupo *Command Center Antioquia* > *"125 Municipios"* | Directorio municipal, dioramas 3D, mapas vectoriales y ECV |
+| **Enlace Google Drive** | Modal Global | [`GoogleDriveSyncModal.tsx`](../../src/components/drive/GoogleDriveSyncModal.tsx) | Grupo *Sistema & Persistencia* > *"Enlace Google Drive"* | Conexión OAuth/Email, respaldo y sincronización en la nube |
+| **Identidad Institucional** | `'brand-manual'` | [`BrandIdentityView.tsx`](../../src/modules/system/BrandIdentityView.tsx) | Grupo *Sistema & Persistencia* > *"Identidad Institucional"* | Manual de identidad CMT Proteus, isotipo y tokens visuales |
+| **Consola Antigravity** | `'antigravity-console'` | [`AntigravityAgentConsole.tsx`](../../src/components/AntigravityAgentConsole.tsx) | Accesible por consola/desarrollo | Pipeline de datos, optimizador D'Hondt y auditorías de código |
 
 ---
 
@@ -63,26 +63,26 @@ NIVEL 5: COMUNAS & BARRIOS (Microdatos E-24 Históricos 2015-2023, IPM y Crimina
 
 #### Funciones y Herramientas del Módulo:
 1. **Navegación Dinámica por Breadcrumb de 5 Escalas**:
-   - *Ubicación UI*: Parte superior de la pantalla de Zoom Territorial ([`MapBreadcrumb.tsx`](src/components/maps/MapBreadcrumb.tsx)).
+   - *Ubicación UI*: Parte superior de la pantalla de Zoom Territorial ([`MapBreadcrumb.tsx`](../../src/components/maps/MapBreadcrumb.tsx)).
    - *Función*: Permite saltar instantáneamente a cualquier nivel superior o reenfocar a la escala nacional con un clic.
 2. **Motor Cartográfico Vectorial (Leaflet / GeoJSON Reactivo)**:
-   - *Ubicación UI*: Área central de la pantalla ([`MultiLevelZoomMap.tsx`](src/components/maps/MultiLevelZoomMap.tsx)).
+   - *Ubicación UI*: Área central de la pantalla ([`MultiLevelZoomMap.tsx`](../../src/components/maps/MultiLevelZoomMap.tsx)).
    - *Función*: Renderiza geometrías de polígonos GeoJSON con zoom suave (`flyToBounds`), detección de clics, tooltips al pasar el ratón y coropletas de color graduado.
 3. **Selector de Capas Temáticas (Choropleth Toggles)**:
-   - *Ubicación UI*: Barra de control superior del mapa ([`MapLayerControls.tsx`](src/components/maps/MapLayerControls.tsx)).
+   - *Ubicación UI*: Barra de control superior del mapa ([`MapLayerControls.tsx`](../../src/components/maps/MapLayerControls.tsx)).
    - *Función*: Alterna la visualización del mapa entre 4 capas analíticas:
      - *Capa Electoral*: Censo electoral, potencial de votantes y participación.
      - *Capa Demográfica*: Población proyectada DANE y pirámides de edad.
      - *Capa Pobreza NBI / IPM*: Índice de Necesidades Básicas Insatisfechas e Índice de Pobreza Multidimensional.
      - *Capa Seguridad / Riesgo*: Incidencia de extorsión, delitos y alertas de orden público.
 4. **Buscador Predictivo Territorial**:
-   - *Ubicación UI*: Input de búsqueda en [`MapLayerControls.tsx`](src/components/maps/MapLayerControls.tsx).
+   - *Ubicación UI*: Input de búsqueda en [`MapLayerControls.tsx`](../../src/components/maps/MapLayerControls.tsx).
    - *Función*: Filtra en tiempo real los polígonos visibles en el mapa según el nombre del territorio, código DANE o subregión.
 5. **Panel Lateral de Analítica Profunda (Deep Analytics Multi-Tab Drawer)**:
-   - *Ubicación UI*: Cajón lateral derecho que se despliega al hacer clic en cualquier comuna, barrio o municipio ([`CommuneDeepAnalyticsDrawer.tsx`](src/components/maps/CommuneDeepAnalyticsDrawer.tsx)).
+   - *Ubicación UI*: Cajón lateral derecho que se despliega al hacer clic en cualquier comuna, barrio o municipio ([`CommuneDeepAnalyticsDrawer.tsx`](../../src/components/maps/CommuneDeepAnalyticsDrawer.tsx)).
    - *Subpestañas de Información*:
      - **Pestaña Resumen**: Ficha rápida de población, censo, zona geográfica y botón de drill-down a la siguiente escala.
-     - **Pestaña E-24 Histórico** ([`E24HistoricalViewer.tsx`](src/components/maps/E24HistoricalViewer.tsx)): Matriz histórica de votaciones para Alcaldía, Concejo y Congreso en los periodos 2015, 2019 y 2023. Permite consultar mesas, votos válidos, blanco, nulos y candidatos ganadores.
+     - **Pestaña E-24 Histórico** ([`E24HistoricalViewer.tsx`](../../src/components/maps/E24HistoricalViewer.tsx)): Matriz histórica de votaciones para Alcaldía, Concejo y Congreso en los periodos 2015, 2019 y 2023. Permite consultar mesas, votos válidos, blanco, nulos y candidatos ganadores.
      - **Pestaña Pobreza IPM**: Desglose de dimensiones de privación (salud, educación, empleo y servicios públicos) según microdatos de la encuesta de calidad de vida.
      - **Pestaña Seguridad & Extorsión**: Métricas de extorsión barrial, presencia de estructuras delictivas y victimización según el CIEF de la Universidad EAFIT.
      - **Pestaña Demografía DANE**: Indicadores de masculinidad, tasa de envejecimiento y proyecciones de población a 2026.
@@ -94,8 +94,8 @@ NIVEL 5: COMUNAS & BARRIOS (Microdatos E-24 Históricos 2015-2023, IPM y Crimina
 
 - **Ubicación en UI**: Barra lateral izquierda > Sección *"Triple Propósito & Analítica"* > **`1. Repositorio Municipal`**.
 - **Archivos de Código**: 
-  - Vista: [`MunicipalRepositoryExplorerView.tsx`](src/modules/repository/MunicipalRepositoryExplorerView.tsx)
-  - Servicio / Base de Datos: [`municipalRepositoryService.ts`](src/services/municipalRepositoryService.ts)
+  - Vista: [`MunicipalRepositoryExplorerView.tsx`](../../src/modules/repository/MunicipalRepositoryExplorerView.tsx)
+  - Servicio / Base de Datos: [`municipalRepositoryService.ts`](../../src/services/municipalRepositoryService.ts)
 
 #### Funciones y Herramientas:
 1. **Directorio y Búsqueda Multicriterio 360°**:
@@ -115,7 +115,7 @@ NIVEL 5: COMUNAS & BARRIOS (Microdatos E-24 Históricos 2015-2023, IPM y Crimina
 
 - **Ubicación en UI**: Barra lateral izquierda > Sección *"Triple Propósito & Analítica"* > **`2. Segmentación & Votantes`**.
 - **Archivos de Código**: 
-  - Vista / Motor: [`VoterSegmentationEngine.tsx`](src/modules/analytics/VoterSegmentationEngine.tsx)
+  - Vista / Motor: [`VoterSegmentationEngine.tsx`](../../src/modules/analytics/VoterSegmentationEngine.tsx)
 
 #### Funciones y Herramientas:
 1. **Modelado Dinámico de Arquetipos Demográficos**:
@@ -141,7 +141,7 @@ NIVEL 5: COMUNAS & BARRIOS (Microdatos E-24 Históricos 2015-2023, IPM y Crimina
 
 - **Ubicación en UI**: Barra lateral izquierda > Sección *"Triple Propósito & Analítica"* > **`3. Director de Contenido`**.
 - **Archivos de Código**: 
-  - Vista: [`CampaignContentDirectorView.tsx`](src/modules/content/CampaignContentDirectorView.tsx)
+  - Vista: [`CampaignContentDirectorView.tsx`](../../src/modules/content/CampaignContentDirectorView.tsx)
   - Motor PDF: `jspdf`
 
 #### Funciones y Herramientas:
@@ -175,8 +175,8 @@ NIVEL 5: COMUNAS & BARRIOS (Microdatos E-24 Históricos 2015-2023, IPM y Crimina
 
 - **Ubicación en UI**: Barra lateral izquierda > Sección *"Triple Propósito & Analítica"* > **`Analista Multimedia`**.
 - **Archivos de Código**: 
-  - Vista: [`CandidateMultimediaStudioView.tsx`](src/modules/multimedia/CandidateMultimediaStudioView.tsx)
-  - Componente de Video: [`CandidateVideoAnalyzer.tsx`](src/components/CandidateVideoAnalyzer.tsx)
+  - Vista: [`CandidateMultimediaStudioView.tsx`](../../src/modules/multimedia/CandidateMultimediaStudioView.tsx)
+  - Componente de Video: [`CandidateVideoAnalyzer.tsx`](../../src/components/CandidateVideoAnalyzer.tsx)
 
 #### Funciones y Herramientas:
 1. **Analista de Video (Oratoria, Ritmo y Dicción)**:
@@ -196,8 +196,8 @@ NIVEL 5: COMUNAS & BARRIOS (Microdatos E-24 Históricos 2015-2023, IPM y Crimina
 
 - **Ubicación en UI**: Barra lateral izquierda > Sección *"Triple Propósito & Analítica"* > **`Cuadrilla de 5 Agentes`**.
 - **Archivos de Código**: 
-  - Vista: [`AgentTeamConsoleView.tsx`](src/modules/agents/AgentTeamConsoleView.tsx)
-  - Configuración del Equipo: [`proteusAgentTeam.ts`](src/data/agentic/proteusAgentTeam.ts)
+  - Vista: [`AgentTeamConsoleView.tsx`](../../src/modules/agents/AgentTeamConsoleView.tsx)
+  - Configuración del Equipo: [`proteusAgentTeam.ts`](../../src/data/agentic/proteusAgentTeam.ts)
 
 #### Roles, Misiones y Herramientas de cada Agente:
 
@@ -220,7 +220,7 @@ NIVEL 5: COMUNAS & BARRIOS (Microdatos E-24 Históricos 2015-2023, IPM y Crimina
 - **Ubicación en UI**: Barra lateral izquierda > Grupo *"Ámbito Nacional"*.
 
 #### 1. Presidencia & Territorio (`'national-overview'`):
-- **Archivo**: [`NationalDashboardView.tsx`](src/modules/national/NationalDashboardView.tsx)
+- **Archivo**: [`NationalDashboardView.tsx`](../../src/modules/national/NationalDashboardView.tsx)
 - **Funciones**:
   - Visualizador de las 5 regiones naturales de Colombia (Andina, Caribe, Pacífica, Orinoquía, Amazonía).
   - Selector de los 32 departamentos y municipios del país.
@@ -228,7 +228,7 @@ NIVEL 5: COMUNAS & BARRIOS (Microdatos E-24 Históricos 2015-2023, IPM y Crimina
   - Generador de informes de inteligencia con IA para cualquier departamento o municipio nacional.
 
 #### 2. Candidato & Perfil (`'national-candidates'`):
-- **Archivo**: [`CandidateProfilesView.tsx`](src/modules/national/CandidateProfilesView.tsx) & [`CandidateProfileManager.tsx`](src/components/CandidateProfileManager.tsx)
+- **Archivo**: [`CandidateProfilesView.tsx`](../../src/modules/national/CandidateProfilesView.tsx) & [`CandidateProfileManager.tsx`](../../src/components/CandidateProfileManager.tsx)
 - **Funciones**:
   - Configuración completa de la identidad del candidato activo (Nombre, partido, tono narrativo, estilo de comunicación, ejes programáticos, fototipo).
   - Perfil predeterminado: **Isaac Mendoza** (Líder y Estratega).
@@ -236,7 +236,7 @@ NIVEL 5: COMUNAS & BARRIOS (Microdatos E-24 Históricos 2015-2023, IPM y Crimina
   - Persistencia automática en `localStorage` del navegador.
 
 #### 3. Herramientas de Campaña (`'national-tools'`):
-- **Archivo**: [`CampaignToolsView.tsx`](src/modules/national/CampaignToolsView.tsx)
+- **Archivo**: [`CampaignToolsView.tsx`](../../src/modules/national/CampaignToolsView.tsx)
 - **Funciones**:
   - Procesador demoscópico de encuestas electorales (permite pegar textos o cargar archivos de encuestas).
   - Extractor automático de intención de voto para primera y segunda vuelta, preferencias por región y metodologías.
@@ -249,7 +249,7 @@ NIVEL 5: COMUNAS & BARRIOS (Microdatos E-24 Históricos 2015-2023, IPM y Crimina
 - **Ubicación en UI**: Barra lateral izquierda > Grupo *"Command Center Antioquia"*.
 
 #### 1. Sala Gobernación (`'antioquia-gobernacion'`):
-- **Archivo**: [`GobernacionExecutiveView.tsx`](src/modules/antioquia/departamental/GobernacionExecutiveView.tsx) & [`PdfScriptGenerator.tsx`](src/components/PdfScriptGenerator.tsx)
+- **Archivo**: [`GobernacionExecutiveView.tsx`](../../src/modules/antioquia/departamental/GobernacionExecutiveView.tsx) & [`PdfScriptGenerator.tsx`](../../src/components/PdfScriptGenerator.tsx)
 - **Funciones**:
   - Monitoreo de 28 actores políticos departamentales y medios de comunicación regionales.
   - Seguimiento a los **7 Ejes Estratégicos de Gobierno**:
@@ -265,7 +265,7 @@ NIVEL 5: COMUNAS & BARRIOS (Microdatos E-24 Históricos 2015-2023, IPM y Crimina
   - Generador de Discursos y Guiones Institucionales con descarga en PDF.
 
 #### 2. 9 Subregiones Estratégicas (`'antioquia-subregiones'`):
-- **Archivo**: [`SubregionesView.tsx`](src/modules/antioquia/subregiones/SubregionesView.tsx) & [`SubregionesManager.tsx`](src/components/SubregionesManager.tsx)
+- **Archivo**: [`SubregionesView.tsx`](../../src/modules/antioquia/subregiones/SubregionesView.tsx) & [`SubregionesManager.tsx`](../../src/components/SubregionesManager.tsx)
 - **Funciones**:
   - Inmersión en las 9 subregiones: *Valle de Aburrá, Oriente, Suroeste, Occidente, Norte, Bajo Cauca, Magdalena Medio, Nordeste, Urabá*.
   - Indicadores de NBI, población, vocación productiva y actores clave.
@@ -273,10 +273,10 @@ NIVEL 5: COMUNAS & BARRIOS (Microdatos E-24 Históricos 2015-2023, IPM y Crimina
   - Profundización estratégica asistida por Gemini y exportación de informes subregionales.
 
 #### 3. Directorio de 125 Municipios (`'antioquia-municipios'`):
-- **Archivo**: [`AntioquiaExplorerView.tsx`](src/modules/antioquia/municipios/AntioquiaExplorerView.tsx) & [`AntioquiaMunicipiosManager.tsx`](src/components/AntioquiaMunicipiosManager.tsx)
+- **Archivo**: [`AntioquiaExplorerView.tsx`](../../src/modules/antioquia/municipios/AntioquiaExplorerView.tsx) & [`AntioquiaMunicipiosManager.tsx`](../../src/components/AntioquiaMunicipiosManager.tsx)
 - **Funciones**:
   - Explorador territorial de los 125 municipios antioqueños.
-  - **Dioramas 3D Interactivos** ([`Municipio3DDiorama.tsx`](src/components/Municipio3DDiorama.tsx) y [`Rionegro3DDiorama.tsx`](src/components/Rionegro3DDiorama.tsx)) con representación espacial de hitos urbanos.
+  - **Dioramas 3D Interactivos** ([`Municipio3DDiorama.tsx`](../../src/components/Municipio3DDiorama.tsx) y [`Rionegro3DDiorama.tsx`](../../src/components/Rionegro3DDiorama.tsx)) con representación espacial de hitos urbanos.
   - Mapas cartográficos específicos de Bello, Rionegro y el Valle de San Nicolás.
   - Tableros de Encuesta de Calidad de Vida (ECV) a nivel de comuna y vereda.
 
@@ -286,7 +286,7 @@ NIVEL 5: COMUNAS & BARRIOS (Microdatos E-24 Históricos 2015-2023, IPM y Crimina
 
 #### 1. Enlace y Sincronización con Google Drive:
 - **Ubicación UI**: Botón *"Enlace Google Drive"* en la barra lateral o modal emergente.
-- **Archivos**: [`GoogleDriveSyncModal.tsx`](src/components/drive/GoogleDriveSyncModal.tsx) y [`googleDriveService.ts`](src/services/googleDriveService.ts).
+- **Archivos**: [`GoogleDriveSyncModal.tsx`](../../src/components/drive/GoogleDriveSyncModal.tsx) y [`googleDriveService.ts`](../../src/services/googleDriveService.ts).
 - **Funciones**:
   - Enlace de cuenta de Google Drive del usuario.
   - Respaldo estructurado de documentos en 4 categorías: `analisis_territorial`, `brief_contenido`, `segmentacion_votantes`, `multimedia`.
@@ -294,14 +294,14 @@ NIVEL 5: COMUNAS & BARRIOS (Microdatos E-24 Históricos 2015-2023, IPM y Crimina
 
 #### 2. Identidad Institucional y Manual de Marca:
 - **Ubicación UI**: Barra lateral > *"Identidad Institucional"*.
-- **Archivos**: [`BrandIdentityView.tsx`](src/modules/system/BrandIdentityView.tsx) y [`CmtProteusLogo.tsx`](src/components/CmtProteusLogo.tsx).
+- **Archivos**: [`BrandIdentityView.tsx`](../../src/modules/system/BrandIdentityView.tsx) y [`CmtProteusLogo.tsx`](../../src/components/CmtProteusLogo.tsx).
 - **Funciones**:
   - Especificaciones del Isotipo (Tridente geométrico CMT), Logotipo e Imagotipo en SVG escalable.
   - Sistema de diseño **Glassmorphism Frost**: fondos `slate-950/40`, desenfoque `backdrop-blur-3xl`, bordes `white/20` e iluminación especular interior.
 
 #### 3. Capa de Servicios de Inteligencia Artificial & Backend:
-- **[`geminiService.ts`](src/services/geminiService.ts)**: Cliente unificado para llamadas a Google Gemini 3.8 Flash, con soporte para Google Search Grounding y manejo robusto de excepciones y cuotas.
-- **[`antigravityService.ts`](src/services/antigravityService.ts)**: Conexión con el runtime de Antigravity para ejecución de agentes en segundo plano y pipelines de código.
+- **[`geminiService.ts`](../../src/services/geminiService.ts)**: Cliente unificado para llamadas a Google Gemini 3.8 Flash, con soporte para Google Search Grounding y manejo robusto de excepciones y cuotas.
+- **[`antigravityService.ts`](../../src/services/antigravityService.ts)**: Conexión con el runtime de Antigravity para ejecución de agentes en segundo plano y pipelines de código.
 
 ---
 
