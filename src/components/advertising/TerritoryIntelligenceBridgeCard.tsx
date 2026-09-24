@@ -17,7 +17,10 @@ import {
   Sparkles,
   MapPin,
   Activity,
-  Layers
+  Layers,
+  Users,
+  RefreshCw,
+  UserCheck
 } from 'lucide-react';
 
 interface TerritoryIntelligenceBridgeCardProps {
@@ -98,6 +101,11 @@ export const TerritoryIntelligenceBridgeCard: React.FC<TerritoryIntelligenceBrid
           <p className="text-xs text-slate-400">
             {intelligence.tacticalPostureDescription}
           </p>
+          {intelligence.electoralDynamicsNotes && (
+            <div className="text-[11px] font-mono text-sky-300/90 bg-sky-950/40 border border-sky-500/20 px-2.5 py-1 rounded-lg">
+              ℹ️ {intelligence.electoralDynamicsNotes}
+            </div>
+          )}
         </div>
 
         {/* IRPV ROI Gauge Card */}
@@ -266,6 +274,118 @@ export const TerritoryIntelligenceBridgeCard: React.FC<TerritoryIntelligenceBrid
           </div>
         </div>
       </div>
+
+      {/* Relevos de Curules Institucionales (Mayo / Agosto 2026 - PA-012) */}
+      {intelligence.recentReplacements && intelligence.recentReplacements.length > 0 && (
+        <div className="bg-gradient-to-r from-amber-950/60 via-slate-900/80 to-purple-950/40 border border-amber-500/40 rounded-xl p-4 space-y-3 shadow-lg">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div className="flex items-center gap-2 text-xs font-mono uppercase font-bold text-amber-300">
+              <RefreshCw className="w-4 h-4 text-amber-400 shrink-0" />
+              <span>Trazabilidad de Relevos de Curules • Impacto Directo en Conversión Publicitaria</span>
+            </div>
+            <span className="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 w-fit">
+              {intelligence.recentReplacements.length} Relevos Oficiales 2026
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {intelligence.recentReplacements.map((rep, idx) => (
+              <div key={idx} className="bg-slate-900/90 border border-amber-500/30 rounded-lg p-3 space-y-2">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-[10px] font-mono uppercase text-slate-400 font-bold truncate">
+                    {rep.curulTitle}
+                  </span>
+                  <span className="text-[10px] font-mono text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded shrink-0">
+                    {rep.dateLabel}
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-2 text-xs font-bold">
+                  <span className="text-slate-400 line-through">{rep.outgoingName}</span>
+                  <span className="text-amber-400 font-mono">➜</span>
+                  <span className="text-emerald-400 font-black flex items-center gap-1">
+                    <UserCheck className="w-3.5 h-3.5 shrink-0" />
+                    <span>{rep.incomingName}</span>
+                  </span>
+                </div>
+
+                <p className="text-[11px] text-slate-300 leading-snug">
+                  {rep.reason}
+                </p>
+
+                <div className="p-2 rounded bg-amber-500/10 border border-amber-500/20 text-[10px] text-amber-200">
+                  <strong className="block text-amber-300 uppercase font-mono">Ventana de Persuasión:</strong>
+                  {rep.politicalOpportunity}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => handleCopyHook(rep.adHookSuggestion, 9000 + idx)}
+                  className="w-full mt-1 px-2.5 py-1.5 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 rounded text-amber-200 text-[10px] font-mono font-bold flex items-center justify-center gap-1.5 transition cursor-pointer"
+                  title="Copiar y usar este gancho derivado del relevo de curul"
+                >
+                  <Sparkles className="w-3 h-3 text-amber-300" />
+                  <span>Usar Gancho de Relevo en Pauta</span>
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Micro-redes de Concejales Locales (Protocolo PA-012) */}
+      {intelligence.localCouncilors && intelligence.localCouncilors.length > 0 && (
+        <div className="bg-slate-950/60 border border-sky-500/20 rounded-xl p-4 space-y-3">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+            <div className="flex items-center gap-2 text-xs font-mono uppercase font-bold text-sky-400">
+              <Users className="w-4 h-4 text-sky-400 shrink-0" />
+              <span>Concejales y Bancadas Locales en {intelligence.territory} ({intelligence.localCouncilors.length} identificados)</span>
+            </div>
+            <span className="text-[10px] font-mono text-slate-400">
+              Operadores de proximidad y validación barrial
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 max-h-72 overflow-y-auto pr-1">
+            {intelligence.localCouncilors.map((councilor, idx) => (
+              <div 
+                key={idx} 
+                className="p-2.5 rounded-lg bg-slate-900/80 border border-white/5 hover:border-sky-500/30 transition space-y-1.5"
+              >
+                <div className="flex items-center justify-between gap-1">
+                  <span className="text-xs font-bold text-white truncate" title={councilor.name}>
+                    {councilor.name}
+                  </span>
+                  <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-sky-500/10 text-sky-300 border border-sky-500/20 shrink-0">
+                    {councilor.partyName}
+                  </span>
+                </div>
+
+                <div className="text-[10px] font-mono text-slate-400 flex items-center justify-between">
+                  <span className="truncate">{councilor.roleLabel}</span>
+                  {councilor.votes2023 && (
+                    <span className="text-amber-300/80 font-mono shrink-0 ml-1">
+                      {councilor.votes2023.toLocaleString()} votos
+                    </span>
+                  )}
+                </div>
+
+                {councilor.headlineTopic && (
+                  <div className="text-[10px] text-slate-300 italic border-t border-white/5 pt-1 line-clamp-2">
+                    🎯 {councilor.headlineTopic}
+                  </div>
+                )}
+
+                {councilor.isReplacement && (
+                  <span className="inline-block text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                    Reemplazo Oficial (2026)
+                  </span>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Geopolitical Ad Hooks Section */}
       <div className="bg-slate-950/70 border border-amber-500/20 rounded-xl p-4 space-y-2.5">

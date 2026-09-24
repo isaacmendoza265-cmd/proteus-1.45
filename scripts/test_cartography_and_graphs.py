@@ -23,8 +23,8 @@ with open('public/data/colombia_municipios_completo.geojson', 'r', encoding='utf
 medellin_dane = [f for f in col_munis['features'] if f['properties'].get('daneCode') == '05001']
 print(f"Medellín DANE en dataset nacional: {len(medellin_dane)} feature(s)")
 
-# Verificar medellin16ComunasOfficialGeoJson.ts
-with open('src/data/geojson/medellin16ComunasOfficialGeoJson.ts', 'r', encoding='utf-8') as f:
+# Verificar medellin16ComunasOfficial.geo.json
+with open('src/data/geojson/medellin16ComunasOfficial.geo.json', 'r', encoding='utf-8') as f:
     med_ts = f.read()
 
 assert 'medellin-base-outline' in med_ts, "Debe existir medellin-base-outline"
@@ -114,4 +114,27 @@ assert 'Carlos Andrés Zapata Chaverra' in graph_ts, "Concejal de Barbosa Carlos
 assert 'Lina Marcela Ciro' in graph_ts, "Concejal de Rionegro Lina Ciro debe estar en el grafo"
 
 print("✓ Grafo Político: Relevos de Medellín (López->Vasco, Carrasquilla->Osorio) y concejales de Bello, Itagüí, Envigado, Sabaneta, Copacabana, Caldas, La Estrella, Girardota, Barbosa y Rionegro validados con éxito!")
-print("\n>>> TODAS LAS PRUEBAS DE CARTOGRAFÍA Y GRAFOS PASARON EXITOSAMENTE (100% OK) <<<")
+
+print("\n=== 5. VERIFICANDO MOTOR DE PUBLICIDAD HOLÍSTICA Y RELEVOS INSTITUCIONALES (PA-012) ===")
+with open('src/services/holisticAdvertisingIntelligenceService.ts', 'r', encoding='utf-8') as f:
+    ad_service = f.read()
+
+assert 'GRAPH_NODES_DATA' in ad_service, "Holistic service debe importar GRAPH_NODES_DATA"
+assert 'localCouncilors' in ad_service, "Holistic service debe incluir localCouncilors"
+assert 'recentReplacements' in ad_service, "Holistic service debe incluir recentReplacements"
+assert 'Milton Darío Vasco Restrepo' in ad_service, "Holistic service debe contemplar reemplazo Milton Vasco"
+assert 'Jorge Julián Osorio Gómez' in ad_service, "Holistic service debe contemplar reemplazo Dr. Jorge Julián Osorio"
+assert 'Rionegro' in ad_service, "Holistic service debe incluir Rionegro"
+assert 'Bogotá D.C.' in ad_service, "Holistic service debe incluir Bogotá D.C."
+assert 'Meta' in ad_service, "Holistic service debe incluir Meta"
+
+with open('src/components/advertising/TerritoryIntelligenceBridgeCard.tsx', 'r', encoding='utf-8') as f:
+    bridge_card = f.read()
+
+assert 'recentReplacements' in bridge_card, "Bridge card debe renderizar recentReplacements"
+assert 'localCouncilors' in bridge_card, "Bridge card debe renderizar localCouncilors"
+assert 'RefreshCw' in bridge_card, "Bridge card debe incluir icono RefreshCw"
+assert 'UserCheck' in bridge_card, "Bridge card debe incluir icono UserCheck"
+print("✓ Publicidad Holística (PA-012): Inyección de concejales, relevos y departamentos verificados con éxito!")
+
+print("\n>>> TODAS LAS PRUEBAS DE CARTOGRAFÍA, GRAFOS Y PUBLICIDAD PASARON EXITOSAMENTE (100% OK) <<<")
