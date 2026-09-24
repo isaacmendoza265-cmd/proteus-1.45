@@ -15,11 +15,11 @@ import { SubregionAggregationEngine } from '../../services/subregionAggregationE
 import { ColombiaMunicipalitiesGeoService } from '../../services/colombiaMunicipalitiesGeoService';
 
 export const COLOMBIA_ALL_DEPARTMENTS = [
-  'Antioquia', 'Meta', 'Cundinamarca', 'Santander', 'Valle del Cauca', 'Boyacá',
-  'Atlántico', 'Bolívar', 'Caldas', 'Cauca', 'Cesar', 'Córdoba', 'Chocó',
-  'Huila', 'La Guajira', 'Magdalena', 'Nariño', 'Norte de Santander', 'Quindío',
-  'Risaralda', 'Sucre', 'Tolima', 'Arauca', 'Casanare', 'Putumayo',
-  'Archipiélago de San Andrés', 'Amazonas', 'Caquetá', 'Guainía', 'Guaviare', 'Vaupés', 'Vichada'
+  'Amazonas', 'Antioquia', 'Arauca', 'Atlántico', 'Bogotá D.C.', 'Bolívar', 'Boyacá', 
+  'Caldas', 'Caquetá', 'Casanare', 'Cauca', 'Cesar', 'Chocó', 'Cundinamarca', 'Córdoba', 
+  'Guainía', 'Guaviare', 'Huila', 'La Guajira', 'Magdalena', 'Meta', 'Nariño', 
+  'Norte de Santander', 'Putumayo', 'Quindío', 'Risaralda', 'San Andrés y Providencia', 
+  'Santander', 'Sucre', 'Tolima', 'Valle del Cauca', 'Vaupés', 'Vichada'
 ];
 
 interface MultiLevelZoomMapProps {

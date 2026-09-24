@@ -47,14 +47,19 @@ export class ColombiaMunicipalitiesGeoService {
   }
 
   /**
-   * Normaliza nombres de departamento para búsqueda flexible
+   * Normaliza nombres de departamento para búsqueda canónica y exacta
    */
   public static normalizeDeptName(name: string): string {
-    return name
+    const raw = name
       .trim()
       .toLowerCase()
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, ""); // Remueve tildes
+    
+    // Normalizar alias comunes
+    if (raw.includes("san andres")) return "san andres";
+    if (raw.includes("bogota")) return "bogota";
+    return raw;
   }
 
   /**
@@ -71,7 +76,7 @@ export class ColombiaMunicipalitiesGeoService {
     const allFeatures = await this.loadAllMunicipalities();
     const deptFeatures = allFeatures.filter((f) => {
       const fDept = this.normalizeDeptName(f.properties.department || f.properties.dptoName || '');
-      return fDept.includes(norm) || norm.includes(fDept);
+      return fDept === norm;
     });
 
     // Colores temáticos por índice
