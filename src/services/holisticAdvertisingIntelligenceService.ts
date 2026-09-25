@@ -8,6 +8,34 @@
 import { POLITICAL_HOUSES_DATA, GRAPH_NODES_DATA } from '../data/politicalHouses/politicalHousesMasterData';
 import { PoliticalHouse, GraphNodeActor } from '../data/politicalHouses/types';
 import { getGobernacionStatus, GobernacionStatus } from './gobernacionService';
+import { 
+  getMunicipalCensus, 
+  getDepartmentCensus, 
+  formatCensus, 
+  formatCensusShort, 
+  CENSUS_SOURCE_LABEL, 
+  resolveDepartmentId 
+} from './electoralCensusService';
+import { resolveMunicipality } from '../data/geojson/municipalDivisions';
+
+export interface OfficialCensusSummary {
+  total: number;
+  mujeres: number;
+  hombres: number;
+  mesas: number;
+  puestos: number;
+  sourceLabel: string;
+  formattedTotal: string;
+  formattedShort: string;
+}
+
+export interface MunicipalDivisionMeta {
+  divisionLabel: string;
+  subdivisionLabel?: string;
+  fuente: string;
+  confianza: string;
+  disponible: boolean;
+}
 
 export interface LocalCouncilorSummary {
   name: string;
@@ -71,6 +99,8 @@ export interface TerritoryGeopoliticalIntelligence {
   recentReplacements: CurulReplacementEvent[]; // Trazabilidad de relevos institucionales
   totalCouncilorsCount: number;
   electoralDynamicsNotes: string;
+  officialCensus?: OfficialCensusSummary;
+  municipalDivisionMeta?: MunicipalDivisionMeta;
 }
 
 export interface AdvertisingEfficiencyCalculation {
@@ -511,6 +541,53 @@ export class HolisticAdvertisingIntelligenceService {
       sourceLabel: gobernacionStatus?.connected ? 'Gobernación Sync Activa' : 'Sensor Independencia Local'
     };
 
+    // Ingesta de Censo Oficial de la Registraduría (Protocolo PA-013)
+    let officialCensus: OfficialCensusSummary | undefined = undefined;
+    const municipalCensus = getMunicipalCensus(normalizedTerritory, 'antioquia');
+    if (municipalCensus) {
+      officialCensus = {
+        total: municipalCensus.total,
+        mujeres: municipalCensus.mujeres,
+        hombres: municipalCensus.hombres,
+        mesas: municipalCensus.mesas,
+        puestos: municipalCensus.puestos,
+        sourceLabel: CENSUS_SOURCE_LABEL,
+        formattedTotal: formatCensus(municipalCensus.total),
+        formattedShort: formatCensusShort(municipalCensus.total)
+      };
+    } else {
+      const depCensus = getDepartmentCensus(normalizedTerritory);
+      if (depCensus) {
+        officialCensus = {
+          total: depCensus.total,
+          mujeres: depCensus.mujeres,
+          hombres: depCensus.hombres,
+          mesas: depCensus.mesas,
+          puestos: depCensus.puestos,
+          sourceLabel: CENSUS_SOURCE_LABEL,
+          formattedTotal: formatCensus(depCensus.total),
+          formattedShort: formatCensusShort(depCensus.total)
+        };
+      }
+    }
+
+    // Ingesta de Microdivisiones Cartográficas Niveles 4 y 5 (Protocolo PA-013)
+    const divisionEntry = resolveMunicipality({ name: normalizedTerritory });
+    const municipalDivisionMeta: MunicipalDivisionMeta | undefined = divisionEntry ? {
+      divisionLabel: divisionEntry.divisionLabel,
+      subdivisionLabel: divisionEntry.subdivisionLabel,
+      fuente: divisionEntry.fuente,
+      confianza: divisionEntry.confianza,
+      disponible: divisionEntry.disponible
+    } : undefined;
+
+    if (officialCensus) {
+      electoralDynamicsNotes += ` Potencial electoral oficial Registraduría: ${officialCensus.formattedTotal} ciudadanos habilitados (${officialCensus.formattedShort}), ${formatCensus(officialCensus.mesas)} mesas instaladas (${officialCensus.sourceLabel}).`;
+    }
+    if (municipalDivisionMeta?.disponible) {
+      electoralDynamicsNotes += ` Cobertura cartográfica microterritorial: ${municipalDivisionMeta.divisionLabel}${municipalDivisionMeta.subdivisionLabel ? ' y ' + municipalDivisionMeta.subdivisionLabel : ''} (${municipalDivisionMeta.fuente}).`;
+    }
+
     return {
       territory: normalizedTerritory,
       dominantHouse,
@@ -527,7 +604,9 @@ export class HolisticAdvertisingIntelligenceService {
       localCouncilors,
       recentReplacements,
       totalCouncilorsCount: localCouncilors.length,
-      electoralDynamicsNotes
+      electoralDynamicsNotes,
+      officialCensus,
+      municipalDivisionMeta
     };
   }
 

@@ -137,4 +137,53 @@ assert 'RefreshCw' in bridge_card, "Bridge card debe incluir icono RefreshCw"
 assert 'UserCheck' in bridge_card, "Bridge card debe incluir icono UserCheck"
 print("✓ Publicidad Holística (PA-012): Inyección de concejales, relevos y departamentos verificados con éxito!")
 
-print("\n>>> TODAS LAS PRUEBAS DE CARTOGRAFÍA, GRAFOS Y PUBLICIDAD PASARON EXITOSAMENTE (100% OK) <<<")
+print("\n=== 6. VERIFICANDO ASIMILACIÓN CENSO REGISTRADURÍA 2026 Y NIVELES 4/5 (PA-013) ===")
+import json
+
+with open('src/data/electoral/censoElectoral2026.json', 'r', encoding='utf-8') as f:
+    censo_data = json.load(f)
+
+assert censo_data['meta']['corte'] == '2026-04-30', "El corte oficial del censo debe ser 2026-04-30"
+assert censo_data['total']['total'] == 41421973, f"Total censo nacional + exterior esperado 41.421.973, obtenido {censo_data['total']['total']}"
+assert censo_data['nacional']['total'] == 40007312, f"Total censo nacional esperado 40.007.312, obtenido {censo_data['nacional']['total']}"
+assert censo_data['exterior']['total'] == 1414661, f"Total censo exterior esperado 1.414.661, obtenido {censo_data['exterior']['total']}"
+
+# Validar corrección de Cañasgordas, Guadalupe y San Vicente Ferrer
+antioquia_mpios = [m for m in censo_data['municipios'] if m['departamento'] == 'antioquia']
+nombres_antioquia = {m['nombre'] for m in antioquia_mpios}
+assert 'CAÑASGORDAS' in nombres_antioquia or 'CANASGORDAS' in nombres_antioquia, "Cañasgordas debe estar en el censo oficial"
+assert 'GUADALUPE' in nombres_antioquia, "Guadalupe debe estar en el censo oficial"
+assert 'SAN VICENTE' in nombres_antioquia or 'SAN VICENTE FERRER' in nombres_antioquia, "San Vicente Ferrer debe estar en el censo oficial"
+
+# Validar zonas 90 y 99 de Medellín
+assert '90' in censo_data['medellinZonas'], "Zona 90 (Puesto Censo) debe existir en Medellín"
+assert '99' in censo_data['medellinZonas'], "Zona 99 (Corregimientos) debe existir en Medellín"
+
+# Validar integración en holisticAdvertisingIntelligenceService
+assert 'OfficialCensusSummary' in ad_service, "Holistic service debe definir OfficialCensusSummary"
+assert 'MunicipalDivisionMeta' in ad_service, "Holistic service debe definir MunicipalDivisionMeta"
+assert 'officialCensus' in ad_service, "Holistic service debe incluir officialCensus"
+assert 'municipalDivisionMeta' in ad_service, "Holistic service debe incluir municipalDivisionMeta"
+assert 'getMunicipalCensus' in ad_service, "Holistic service debe consumir getMunicipalCensus"
+assert 'resolveMunicipality' in ad_service, "Holistic service debe consumir resolveMunicipality"
+
+# Validar renderizado en TerritoryIntelligenceBridgeCard
+assert 'officialCensus' in bridge_card, "Bridge card debe renderizar officialCensus"
+assert 'municipalDivisionMeta' in bridge_card, "Bridge card debe renderizar municipalDivisionMeta"
+assert 'Censo Registraduría' in bridge_card, "Bridge card debe mostrar label Censo Registraduría"
+assert 'Niveles 4/5 Cartográficos' in bridge_card, "Bridge card debe mostrar label Niveles 4/5 Cartográficos"
+
+# Validar Registro de Microdivisiones
+with open('src/data/geojson/municipalDivisions.ts', 'r', encoding='utf-8') as f:
+    divisions_ts = f.read()
+
+assert 'medellin' in divisions_ts, "Registro debe contener medellin"
+assert 'bogota' in divisions_ts, "Registro debe contener bogota"
+assert 'itagui' in divisions_ts, "Registro debe contener itagui"
+assert 'rionegro' in divisions_ts, "Registro debe contener rionegro"
+assert 'resolveMunicipality' in divisions_ts, "Debe exportar resolveMunicipality"
+
+print("✓ Censo Oficial Registraduría 2026 (41.4M) y Microdivisiones Niveles 4/5 (Bogotá, Medellín, Itagüí, Rionegro) verificados con éxito!")
+
+print("\n>>> TODAS LAS PRUEBAS DE CARTOGRAFÍA, GRAFOS, CENSO Y PUBLICIDAD PASARON EXITOSAMENTE (100% OK) <<<")
+
