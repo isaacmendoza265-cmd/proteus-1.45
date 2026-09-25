@@ -12,6 +12,7 @@
 
 import { getMunicipalCensus } from '../services/electoralCensusService';
 import { getDaneMunicipio } from '../services/daneMunicipalService';
+import { getResultado2023 } from '../services/electoralResults2023Service';
 
 export interface CouncilPartySeat {
   party: string;
@@ -70,6 +71,8 @@ export interface UnifiedMunicipalityRecord {
   electoralCensusSource?: 'oficial' | 'estimado';
   /** true si población y NBI vienen del DANE (proyección 2026 y CNPV 2018) */
   daneOficial?: boolean;
+  /** true si partido, votos, segundo lugar y concejo 2023 vienen de la Registraduría */
+  resultados2023Oficiales?: boolean;
 }
 
 export const ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA: UnifiedMunicipalityRecord[] = [
@@ -9813,4 +9816,25 @@ for (const m of ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA) {
     m.nbiPercentage = dane.nbi2018;
   }
   m.daneOficial = !!dane;
+
+  // Resultados oficiales 2023 (Registraduría): reemplazan partido, votos, segundo lugar y concejo,
+  // que en este archivo eran estimados (el "segundo lugar" era una plantilla en 123 municipios).
+  const res = getResultado2023(m.daneCode);
+  if (res) {
+    const [ganador, segundo] = res.alcaldia.candidatos;
+    m.winnerParty = ganador.partido;
+    m.votesMayor = ganador.votos;
+    m.percentageValidMayor = ganador.pctValidos;
+    m.runnerUp = segundo
+      ? { name: segundo.nombre, party: segundo.partido, votes: segundo.votos, percentageValid: segundo.pctValidos }
+      : undefined;
+    if (res.concejo) {
+      m.councilSeats = res.concejo.curulesPorLista.map((c) => ({ party: c.partido, seats: c.curules }));
+      m.totalCouncilSeats = res.concejo.totalCurulesListas;
+      if (res.concejo.partidoMasVotado) m.predominantParty = res.concejo.partidoMasVotado;
+    } else {
+      m.councilSeats = undefined; // sin dato oficial: no se muestra el estimado anterior
+    }
+  }
+  m.resultados2023Oficiales = !!res;
 }

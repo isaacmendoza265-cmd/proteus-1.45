@@ -20,6 +20,7 @@ import { ANTIOQUIA_125_MUNICIPIOS_GEOJSON } from '../../data/geojson/antioquia12
 import { ZONE_POPULATION_WEIGHTS } from '../../data/e24/territorialData';
 import { COMUNAS_INFO } from '../../data/e24/comunasData';
 import { getAllDaneMunicipios } from '../daneMunicipalService';
+import { getResultado2023 } from '../electoralResults2023Service';
 
 const sum = (xs: number[]) => xs.reduce((a, b) => a + b, 0);
 
@@ -164,5 +165,34 @@ describe('Datos oficiales del DANE en el maestro', () => {
       expect(m.nbiPercentage).toBe(dane[m.daneCode].nbi2018);
     }
     expect(sum(ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA.map((m) => m.population))).toBe(6_963_990);
+  });
+});
+
+describe('Resultados oficiales 2023 (Registraduría)', () => {
+  const words = (x: string) => new Set(x.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase().split(/[^A-Z]+/).filter((w) => w.length > 2));
+
+  it('los 125 municipios tienen resultado y el total cuadra con el departamento', () => {
+    const res = ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA.map((m) => getResultado2023(m.daneCode)!);
+    expect(res.every(Boolean)).toBe(true);
+    expect(sum(res.map((r) => r.alcaldia.votantes))).toBe(2_933_751);
+    expect(sum(res.map((r) => r.alcaldia.censo))).toBe(5_246_344);
+  });
+
+  it('el ganador de la Registraduría es el alcalde del directorio de la Gobernación', () => {
+    // Venecia: ganó Ferney Darío Fernández en 2023; el directorio (feb-2025) registra a Natalia Orozco
+    // Loaiza como alcaldesa (cambio posterior a la elección). Se conserva el alcalde actual.
+    const CAMBIO_POSTERIOR = new Set(['05861']);
+    for (const m of ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA.filter((x) => !CAMBIO_POSTERIOR.has(x.daneCode))) {
+      const ganador = getResultado2023(m.daneCode)!.alcaldia.candidatos[0].nombre;
+      const comunes = [...words(ganador)].filter((w) => words(m.electedMayor).has(w)).length;
+      expect([m.name, comunes >= 2]).toEqual([m.name, true]);
+    }
+  });
+
+  it('el maestro ya no usa el segundo lugar de plantilla', () => {
+    for (const m of ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA) {
+      expect(m.resultados2023Oficiales).toBe(true);
+      expect(m.runnerUp?.name ?? '').not.toMatch(/^Candidatura Cívica por/);
+    }
   });
 });
