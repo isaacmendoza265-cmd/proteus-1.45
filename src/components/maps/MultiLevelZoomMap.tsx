@@ -32,6 +32,11 @@ const VALLE_ABURRA_DANE = new Set(
   ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA.filter((m) => m.subregionId === 'valle-de-aburra').map((m) => m.daneCode),
 );
 
+// Mapa base sin API key: servidor de teselas de la Fundación OpenStreetMap. Su política de uso pide
+// atribución visible y uso moderado (https://operations.osmfoundation.org/policies/tiles/).
+const OSM_TILE_URL = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+const OSM_ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>';
+
 const escapeHtml = (s: string) => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]!));
 
 export const COLOMBIA_ALL_DEPARTMENTS = [
@@ -157,17 +162,11 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
         center: currentConfig.center,
         zoom: currentConfig.defaultZoom,
         zoomControl: false,
-        attributionControl: false
+        // La licencia de OpenStreetMap exige mostrar la atribución
+        attributionControl: true
       });
-
-      // Futuristic Dark Basemap: CartoDB Dark Matter (High-contrast, elegant obsidian aesthetic)
-      const tileUrl = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
-
-      L.tileLayer(tileUrl, {
-        subdomains: 'abcd',
-        maxZoom: 19,
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
-      }).addTo(map);
+      map.attributionControl.setPrefix(false);
+      map.attributionControl.setPosition('bottomright');
 
       // Dedicated layer group for GeoJSON
       const lg = L.layerGroup().addTo(map);
@@ -191,7 +190,8 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
     };
   }, []);
 
-  // Update Basemap if theme changes
+  // Mapa base: teselas estándar de OpenStreetMap (sin API key). El modo oscuro no usa otro
+  // proveedor: oscurece las mismas teselas con un filtro CSS sobre su capa.
   useEffect(() => {
     const map = mapInstanceRef.current;
     if (!map) return;
@@ -202,14 +202,10 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
       }
     });
 
-    const tileUrl = mapBaseTheme === 'dark' 
-      ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
-      : 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
-
-    L.tileLayer(tileUrl, {
-      subdomains: 'abcd',
+    L.tileLayer(OSM_TILE_URL, {
       maxZoom: 19,
-      attribution: '&copy; OpenStreetMap &copy; CARTO'
+      attribution: OSM_ATTRIBUTION,
+      className: mapBaseTheme === 'dark' ? 'proteus-basemap-dark' : '',
     }).addTo(map);
   }, [mapBaseTheme]);
 
@@ -859,7 +855,7 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
 
       {/* Leyenda de puestos de votación (abajo a la derecha) */}
       {showPuestos && puestosScope && (
-        <div className="absolute bottom-4 right-4 z-10 p-3 rounded-2xl bg-slate-950/70 backdrop-blur-2xl border border-white/20 shadow-2xl text-[11px] max-w-xs pointer-events-auto text-slate-300">
+        <div className="absolute bottom-8 right-4 z-10 p-3 rounded-2xl bg-slate-950/70 backdrop-blur-2xl border border-white/20 shadow-2xl text-[11px] max-w-xs pointer-events-auto text-slate-300">
           <div className="font-bold text-white uppercase text-[10px] tracking-wider flex items-center gap-1.5 mb-1">
             <Vote className="w-3.5 h-3.5 text-emerald-400" />
             {puestosScope}
