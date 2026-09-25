@@ -14,7 +14,8 @@ aproximado (similitud >= 0,9, o >= 0,75 con una palabra distintiva en común). L
 queda sin dirección ni coordenadas; en su mayoría son puestos creados después de 2023.
 
 Uso: python3 scripts/build_puestos_20k.py
-Salida: src/data/electoral/puestos2026Municipios20k.json
+Salida: src/data/electoral/puestos/resumen.json (municipios) y
+        src/data/electoral/puestos/<departamento>.json (puestos, se cargan bajo demanda)
 """
 import collections
 import csv
@@ -28,7 +29,7 @@ ROOT = Path(__file__).resolve().parent.parent
 CENSO = ROOT / '_originales/censo_electoral/censo_puestos_2026-04-30.csv'
 DIVIPOLE = ROOT / '_originales/divipole/divipole_2023_georreferenciada.csv'
 CENSO_JSON = ROOT / 'src/data/electoral/censoElectoral2026.json'
-OUT = ROOT / 'src/data/electoral/puestos2026Municipios20k.json'
+OUT_DIR = ROOT / 'src/data/electoral/puestos'
 UMBRAL = 20_000
 
 
@@ -166,7 +167,11 @@ def main():
         })
 
     municipios.sort(key=lambda x: -x['censo'])
-    OUT.write_text(json.dumps({
+    OUT_DIR.mkdir(parents=True, exist_ok=True)
+    for f in OUT_DIR.glob('*.json'):
+        f.unlink()
+    dump = lambda obj: json.dumps(obj, ensure_ascii=False, separators=(',', ':')) + '\n'
+    (OUT_DIR / 'resumen.json').write_text(dump({
         'meta': {
             'criterio': f'Municipios con censo electoral > {UMBRAL:,} (corte 30-abr-2026)'.replace(',', '.'),
             'fuentes': [
@@ -178,10 +183,15 @@ def main():
             'cruce': dict(stats),
         },
         'municipios': municipios,
-        'puestos': puestos,
-    }, ensure_ascii=False, separators=(',', ':')) + '\n', encoding='utf-8')
-    print(f'OK {OUT.relative_to(ROOT)}: {len(municipios)} municipios, {len(puestos)} puestos, cruce {dict(stats)}')
-
+    }), encoding='utf-8')
+    dep_de = {m['codMunicipio']: m['departamento'] for m in municipios}
+    por_dep = collections.defaultdict(list)
+    for p in puestos:
+        por_dep[dep_de[p['codMunicipio']]].append(p)
+    for dep, lista in por_dep.items():
+        (OUT_DIR / f'{dep}.json').write_text(dump(lista), encoding='utf-8')
+    print(f'OK {OUT_DIR.relative_to(ROOT)}: {len(municipios)} municipios, {len(puestos)} puestos en '
+          f'{len(por_dep)} departamentos, cruce {dict(stats)}')
 
 if __name__ == '__main__':
     main()

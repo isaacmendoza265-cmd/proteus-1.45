@@ -10,10 +10,29 @@ import {
   ZOOM_LEVELS_CONFIG,
   ANTIOQUIA_125_MUNICIPIOS_GEOJSON
 } from '../../data/geojson';
-import { Maximize2, Layers, Compass, Sparkles, Map, Building, Megaphone, ChevronDown, Check } from 'lucide-react';
+import { Maximize2, Layers, Compass, Sparkles, Map, Building, Megaphone, ChevronDown, Check, Vote } from 'lucide-react';
 import { SubregionAggregationEngine } from '../../services/subregionAggregationEngine';
 import { ColombiaMunicipalitiesGeoService } from '../../services/colombiaMunicipalitiesGeoService';
 import { MUNICIPAL_DIVISIONS_REGISTRY, resolveMunicipality } from '../../data/geojson/municipalDivisions';
+import {
+  AsignacionPuestos,
+  PuestoVotacion,
+  asignarPuestosATerritorios,
+  describirCruce,
+  getMunicipio20k,
+  loadPuestosDepartamento,
+  loadPuestosMunicipio,
+  tieneCoordenadas,
+  MUNICIPIOS_20K,
+} from '../../services/pollingStationsService';
+import { ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA } from '../../data/antioquia125MunicipalitiesMasterData';
+
+// Códigos DANE del Valle de Aburrá (nivel metropolitano)
+const VALLE_ABURRA_DANE = new Set(
+  ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA.filter((m) => m.subregionId === 'valle-de-aburra').map((m) => m.daneCode),
+);
+
+const escapeHtml = (s: string) => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]!));
 
 export const COLOMBIA_ALL_DEPARTMENTS = [
   'Amazonas', 'Antioquia', 'Arauca', 'Atlántico', 'Bogotá D.C.', 'Bolívar', 'Boyacá', 
@@ -68,6 +87,14 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
   const [customMuniDataset, setCustomMuniDataset] = useState<TerritoryFeatureCollection | null>(null);
   const [isLoadingMuni, setIsLoadingMuni] = useState<boolean>(false);
   const [muniDropdownOpen, setMuniDropdownOpen] = useState<boolean>(false);
+
+  // Puestos de votación (municipios con más de 20.000 votantes; ver pollingStationsService)
+  const [showPuestos, setShowPuestos] = useState<boolean>(true);
+  const [puestos, setPuestos] = useState<PuestoVotacion[]>([]);
+  const [puestosScope, setPuestosScope] = useState<string>('');
+  const [asignacion, setAsignacion] = useState<AsignacionPuestos | null>(null);
+  const puestosLayerRef = useRef<L.LayerGroup | null>(null);
+  const puestosRendererRef = useRef<L.Canvas | null>(null);
 
   // Cámara: última escala encuadrada y límites de la capa visible
   const lastCameraKeyRef = useRef<string>('');
@@ -145,6 +172,12 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
       // Dedicated layer group for GeoJSON
       const lg = L.layerGroup().addTo(map);
       geoJsonLayerGroupRef.current = lg;
+
+      // Puestos de votación: panel propio por encima de los polígonos
+      map.createPane('puestos');
+      map.getPane('puestos')!.style.zIndex = '450';
+      puestosRendererRef.current = L.canvas({ pane: 'puestos' });
+      puestosLayerRef.current = L.layerGroup().addTo(map);
       mapInstanceRef.current = map;
     }
 
@@ -153,6 +186,8 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
       mapInstanceRef.current?.remove();
       mapInstanceRef.current = null;
       geoJsonLayerGroupRef.current = null;
+      puestosLayerRef.current = null;
+      puestosRendererRef.current = null;
     };
   }, []);
 
@@ -224,6 +259,87 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
       .finally(() => { if (active) setIsLoadingMuni(false); });
     return () => { active = false; };
   }, [currentLevel, selectedMunicipalityId, usesCustomMuni]);
+
+  // Cargar los puestos del territorio visible: departamento (nivel 2), Valle de Aburrá (nivel 3)
+  // o municipio (niveles 4 y 5)
+  useEffect(() => {
+    let scope = '';
+    let load: (() => Promise<PuestoVotacion[]>) | null = null;
+    if (currentLevel === 'departamental') {
+      const dept = selectedDepartmentName || 'Antioquia';
+      scope = `Puestos de ${dept} (municipios con más de 20.000 votantes)`;
+      load = () => loadPuestosDepartamento(dept);
+    } else if (currentLevel === 'metropolitano') {
+      const codigos = new Set(MUNICIPIOS_20K.filter((m) => m.dane && VALLE_ABURRA_DANE.has(m.dane)).map((m) => m.codMunicipio));
+      scope = 'Puestos del Valle de Aburrá';
+      load = () => loadPuestosDepartamento('antioquia').then((l) => l.filter((p) => codigos.has(p.codMunicipio)));
+    } else if (isMunicipalScale) {
+      const m = getMunicipio20k(activeMuni.name, activeMuni.department);
+      if (m) {
+        scope = `Puestos de ${activeMuni.name}`;
+        load = () => loadPuestosMunicipio(m);
+      }
+    }
+    setPuestosScope(scope);
+    if (!load) {
+      setPuestos([]);
+      return;
+    }
+    let active = true;
+    load()
+      .then((l) => { if (active) setPuestos(l); })
+      .catch((e) => console.error('[Proteus] No se pudieron cargar los puestos de votación:', e));
+    return () => { active = false; };
+  }, [currentLevel, selectedDepartmentName, isMunicipalScale, activeMuni.name, activeMuni.department]);
+
+  // Ubicar los puestos en las comunas, barrios o veredas visibles (solo escala municipal)
+  const municipalFeatures = isMunicipalScale ? (usesCustomMuni ? customMuniDataset?.features : GEOJSON_LAYERS_BY_ZOOM[currentLevel]?.features) : undefined;
+  useEffect(() => {
+    if (!municipalFeatures?.length || !puestos.length) {
+      setAsignacion(null);
+      return;
+    }
+    setAsignacion(asignarPuestosATerritorios(puestos, municipalFeatures));
+  }, [puestos, municipalFeatures]);
+
+  // Dibujar los puestos
+  useEffect(() => {
+    const layer = puestosLayerRef.current;
+    const renderer = puestosRendererRef.current;
+    if (!layer || !renderer) return;
+    layer.clearLayers();
+    if (!showPuestos) return;
+    const nombreTerritorio: Record<string, string> = {};
+    for (const f of municipalFeatures ?? []) nombreTerritorio[String(f.id)] = f.properties.name;
+    const municipioDe = (cod: string) => MUNICIPIOS_20K.find((m) => m.codMunicipio === cod)?.municipio ?? '';
+    for (const p of puestos) {
+      if (!tieneCoordenadas(p)) continue;
+      const d = p.divipole2023;
+      const aproximado = d.cruce === 'aproximado';
+      const territorio = asignacion?.territorioDePuesto[p.codPuesto];
+      const marker = L.circleMarker([d.lat, d.lon], {
+        renderer,
+        radius: Math.max(2.5, Math.min(10, Math.sqrt(p.total) / 12)),
+        color: aproximado ? '#fbbf24' : '#f8fafc',
+        weight: 1,
+        fillColor: aproximado ? '#f59e0b' : '#10b981',
+        fillOpacity: 0.85,
+      });
+      marker.bindTooltip(
+        `<div style="font-family: system-ui, sans-serif; font-size: 11px; max-width: 260px;">
+          <div style="color: #34d399; font-size: 9px; text-transform: uppercase; font-weight: 800;">Puesto de votación · ${escapeHtml(municipioDe(p.codMunicipio))}</div>
+          <div style="color: #ffffff; font-size: 12px; font-weight: 900;">${escapeHtml(p.puesto)}</div>
+          ${d.direccion ? `<div style="color: #cbd5e1;">${escapeHtml(d.direccion)}</div>` : ''}
+          ${d.comuna ? `<div style="color: #94a3b8;">Registraduría: ${escapeHtml(d.comuna)}</div>` : ''}
+          ${territorio && nombreTerritorio[territorio] ? `<div style="color: #7dd3fc;">En el mapa: ${escapeHtml(nombreTerritorio[territorio])}</div>` : ''}
+          <div style="color: #ffffff; margin-top: 3px; font-weight: 800;">Censo 2026: ${p.total.toLocaleString('es-CO')} · ${p.mesas} mesas</div>
+          <div style="color: ${aproximado ? '#fbbf24' : '#94a3b8'}; font-size: 9px; margin-top: 2px;">${escapeHtml(describirCruce(p))}</div>
+        </div>`,
+        { sticky: true, className: 'leaflet-glass-tooltip' },
+      );
+      layer.addLayer(marker);
+    }
+  }, [puestos, showPuestos, asignacion, municipalFeatures]);
 
   // Synchronize GeoJSON features and camera transitions when currentLevel, activeLayer, or searchQuery changes
   useEffect(() => {
@@ -440,6 +556,7 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
             ${subregHtml}
             ${corregimientoHtml}
             <div style="color: #cbd5e1; margin-top: 2px;">${metricDisplay}</div>
+            ${asignacion?.porTerritorio[String(feature.id)] ? `<div style="color: #34d399; margin-top: 2px;">Censo en sus puestos: ${asignacion.porTerritorio[String(feature.id)].censo.toLocaleString('es-CO')} · ${asignacion.porTerritorio[String(feature.id)].puestos} puestos</div>` : ''}
             ${(p.isInteractiveTarget || currentLevel === 'nacional') ? '<div style="color: #34d399; font-size: 9px; margin-top: 3px;">✨ Clic para hacer zoom</div>' : ''}
           </div>`,
           { sticky: true, className: 'leaflet-glass-tooltip' }
@@ -471,7 +588,7 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
       }
     }
 
-  }, [currentLevel, activeLayer, searchQuery, selectedFeature, antioquiaViewMode, selectedDepartmentName, customDeptDataset, usesCustomMuni, customMuniDataset]);
+  }, [currentLevel, activeLayer, searchQuery, selectedFeature, antioquiaViewMode, selectedDepartmentName, customDeptDataset, usesCustomMuni, customMuniDataset, asignacion]);
 
   // Leyenda honesta: cuántos territorios de la escala actual no tienen dato de partido
   // (se pintan con el color de su agrupación territorial, no con un color de partido)
@@ -740,6 +857,26 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
         </div>
       </div>
 
+      {/* Leyenda de puestos de votación (abajo a la derecha) */}
+      {showPuestos && puestosScope && (
+        <div className="absolute bottom-4 right-4 z-10 p-3 rounded-2xl bg-slate-950/70 backdrop-blur-2xl border border-white/20 shadow-2xl text-[11px] max-w-xs pointer-events-auto text-slate-300">
+          <div className="font-bold text-white uppercase text-[10px] tracking-wider flex items-center gap-1.5 mb-1">
+            <Vote className="w-3.5 h-3.5 text-emerald-400" />
+            {puestosScope}
+          </div>
+          <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-emerald-500 inline-block border border-white" /> Ubicado con la Divipole 2023</div>
+          <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-amber-500 inline-block border border-amber-300" /> Ubicado por nombre parecido (verificar)</div>
+          <div className="mt-1 text-[10px] text-slate-400 leading-snug">
+            {puestos.filter(tieneCoordenadas).length.toLocaleString('es-CO')} de {puestos.length.toLocaleString('es-CO')} puestos en el mapa (tamaño = censo 2026).
+            {puestos.length - puestos.filter(tieneCoordenadas).length > 0 && ` ${(puestos.length - puestos.filter(tieneCoordenadas).length).toLocaleString('es-CO')} sin coordenadas (puestos nuevos).`}
+            {asignacion && asignacion.fueraDeLaCapa.length > 0 && ` ${asignacion.fueraDeLaCapa.length} fuera de la capa del municipio.`}
+          </div>
+          {puestos.length === 0 && isMunicipalScale && (
+            <div className="text-[10px] text-slate-400">Municipio con 20.000 votantes o menos: no se cargan puestos.</div>
+          )}
+        </div>
+      )}
+
       {/* Floating Quick Map Controls (Top Right) */}
       <div className="absolute top-4 right-4 z-10 flex flex-col gap-2 pointer-events-auto">
         <button
@@ -749,6 +886,16 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
         >
           <Compass className="w-4 h-4 text-sky-400" />
         </button>
+
+        {puestosScope && (
+          <button
+            onClick={() => setShowPuestos((v) => !v)}
+            className={`p-2.5 rounded-xl border backdrop-blur-xl shadow-lg transition ${showPuestos ? 'bg-emerald-500/30 border-emerald-400/60 text-emerald-200' : 'bg-slate-950/70 border-white/20 text-slate-300 hover:text-white'}`}
+            title={showPuestos ? 'Ocultar puestos de votación' : 'Mostrar puestos de votación'}
+          >
+            <Vote className="w-4 h-4" />
+          </button>
+        )}
 
         <button
           onClick={() => setMapBaseTheme(prev => prev === 'dark' ? 'voyager' : 'dark')}

@@ -11,6 +11,7 @@ import { MapBreadcrumb } from '../../components/maps/MapBreadcrumb';
 import { MapLayerControls } from '../../components/maps/MapLayerControls';
 import { MultiLevelZoomMap } from '../../components/maps/MultiLevelZoomMap';
 import { CommuneDeepAnalyticsDrawer } from '../../components/maps/CommuneDeepAnalyticsDrawer';
+import { PollingStationsPanel } from '../../components/maps/PollingStationsPanel';
 import { 
   Compass, 
   Shield, 
@@ -228,6 +229,13 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
           </div>
         )}
       </div>
+
+      {/* 4.2. Puestos de votación del territorio visible */}
+      <PollingStationsPanel
+        currentLevel={currentLevel}
+        selectedDepartmentName={selectedDepartmentName}
+        selectedMunicipalityId={selectedMunicipalityId}
+      />
 
       {/* 4.5. Fast Campaign Bridge Banner (Conexión Directa con Generador de Contenido y Segmentación) */}
       <div className="p-4 sm:p-5 rounded-3xl bg-gradient-to-r from-amber-500/15 via-sky-500/15 to-purple-500/15 border border-amber-400/40 backdrop-blur-2xl shadow-[0_10px_30px_rgba(0,0,0,0.5)] flex flex-col md:flex-row items-center justify-between gap-4">
