@@ -211,7 +211,7 @@ ${subregionsSummary}
 
 Diseña un PLAN DE ACCIÓN ELECTORAL DE CHOQUE PARA CONQUISTAR LA CURUL MARGINAL estructurado en 4 secciones concretas y accionables:
 1. TERRITORIALIZACIÓN DE METAS Y PUESTOS CLAVE:
-   Cómo capturar los ${simulation.marginalSeatInfo.votesNeededForRunnerUp.toLocaleString()} votos adicionales desglosados en las subregiones clave, identificando dónde está la menor resistencia y el menor costo por voto ganado.
+   Cómo capturar los ${simulation.marginalSeatInfo.votesNeededForRunnerUp.toLocaleString()} votos adicionales desglosados en las subregiones clave, identificando dónde está la menor resistencia.
 2. ESTRATEGIA DE CAPTACIÓN DE VOTO BLANDO E INDECISOS:
    Tácticas de contacto directo persona a persona, redes barriales y liderazgo comunal para convertir indecisos en votos marcados efectivos.
 3. MATRIZ DE MENSAJE SEGÚN SUBREGIÓN (PERSUASIÓN COGNITIVA PA-003):

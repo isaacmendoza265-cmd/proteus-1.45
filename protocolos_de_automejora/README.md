@@ -1,6 +1,12 @@
 # REPOSITORIO INTERNO: PROTOCOLOS DE AUTOMEJORA (PA)
 ## PROYECTO PROTEUS v1.2.0 • UNIDAD DE INTELIGENCIA ESTRATÉGICA Y OPTIMIZACIÓN CONTINUA
 
+> [!CAUTION]
+> **Decisión vigente del candidato (25-sep-2026):** Proteus **no predice votos a partir de dinero**
+> (IRPV, costo por voto, votos por millón, votantes persuadidos por presupuesto). Ver
+> [`DECISION_2026-09-25_SIN_PREDICCION_DE_VOTOS_POR_DINERO.md`](DECISION_2026-09-25_SIN_PREDICCION_DE_VOTOS_POR_DINERO.md).
+> Prevalece sobre cualquier protocolo anterior.
+
 ---
 
 ### 1. MISIÓN SUPREMA DE LA UNIDAD DE AUTOMEJORA

@@ -27,7 +27,6 @@ export interface AdvertisingResonanceProfile {
   callToAction: string;
   expectedCTR: number; // Porcentaje (ej. 3.4%)
   estimatedCPM: number; // COP por 1.000 impresiones
-  estimatedCPVP: number; // Costo por Votante Persuadido en COP
   sampleCopyVariantA: string; // Ganancia
   sampleCopyVariantB: string; // Pérdida/Protección
 }
@@ -50,7 +49,6 @@ export const ADVERTISING_ARCHETYPES_DATA: AdvertisingResonanceProfile[] = [
     callToAction: 'Guarda este video, compártelo en tu grupo y sumemos fuerzas para renovar la Cámara por Antioquia.',
     expectedCTR: 4.8,
     estimatedCPM: 8500,
-    estimatedCPVP: 12500,
     sampleCopyVariantA: 'Tu talento no necesita favores políticos. Proponemos cero trabas para tu primera empresa y empleo digital con sueldos dignos en Antioquia. Es ahora.',
     sampleCopyVariantB: 'Nos están dejando sin futuro mientras ellos se reparten los contratos. No te resignes a migrar o a depender de un padrino: blindemos las oportunidades para los jóvenes.'
   },
@@ -71,7 +69,6 @@ export const ADVERTISING_ARCHETYPES_DATA: AdvertisingResonanceProfile[] = [
     callToAction: 'Reenvía este mensaje a las madres de tu cuadra y acompáñanos este domingo para proteger a nuestras familias.',
     expectedCTR: 3.9,
     estimatedCPM: 6200,
-    estimatedCPVP: 9800,
     sampleCopyVariantA: 'Para que ninguna madre tenga que elegir entre trabajar o cuidar a sus hijos: centros de cuidado comunitarios y apoyo directo a las jefas de hogar.',
     sampleCopyVariantB: 'No permitas que el gota a gota siga asfixiando tu hogar. Vamos a erradicar la usura con microcréditos públicos protegidos para las madres trabajadoras.'
   },
@@ -92,7 +89,6 @@ export const ADVERTISING_ARCHETYPES_DATA: AdvertisingResonanceProfile[] = [
     callToAction: 'Ponte la camiseta del comercio antioqueño. Escribe "COMERCIO" al WhatsApp y conoce la propuesta de Isaac Mendoza.',
     expectedCTR: 3.2,
     estimatedCPM: 9800,
-    estimatedCPVP: 15200,
     sampleCopyVariantA: 'Menos impuestos y cero vacunas: defendemos a los comerciantes que madrugan a mover a Antioquia. Isaac Mendoza: la voz del comercio real.',
     sampleCopyVariantB: '¿Hasta cuándo vamos a tolerar que te cobren impuestos como suizo y te den seguridad de selva? Blindemos tu negocio de la delincuencia.'
   },
@@ -113,7 +109,6 @@ export const ADVERTISING_ARCHETYPES_DATA: AdvertisingResonanceProfile[] = [
     callToAction: 'Hable con sus hijos y nietos. Este domingo votemos por la experiencia y el compromiso con nuestros mayores.',
     expectedCTR: 2.7,
     estimatedCPM: 5400,
-    estimatedCPVP: 8200,
     sampleCopyVariantA: 'La salud no puede ser una limosna. Citas médicas a tiempo y medicinas en la puerta de su casa para nuestros adultos mayores. Isaac Mendoza cumple.',
     sampleCopyVariantB: 'Su tranquilidad y su pensión se respetan. Digamos NO al caos y a las filas infames en los hospitales. Defendamos a quienes construyeron a Antioquia.'
   },
@@ -134,7 +129,6 @@ export const ADVERTISING_ARCHETYPES_DATA: AdvertisingResonanceProfile[] = [
     callToAction: 'Nos vemos este domingo en la plaza de mercado. Pregunte por la lista de Isaac Mendoza.',
     expectedCTR: 4.1,
     estimatedCPM: 4200,
-    estimatedCPVP: 7600,
     sampleCopyVariantA: 'Vías veredales transitables para sacar sus cosechas y abonos a precio justo. Isaac Mendoza: el corazón en el campo antioqueño.',
     sampleCopyVariantB: 'No más cosechas perdidas en el lodo. Exigimos presupuesto real para las placas huellas de nuestras veredas. El campo se hace respetar.'
   }

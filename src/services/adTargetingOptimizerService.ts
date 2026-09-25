@@ -10,22 +10,6 @@ import {
 } from '../data/advertising/adTargetingModelData';
 import { callGeminiApi, formatAiError } from './geminiService';
 
-export interface BudgetPacingResult {
-  totalBudget: number;
-  totalEstimatedImpressions: number;
-  totalEstimatedClicks: number;
-  totalEstimatedPersuadedVoters: number;
-  averageCPVP: number;
-  archetypeAllocations: {
-    archetype: AdvertisingResonanceProfile;
-    allocatedBudget: number;
-    budgetSharePercent: number;
-    estimatedImpressions: number;
-    estimatedClicks: number;
-    estimatedPersuadedVoters: number;
-  }[];
-}
-
 export interface GeneratedCreativeSet {
   videoReel: {
     hookSeconds0to2: string;
@@ -54,69 +38,6 @@ export class AdTargetingOptimizerService {
 
   static getProfileById(id: string): AdvertisingResonanceProfile | undefined {
     return ADVERTISING_ARCHETYPES_DATA.find(p => p.id === id);
-  }
-
-  /**
-   * Simula la distribución presupuestal óptima y el retorno electoral de pauta
-   */
-  static simulateBudgetPacing(
-    totalBudgetCop: number,
-    selectedArchetypeIds: string[]
-  ): BudgetPacingResult {
-    const profiles = selectedArchetypeIds.length > 0
-      ? ADVERTISING_ARCHETYPES_DATA.filter(p => selectedArchetypeIds.includes(p.id))
-      : ADVERTISING_ARCHETYPES_DATA;
-
-    if (profiles.length === 0 || totalBudgetCop <= 0) {
-      return {
-        totalBudget: totalBudgetCop,
-        totalEstimatedImpressions: 0,
-        totalEstimatedClicks: 0,
-        totalEstimatedPersuadedVoters: 0,
-        averageCPVP: 0,
-        archetypeAllocations: []
-      };
-    }
-
-    // Ponderación basada en eficiencia (menor CPVP recibe mayor peso relativo de pauta)
-    const invertedCpupScores = profiles.map(p => 1 / p.estimatedCPVP);
-    const sumInverted = invertedCpupScores.reduce((a, b) => a + b, 0);
-
-    let totalImpressions = 0;
-    let totalClicks = 0;
-    let totalPersuaded = 0;
-
-    const allocations = profiles.map((p, idx) => {
-      const weight = invertedCpupScores[idx] / sumInverted;
-      const allocated = Math.round(totalBudgetCop * weight);
-      const impressions = Math.round((allocated / p.estimatedCPM) * 1000);
-      const clicks = Math.round(impressions * (p.expectedCTR / 100));
-      const persuaded = Math.round(allocated / p.estimatedCPVP);
-
-      totalImpressions += impressions;
-      totalClicks += clicks;
-      totalPersuaded += persuaded;
-
-      return {
-        archetype: p,
-        allocatedBudget: allocated,
-        budgetSharePercent: Math.round(weight * 100),
-        estimatedImpressions: impressions,
-        estimatedClicks: clicks,
-        estimatedPersuadedVoters: persuaded
-      };
-    });
-
-    const averageCPVP = totalPersuaded > 0 ? Math.round(totalBudgetCop / totalPersuaded) : 0;
-
-    return {
-      totalBudget: totalBudgetCop,
-      totalEstimatedImpressions: totalImpressions,
-      totalEstimatedClicks: totalClicks,
-      totalEstimatedPersuadedVoters: totalPersuaded,
-      averageCPVP,
-      archetypeAllocations: allocations
-    };
   }
 
   /**

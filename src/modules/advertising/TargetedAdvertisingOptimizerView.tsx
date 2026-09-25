@@ -12,7 +12,6 @@ import {
   TerritoryGeopoliticalIntelligence 
 } from '../../services/holisticAdvertisingIntelligenceService';
 import { AdCreativeVariantCard } from '../../components/advertising/AdCreativeVariantCard';
-import { BudgetPacingSimulator } from '../../components/advertising/BudgetPacingSimulator';
 import { TerritoryIntelligenceBridgeCard } from '../../components/advertising/TerritoryIntelligenceBridgeCard';
 import { CandidateProfile } from '../../components/CandidateProfileManager';
 import { useActiveTerritory } from '../../services/activeTerritoryContextService';
@@ -122,11 +121,11 @@ export const TargetedAdvertisingOptimizerView: React.FC<TargetedAdvertisingOptim
           <h1 className="text-xl sm:text-2xl font-black tracking-tight text-white flex items-center gap-2.5">
             Optimizador de Publicidad Electoral Segmentada
             <span className="text-xs font-bold font-mono px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
-              Eficacia Publicitaria & Retorno Votos
+              Segmentación y Creatividades
             </span>
           </h1>
           <p className="text-xs sm:text-sm text-slate-400 max-w-3xl">
-            Maximiza el retorno persuasivo y la conversión en votos para la campaña de <strong>{candidateName}</strong> en <strong>{selectedTerritory}</strong> mediante el cruce de inteligencia territorial (casas políticas, monitoreo de Gobernación, mapas de calor) con microtargeting publicitario y variantes creativas A/B.
+            Diseña mensajes segmentados para la campaña de <strong>{candidateName}</strong> en <strong>{selectedTerritory}</strong> mediante el cruce de inteligencia territorial (casas políticas, monitoreo de Gobernación, mapas de calor) con microtargeting publicitario y variantes creativas A/B.
           </p>
         </div>
 
@@ -275,10 +274,6 @@ export const TargetedAdvertisingOptimizerView: React.FC<TargetedAdvertisingOptim
         )}
       </div>
 
-      {/* Budget & ROAS Simulator */}
-      <BudgetPacingSimulator
-        selectedArchetypeIds={[selectedProfileId]}
-      />
     </div>
   );
 };
