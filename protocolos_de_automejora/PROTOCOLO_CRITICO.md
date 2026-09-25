@@ -38,6 +38,11 @@ Para que la publicidad electoral sea eficaz y no un despilfarro ciego, **debe al
    - El sistema analiza datos históricos y presentes para predecir y persuadir; no se concibe como una herramienta burocrática o de escrutinio postelectoral aislado.
 4. **Pruebas A/B y Neuromarketing Político**:
    - Toda pieza publicitaria debe formularse con variantes de marco (*Gain Framing* vs. *Loss Framing*) fundamentadas en la Teoría de las Perspectivas (Kahneman & Tversky).
+5. **Principio de Disociación de Automejora y Ejecución (Autorización Soberana del Usuario)**:
+   - *La deliberación, formulación de diagnósticos y diseño de propuestas de la Unidad de Automejora están terminantemente separadas de la ejecución de código en el repositorio.*
+   - *Bajo ninguna circunstancia la Unidad de Automejora modificará archivos fuente, scripts, configuraciones o realizará commits/pushes de manera autónoma sin autorización previa.*
+   - *Al culminar la fase de automejora, la Unidad debe detenerse obligatoriamente, presentar su dictamen colegiado con el desglose exacto de los cambios propuestos (archivos, impactos, riesgos y pruebas) y solicitar el permiso explícito y soberano del usuario.*
+   - *Solo tras la aprobación afirmativa y consciente del usuario se activa la Etapa de Ejecución Técnica.*
 
 ---
 
@@ -91,27 +96,50 @@ Para que la publicidad electoral sea eficaz y no un despilfarro ciego, **debe al
 
 ---
 
-## 4. CICLO DE 6 FASES PARA LA AUTOMEJORA HOLÍSTICA
+## 4. ESTRUCTURA BIFURCADA EN DOS ETAPAS CON PUERTA DE AUTORIZACIÓN (GATEKEEPER)
+
+El ciclo de automejora se divide obligatoriamente en dos etapas independientes, separadas por un punto de parada estricto donde el usuario debe autorizar expresamente la intervención:
 
 ```
-[ FASE 1: CONVOCATORIA & DIAGNÓSTICO ]  ➔ Reto de conversión publicidad/votos en territorio específico.
-                   │
-                   ▼
-[ FASE 2: INVESTIGACIÓN CONCURRENTE ]   ➔ Cruce de Grafos de Casas + Mapas de Calor + Monitoreo 3 Niveles.
-                   │
-                   ▼
-[ FASE 3: DEBATE DIALÉCTICO INTERNO ]   ➔ Confrontación de posturas tácticas (confrontar vs seducir base).
-                   │
-                   ▼
-[ FASE 4: AUDITORÍA EPISTEMOLÓGICA ]    ➔ Auditor certifica que la inteligencia eleva el retorno publicitario.
-                   │
-                   ▼
-[ FASE 5: ESPECIFICACIÓN EN 5 PILARES ] ➔ Arquitectura técnica del puente de inteligencia publicitaria.
-                   │
-                   ▼
-[ FASE 6: PROTOCOLIZACIÓN & EJECUCIÓN]  ➔ Despliegue en código y verificación en el repositorio.
+╔══════════════════════════════════════════════════════════════════════════════════════════════════════╗
+║ ETAPA I: PROTOCOLO DE AUTOMEJORA (DIAGNÓSTICO, DEBATE, FORMULACIÓN Y SOLICITUD DE PERMISO)          ║
+╚══════════════════════════════════════════════════════════════════════════════════════════════════════╝
+  [ FASE 1: CONVOCATORIA & DIAGNÓSTICO ]  ➔ Detección del reto o auditoría de cambios en repositorio.
+                     │
+                     ▼
+  [ FASE 2: INVESTIGACIÓN CONCURRENTE ]   ➔ Cruce de Grafos + Mapas + Censo Registraduría + Monitoreo.
+                     │
+                     ▼
+  [ FASE 3: DEBATE DIALÉCTICO INTERNO ]   ➔ Discusión entre los 7 agentes y fijación de Prioridad (PE).
+                     │
+                     ▼
+  [ FASE 4: AUDITORÍA EPISTEMOLÓGICA ]    ➔ Auditor certifica que la propuesta eleva Publicidad/Votos.
+                     │
+                     ▼
+  [ FASE 5: ESPECIFICACIÓN EN 5 PILARES ] ➔ Qué cambiar, Por qué, Cómo, Archivos y Riesgos.
+                     │
+                     ▼
+╔══════════════════════════════════════════════════════════════════════════════════════════════════════╗
+║ ⛔ PUNTO DE PARADA ESTRICTO (GATEKEEPER): SOLICITUD DE AUTORIZACIÓN AL USUARIO                       ║
+║                                                                                                      ║
+║  "Al finalizar la Fase 5, el proceso SE DETIENE POR COMPLETO.                                        ║
+║   Se presenta el dictamen colegiado con el desglose exacto de los cambios propuestos                 ║
+║   (archivos a intervenir, líneas aproximadas, justificación e impacto esperado).                     ║
+║   SE SOLICITA EXPRESAMENTE EL PERMISO DEL USUARIO.                                                   ║
+║   NINGÚN ARCHIVO DE CÓDIGO PUEDE SER EDITADO O MODIFICADO EN ESTA ETAPA."                            ║
+╚══════════════════════════════════════════════════════════════════════════════════════════════════════╝
+                     │
+                     │ (Solo tras recibir aprobación afirmativa: 'Procede', 'Adelante', 'Sí')
+                     ▼
+╔══════════════════════════════════════════════════════════════════════════════════════════════════════╗
+║ ETAPA II: EJECUCIÓN TÉCNICA, VALIDACIÓN Y SINCRONIZACIÓN (BAJO AUTORIZACIÓN CONCEDIDA)               ║
+╚══════════════════════════════════════════════════════════════════════════════════════════════════════╝
+  [ FASE 6: IMPLEMENTACIÓN TÉCNICA ]      ➔ Edición quirúrgica de código fuente y componentes UI.
+                     │
+                     ▼
+  [ FASE 7: BATERÍA DE PRUEBAS & SYNC ]   ➔ Ejecución de suites de prueba, verificación imports y Git.
 ```
 
 ---
 
-*Aprobado por el cuerpo colegiado de los 7 agentes. Vigente como doctrina unificada de Proyecto Proteus.*
+*Aprobado por el cuerpo colegiado de los 7 agentes y refrendado por orden superior del Usuario. Vigente como doctrina constitucional unificada de Proyecto Proteus.*

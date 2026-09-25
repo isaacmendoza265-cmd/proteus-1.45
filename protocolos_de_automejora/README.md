@@ -27,15 +27,24 @@ La Unidad de Automejora de Proyecto Proteus es un cuerpo colegiado y autónomo d
 
 ---
 
-### 3. METODOLOGÍA DE TRABAJO EN 5 PASOS OBLIGATORIOS
+### 3. METODOLOGÍA DE TRABAJO EN DOS ETAPAS Y 5 PILARES OBLIGATORIOS
 
-Para garantizar que ninguna mejora sea un capricho estético o una complicación innecesaria, **cada Protocolo de Automejora (PA)** debe responder obligatoriamente a los siguientes 5 pilares:
+Para garantizar que ninguna mejora sea un capricho estético o una complicación innecesaria, **cada ciclo de automejora se bifurca estrictamente en dos etapas**:
 
+#### ETAPA I: PROTOCOLO DE AUTOMEJORA (DIAGNÓSTICO, DEBATE Y PROPUESTA)
+Cada **Protocolo de Automejora (PA)** debe responder obligatoriamente a los 5 pilares:
 1. **QUÉ CAMBIAR**: Identificación quirúrgica del componente creativo, de segmentación o de pauta publicitaria a intervenir.
 2. **POR QUÉ CAMBIARLO**: Justificación causal demostrable en incremento de conversión publicitaria y reducción del costo por votante persuadido.
 3. **CÓMO CAMBIARLO**: Subprotocolo técnico de ejecución detallado paso a paso para su desarrollo.
 4. **RECURSOS NECESARIOS**: Dependencias, modelos de IA, matrices de audiencias, horas de cómputo y costos asociados.
 5. **ALTERNATIVAS AL CAMBIO**: Análisis de trade-offs, costo de oportunidad y riesgos de mantener publicidad genérica.
+
+> [!CAUTION]
+> **Punto de Parada Estricto (Gatekeeper - Solicitud de Permiso)**:
+> La Unidad de Automejora **NUNCA modifica código fuente, scripts ni configuraciones de forma autónoma**. Al culminar la Etapa I, la Unidad se detiene, presenta su propuesta con el desglose de archivos e impacto, y **solicita el permiso expreso del usuario**.
+
+#### ETAPA II: EJECUCIÓN TÉCNICA Y DESPLIEGUE (SOLO CON PERMISO CONCEDIDO)
+Únicamente tras la autorización explícita del usuario (`"Procede"`, `"Adelante"`, `"Sí"`), se procede a la modificación de archivos, ejecución de la batería de pruebas y sincronización en Git/GitHub.
 
 ---
 
