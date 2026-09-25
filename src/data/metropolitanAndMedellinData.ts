@@ -10,6 +10,7 @@ import {
   getMedellinCorregimientoCensus,
   type CensusFigures,
 } from '../services/electoralCensusService';
+import { getDaneMunicipio } from '../services/daneMunicipalService';
 
 export interface ComunaElectoralProfile {
   id: string;
@@ -877,7 +878,15 @@ const applyCensus = (
     rec.electoralCensusSource = 'estimado';
   }
 };
-for (const m of Object.values(METROPOLITAN_MUNICIPALITIES_DATA)) applyCensus(m, getMunicipalCensus(m.name));
+for (const m of Object.values(METROPOLITAN_MUNICIPALITIES_DATA)) {
+  applyCensus(m, getMunicipalCensus(m.name));
+  // Población (DANE, proyección 2026) y NBI (DANE, CNPV 2018) oficiales
+  const dane = getDaneMunicipio(m.name);
+  if (dane) {
+    m.population = dane.poblacion;
+    m.nbiPercentage = dane.nbi2018;
+  }
+}
 for (const c of Object.values(MEDELLIN_COMUNAS_DATA)) {
   applyCensus(c, c.zone === 'Urbana' ? getMedellinComunaCensus(c.number) : getMedellinCorregimientoCensus(c.id));
 }

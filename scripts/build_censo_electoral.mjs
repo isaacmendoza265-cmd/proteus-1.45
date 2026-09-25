@@ -63,7 +63,7 @@ const ALIAS_ANTIOQUIA = {
 
 // Tres registros del maestro tenían el nombre del vecino; se corrigen en el maestro,
 // pero el cruce se hace por código DANE para no depender de ello.
-const NOMBRE_POR_DANE = { '05138': 'CANASGORDAS', '05321': 'GUADALUPE', '05674': 'SAN VICENTE' };
+const NOMBRE_POR_DANE = { '05138': 'CANASGORDAS', '05674': 'SAN VICENTE' };
 
 function readCsv(file) {
   const text = fs.readFileSync(path.join(SRC_DIR, file), 'utf8').replace(/^﻿/, '');

@@ -23,6 +23,8 @@ export const ANTIOQUIA_125_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
         name: m.name,
         subregion: m.subregion,
         electoralCensus: m.electoralCensus,
+        population: m.population,
+        nbiPercentage: m.nbiPercentage,
         electedMayor: m.electedMayor,
         winnerParty: m.winnerParty,
         predominantParty: m.predominantParty,

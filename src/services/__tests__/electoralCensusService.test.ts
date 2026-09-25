@@ -19,6 +19,7 @@ import { METROPOLITAN_MUNICIPALITIES_DATA, MEDELLIN_COMUNAS_DATA } from '../../d
 import { ANTIOQUIA_125_MUNICIPIOS_GEOJSON } from '../../data/geojson/antioquia125MunicipiosGeoJson';
 import { ZONE_POPULATION_WEIGHTS } from '../../data/e24/territorialData';
 import { COMUNAS_INFO } from '../../data/e24/comunasData';
+import { getAllDaneMunicipios } from '../daneMunicipalService';
 
 const sum = (xs: number[]) => xs.reduce((a, b) => a + b, 0);
 
@@ -78,17 +79,18 @@ describe('Maestro de los 125 municipios de Antioquia', () => {
   it('corrige los tres registros que tenían el nombre del vecino', () => {
     const by = (dane: string) => ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA.find((m) => m.daneCode === dane)!;
     expect(by('05138').name).toBe('Cañasgordas');
-    expect(by('05321').name).toBe('Guadalupe');
-    expect(by('05321').subregionId).toBe('norte');
+    expect(by('05315').name).toBe('Guadalupe');
+    expect(by('05315').subregionId).toBe('norte');
     expect(by('05674').name).toBe('San Vicente Ferrer');
-    for (const d of ['05138', '05321', '05674']) expect(by(d).dataWarning).toBeTruthy();
+    for (const d of ['05138', '05315', '05674']) expect(by(d).dataWarning).toBeTruthy();
   });
 
   it('alcaldes corregidos según el directorio oficial de la Gobernación (tuqk-aemc)', () => {
     const mayor = (dane: string) => ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA.find((m) => m.daneCode === dane)!.electedMayor;
     expect(mayor('05138')).toBe('Diego Alonso Vanegas Arango'); // Cañasgordas
-    expect(mayor('05318')).toBe('David Esteban Franco Vallejo'); // Guatapé (tenía el de Guarne)
-    expect(mayor('05321')).toBe('José Fernando Salazar Ospina'); // Guadalupe (tenía el de Guatapé)
+    expect(mayor('05318')).toBe('Diego Mauricio Grisales Gallego'); // Guarne
+    expect(mayor('05321')).toBe('David Esteban Franco Vallejo'); // Guatapé
+    expect(mayor('05315')).toBe('José Fernando Salazar Ospina'); // Guadalupe
     expect(mayor('05674')).toBe('Nelson de Jesús Henao Zapata'); // San Vicente Ferrer
   });
 
@@ -137,5 +139,30 @@ describe('Medellín por comuna y corregimiento', () => {
     expect(COMUNAS_INFO.find((c) => c.id === 99)?.type).toBe('rural');
     expect(COMUNAS_INFO.find((c) => c.id === 90)?.type).toBe('censo');
     expect(sum(Object.values(ZONE_POPULATION_WEIGHTS))).toBeCloseTo(1, 10);
+  });
+});
+
+describe('Datos oficiales del DANE en el maestro', () => {
+  const norm = (x: string) => x.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase().replace(/[^A-Z]/g, '');
+  // Nombres oficiales que el DANE escribe distinto
+  const ALIAS: Record<string, string> = {
+    ARMENIAMANTEQUILLA: 'ARMENIA', CAROLINADELPRINCIPE: 'CAROLINA', ELPENOL: 'PENOL', ELRETIRO: 'RETIRO',
+    SANVICENTEFERRER: 'SANVICENTE', SANTAFEDEANTIOQUIA: 'SANTAFEDEANTIOQUIA',
+  };
+
+  it('cada código DANE del maestro corresponde al municipio de ese nombre', () => {
+    const dane = getAllDaneMunicipios();
+    for (const m of ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA) {
+      expect([m.daneCode, norm(dane[m.daneCode].nombre)]).toEqual([m.daneCode, ALIAS[norm(m.name)] ?? norm(m.name)]);
+    }
+  });
+
+  it('población (proyección 2026) y NBI (CNPV 2018) son los del DANE', () => {
+    const dane = getAllDaneMunicipios();
+    for (const m of ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA) {
+      expect(m.population).toBe(dane[m.daneCode].poblacion);
+      expect(m.nbiPercentage).toBe(dane[m.daneCode].nbi2018);
+    }
+    expect(sum(ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA.map((m) => m.population))).toBe(6_963_990);
   });
 });

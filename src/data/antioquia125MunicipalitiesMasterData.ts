@@ -1,7 +1,8 @@
 /**
  * PROTEUS 1.2 - BASE DE DATOS MAESTRA DE LOS 125 MUNICIPIOS DE ANTIOQUIA
  * Consolidados oficiales cruzando:
- * 1. DANE - Censo Nacional de Población y Vivienda & NBI
+ * 1. DANE - Población (proyección 2026) y NBI (CNPV 2018) oficiales, aplicados por código DANE al final
+ *    de este archivo (src/services/daneMunicipalService.ts)
  * 2. Registraduría Nacional del Estado Civil - Elecciones Locales 2023. El censo electoral se
  *    toma del censo oficial con corte 30-abr-2026 (src/services/electoralCensusService.ts)
  * 3. Gobernación de Antioquia - Directorio Oficial de Alcaldes 2024-2027 (tuqk-aemc)
@@ -10,6 +11,7 @@
  */
 
 import { getMunicipalCensus } from '../services/electoralCensusService';
+import { getDaneMunicipio } from '../services/daneMunicipalService';
 
 export interface CouncilPartySeat {
   party: string;
@@ -66,6 +68,8 @@ export interface UnifiedMunicipalityRecord {
   dataWarning?: string;
   /** 'oficial' = Registraduría (corte 30-abr-2026) */
   electoralCensusSource?: 'oficial' | 'estimado';
+  /** true si población y NBI vienen del DANE (proyección 2026 y CNPV 2018) */
+  daneOficial?: boolean;
 }
 
 export const ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA: UnifiedMunicipalityRecord[] = [
@@ -4050,8 +4054,55 @@ export const ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA: UnifiedMunicipalityRecord
   },
   {
     "id": "mpio-05315",
-    "name": "Guarne",
+    "name": "Guadalupe",
     "daneCode": "05315",
+    "department": "Antioquia",
+    "subregion": "Norte",
+    "subregionId": "norte",
+    "category": "6",
+    "population": 9500,
+    "electoralCensus": 7220,
+    "nbiPercentage": 13.2,
+    "areaKm2": 118.2,
+    "predominantStratum": "Estrato 1 y 2 (Rural predominante)",
+    "riskLevel": "Bajo",
+    "predominantParty": "Por verificar",
+    "winnerParty": "Por verificar",
+    "electedMayor": "José Fernando Salazar Ospina",
+    "mayorTitle": "Alcalde",
+    "contact": {
+      "phone": "8616440 Ext 103 - 8616066",
+      "email": "alcaldia@guadalupe-antioquia.gov.co"
+    },
+    "totalCouncilSeats": 9,
+    "economicSectors": [
+      "Turismo masivo; pleno empleo informal.",
+      "Turismo de embalses y hotelería",
+      "Comercio y gastronomía",
+      "Generación hidroeléctrica",
+      "Agricultura tradicional"
+    ],
+    "securityDynamics": {
+      "homicideRate": "Baja letalidad.",
+      "extortionRisk": "Microtráfico turístico.",
+      "armedPresence": "Bandas locales."
+    },
+    "keyProblems": [
+      "Excelente cobertura urbana."
+    ],
+    "strategicOpportunities": [
+      "Seguridad Total como garante de la inversión y desarrollo agroindustrial",
+      "Consolidación del Altiplano como hub aeroportuario y logístico internacional",
+      "Créditos blandos y fomento asociativo para floricultura, aguacate hass y café",
+      "Turismo ecológico y patrimonial sostenible en embalses y cuencas protegidas"
+    ],
+    "updatedAt": "2026-09-20",
+    "dataWarning": "Registro corregido el 24-sep-2026: estaba duplicado con Guatapé (nombre, subregión y datos). Alcalde y contacto según el Directorio oficial de alcaldes de la Gobernación de Antioquia (datos.gov.co tuqk-aemc, actualizado 03-feb-2025). Partido, resultados 2023, población y NBI por verificar. Además, el maestro tenía rotados los códigos DANE de Guarne, Guatapé y Guadalupe (05315 es Guadalupe, 05318 Guarne y 05321 Guatapé según DIVIPOLA); corregido el 25-sep-2026."
+  },
+  {
+    "id": "mpio-05318",
+    "name": "Guarne",
+    "daneCode": "05318",
     "department": "Antioquia",
     "subregion": "Oriente",
     "subregionId": "oriente",
@@ -4059,7 +4110,7 @@ export const ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA: UnifiedMunicipalityRecord
     "population": 58000,
     "electoralCensus": 41760,
     "nbiPercentage": 10.3,
-    "areaKm2": 118.2,
+    "areaKm2": 151.8,
     "predominantStratum": "Estrato 1 y 2 (Rural predominante)",
     "riskLevel": "Bajo",
     "predominantParty": "Coalición",
@@ -4128,12 +4179,13 @@ export const ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA: UnifiedMunicipalityRecord
       "Créditos blandos y fomento asociativo para floricultura, aguacate hass y café",
       "Turismo ecológico y patrimonial sostenible en embalses y cuencas protegidas"
     ],
-    "updatedAt": "2026-09-20"
+    "updatedAt": "2026-09-20",
+    "dataWarning": "Además, el maestro tenía rotados los códigos DANE de Guarne, Guatapé y Guadalupe (05315 es Guadalupe, 05318 Guarne y 05321 Guatapé según DIVIPOLA); corregido el 25-sep-2026."
   },
   {
-    "id": "mpio-05318",
+    "id": "mpio-05321",
     "name": "Guatapé",
-    "daneCode": "05318",
+    "daneCode": "05321",
     "department": "Antioquia",
     "subregion": "Oriente",
     "subregionId": "oriente",
@@ -4141,7 +4193,7 @@ export const ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA: UnifiedMunicipalityRecord
     "population": 9500,
     "electoralCensus": 7220,
     "nbiPercentage": 13.2,
-    "areaKm2": 151.8,
+    "areaKm2": 83.3,
     "predominantStratum": "Estrato 1 y 2 (Rural predominante)",
     "riskLevel": "Bajo",
     "predominantParty": "Centro Democrático",
@@ -4206,54 +4258,7 @@ export const ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA: UnifiedMunicipalityRecord
       "Turismo ecológico y patrimonial sostenible en embalses y cuencas protegidas"
     ],
     "updatedAt": "2026-09-20",
-    "dataWarning": "Registro corregido el 24-sep-2026: tenía el alcalde y el resultado de Guarne. Se trasladaron los datos de Guatapé que estaban en el registro de Guadalupe; alcalde confirmado con el Directorio oficial de alcaldes de la Gobernación de Antioquia (datos.gov.co tuqk-aemc, actualizado 03-feb-2025). Resultados 2023 por verificar con la Registraduría."
-  },
-  {
-    "id": "mpio-05321",
-    "name": "Guadalupe",
-    "daneCode": "05321",
-    "department": "Antioquia",
-    "subregion": "Norte",
-    "subregionId": "norte",
-    "category": "6",
-    "population": 9500,
-    "electoralCensus": 7220,
-    "nbiPercentage": 13.2,
-    "areaKm2": 83.3,
-    "predominantStratum": "Estrato 1 y 2 (Rural predominante)",
-    "riskLevel": "Bajo",
-    "predominantParty": "Por verificar",
-    "winnerParty": "Por verificar",
-    "electedMayor": "José Fernando Salazar Ospina",
-    "mayorTitle": "Alcalde",
-    "contact": {
-      "phone": "8616440 Ext 103 - 8616066",
-      "email": "alcaldia@guadalupe-antioquia.gov.co"
-    },
-    "totalCouncilSeats": 9,
-    "economicSectors": [
-      "Turismo masivo; pleno empleo informal.",
-      "Turismo de embalses y hotelería",
-      "Comercio y gastronomía",
-      "Generación hidroeléctrica",
-      "Agricultura tradicional"
-    ],
-    "securityDynamics": {
-      "homicideRate": "Baja letalidad.",
-      "extortionRisk": "Microtráfico turístico.",
-      "armedPresence": "Bandas locales."
-    },
-    "keyProblems": [
-      "Excelente cobertura urbana."
-    ],
-    "strategicOpportunities": [
-      "Seguridad Total como garante de la inversión y desarrollo agroindustrial",
-      "Consolidación del Altiplano como hub aeroportuario y logístico internacional",
-      "Créditos blandos y fomento asociativo para floricultura, aguacate hass y café",
-      "Turismo ecológico y patrimonial sostenible en embalses y cuencas protegidas"
-    ],
-    "updatedAt": "2026-09-20",
-    "dataWarning": "Registro corregido el 24-sep-2026: estaba duplicado con Guatapé (nombre, subregión y datos). Alcalde y contacto según el Directorio oficial de alcaldes de la Gobernación de Antioquia (datos.gov.co tuqk-aemc, actualizado 03-feb-2025). Partido, resultados 2023, población y NBI por verificar."
+    "dataWarning": "Registro corregido el 24-sep-2026: tenía el alcalde y el resultado de Guarne. Se trasladaron los datos de Guatapé que estaban en el registro de Guadalupe; alcalde confirmado con el Directorio oficial de alcaldes de la Gobernación de Antioquia (datos.gov.co tuqk-aemc, actualizado 03-feb-2025). Resultados 2023 por verificar con la Registraduría. Además, el maestro tenía rotados los códigos DANE de Guarne, Guatapé y Guadalupe (05315 es Guadalupe, 05318 Guarne y 05321 Guatapé según DIVIPOLA); corregido el 25-sep-2026."
   },
   {
     "id": "mpio-05310",
@@ -9802,4 +9807,10 @@ for (const m of ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA) {
   const official = getMunicipalCensus(m.daneCode);
   if (official) m.electoralCensus = official.total;
   m.electoralCensusSource = official ? 'oficial' : 'estimado';
+  const dane = getDaneMunicipio(m.daneCode);
+  if (dane) {
+    m.population = dane.poblacion;
+    m.nbiPercentage = dane.nbi2018;
+  }
+  m.daneOficial = !!dane;
 }
