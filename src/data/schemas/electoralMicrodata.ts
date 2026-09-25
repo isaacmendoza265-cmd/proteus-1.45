@@ -44,30 +44,7 @@ export interface PollingStationRecord {
   coordinates: [number, number]; // [lat, lng]
   riskLevel: AnomalySeverity;
   tables: PollingTableRecord[];
-  benfordChiSquare: number;
-  benfordPValue: number;
-  isBenfordAnomalous: boolean;
   historicalDominantParty: string;
-}
-
-export interface BenfordDigitDistribution {
-  digit: number;
-  observedCount: number;
-  observedPercentage: number;
-  theoreticalPercentage: number;
-  difference: number;
-}
-
-export interface BenfordTestResult {
-  digitPosition: 1 | 2;
-  totalNumbersAnalyzed: number;
-  chiSquare: number;
-  degreesOfFreedom: number;
-  pValue: number;
-  criticalValue95: number;
-  isAnomalous: boolean;
-  interpretation: string;
-  distribution: BenfordDigitDistribution[];
 }
 
 export interface ElectoralReclamationDraft {

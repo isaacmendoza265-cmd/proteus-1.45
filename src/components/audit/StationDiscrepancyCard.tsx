@@ -9,8 +9,7 @@ import {
   FileText, 
   ChevronDown, 
   ChevronUp, 
-  Scale, 
-  ShieldAlert
+  Scale
 } from 'lucide-react';
 
 interface StationDiscrepancyCardProps {
@@ -93,10 +92,6 @@ export const StationDiscrepancyCard: React.FC<StationDiscrepancyCardProps> = ({
         <div className="flex items-center gap-1.5 text-slate-400">
           <Scale className="w-3.5 h-3.5 text-amber-400" />
           <span>Mesas con descuadre: <b className="text-rose-400 font-mono">{tablesWithDiscrepancy.length}</b></span>
-        </div>
-        <div className="flex items-center gap-1.5 text-slate-400">
-          <ShieldAlert className="w-3.5 h-3.5 text-purple-400" />
-          <span>Benford χ²: <b className="text-white font-mono">{station.benfordChiSquare.toFixed(1)}</b></span>
         </div>
         <div className="flex items-center gap-1.5 text-slate-400">
           <span>Dominancia: <b className="text-slate-200">{station.historicalDominantParty}</b></span>

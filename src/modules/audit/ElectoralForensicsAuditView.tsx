@@ -3,11 +3,9 @@ import { POLLING_STATIONS_MASTER_DATA } from '../../data/electoralAudit/electora
 import { 
   PollingStationRecord, 
   PollingTableRecord, 
-  ElectoralReclamationDraft,
-  BenfordTestResult 
+  ElectoralReclamationDraft
 } from '../../data/schemas/electoralMicrodata';
 import { ElectoralForensicsService } from '../../services/electoralForensicsService';
-import { BenfordDistributionChart } from '../../components/audit/BenfordDistributionChart';
 import { StationDiscrepancyCard } from '../../components/audit/StationDiscrepancyCard';
 import { CandidateProfile } from '../../components/CandidateProfileManager';
 import { 
@@ -22,7 +20,6 @@ import {
   Search,
   Filter,
   CheckCircle2,
-  TrendingUp,
   Download
 } from 'lucide-react';
 
@@ -41,7 +38,6 @@ export const ElectoralForensicsAuditView: React.FC<ElectoralForensicsAuditViewPr
   const [selectedMuni, setSelectedMuni] = useState<string>('TODOS');
   const [onlyAnomalous, setOnlyAnomalous] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [benfordDigit, setBenfordDigit] = useState<1 | 2>(2);
 
   // Active Reclamation Modal
   const [activeReclamation, setActiveReclamation] = useState<ElectoralReclamationDraft | null>(null);
@@ -63,16 +59,6 @@ export const ElectoralForensicsAuditView: React.FC<ElectoralForensicsAuditViewPr
     });
   }, [selectedMuni, onlyAnomalous, searchQuery]);
 
-  // Aggregate numbers for Benford test based on current selection
-  const aggregatedBenfordTest: BenfordTestResult = useMemo(() => {
-    const allNumbers: number[] = [];
-    filteredStations.forEach(st => {
-      const numbers = ElectoralForensicsService.extractVotesVectorFromStation(st);
-      allNumbers.push(...numbers);
-    });
-    return ElectoralForensicsService.calculateBenfordDistribution(allNumbers, benfordDigit);
-  }, [filteredStations, benfordDigit]);
-
   // Macro KPIs
   const totalAuditStations = filteredStations.length;
   const totalAuditTables = filteredStations.reduce((acc, st) => acc + st.tables.length, 0);
@@ -82,7 +68,6 @@ export const ElectoralForensicsAuditView: React.FC<ElectoralForensicsAuditViewPr
   const totalDisputedVotes = filteredStations.reduce((acc, st) => {
     return acc + st.tables.reduce((sum, t) => sum + Math.abs(t.discrepancy), 0);
   }, 0);
-  const stationsWithBenfordAlert = filteredStations.filter(st => st.isBenfordAnomalous).length;
 
   const handleOpenReclamation = (table: PollingTableRecord, station: PollingStationRecord) => {
     const draft = ElectoralForensicsService.generateReclamationDraft(table, station, candidateName);
@@ -142,7 +127,7 @@ Fecha y Hora de Radicación: ${activeReclamation.timestamp}
             </span>
           </h1>
           <p className="text-xs sm:text-sm text-slate-400 max-w-3xl">
-            Control de mesas, detección de alteraciones matemáticas mediante la <strong>Ley de Benford (2º Dígito - Walter Mebane)</strong> y generación inmediata de minutas de reclamación legal para el escrutinio de {candidateName}.
+            Control de mesas, detección de alteraciones matemáticas entre actas E-14 y E-24 y generación inmediata de minutas de reclamación legal para el escrutinio de {candidateName}.
           </p>
         </div>
 
@@ -160,7 +145,7 @@ Fecha y Hora de Radicación: ${activeReclamation.timestamp}
       </div>
 
       {/* Macro KPIs */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-2xl p-4 shadow-xl">
           <div className="flex items-center justify-between text-sky-400 mb-1">
             <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400">Puestos Auditados</span>
@@ -188,14 +173,6 @@ Fecha y Hora de Radicación: ${activeReclamation.timestamp}
           <div className="text-[10px] text-slate-400 mt-1">Votos recuperables por escrutinio</div>
         </div>
 
-        <div className="bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-2xl p-4 shadow-xl">
-          <div className="flex items-center justify-between text-purple-400 mb-1">
-            <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400">Alertas Benford</span>
-            <TrendingUp className="w-4 h-4" />
-          </div>
-          <div className="text-2xl font-black font-mono text-purple-300">{stationsWithBenfordAlert}</div>
-          <div className="text-[10px] text-slate-400 mt-1">Puestos con χ² anómalo (p &lt; 0.05)</div>
-        </div>
       </div>
 
       {/* Filter Controls */}
@@ -243,12 +220,6 @@ Fecha y Hora de Radicación: ${activeReclamation.timestamp}
           </div>
         </div>
       </div>
-
-      {/* Benford Law Section */}
-      <BenfordDistributionChart
-        testResult={aggregatedBenfordTest}
-        onToggleDigitPosition={(pos) => setBenfordDigit(pos)}
-      />
 
       {/* Stations and Tables Audit Section */}
       <div className="space-y-4">

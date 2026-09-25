@@ -335,14 +335,14 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
                   ? 'bg-gradient-to-r from-rose-500/35 to-amber-600/40 border border-rose-300/60 text-white shadow-[inset_0_1.5px_2px_0_rgba(255,255,255,0.5),0_4px_20px_rgba(244,63,94,0.4)]'
                   : 'text-slate-300 hover:text-white hover:bg-white/10 border border-transparent'
               }`}
-              title="Auditoría Forense Electoral, Ley de Benford y Escrutinios E-14 vs E-24"
+              title="Auditoría Electoral: Escrutinios E-14 vs E-24 y reclamaciones"
             >
               <Scale className="w-4 h-4 shrink-0 text-amber-400" />
               {!collapsed && (
                 <div className="flex items-center justify-between w-full">
                   <span>Auditoría E-14/E-24</span>
                   <span className="text-[9px] px-1.5 py-0.2 rounded bg-rose-500/20 text-rose-300 font-mono font-bold">
-                    Benford
+                    E-14
                   </span>
                 </div>
               )}

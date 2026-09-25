@@ -6,6 +6,9 @@
 > (IRPV, costo por voto, votos por millón, votantes persuadidos por presupuesto). Ver
 > [`DECISION_2026-09-25_SIN_PREDICCION_DE_VOTOS_POR_DINERO.md`](DECISION_2026-09-25_SIN_PREDICCION_DE_VOTOS_POR_DINERO.md).
 > Prevalece sobre cualquier protocolo anterior.
+>
+> **Decisión vigente (25-sep-2026):** Proteus **no usa la Ley de Benford** ni otras "pruebas de fraude"
+> estadísticas. Ver [`DECISION_2026-09-25_SIN_LEY_DE_BENFORD.md`](DECISION_2026-09-25_SIN_LEY_DE_BENFORD.md).
 
 ---
 

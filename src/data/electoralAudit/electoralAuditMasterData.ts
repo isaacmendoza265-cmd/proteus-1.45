@@ -20,9 +20,6 @@ export const POLLING_STATIONS_MASTER_DATA: PollingStationRecord[] = [
     turnoutPercentage: 58.0,
     coordinates: [6.1983, -75.5781],
     riskLevel: 'BAJO',
-    benfordChiSquare: 7.42,
-    benfordPValue: 0.593,
-    isBenfordAnomalous: false,
     historicalDominantParty: 'Centro Democrático / Creemos',
     tables: [
       {
@@ -85,9 +82,6 @@ export const POLLING_STATIONS_MASTER_DATA: PollingStationRecord[] = [
     turnoutPercentage: 45.96,
     coordinates: [6.2995, -75.5492],
     riskLevel: 'ALTO',
-    benfordChiSquare: 19.85,
-    benfordPValue: 0.018,
-    isBenfordAnomalous: true,
     historicalDominantParty: 'Pacto Histórico / Independientes',
     tables: [
       {
@@ -152,9 +146,6 @@ export const POLLING_STATIONS_MASTER_DATA: PollingStationRecord[] = [
     turnoutPercentage: 50.0,
     coordinates: [6.3352, -75.5583],
     riskLevel: 'CRITICO',
-    benfordChiSquare: 23.41,
-    benfordPValue: 0.005,
-    isBenfordAnomalous: true,
     historicalDominantParty: 'Casa Suárez Mira / Conservador',
     tables: [
       {
@@ -219,9 +210,6 @@ export const POLLING_STATIONS_MASTER_DATA: PollingStationRecord[] = [
     turnoutPercentage: 54.5,
     coordinates: [6.1738, -75.6112],
     riskLevel: 'MEDIO',
-    benfordChiSquare: 15.22,
-    benfordPValue: 0.085,
-    isBenfordAnomalous: false,
     historicalDominantParty: 'Casa Trujillo / Conservador',
     tables: [
       {
@@ -270,9 +258,6 @@ export const POLLING_STATIONS_MASTER_DATA: PollingStationRecord[] = [
     turnoutPercentage: 59.9,
     coordinates: [6.1684, -75.5861],
     riskLevel: 'BAJO',
-    benfordChiSquare: 6.89,
-    benfordPValue: 0.648,
-    isBenfordAnomalous: false,
     historicalDominantParty: 'Liberalismo de Envigado (Héctor Londoño)',
     tables: [
       {
