@@ -44,11 +44,16 @@ describe('Regla de niveles del zoom municipal', () => {
     expect(nivelesMunicipales('amaga', 'Amagá').ultimoNivel).toBe(true); // 24.772
   });
 
-  it('Bello: 10 comunas y 132 barrios, todos con comuna', async () => {
+  it('Bello: 12 comunas, 132 barrios y 19 veredas (planos del POT), todos con padre', async () => {
     const b = MUNICIPAL_DIVISIONS_REGISTRY.bello;
     const [div, sub] = await Promise.all([b.loadDivisions!(), b.loadSubdivisions!()]);
-    expect(div.features).toHaveLength(10);
-    expect(sub.features).toHaveLength(132);
+    expect(div.features.filter((f) => f.properties.tipo === 'Comuna')).toHaveLength(12);
+    expect(div.features.filter((f) => f.properties.tipo === 'Zona rural').map((f) => f.properties.name).sort())
+      .toEqual(['Corregimiento San Félix', 'Veredas sin corregimiento']);
+    expect(sub.features.filter((f) => f.properties.tipo === 'Barrio')).toHaveLength(132);
+    const veredas = sub.features.filter((f) => f.properties.tipo === 'Vereda');
+    expect(veredas).toHaveLength(19);
+    expect(veredas.filter((f) => f.properties.parentName === 'Corregimiento San Félix')).toHaveLength(10);
     expect(sub.features.every((f) => f.properties.parentId)).toBe(true);
   });
 });

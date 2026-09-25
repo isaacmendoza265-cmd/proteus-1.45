@@ -32,13 +32,19 @@ const SMALL = new Set(['de', 'del', 'la', 'las', 'los', 'el', 'y', 'e', 'en']);
 const titleCase = (s) => String(s).trim().replace(/\s+/g, ' ').toLowerCase()
   .split(' ').map((w, i) => (i > 0 && SMALL.has(w) ? w : w.charAt(0).toUpperCase() + w.slice(1))).join(' ');
 
-// Bello: la Alcaldía publica solo los barrios (POT, Acuerdo 033 de 2009). La comuna de cada barrio
-// se asignó con la capa Admin_Comunas (EAFIT, 2023) en asignacion_comunas.txt (clave = shape_area;
-// m = mayoría clara, p = parcial, c = por cercanía). Las comunas se construyen disolviendo los barrios
-// ya simplificados, para que sus bordes coincidan exactamente.
-const BELLO_COMUNAS = {
+// Bello: la Alcaldía publica solo los barrios (POT, Acuerdo 033 de 2009). La comuna de cada barrio sale
+// del plano oficial del POT "Comunas y Barrios" (capa Comunas_POT_2009, 12 comunas), digitalizado y
+// georreferenciado (ver _originales/bello/FUENTE.md). asignacion_comunas.txt: clave = shape_area;
+// m = el 80 % o más del barrio cae en la comuna, p = mayoría parcial, c = por cercanía.
+// El plano numera las comunas sin nombre. Los nombres vienen del mapa de 10 comunas con nombre que
+// usa la Alcaldía, solo donde la comuna es la misma en ambos (decisión de Isaac, 25-sep-2026):
+// la Niquía de ese mapa se parte aquí en 8 y 9, Fontidueño pasa a ser la 10 y Acevedo la 11;
+// la 9, la 11 y la 12 quedan solo con número hasta tener su nombre oficial.
+// Las comunas se construyen disolviendo los barrios ya simplificados, para que los bordes coincidan.
+const BELLO_TOTAL_COMUNAS = 12;
+const BELLO_NOMBRES = {
   1: 'París', 2: 'La Madera', 3: 'Santa Ana', 4: 'Suárez', 5: 'La Cumbre',
-  6: 'Bellavista', 7: 'Altos de Niquía', 8: 'Niquía', 9: 'Fontidueño', 10: 'Acevedo',
+  6: 'Bellavista', 7: 'Altos de Niquía', 8: 'Niquía', 10: 'Fontidueño',
 };
 const limpiarBarrioBello = (n) => String(n).trim()
   .replace(/^B\.\s*/, '').replace(/^Urb\.\s*/, 'Urb. ').replace(/^Asent\.\s*de Hecho/, 'Asentamiento de Hecho')
@@ -54,6 +60,7 @@ function prepBello() {
   src.features.forEach((f, i) => {
     const a = asign[f.properties.shape_area];
     if (!a) throw new Error(`Barrio de Bello sin comuna asignada: ${f.properties.nombre}`);
+    if (!(Number(a.comuna) >= 1 && Number(a.comuna) <= BELLO_TOTAL_COMUNAS)) throw new Error(`Comuna fuera de rango: ${a.comuna}`);
     f.properties = { BARRIO: `B${String(i + 1).padStart(3, '0')}`, NOMBRE: limpiarBarrioBello(f.properties.nombre), COMUNA: a.comuna, ASIGNACION: a.tipo };
   });
   fs.writeFileSync(conComuna, JSON.stringify(src));
@@ -61,18 +68,34 @@ function prepBello() {
     'precision=0.00001', 'format=geojson', 'geojson-type=FeatureCollection']);
   mapshaper([path.join(dir, 'Bello_Barrios_con_comuna.geojson'), '-dissolve', 'COMUNA', '-clean',
     '-o', path.join(dir, 'Bello_Comunas_desde_barrios.geojson'), 'precision=0.00001', 'format=geojson', 'geojson-type=FeatureCollection']);
+  // Zona rural: veredas del plano PL14 del POT (digitalizado); se agrupan en el corregimiento San Félix
+  // y en las veredas que no pertenecen a ningún corregimiento.
+  const ver = JSON.parse(fs.readFileSync(path.join(dir, 'Bello_Veredas_PL14_digitalizadas.geojson'), 'utf8'));
+  ver.features.forEach((f, i) => {
+    f.properties = { VEREDA: `V${String(i + 1).padStart(2, '0')}`, NOMBRE: f.properties.NOMBRE,
+      GRUPO: f.properties.CORREGIMIENTO ? 'SF' : 'RUR' };
+  });
+  const verTmp = path.join(tmp, 'veredas.geojson');
+  fs.writeFileSync(verTmp, JSON.stringify(ver));
+  mapshaper([verTmp, '-clean', 'snap-interval=0.00005', '-simplify', '20%', 'keep-shapes', '-o', path.join(dir, 'Bello_Veredas.geojson'),
+    'precision=0.00001', 'format=geojson', 'geojson-type=FeatureCollection']);
+  mapshaper([path.join(dir, 'Bello_Veredas.geojson'), '-dissolve', 'GRUPO', '-clean',
+    '-o', path.join(dir, 'Bello_Rural_desde_veredas.geojson'), 'precision=0.00001', 'format=geojson', 'geojson-type=FeatureCollection']);
   fs.rmSync(tmp, { recursive: true, force: true });
 }
+const BELLO_RURAL = { SF: 'Corregimiento San Félix', RUR: 'Veredas sin corregimiento' };
 
 /** Configuración por municipio: capas de origen y cómo leer sus campos. */
 const MUNICIPIOS = {
   bello: {
     prep: prepBello,
     divisiones: [
-      { file: 'bello/Bello_Comunas_desde_barrios.geojson', tipo: 'Comuna', code: (p) => String(p.COMUNA), name: (p) => `Comuna ${p.COMUNA} - ${BELLO_COMUNAS[p.COMUNA]}` },
+      { file: 'bello/Bello_Comunas_desde_barrios.geojson', tipo: 'Comuna', code: (p) => String(p.COMUNA), name: (p) => (BELLO_NOMBRES[p.COMUNA] ? `Comuna ${p.COMUNA} - ${BELLO_NOMBRES[p.COMUNA]}` : `Comuna ${p.COMUNA}`) },
+      { file: 'bello/Bello_Rural_desde_veredas.geojson', tipo: 'Zona rural', code: (p) => p.GRUPO, name: (p) => BELLO_RURAL[p.GRUPO] },
     ],
     subdivisiones: [
       { file: 'bello/Bello_Barrios_con_comuna.geojson', tipo: 'Barrio', code: (p) => p.BARRIO, name: (p) => p.NOMBRE },
+      { file: 'bello/Bello_Veredas.geojson', tipo: 'Vereda', code: (p) => p.VEREDA, name: (p) => p.NOMBRE },
     ],
     simplify: '100%',
   },
