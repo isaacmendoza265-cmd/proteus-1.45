@@ -216,7 +216,7 @@ export const CandidateProfilesView: React.FC<CandidateProfilesViewProps> = ({
                   Simulador D'Hondt
                 </div>
                 <div className="text-[10px] text-slate-400 mt-0.5">
-                  Curul marginal y umbral 3%
+                  Curul marginal y umbral (Art. 263)
                 </div>
               </button>
 

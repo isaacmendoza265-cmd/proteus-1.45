@@ -38,6 +38,8 @@ export interface SimulationOutput {
   totalValidVotes: number;
   thresholdVotes: number;
   thresholdPercentage: number;
+  /** Regla aplicada, p. ej. "3 % de los votos válidos (Senado)" */
+  thresholdRule: string;
   cifraRepartidora: number;
   results: DhondtSeatResult[];
   marginalSeatInfo: {
@@ -127,6 +129,25 @@ export const ANTIOQUIA_CAMARA_2026_BASELINE: {
   ]
 };
 
+/** Corporación que se simula: define el umbral (Art. 263 C.P.) */
+export type Corporation = 'senado' | 'camara';
+
+/**
+ * Umbral según el Art. 263 de la Constitución:
+ * - Senado (circunscripción nacional): 3 % de los votos válidos.
+ * - Cámara y demás corporaciones: 50 % del cociente electoral (votos válidos / curules) cuando se
+ *   eligen más de dos curules; 30 % del cociente cuando se eligen dos.
+ */
+export function computeThreshold(corporation: Corporation, totalValidVotes: number, totalSeats: number) {
+  if (corporation === 'senado') {
+    return { votes: Math.round(totalValidVotes * 0.03), rule: '3 % de los votos válidos (Senado)' };
+  }
+  const quotient = totalValidVotes / Math.max(totalSeats, 1);
+  if (totalSeats > 2) return { votes: Math.round(quotient * 0.5), rule: '50 % del cociente electoral (más de 2 curules)' };
+  if (totalSeats === 2) return { votes: Math.round(quotient * 0.3), rule: '30 % del cociente electoral (2 curules)' };
+  return { votes: 0, rule: 'Sin umbral (una sola curul)' };
+}
+
 export class ElectoralSimulatorService {
   /**
    * Ejecuta el cálculo determinista D'Hondt de asignación de curules.
@@ -136,16 +157,17 @@ export class ElectoralSimulatorService {
     turnoutPercent: number,
     blankVotesPercent: number,
     parties: SimulatorParty[],
-    totalSeats: number = 17
+    totalSeats: number = 17,
+    corporation: Corporation = 'camara'
   ): SimulationOutput {
     const totalVotesCast = Math.round((census * turnoutPercent) / 100);
     const blankVotes = Math.round((totalVotesCast * blankVotesPercent) / 100);
     const nullVotes = Math.round(totalVotesCast * 0.045); // Promedio histórico nulos/no marcados 4.5%
     const totalValidVotes = totalVotesCast - nullVotes;
 
-    // Umbral constitucional: 3% de los votos válidos (o 50% del cociente electoral)
-    const thresholdPercentage = 3.0;
-    const thresholdVotes = Math.round((totalValidVotes * thresholdPercentage) / 100);
+    // Umbral constitucional según la corporación (Art. 263 C.P.)
+    const { votes: thresholdVotes, rule: thresholdRule } = computeThreshold(corporation, totalValidVotes, totalSeats);
+    const thresholdPercentage = totalValidVotes > 0 ? (thresholdVotes / totalValidVotes) * 100 : 0;
 
     // Ajustar votación de partidos proporcional a la participación simulada
     const totalBaseVotes = parties.reduce((sum, p) => sum + p.baseVotes, 0);
@@ -244,6 +266,7 @@ export class ElectoralSimulatorService {
       totalValidVotes,
       thresholdVotes,
       thresholdPercentage,
+      thresholdRule,
       cifraRepartidora: Math.round(cifraRepartidora),
       results,
       marginalSeatInfo: {

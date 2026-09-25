@@ -55,9 +55,10 @@ export const ElectoralSimulatorDashboard: React.FC = () => {
       turnoutPercent,
       blankVotesPercent,
       parties,
-      totalSeats
+      totalSeats,
+      activeCircumscription === 'antioquia-camara' ? 'camara' : 'senado'
     );
-  }, [census, turnoutPercent, blankVotesPercent, parties, totalSeats]);
+  }, [census, turnoutPercent, blankVotesPercent, parties, totalSeats, activeCircumscription]);
 
   // Subregional Target Allocation Breakdown
   const subregionalBreakdown = useMemo(() => {
@@ -195,7 +196,7 @@ export const ElectoralSimulatorDashboard: React.FC = () => {
 - Circunscripción: ${territoryName}
 - Censo Electoral: ${census.toLocaleString()} ciudadanos
 - Participación Proyectada: ${simulation.turnoutPercentage}% (${simulation.totalVotesCast.toLocaleString()} sufragantes)
-- Umbral Legal Constitucional (3%): ${simulation.thresholdVotes.toLocaleString()} votos válidos
+- Umbral Legal Constitucional (${simulation.thresholdRule}): ${simulation.thresholdVotes.toLocaleString()} votos válidos
 - Cifra Repartidora Proyectada: ${simulation.cifraRepartidora.toLocaleString()} votos
 - Último Escaño Asignado (Curul #${totalSeats}): Retenido por "${simulation.marginalSeatInfo.lastSeatPartyName}" (Cociente: ${simulation.marginalSeatInfo.lastSeatQuotient.toLocaleString()})
 - Perseguidor Inmediato: "${simulation.marginalSeatInfo.runnerUpPartyName}"
@@ -323,12 +324,12 @@ Diseña un PLAN DE ACCIÓN ELECTORAL DE CHOQUE PARA CONQUISTAR LA CURUL MARGINAL
         </div>
 
         <div className="p-4 rounded-3xl bg-slate-950/40 backdrop-blur-2xl border border-amber-400/30">
-          <div className="text-[10px] font-mono text-amber-400 uppercase font-bold">Umbral Electoral (3%)</div>
+          <div className="text-[10px] font-mono text-amber-400 uppercase font-bold">Umbral Electoral ({simulation.thresholdPercentage.toLocaleString('es-CO', { maximumFractionDigits: 2 })}%)</div>
           <div className="text-xl font-black text-amber-300 font-mono mt-1">
             {simulation.thresholdVotes.toLocaleString()}
           </div>
           <div className="text-[10px] text-slate-400 mt-0.5 font-mono">
-            Votos mínimos para acceder a curul
+            {simulation.thresholdRule}
           </div>
         </div>
 

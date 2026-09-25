@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { ElectoralSimulatorService, SimulatorParty } from '../electoralSimulatorService';
+import { computeThreshold, ElectoralSimulatorService, SimulatorParty } from '../electoralSimulatorService';
 
 /**
  * Implementación de referencia (oráculo) del método D'Hondt, escrita aparte
@@ -34,8 +34,8 @@ const party = (id: string, baseVotes: number): SimulatorParty => ({
 // nulos = 4.500 (4,5 %) y válidos = 95.500. Si los baseVotes suman 95.500 el
 // factor de escala es 1 y los votos de cada partido no se alteran.
 const BASE = [party('A', 40000), party('B', 32000), party('C', 12000), party('D', 8000), party('E', 3500)];
-const run = (parties: SimulatorParty[] = BASE, seats = 7) =>
-  ElectoralSimulatorService.runSimulation(100000, 100, 0, parties, seats);
+const run = (parties: SimulatorParty[] = BASE, seats = 7, corp: 'senado' | 'camara' = 'senado') =>
+  ElectoralSimulatorService.runSimulation(100000, 100, 0, parties, seats, corp);
 
 const seatsOf = (out: ReturnType<typeof run>) =>
   Object.fromEntries(out.results.map((r) => [r.partyId, r.seatsWon]));
@@ -106,5 +106,28 @@ describe('ElectoralSimulatorService.runSimulation', () => {
         expect(r.seatsWon).toBe(r.aboveThreshold ? expected[r.partyId] : 0);
       }
     }
+  });
+});
+
+describe('Umbral por corporación (Art. 263 C.P.)', () => {
+  it('Senado: 3 % de los votos válidos', () => {
+    expect(computeThreshold('senado', 1_000_000, 100).votes).toBe(30_000);
+  });
+
+  it('Cámara con más de 2 curules: 50 % del cociente electoral', () => {
+    // Antioquia, 17 curules: cociente = 1.700.000 / 17 = 100.000  ->  umbral 50.000 (≈ 2,94 %)
+    expect(computeThreshold('camara', 1_700_000, 17).votes).toBe(50_000);
+  });
+
+  it('Cámara con 2 curules: 30 % del cociente electoral', () => {
+    expect(computeThreshold('camara', 200_000, 2).votes).toBe(30_000);
+  });
+
+  it('el simulador aplica la regla de la corporación', () => {
+    const parties = [party('A', 41500), party('B', 32000), party('C', 12000), party('D', 8000), party('E', 2000)];
+    const camara = run(parties, 17, 'camara'); // cociente = 95.500 / 17 = 5.617,6 -> umbral 2.809
+    expect(camara.thresholdVotes).toBe(2809);
+    expect(camara.thresholdRule).toMatch(/50 %/);
+    expect(run(parties, 17, 'senado').thresholdVotes).toBe(2865);
   });
 });

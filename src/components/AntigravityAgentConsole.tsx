@@ -50,7 +50,7 @@ const PRESET_TASKS: PresetTask[] = [
     title: 'Optimizador Algorítmico Cifra Repartidora',
     badge: 'Algorítmica Electoral',
     input:
-      'Implementa el algoritmo de Cifra Repartidora (D\'Hondt) para el Senado y Cámara de Representantes en Colombia, con cálculo de umbral electoral del 3% y asignación de curules por cociente residual. Incluye pruebas unitarias exhaustivas con casos límite.',
+      'Implementa el algoritmo de Cifra Repartidora (D\'Hondt) para el Senado y Cámara de Representantes en Colombia, con cálculo de umbral electoral por corporación (Senado 3 %, Cámara 50 % del cociente) y asignación de curules por cociente residual. Incluye pruebas unitarias exhaustivas con casos límite.',
     background:
       'Sistema electoral colombiano regido por la Constitución de 1991. Elecciones legislativas 2026. TypeScript moderno con tipos inmutables.',
   },
