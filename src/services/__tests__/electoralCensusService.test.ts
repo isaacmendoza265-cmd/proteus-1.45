@@ -84,6 +84,14 @@ describe('Maestro de los 125 municipios de Antioquia', () => {
     for (const d of ['05138', '05321', '05674']) expect(by(d).dataWarning).toBeTruthy();
   });
 
+  it('alcaldes corregidos según el directorio oficial de la Gobernación (tuqk-aemc)', () => {
+    const mayor = (dane: string) => ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA.find((m) => m.daneCode === dane)!.electedMayor;
+    expect(mayor('05138')).toBe('Diego Alonso Vanegas Arango'); // Cañasgordas
+    expect(mayor('05318')).toBe('David Esteban Franco Vallejo'); // Guatapé (tenía el de Guarne)
+    expect(mayor('05321')).toBe('José Fernando Salazar Ospina'); // Guadalupe (tenía el de Guatapé)
+    expect(mayor('05674')).toBe('Nelson de Jesús Henao Zapata'); // San Vicente Ferrer
+  });
+
   it('las subregiones tienen el número oficial de municipios', () => {
     const count: Record<string, number> = {};
     for (const m of ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA) count[m.subregionId] = (count[m.subregionId] ?? 0) + 1;

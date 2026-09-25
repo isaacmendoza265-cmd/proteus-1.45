@@ -2360,11 +2360,11 @@ export const ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA: UnifiedMunicipalityRecord
     "riskLevel": "Alto",
     "predominantParty": "Por verificar",
     "winnerParty": "Por verificar",
-    "electedMayor": "Por verificar",
+    "electedMayor": "Diego Alonso Vanegas Arango",
     "mayorTitle": "Alcalde",
     "contact": {
-      "phone": "Por verificar",
-      "email": "Por verificar"
+      "phone": "8564101-8564903-8564319",
+      "email": "alcaldia@canasgordas-antioquia.gov.co"
     },
     "totalCouncilSeats": 9,
     "economicSectors": [
@@ -2389,7 +2389,7 @@ export const ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA: UnifiedMunicipalityRecord
       "Mesa de formalización de pequeña minería con estándares ambientales limpios"
     ],
     "updatedAt": "2026-09-20",
-    "dataWarning": "Registro corregido el 24-sep-2026: estaba duplicado con el nombre de Caicedo (05125). Código DANE, área y censo electoral son propios; alcalde, resultados, población, NBI y el resto de campos descriptivos eran copia del vecino y deben verificarse."
+    "dataWarning": "Registro corregido el 24-sep-2026: estaba duplicado con el nombre de Caicedo (05125). Código DANE, área y censo electoral son propios; partido, resultados, población, NBI y el resto de campos descriptivos eran copia del vecino y deben verificarse. Alcalde y contacto según el Directorio oficial de alcaldes de la Gobernación de Antioquia (datos.gov.co tuqk-aemc, actualizado 03-feb-2025)."
   },
   {
     "id": "mpio-05172",
@@ -4144,90 +4144,13 @@ export const ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA: UnifiedMunicipalityRecord
     "areaKm2": 151.8,
     "predominantStratum": "Estrato 1 y 2 (Rural predominante)",
     "riskLevel": "Bajo",
-    "predominantParty": "Coalición",
-    "winnerParty": "Coalición Guarne con Sentido Social",
-    "electedMayor": "Diego Mauricio Grisales Gallego",
-    "mayorTitle": "Alcalde",
-    "contact": {
-      "phone": "8610539-8610555 Ext 12",
-      "email": "alcaldia@guatape-antioquia.gov.co"
-    },
-    "votesMayor": 13800,
-    "percentageValidMayor": 43.8,
-    "runnerUp": {
-      "name": "Candidatura Cívica por Guatapé",
-      "party": "Coalición Opositora / Movimiento Independiente",
-      "votes": 9936,
-      "percentageValid": 31.5,
-      "acceptedOppositionSeat": true
-    },
-    "councilSeats": [
-      {
-        "party": "Centro Democrático",
-        "seats": 3,
-        "percentageValid": 33.3
-      },
-      {
-        "party": "Partido Conservador",
-        "seats": 3,
-        "percentageValid": 33.3
-      },
-      {
-        "party": "Partido Liberal / Coalición",
-        "seats": 2,
-        "percentageValid": 22.2
-      },
-      {
-        "party": "Cambio Radical / Oposición",
-        "seats": 1,
-        "percentageValid": 11.1
-      }
-    ],
-    "totalCouncilSeats": 9,
-    "economicSectors": [
-      "Turismo masivo; pleno empleo informal.",
-      "Turismo de embalses y hotelería",
-      "Comercio y gastronomía",
-      "Generación hidroeléctrica",
-      "Agricultura tradicional"
-    ],
-    "securityDynamics": {
-      "homicideRate": "Baja letalidad.",
-      "extortionRisk": "Microtráfico turístico.",
-      "armedPresence": "Bandas locales."
-    },
-    "keyProblems": [
-      "Excelente cobertura urbana."
-    ],
-    "strategicOpportunities": [
-      "Seguridad Total como garante de la inversión y desarrollo agroindustrial",
-      "Consolidación del Altiplano como hub aeroportuario y logístico internacional",
-      "Créditos blandos y fomento asociativo para floricultura, aguacate hass y café",
-      "Turismo ecológico y patrimonial sostenible en embalses y cuencas protegidas"
-    ],
-    "updatedAt": "2026-09-20"
-  },
-  {
-    "id": "mpio-05321",
-    "name": "Guadalupe",
-    "daneCode": "05321",
-    "department": "Antioquia",
-    "subregion": "Norte",
-    "subregionId": "norte",
-    "category": "6",
-    "population": 9500,
-    "electoralCensus": 7220,
-    "nbiPercentage": 13.2,
-    "areaKm2": 83.3,
-    "predominantStratum": "Estrato 1 y 2 (Rural predominante)",
-    "riskLevel": "Bajo",
     "predominantParty": "Centro Democrático",
     "winnerParty": "Coalición Guatapé Nos Une (Centro Democrático)",
     "electedMayor": "David Esteban Franco Vallejo",
     "mayorTitle": "Alcalde",
     "contact": {
-      "phone": "Por verificar",
-      "email": "Por verificar"
+      "phone": "8610539-8610555 Ext 12",
+      "email": "alcaldia@guatape-antioquia.gov.co"
     },
     "votesMayor": 1926,
     "percentageValidMayor": 46.0,
@@ -4283,7 +4206,54 @@ export const ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA: UnifiedMunicipalityRecord
       "Turismo ecológico y patrimonial sostenible en embalses y cuencas protegidas"
     ],
     "updatedAt": "2026-09-20",
-    "dataWarning": "Registro corregido el 24-sep-2026: estaba duplicado con el nombre de Guatapé (05318) y en la subregión Oriente. Código DANE, área, censo electoral y datos del alcalde son propios; población, NBI, concejo y campos descriptivos eran copia del vecino y deben verificarse."
+    "dataWarning": "Registro corregido el 24-sep-2026: tenía el alcalde y el resultado de Guarne. Se trasladaron los datos de Guatapé que estaban en el registro de Guadalupe; alcalde confirmado con el Directorio oficial de alcaldes de la Gobernación de Antioquia (datos.gov.co tuqk-aemc, actualizado 03-feb-2025). Resultados 2023 por verificar con la Registraduría."
+  },
+  {
+    "id": "mpio-05321",
+    "name": "Guadalupe",
+    "daneCode": "05321",
+    "department": "Antioquia",
+    "subregion": "Norte",
+    "subregionId": "norte",
+    "category": "6",
+    "population": 9500,
+    "electoralCensus": 7220,
+    "nbiPercentage": 13.2,
+    "areaKm2": 83.3,
+    "predominantStratum": "Estrato 1 y 2 (Rural predominante)",
+    "riskLevel": "Bajo",
+    "predominantParty": "Por verificar",
+    "winnerParty": "Por verificar",
+    "electedMayor": "José Fernando Salazar Ospina",
+    "mayorTitle": "Alcalde",
+    "contact": {
+      "phone": "8616440 Ext 103 - 8616066",
+      "email": "alcaldia@guadalupe-antioquia.gov.co"
+    },
+    "totalCouncilSeats": 9,
+    "economicSectors": [
+      "Turismo masivo; pleno empleo informal.",
+      "Turismo de embalses y hotelería",
+      "Comercio y gastronomía",
+      "Generación hidroeléctrica",
+      "Agricultura tradicional"
+    ],
+    "securityDynamics": {
+      "homicideRate": "Baja letalidad.",
+      "extortionRisk": "Microtráfico turístico.",
+      "armedPresence": "Bandas locales."
+    },
+    "keyProblems": [
+      "Excelente cobertura urbana."
+    ],
+    "strategicOpportunities": [
+      "Seguridad Total como garante de la inversión y desarrollo agroindustrial",
+      "Consolidación del Altiplano como hub aeroportuario y logístico internacional",
+      "Créditos blandos y fomento asociativo para floricultura, aguacate hass y café",
+      "Turismo ecológico y patrimonial sostenible en embalses y cuencas protegidas"
+    ],
+    "updatedAt": "2026-09-20",
+    "dataWarning": "Registro corregido el 24-sep-2026: estaba duplicado con Guatapé (nombre, subregión y datos). Alcalde y contacto según el Directorio oficial de alcaldes de la Gobernación de Antioquia (datos.gov.co tuqk-aemc, actualizado 03-feb-2025). Partido, resultados 2023, población y NBI por verificar."
   },
   {
     "id": "mpio-05310",
@@ -7842,11 +7812,11 @@ export const ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA: UnifiedMunicipalityRecord
     "riskLevel": "Bajo",
     "predominantParty": "Por verificar",
     "winnerParty": "Por verificar",
-    "electedMayor": "Por verificar",
+    "electedMayor": "Nelson de Jesús Henao Zapata",
     "mayorTitle": "Alcalde",
     "contact": {
-      "phone": "Por verificar",
-      "email": "Por verificar"
+      "phone": "8544938-8544212-8544154-8544856",
+      "email": "alcaldia@sanvicente-antioquia.gov.co"
     },
     "totalCouncilSeats": 11,
     "economicSectors": [
@@ -7871,7 +7841,7 @@ export const ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA: UnifiedMunicipalityRecord
       "Turismo ecológico y patrimonial sostenible en embalses y cuencas protegidas"
     ],
     "updatedAt": "2026-09-20",
-    "dataWarning": "Registro corregido el 24-sep-2026: estaba duplicado con el nombre de San Rafael (05667). Código DANE, área y censo electoral son propios; alcalde, resultados, población, NBI y el resto de campos descriptivos eran copia del vecino y deben verificarse."
+    "dataWarning": "Registro corregido el 24-sep-2026: estaba duplicado con el nombre de San Rafael (05667). Código DANE, área y censo electoral son propios; partido, resultados, población, NBI y el resto de campos descriptivos eran copia del vecino y deben verificarse. Alcalde y contacto según el Directorio oficial de alcaldes de la Gobernación de Antioquia (datos.gov.co tuqk-aemc, actualizado 03-feb-2025)."
   },
   {
     "id": "mpio-05679",
