@@ -8,7 +8,7 @@ dotenv.config();
 
 async function startServer() {
   const app = express();
-  const PORT = 3000;
+  const PORT = Number(process.env.PORT) || 3000;
 
   app.use(express.json({ limit: '15mb' }));
 
@@ -31,21 +31,46 @@ async function startServer() {
     return client;
   }
 
-  // Helper para ejecutar el bridge de Python del Subproyecto Gobernación
+  // Helper para ejecutar el bridge de Python del Subproyecto Gobernación.
+  // Usa execFile (sin shell) con una lista cerrada de comandos, tiempo límite
+  // y mensajes claros si Python no está instalado o la salida no es JSON.
   const BRIDGE_SCRIPT = path.join(process.cwd(), 'scripts', 'gobernacion_bridge.py');
-  async function runBridgeCommand(arg: string): Promise<any> {
-    const { exec } = await import('child_process');
+  type BridgeCommand = '--status' | '--get-latest' | '--get-objectives' | '--run-cycle';
+  async function runBridgeCommand(arg: BridgeCommand): Promise<any> {
+    const { execFile } = await import('child_process');
     const { promisify } = await import('util');
-    const execAsync = promisify(exec);
-    const pythonCmd = process.platform === 'win32' ? 'python' : 'python3';
-    const { stdout, stderr } = await execAsync(`"${pythonCmd}" "${BRIDGE_SCRIPT}" ${arg}`, {
-      maxBuffer: 15 * 1024 * 1024,
-      encoding: 'utf-8'
-    });
+    const execFileAsync = promisify(execFile);
+    const pythonCmd = process.env.PYTHON_PATH || (process.platform === 'win32' ? 'python' : 'python3');
+    const timeout = arg === '--run-cycle' ? 15 * 60_000 : 60_000;
+
+    let stdout: string;
+    let stderr: string;
+    try {
+      ({ stdout, stderr } = await execFileAsync(pythonCmd, [BRIDGE_SCRIPT, arg], {
+        maxBuffer: 15 * 1024 * 1024,
+        encoding: 'utf-8',
+        timeout,
+        windowsHide: true,
+      }));
+    } catch (err: any) {
+      if (err?.code === 'ENOENT') {
+        throw new Error(`No se encontró Python ("${pythonCmd}"). Instálalo o define PYTHON_PATH en .env.`);
+      }
+      if (err?.killed) {
+        throw new Error(`El bridge de Gobernación superó el tiempo límite (${timeout / 1000} s) en ${arg}.`);
+      }
+      const detail = String(err?.stderr || err?.message || '').trim().slice(0, 500);
+      throw new Error(`El bridge de Gobernación falló (${arg}): ${detail}`);
+    }
+
     if (stderr && stderr.trim()) {
       console.warn(`[Gobernación Bridge]: ${stderr.trim()}`);
     }
-    return JSON.parse(stdout);
+    try {
+      return JSON.parse(stdout);
+    } catch {
+      throw new Error(`El bridge de Gobernación devolvió una respuesta que no es JSON (${arg}).`);
+    }
   }
 
   // Health check

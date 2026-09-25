@@ -13,6 +13,7 @@ import {
 import { Maximize2, Layers, Compass, Sparkles, Map, Building, Megaphone, ChevronDown, Check } from 'lucide-react';
 import { SubregionAggregationEngine } from '../../services/subregionAggregationEngine';
 import { ColombiaMunicipalitiesGeoService } from '../../services/colombiaMunicipalitiesGeoService';
+import { MUNICIPAL_DIVISIONS_REGISTRY, resolveMunicipality } from '../../data/geojson/municipalDivisions';
 
 export const COLOMBIA_ALL_DEPARTMENTS = [
   'Amazonas', 'Antioquia', 'Arauca', 'Atlántico', 'Bogotá D.C.', 'Bolívar', 'Boyacá', 
@@ -32,6 +33,9 @@ interface MultiLevelZoomMapProps {
   onGenerateContent?: (feature: TerritoryGeoFeature) => void;
   selectedDepartmentName?: string;
   onSelectDepartmentName?: (deptName: string) => void;
+  /** Municipio de los niveles 4 y 5 (id del registro de divisiones municipales) */
+  selectedMunicipalityId?: string;
+  onSelectMunicipality?: (muniId: string) => void;
 }
 
 export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
@@ -43,7 +47,9 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
   onDrillDown,
   onGenerateContent,
   selectedDepartmentName = 'Antioquia',
-  onSelectDepartmentName
+  onSelectDepartmentName,
+  selectedMunicipalityId = 'medellin',
+  onSelectMunicipality
 }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
@@ -54,6 +60,18 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
   const [customDeptDataset, setCustomDeptDataset] = useState<TerritoryFeatureCollection | null>(null);
   const [isLoadingDept, setIsLoadingDept] = useState<boolean>(false);
   const [deptDropdownOpen, setDeptDropdownOpen] = useState<boolean>(false);
+
+  // Niveles 4 y 5 para municipios distintos de Medellín (se cargan bajo demanda)
+  const isMunicipalScale = currentLevel === 'municipal' || currentLevel === 'hiperlocal' || currentLevel === 'comunas-barrios';
+  const usesCustomMuni = isMunicipalScale && selectedMunicipalityId !== 'medellin';
+  const activeMuni = MUNICIPAL_DIVISIONS_REGISTRY[selectedMunicipalityId] ?? MUNICIPAL_DIVISIONS_REGISTRY.medellin;
+  const [customMuniDataset, setCustomMuniDataset] = useState<TerritoryFeatureCollection | null>(null);
+  const [isLoadingMuni, setIsLoadingMuni] = useState<boolean>(false);
+  const [muniDropdownOpen, setMuniDropdownOpen] = useState<boolean>(false);
+
+  // Cámara: última escala encuadrada y límites de la capa visible
+  const lastCameraKeyRef = useRef<string>('');
+  const lastLayerBoundsRef = useRef<L.LatLngBounds | null>(null);
 
   // Helper: Color logic by layer
   const getFeatureColor = (feature: TerritoryGeoFeature): string => {
@@ -131,7 +149,10 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
     }
 
     return () => {
-      // Cleanup on full unmount
+      // Liberar el mapa de Leaflet al salir de la vista (antes quedaba en memoria)
+      mapInstanceRef.current?.remove();
+      mapInstanceRef.current = null;
+      geoJsonLayerGroupRef.current = null;
     };
   }, []);
 
@@ -185,6 +206,24 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
     };
   }, [currentLevel, selectedDepartmentName]);
 
+  // Cargar divisiones (nivel 4) o subdivisiones (nivel 5) del municipio seleccionado
+  useEffect(() => {
+    setCustomMuniDataset(null);
+    if (!usesCustomMuni) return;
+    const entry = MUNICIPAL_DIVISIONS_REGISTRY[selectedMunicipalityId];
+    const loader = currentLevel === 'comunas-barrios'
+      ? (entry?.loadSubdivisions ?? entry?.loadDivisions)
+      : entry?.loadDivisions;
+    if (!loader) return;
+    let active = true;
+    setIsLoadingMuni(true);
+    loader()
+      .then((fc) => { if (active) setCustomMuniDataset(fc); })
+      .catch((e) => console.error('[Proteus] No se pudo cargar la cartografía municipal:', e))
+      .finally(() => { if (active) setIsLoadingMuni(false); });
+    return () => { active = false; };
+  }, [currentLevel, selectedMunicipalityId, usesCustomMuni]);
+
   // Synchronize GeoJSON features and camera transitions when currentLevel, activeLayer, or searchQuery changes
   useEffect(() => {
     const map = mapInstanceRef.current;
@@ -205,6 +244,11 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
       } else if (customDeptDataset) {
         dataset = customDeptDataset;
       }
+    }
+    if (usesCustomMuni) {
+      // Municipio sin cartografía (o todavía cargando): no se muestra la capa de Medellín
+      if (!customMuniDataset) return;
+      dataset = customMuniDataset;
     }
     if (!dataset) return;
 
@@ -336,6 +380,16 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
               });
             }
 
+            // Drill down a las divisiones internas de un municipio registrado
+            if (currentLevel === 'departamental' || currentLevel === 'metropolitano') {
+              const muni = resolveMunicipality({ id: feature.id, name: p.name, daneCode: (p as any).daneCode });
+              if (muni?.disponible) {
+                onSelectMunicipality?.(muni.id);
+                onDrillDown('municipal', feature.id);
+                return;
+              }
+            }
+
             // Drill down:
             if (currentLevel === 'nacional') {
               // Direct drill down into ANY department in Colombia
@@ -364,7 +418,7 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
 
         const isCorregimiento = Boolean((feature.properties as any).isCorregimiento || feature.id.includes('correg'));
         const metricDisplay = 
-          activeLayer === 'electoral' ? `Ganador: ${p.predominantParty || p.winnerCandidate || 'Registrado'}` :
+          activeLayer === 'electoral' ? ((p.predominantParty || p.winnerCandidate) ? `Ganador: ${p.predominantParty || p.winnerCandidate}` : `${(p as any).tipo || 'Territorio'}${(p as any).parentName ? ' · ' + (p as any).parentName : ''} · sin dato electoral`) :
           activeLayer === 'demografico' ? `Pob: ${(p.population || 0).toLocaleString()} hab` :
           activeLayer === 'nbi' ? `NBI: ${p.nbiPercentage}%` :
           `Riesgo: ${p.riskLevel || 'Normal'}`;
@@ -394,26 +448,36 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
 
     layerGroup.addLayer(leafletGeoJson);
 
-    // Smooth camera positioning
-    if (currentLevel === 'departamental' && selectedDepartmentName && selectedDepartmentName.toLowerCase() !== 'antioquia') {
-      try {
-        const bounds = leafletGeoJson.getBounds();
-        if (bounds.isValid()) {
-          map.flyToBounds(bounds, { duration: 1.2, padding: [40, 40] });
-        }
-      } catch (e) {
-        if (dataset.center) {
-          map.flyTo(dataset.center, dataset.defaultZoom || 8, { duration: 1.0 });
-        }
+    // Cámara: encuadrar los polígonos reales de la capa, y SOLO cuando cambia la escala
+    // o el territorio. Antes volaba a un centro/zoom fijo en cada cambio de capa,
+    // búsqueda o selección (cortaba Colombia y deshacía el zoom al elegir un territorio).
+    let layerBounds: L.LatLngBounds | null = null;
+    try {
+      const b = leafletGeoJson.getBounds();
+      if (b.isValid()) layerBounds = b;
+    } catch {
+      layerBounds = null;
+    }
+    lastLayerBoundsRef.current = layerBounds;
+
+    const cameraKey = [currentLevel, antioquiaViewMode, selectedDepartmentName, customDeptDataset?.name, usesCustomMuni ? selectedMunicipalityId : 'medellin', customMuniDataset?.name].join('|');
+    if (cameraKey !== lastCameraKeyRef.current) {
+      lastCameraKeyRef.current = cameraKey;
+      if (layerBounds) {
+        map.flyToBounds(layerBounds, { duration: 1.2, padding: [30, 30] });
+      } else if (dataset.center) {
+        map.flyTo(dataset.center, dataset.defaultZoom || 8, { duration: 1.2, easeLinearity: 0.25 });
       }
-    } else {
-      map.flyTo(dataset.center, dataset.defaultZoom, {
-        duration: 1.2,
-        easeLinearity: 0.25
-      });
     }
 
-  }, [currentLevel, activeLayer, searchQuery, selectedFeature, antioquiaViewMode, selectedDepartmentName, customDeptDataset]);
+  }, [currentLevel, activeLayer, searchQuery, selectedFeature, antioquiaViewMode, selectedDepartmentName, customDeptDataset, usesCustomMuni, customMuniDataset]);
+
+  // Leyenda honesta: cuántos territorios de la escala actual no tienen dato de partido
+  // (se pintan con el color de su agrupación territorial, no con un color de partido)
+  const legendFeatures = (usesCustomMuni ? customMuniDataset?.features : GEOJSON_LAYERS_BY_ZOOM[currentLevel]?.features) || [];
+  const featuresWithoutParty = legendFeatures.filter(
+    (f) => !f.properties.winnerParty && !f.properties.predominantParty
+  ).length;
 
   // Recenter helper
   const handleRecenter = () => {
@@ -422,7 +486,9 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
     const dataset = (currentLevel === 'departamental' && antioquiaViewMode === 'municipios')
       ? ANTIOQUIA_125_MUNICIPIOS_GEOJSON
       : GEOJSON_LAYERS_BY_ZOOM[currentLevel];
-    if (dataset) {
+    if (lastLayerBoundsRef.current) {
+      map.flyToBounds(lastLayerBoundsRef.current, { duration: 0.8, padding: [30, 30] });
+    } else if (dataset) {
       map.flyTo(dataset.center, dataset.defaultZoom, { duration: 0.8 });
     }
   };
@@ -522,6 +588,62 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
         </div>
       )}
 
+      {/* Selector de municipio (niveles 4 y 5) */}
+      {isMunicipalScale && (
+        <div className="absolute top-4 left-4 z-10 flex flex-wrap items-center gap-2 p-1.5 rounded-2xl bg-slate-950/85 backdrop-blur-2xl border border-white/20 shadow-[0_8px_25px_rgba(0,0,0,0.5)] pointer-events-auto max-w-[70%]">
+          <div className="px-2 py-1 text-xs">
+            <div className="font-black text-amber-300 flex items-center gap-1.5">
+              <Building className="w-3.5 h-3.5 text-amber-400" />
+              {activeMuni.name}: {currentLevel === 'comunas-barrios' ? (activeMuni.subdivisionLabel || activeMuni.divisionLabel) : activeMuni.divisionLabel}
+              {isLoadingMuni && <span className="text-slate-400 font-medium">(cargando…)</span>}
+            </div>
+            <div className={`text-[10px] ${activeMuni.confianza === 'oficial' ? 'text-emerald-300' : 'text-amber-200/80'}`}>
+              {activeMuni.confianza === 'oficial' ? 'Fuente oficial' : 'Fuente por verificar'}: {activeMuni.fuente}
+            </div>
+            {(activeMuni.nota || !activeMuni.disponible) && (
+              <div className="text-[10px] text-slate-400 max-w-md">{activeMuni.nota}</div>
+            )}
+          </div>
+          {onSelectMunicipality && (
+            <div className="relative">
+              <button
+                onClick={() => setMuniDropdownOpen(!muniDropdownOpen)}
+                className="px-2.5 py-1.5 rounded-xl text-xs font-bold bg-white/10 hover:bg-white/20 text-slate-200 border border-white/15 flex items-center gap-1 transition"
+                title="Cambiar de municipio"
+              >
+                <span>Municipio</span>
+                <ChevronDown className="w-3 h-3 text-slate-400" />
+              </button>
+              {muniDropdownOpen && (
+                <div className="absolute top-full left-0 mt-1.5 w-60 rounded-2xl bg-slate-900/95 backdrop-blur-2xl border border-white/20 shadow-2xl p-1 z-30 space-y-0.5">
+                  {Object.values(MUNICIPAL_DIVISIONS_REGISTRY).map((m) => {
+                    const isCur = m.id === activeMuni.id;
+                    return (
+                      <button
+                        key={m.id}
+                        disabled={!m.disponible}
+                        onClick={() => {
+                          onSelectMunicipality(m.id);
+                          setMuniDropdownOpen(false);
+                        }}
+                        className={`w-full text-left px-2.5 py-1.5 rounded-xl text-xs flex items-center justify-between transition ${
+                          isCur
+                            ? 'bg-sky-500/30 text-sky-200 font-bold border border-sky-400/40'
+                            : m.disponible ? 'text-slate-300 hover:bg-white/10 hover:text-white' : 'text-slate-500 cursor-not-allowed'
+                        }`}
+                      >
+                        <span>{m.name}{!m.disponible && ' (sin cartografía)'}</span>
+                        {isCur && <Check className="w-3 h-3 text-sky-400" />}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Floating Legend Overlay (Bottom Left) */}
       <div className="absolute bottom-4 left-4 z-10 p-3 rounded-2xl bg-slate-950/70 backdrop-blur-2xl border border-white/20 shadow-2xl text-xs max-w-xs pointer-events-auto">
         <div className="flex items-center justify-between gap-2 mb-2 pb-1 border-b border-white/10">
@@ -530,7 +652,7 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
             Capa: {activeLayer.toUpperCase()}
           </span>
           <span className="text-[10px] font-mono text-sky-300">
-            {ZOOM_LEVELS_CONFIG[currentLevel]?.shortLabel || 'Nivel ' + currentLevel}
+            {isMunicipalScale ? activeMuni.name : (ZOOM_LEVELS_CONFIG[currentLevel]?.shortLabel || 'Nivel ' + currentLevel)}
           </span>
         </div>
         
@@ -554,6 +676,13 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
                 <span className="w-3 h-3 rounded-full bg-purple-500 inline-block" />
                 <span>Pacto Histórico / Mov. Sociales</span>
               </div>
+              {featuresWithoutParty > 0 && (
+                <div className="pt-1 mt-1 border-t border-white/10 text-[10px] leading-snug text-slate-400">
+                  {currentLevel === 'comunas-barrios'
+                    ? 'Sin datos electorales por barrio: el color indica la división a la que pertenece (comuna, corregimiento o localidad).'
+                    : `${featuresWithoutParty} territorios sin dato de partido: se pintan con el color de su agrupación territorial.`}
+                </div>
+              )}
             </>
           )}
 

@@ -49,3 +49,24 @@ Thumbs.db
 *.tmp
 __pycache__/
 *.pyc
+
+# ---- Proteus: fuera del repositorio ----
+# Copia antigua del repo y material local
+SUBIR_A_GITHUB/
+_archivo/
+_originales/
+temp_*/
+# Paquetes y documentos generados (se regeneran con scripts/)
+*.zip
+*.pdf
+# Herramientas locales de IA / IDE
+.antigravity/
+.agents/
+# Lockfiles de otros gestores (el proyecto usa npm)
+bun.lock
+yarn.lock
+pnpm-lock.yaml
+# Muestras de diseño (imágenes pesadas, solo locales)
+muestras_diseno/
+# Archivos que la app de Claude guarda al enviar resultados al chat
+Claude outputs/

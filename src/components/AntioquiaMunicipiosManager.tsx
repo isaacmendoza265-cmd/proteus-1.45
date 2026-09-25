@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { 
   Building2, 
   MapPin, 
@@ -62,7 +62,10 @@ import {
 import { activeTerritoryService } from '../services/activeTerritoryContextService';
 
 // Inicialización de la API de Gemini para búsquedas y análisis profundo
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+// Se crea al usarla: sin clave de Gemini, el constructor lanzaba un error al importar el módulo
+// y el Directorio de 125 Municipios quedaba en blanco.
+let aiClient: GoogleGenAI | null = null;
+const getAi = () => (aiClient ??= new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' }));
 
 interface CandidateProfileProps {
   nombre?: string;
@@ -290,8 +293,7 @@ export const AntioquiaMunicipiosManager: React.FC<AntioquiaMunicipiosManagerProp
     });
   }, [searchMuniQuery, selectedSubregionFilter]);
 
-  // Detección de municipio estratégico (Top 7 con 3D) vs Ficha Maestra 125 Municipios
-  const isStrategic7 = STRATEGIC_7_KEYS.includes(selectedMuniId);
+  // Detección de municipio estratégico (Top 7 con 3D) vs Ficha Maestra 125 Municipios (isStrategic7 se calcula arriba)
   const [nonStrategicTab, setNonStrategicTab] = useState<'ficha' | 'demografia' | 'veredas'>('ficha');
 
   // Modo de visualización territorial ('both' | 'map' | 'charts' | 'comunas' | 'diorama3d' | 'dossier')
@@ -378,7 +380,7 @@ export const AntioquiaMunicipiosManager: React.FC<AntioquiaMunicipiosManagerProp
 
       let text = '';
       try {
-        const response = await ai.models.generateContent({
+        const response = await getAi().models.generateContent({
           model: 'gemini-3.8-flash',
           contents: [{ role: 'user', parts: [{ text: prompt }] }],
           config: {
@@ -388,7 +390,7 @@ export const AntioquiaMunicipiosManager: React.FC<AntioquiaMunicipiosManagerProp
         text = response.text || '';
       } catch (err) {
         // Fallback estándar
-        const fallbackRes = await ai.models.generateContent({
+        const fallbackRes = await getAi().models.generateContent({
           model: 'gemini-3.8-flash',
           contents: [{ role: 'user', parts: [{ text: prompt }] }]
         });
@@ -482,7 +484,7 @@ Entrega un informe denso, sin texto genérico ni rodeos, con lenguaje de consult
     try {
       let result = '';
       try {
-        const response = await ai.models.generateContent({
+        const response = await getAi().models.generateContent({
           model: 'gemini-3.8-flash',
           contents: [{ role: 'user', parts: [{ text: promptText }] }],
           config: {
@@ -491,7 +493,7 @@ Entrega un informe denso, sin texto genérico ni rodeos, con lenguaje de consult
         });
         result = response.text || '';
       } catch (e) {
-        const fallbackRes = await ai.models.generateContent({
+        const fallbackRes = await getAi().models.generateContent({
           model: 'gemini-3.8-flash',
           contents: [{ role: 'user', parts: [{ text: promptText }] }]
         });

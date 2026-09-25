@@ -1,0 +1,78 @@
+{
+      "type": "Feature",
+      "id": "mpio-05001",
+      "properties": {
+        "id": "mpio-05001",
+        "name": "Medellín",
+        "daneCode": "05001",
+        "subregion": "Valle de Aburrá",
+        "category": "Especial",
+        "population": 2650000,
+        "electoralCensus": 1908000,
+        "nbiPercentage": 4.2,
+        "areaKm2": 374.8,
+        "riskLevel": "Medio",
+        "electedMayor": "Federico Andrés Gutiérrez Zuluaga",
+        "winnerParty": "Partido Creemos",
+        "predominantParty": "Creemos"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -75.6687,
+              6.3729
+            ],
+            [
+              -75.6516,
+              6.3332
+            ],
+            [
+              -75.5218,
+              6.2886
+            ],
+            [
+              -75.501,
+              6.2973
+            ],
+            [
+              -75.4863,
+              6.2056
+            ],
+            [
+              -75.4851,
+              6.1907
+            ],
+            [
+              -75.583,
+              6.1895
+            ],
+            [
+              -75.6479,
+              6.1721
+            ],
+            [
+              -75.6797,
+              6.1634
+            ],
+            [
+              -75.6944,
+              6.1944
+            ],
+            [
+              -75.7103,
+              6.2589
+            ],
+            [
+              -75.7177,
+              6.3605
+            ],
+            [
+              -75.6687,
+              6.3729
+            ]
+          ]
+        ]
+      }
+    }

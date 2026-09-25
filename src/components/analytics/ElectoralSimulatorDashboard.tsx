@@ -31,6 +31,7 @@ import {
   SimulatorParty 
 } from '../../services/electoralSimulatorService';
 import { callGeminiApi, formatAiError } from '../../services/geminiService';
+import { TOTAL_CENSUS, formatCensusShort } from '../../services/electoralCensusService';
 
 export const ElectoralSimulatorDashboard: React.FC = () => {
   const [turnoutPercent, setTurnoutPercent] = useState<number>(53.5);
@@ -45,7 +46,8 @@ export const ElectoralSimulatorDashboard: React.FC = () => {
   const [tacticalError, setTacticalError] = useState<string | null>(null);
 
   const totalSeats = activeCircumscription === 'antioquia-camara' ? 17 : 100;
-  const census = activeCircumscription === 'antioquia-camara' ? 5350000 : 39200000;
+  // Censo oficial: Cámara = Antioquia; Senado = nacional + exterior (los votos del exterior cuentan para Senado)
+  const census = activeCircumscription === 'antioquia-camara' ? ANTIOQUIA_CAMARA_2026_BASELINE.census : TOTAL_CENSUS.total;
 
   const simulation = useMemo(() => {
     return ElectoralSimulatorService.runSimulation(
@@ -282,7 +284,7 @@ Diseña un PLAN DE ACCIÓN ELECTORAL DE CHOQUE PARA CONQUISTAR LA CURUL MARGINAL
             }`}
           >
             <ShieldCheck className="w-4 h-4 text-sky-400" />
-            <span>Cámara de Antioquia (17 Curules • Censo: 5.35M)</span>
+            <span>Cámara de Antioquia (17 Curules • Censo: {formatCensusShort(ANTIOQUIA_CAMARA_2026_BASELINE.census)})</span>
           </button>
           <button
             onClick={() => setActiveCircumscription('nacional-senado')}
@@ -293,7 +295,7 @@ Diseña un PLAN DE ACCIÓN ELECTORAL DE CHOQUE PARA CONQUISTAR LA CURUL MARGINAL
             }`}
           >
             <Users className="w-4 h-4 text-emerald-400" />
-            <span>Senado Nacional (100 Curules • Censo: 39.2M)</span>
+            <span>Senado Nacional (100 Curules • Censo: {formatCensusShort(TOTAL_CENSUS.total)})</span>
           </button>
         </div>
       </div>

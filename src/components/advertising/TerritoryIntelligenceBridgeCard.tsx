@@ -101,6 +101,39 @@ export const TerritoryIntelligenceBridgeCard: React.FC<TerritoryIntelligenceBrid
           <p className="text-xs text-slate-400">
             {intelligence.tacticalPostureDescription}
           </p>
+
+          {/* Official Census & Microdivision Badges (Protocol PA-013) */}
+          <div className="flex flex-wrap items-center gap-2 pt-1">
+            {intelligence.officialCensus && (
+              <div className="flex flex-wrap items-center gap-2 bg-emerald-950/60 border border-emerald-500/40 px-2.5 py-1 rounded-lg text-xs font-mono">
+                <Users className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                <span className="text-slate-300">Censo Registraduría:</span>
+                <strong className="text-emerald-300 font-bold">{intelligence.officialCensus.formattedTotal}</strong>
+                <span className="text-emerald-400/90 font-bold">({intelligence.officialCensus.formattedShort})</span>
+                <span className="text-slate-400 border-l border-white/10 pl-2">
+                  ♀ {intelligence.officialCensus.mujeres.toLocaleString('es-CO')} | ♂ {intelligence.officialCensus.hombres.toLocaleString('es-CO')}
+                </span>
+                <span className="text-slate-400 border-l border-white/10 pl-2">
+                  {intelligence.officialCensus.mesas.toLocaleString('es-CO')} mesas
+                </span>
+              </div>
+            )}
+
+            {intelligence.municipalDivisionMeta && intelligence.municipalDivisionMeta.disponible && (
+              <div className="flex flex-wrap items-center gap-2 bg-cyan-950/60 border border-cyan-500/40 px-2.5 py-1 rounded-lg text-xs font-mono">
+                <Compass className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+                <span className="text-slate-300">Niveles 4/5 Cartográficos:</span>
+                <strong className="text-cyan-300 font-bold">{intelligence.municipalDivisionMeta.divisionLabel}</strong>
+                {intelligence.municipalDivisionMeta.subdivisionLabel && (
+                  <span className="text-slate-400">• {intelligence.municipalDivisionMeta.subdivisionLabel}</span>
+                )}
+                <span className="text-[10px] text-cyan-400/80 bg-cyan-500/10 px-1.5 py-0.5 rounded ml-1">
+                  {intelligence.municipalDivisionMeta.confianza === 'oficial' ? 'Oficial' : 'En validación'}
+                </span>
+              </div>
+            )}
+          </div>
+
           {intelligence.electoralDynamicsNotes && (
             <div className="text-[11px] font-mono text-sky-300/90 bg-sky-950/40 border border-sky-500/20 px-2.5 py-1 rounded-lg">
               ℹ️ {intelligence.electoralDynamicsNotes}

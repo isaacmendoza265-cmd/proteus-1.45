@@ -45,6 +45,7 @@ import {
   VoterAudienceCategory
 } from '../../data/voterAudienceCatalog';
 import { useActiveTerritory, activeTerritoryService } from '../../services/activeTerritoryContextService';
+import { NATIONAL_CENSUS, formatCensus } from '../../services/electoralCensusService';
 
 interface CampaignContentDirectorViewProps {
   candidateProfile: CandidateProfile;
@@ -262,7 +263,7 @@ export const CampaignContentDirectorView: React.FC<CampaignContentDirectorViewPr
 [CONTEXTO TERRITORIAL DETALLADO - ESCALA ${currentTerritory.scale.toUpperCase()}]:
 - Territorio Seleccionado: ${currentTerritory.fullName}
 - Nivel de Escala: ${currentTerritory.scale}
-- Censo Electoral: ${currentTerritory.electoralCensus ? currentTerritory.electoralCensus.toLocaleString('es-CO') + ' votantes' : (activeTerritory.electoralCensus ? activeTerritory.electoralCensus.toLocaleString('es-CO') + ' votantes' : 'Consolidado nacional')}
+- Censo Electoral: ${currentTerritory.electoralCensus ? currentTerritory.electoralCensus.toLocaleString('es-CO') + ' votantes' : (activeTerritory.electoralCensus ? activeTerritory.electoralCensus.toLocaleString('es-CO') + ' votantes' : 'sin dato oficial para esta escala')}
 - Población Estimada: ${currentTerritory.population ? currentTerritory.population.toLocaleString('es-CO') + ' habitantes' : (activeTerritory.population ? activeTerritory.population.toLocaleString('es-CO') + ' habitantes' : 'Nacional')}
 - Índice NBI / Pobreza: ${currentTerritory.nbiPercentage ? currentTerritory.nbiPercentage + '%' : (activeTerritory.nbiPercentage ? activeTerritory.nbiPercentage + '%' : 'Variable')}
 - Estratificación Predominante: ${currentTerritory.predominantStratum || activeTerritory.predominantStratum || 'Mixta'}
@@ -561,7 +562,7 @@ Diseña un BRIEF ESTRATÉGICO DE ALTO IMPACTO estructurado exactamente en los si
                     </div>
                   </div>
                   <div className="text-right font-mono text-[11px] text-sky-300 font-bold">
-                    Censo: 39.200.000
+                    Censo: {formatCensus(NATIONAL_CENSUS.total)}
                   </div>
                 </div>
               )}
@@ -613,7 +614,7 @@ Diseña un BRIEF ESTRATÉGICO DE ALTO IMPACTO estructurado exactamente en los si
                   >
                     {allMunicipalities.map(m => (
                       <option key={m.id} value={m.id} className="bg-slate-900 text-white">
-                        {m.name} ({m.subregion}) - Censo: {m.electoralCensus?.toLocaleString('es-CO')}
+                        {m.name} ({m.subregionName}) - Censo: {m.electoralCensus?.toLocaleString('es-CO')}
                       </option>
                     ))}
                   </select>

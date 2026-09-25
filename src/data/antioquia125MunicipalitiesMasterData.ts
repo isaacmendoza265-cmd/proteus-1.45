@@ -2,11 +2,14 @@
  * PROTEUS 1.2 - BASE DE DATOS MAESTRA DE LOS 125 MUNICIPIOS DE ANTIOQUIA
  * Consolidados oficiales cruzando:
  * 1. DANE - Censo Nacional de Población y Vivienda & NBI
- * 2. Registraduría Nacional del Estado Civil - Censo Electoral y Elecciones Locales 2023
+ * 2. Registraduría Nacional del Estado Civil - Elecciones Locales 2023. El censo electoral se
+ *    toma del censo oficial con corte 30-abr-2026 (src/services/electoralCensusService.ts)
  * 3. Gobernación de Antioquia - Directorio Oficial de Alcaldes 2024-2027 (tuqk-aemc)
  * 4. Fichas de Inteligencia Electoral Subregional y Municipal (Isaac M. / CMT Consultora)
  * 5. MUNICIPALITY_DETAILS - Vocaciones económicas, seguridad y orden público
  */
+
+import { getMunicipalCensus } from '../services/electoralCensusService';
 
 export interface CouncilPartySeat {
   party: string;
@@ -59,6 +62,10 @@ export interface UnifiedMunicipalityRecord {
   keyProblems?: string[];
   strategicOpportunities?: string[];
   updatedAt: string;
+  /** Advertencia sobre la calidad del registro (campos por verificar) */
+  dataWarning?: string;
+  /** 'oficial' = Registraduría (corte 30-abr-2026) */
+  electoralCensusSource?: 'oficial' | 'estimado';
 }
 
 export const ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA: UnifiedMunicipalityRecord[] = [
@@ -2339,7 +2346,7 @@ export const ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA: UnifiedMunicipalityRecord
   },
   {
     "id": "mpio-05138",
-    "name": "Caicedo",
+    "name": "Cañasgordas",
     "daneCode": "05138",
     "department": "Antioquia",
     "subregion": "Occidente",
@@ -2351,45 +2358,14 @@ export const ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA: UnifiedMunicipalityRecord
     "areaKm2": 364.8,
     "predominantStratum": "Estrato 1 y 2 (Rural predominante)",
     "riskLevel": "Alto",
-    "predominantParty": "Partido Conservador",
-    "winnerParty": "Coalición Caicedo Nos Une (Partido Conservador)",
-    "electedMayor": "Yúber Felipe Molina Murillo",
+    "predominantParty": "Por verificar",
+    "winnerParty": "Por verificar",
+    "electedMayor": "Por verificar",
     "mayorTitle": "Alcalde",
     "contact": {
-      "phone": "8572002 Ext 103 - 8572134",
-      "email": "alcaldia@caicedo-antioquia.gov.co"
+      "phone": "Por verificar",
+      "email": "Por verificar"
     },
-    "votesMayor": 1939,
-    "percentageValidMayor": 50.0,
-    "runnerUp": {
-      "name": "Candidatura Cívica por Caicedo",
-      "party": "Coalición Opositora / Movimiento Independiente",
-      "votes": 1396,
-      "percentageValid": 36.0,
-      "acceptedOppositionSeat": true
-    },
-    "councilSeats": [
-      {
-        "party": "Partido Conservador",
-        "seats": 3,
-        "percentageValid": 33.3
-      },
-      {
-        "party": "Coalición Local",
-        "seats": 2,
-        "percentageValid": 22.2
-      },
-      {
-        "party": "Centro Democrático",
-        "seats": 2,
-        "percentageValid": 22.2
-      },
-      {
-        "party": "Partido Liberal / Oposición",
-        "seats": 2,
-        "percentageValid": 22.2
-      }
-    ],
     "totalCouncilSeats": 9,
     "economicSectors": [
       "Café y agricultura.",
@@ -2412,7 +2388,8 @@ export const ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA: UnifiedMunicipalityRecord
       "Potenciación del turismo colonial y patrimonial en Santa Fe de Antioquia y Sopetrán",
       "Mesa de formalización de pequeña minería con estándares ambientales limpios"
     ],
-    "updatedAt": "2026-09-20"
+    "updatedAt": "2026-09-20",
+    "dataWarning": "Registro corregido el 24-sep-2026: estaba duplicado con el nombre de Caicedo (05125). Código DANE, área y censo electoral son propios; alcalde, resultados, población, NBI y el resto de campos descriptivos eran copia del vecino y deben verificarse."
   },
   {
     "id": "mpio-05172",
@@ -4232,11 +4209,11 @@ export const ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA: UnifiedMunicipalityRecord
   },
   {
     "id": "mpio-05321",
-    "name": "Guatapé",
+    "name": "Guadalupe",
     "daneCode": "05321",
     "department": "Antioquia",
-    "subregion": "Oriente",
-    "subregionId": "oriente",
+    "subregion": "Norte",
+    "subregionId": "norte",
     "category": "6",
     "population": 9500,
     "electoralCensus": 7220,
@@ -4249,8 +4226,8 @@ export const ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA: UnifiedMunicipalityRecord
     "electedMayor": "David Esteban Franco Vallejo",
     "mayorTitle": "Alcalde",
     "contact": {
-      "phone": "8610539-8610555 Ext 12",
-      "email": "alcaldia@guatape-antioquia.gov.co"
+      "phone": "Por verificar",
+      "email": "Por verificar"
     },
     "votesMayor": 1926,
     "percentageValidMayor": 46.0,
@@ -4305,7 +4282,8 @@ export const ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA: UnifiedMunicipalityRecord
       "Créditos blandos y fomento asociativo para floricultura, aguacate hass y café",
       "Turismo ecológico y patrimonial sostenible en embalses y cuencas protegidas"
     ],
-    "updatedAt": "2026-09-20"
+    "updatedAt": "2026-09-20",
+    "dataWarning": "Registro corregido el 24-sep-2026: estaba duplicado con el nombre de Guatapé (05318) y en la subregión Oriente. Código DANE, área, censo electoral y datos del alcalde son propios; población, NBI, concejo y campos descriptivos eran copia del vecino y deben verificarse."
   },
   {
     "id": "mpio-05310",
@@ -7850,7 +7828,7 @@ export const ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA: UnifiedMunicipalityRecord
   },
   {
     "id": "mpio-05674",
-    "name": "San Rafael",
+    "name": "San Vicente Ferrer",
     "daneCode": "05674",
     "department": "Antioquia",
     "subregion": "Oriente",
@@ -7862,45 +7840,14 @@ export const ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA: UnifiedMunicipalityRecord
     "areaKm2": 230.5,
     "predominantStratum": "Estrato 1 y 2 (Rural predominante)",
     "riskLevel": "Bajo",
-    "predominantParty": "Centro Democrático",
-    "winnerParty": "Coalición San Rafael Nos Une (Centro Democrático)",
-    "electedMayor": "Eduin Aniceno Giraldo Quintana",
+    "predominantParty": "Por verificar",
+    "winnerParty": "Por verificar",
+    "electedMayor": "Por verificar",
     "mayorTitle": "Alcalde",
     "contact": {
-      "phone": "8586681-8586927-8586836-8586681",
-      "email": "alcaldia@sanrafael-antioquia.gov.co"
+      "phone": "Por verificar",
+      "email": "Por verificar"
     },
-    "votesMayor": 3173,
-    "percentageValidMayor": 45.0,
-    "runnerUp": {
-      "name": "Candidatura Cívica por San Rafael",
-      "party": "Coalición Opositora / Movimiento Independiente",
-      "votes": 2284,
-      "percentageValid": 32.4,
-      "acceptedOppositionSeat": true
-    },
-    "councilSeats": [
-      {
-        "party": "Centro Democrático",
-        "seats": 3,
-        "percentageValid": 27.3
-      },
-      {
-        "party": "Partido Conservador",
-        "seats": 3,
-        "percentageValid": 27.3
-      },
-      {
-        "party": "Partido Liberal / Coalición",
-        "seats": 2,
-        "percentageValid": 18.2
-      },
-      {
-        "party": "Cambio Radical / Oposición",
-        "seats": 3,
-        "percentageValid": 27.3
-      }
-    ],
     "totalCouncilSeats": 11,
     "economicSectors": [
       "Energía y turismo.",
@@ -7923,7 +7870,8 @@ export const ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA: UnifiedMunicipalityRecord
       "Créditos blandos y fomento asociativo para floricultura, aguacate hass y café",
       "Turismo ecológico y patrimonial sostenible en embalses y cuencas protegidas"
     ],
-    "updatedAt": "2026-09-20"
+    "updatedAt": "2026-09-20",
+    "dataWarning": "Registro corregido el 24-sep-2026: estaba duplicado con el nombre de San Rafael (05667). Código DANE, área y censo electoral son propios; alcalde, resultados, población, NBI y el resto de campos descriptivos eran copia del vecino y deben verificarse."
   },
   {
     "id": "mpio-05679",
@@ -9878,3 +9826,10 @@ export const ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA: UnifiedMunicipalityRecord
     "updatedAt": "2026-09-20"
   }
 ];
+
+// Censo oficial por código DANE (Registraduría, corte 30-abr-2026)
+for (const m of ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA) {
+  const official = getMunicipalCensus(m.daneCode);
+  if (official) m.electoralCensus = official.total;
+  m.electoralCensusSource = official ? 'oficial' : 'estimado';
+}

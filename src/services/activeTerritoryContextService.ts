@@ -17,6 +17,7 @@ import { ANTIOQUIA_SUBREGIONS_DATA } from '../data/antioquiaSubregionesData';
 import { CRIMINALITY_DATA } from '../data/observatorioComunas/criminalityData';
 import { IPM_DATA } from '../data/observatorioComunas/ipmData';
 import { POPULATION_DATA } from '../data/observatorioComunas/populationData';
+import { getDepartmentCensus, getMunicipalCensus } from './electoralCensusService';
 
 export interface ActiveTerritoryState {
   scale: TerritorialScale;
@@ -29,6 +30,7 @@ export interface ActiveTerritoryState {
   barrioId: string;
   featureId?: string;
   population?: number;
+  /** Censo electoral oficial (Registraduría); undefined si no hay dato para esta escala */
   electoralCensus?: number;
   nbiPercentage?: number;
   riskLevel?: 'Bajo' | 'Medio' | 'Alto' | 'Crítico';
@@ -62,7 +64,7 @@ export const DEFAULT_ACTIVE_TERRITORY: ActiveTerritoryState = {
   barrioId: 'all-comuna',
   featureId: 'mpio-05001',
   population: 2650000,
-  electoralCensus: 1908000,
+  electoralCensus: getMunicipalCensus('05001')?.total,
   nbiPercentage: 4.2,
   riskLevel: 'Medio',
   predominantStratum: 'Estrato 3 (heterogéneo 1 a 6)',
@@ -170,7 +172,8 @@ class ActiveTerritoryManager {
     let comunaId = 'comuna-11';
     let barrioId = 'all-comuna';
     let population = p.population || 50000;
-    let electoralCensus = p.electoralCensus || Math.round(population * 0.72);
+    // Nunca se estima el censo a partir de la población: o hay dato oficial o queda sin dato
+    let electoralCensus: number | undefined = p.electoralCensus;
     let nbiPercentage = p.nbiPercentage || 12.0;
     let riskLevel = p.riskLevel || 'Medio';
     let predominantStratum = p.predominantStratum || 'Estrato 2-3';
@@ -190,6 +193,7 @@ class ActiveTerritoryManager {
     if (level === 'nacional' || fid.startsWith('dept-')) {
       scale = 'departamental';
       deptId = fid.startsWith('dept-') ? fid : `dept-${fid}`;
+      electoralCensus = getDepartmentCensus(deptId.replace('dept-', ''))?.total ?? getDepartmentCensus(p.name)?.total;
       name = p.name;
       fullName = `Departamento de ${p.name}`;
       keyProblems = [
@@ -214,7 +218,10 @@ class ActiveTerritoryManager {
       const subInfo = ANTIOQUIA_SUBREGIONS_DATA[cleanSubId];
       if (subInfo) {
         population = subInfo.demographics.totalPopulation;
-        electoralCensus = Math.round(population * 0.72);
+        electoralCensus = municipalRepository
+          .getAll()
+          .filter((m) => m.subregionId === cleanSubId)
+          .reduce((sum, m) => sum + m.electoralCensus, 0);
         nbiPercentage = subInfo.demographics.nbiAverage;
         keyProblems = [
           subInfo.transversalPains.securityAndOrder,
@@ -258,6 +265,7 @@ class ActiveTerritoryManager {
       } else {
         name = p.name;
         fullName = `${p.name} (Antioquia)`;
+        electoralCensus = getMunicipalCensus(p.name)?.total ?? electoralCensus;
       }
     }
     // 4. ESCALA COMUNAL / CORREGIMENTAL: Comunas y Corregimientos de Medellín
@@ -284,7 +292,7 @@ class ActiveTerritoryManager {
 
       if (deepC) {
         population = deepC.population;
-        electoralCensus = Math.round(deepC.population * 0.78);
+        electoralCensus = deepC.electoralCensusSource === 'oficial' ? deepC.electoralCensus : undefined;
         predominantStratum = deepC.predominantStratum;
         keyProblems = [
           deepC.keyDynamics || 'Microdinámica barrial y convivencia',
@@ -294,12 +302,12 @@ class ActiveTerritoryManager {
           keyProblems.push(`Extorsión a negocios del sector: ${crime.extorsionNegociosPct}%`);
           securityDynamics = {
             homicideRate: `Prioridad territorial en monitoreo CIEF`,
-            extortionRisk: `Extorsión a comercios: ${crime.extorsionNegociosPct}% • Cifra negra: ${crime.cifraNegraPct}%`,
+            extortionRisk: `Extorsión a comercios: ${crime.extorsionNegociosPct}% • Extorsión a hogares: ${crime.extorsionHogaresPct}%`,
             armedPresence: crime.bandasDominantes?.join(', ') || 'Combos delincuenciales locales'
           };
         }
         if (ipmList && ipmList.length > 0) {
-          nbiPercentage = ipmList[ipmList.length - 1].ipm;
+          nbiPercentage = ipmList[ipmList.length - 1].ipmGlobal; // IPM global (no es NBI)
         }
         strategicOpportunities = [
           `Articulación barrial con líderes comunales y comerciantes de ${name}`,
@@ -318,7 +326,7 @@ class ActiveTerritoryManager {
       fullName = `Barrio ${p.name} (${p.comunaName || 'Medellín'})`;
       comunaId = p.comunaId || 'comuna-11';
       population = p.population || 18000;
-      electoralCensus = p.electoralCensus || 14000;
+      electoralCensus = p.electoralCensus;
       predominantStratum = p.predominantStratum || 'Estrato 3';
       nbiPercentage = p.nbiPercentage || 5.0;
       keyProblems = [

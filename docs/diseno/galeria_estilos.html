@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catálogo de Estilos de Diseño - PROTEUS NACIONAL</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #090d16;
+      --card-bg: #111827;
+      --card-border: #1f2937;
+      --text: #f3f4f6;
+      --text-muted: #9ca3af;
+      --primary: #3b82f6;
+      --accent: #10b981;
+      --amber: #f59e0b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      padding: 2.5rem 1.5rem;
+      min-height: 100vh;
+    }
+    .header {
+      max-width: 1300px;
+      margin: 0 auto 3rem auto;
+      text-align: center;
+    }
+    .badge-top {
+      display: inline-block;
+      padding: 0.35rem 0.85rem;
+      border-radius: 9999px;
+      background: rgba(59, 130, 246, 0.15);
+      border: 1px solid rgba(59, 130, 246, 0.4);
+      color: #60a5fa;
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    h1 {
+      font-size: 2.4rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.75rem;
+      background: linear-gradient(135deg, #ffffff 0%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    p.subtitle {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      max-width: 750px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+      gap: 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    .card:hover {
+      transform: translateY(-6px);
+      border-color: #3b82f6;
+      box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.6), 0 0 20px -5px rgba(59, 130, 246, 0.25);
+    }
+    .img-container {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #000;
+      overflow: hidden;
+      cursor: zoom-in;
+    }
+    .img-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+    .card:hover .img-container img {
+      transform: scale(1.03);
+    }
+    .style-num {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+    }
+    .category-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(59, 130, 246, 0.85);
+      backdrop-filter: blur(8px);
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+    }
+    .card-body {
+      padding: 1.4rem;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.45rem;
+    }
+    .card-desc {
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      line-height: 1.5;
+      margin-bottom: 1.1rem;
+      flex-grow: 1;
+    }
+    .tag-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 1.2rem;
+    }
+    .tag {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #cbd5e1;
+      font-size: 0.75rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .btn-choose {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #f3f4f6;
+      padding: 0.65rem 1rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.88rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+    }
+    .btn-choose:hover {
+      background: #3b82f6;
+      border-color: #3b82f6;
+      color: #fff;
+    }
+
+    /* Lightbox Modal */
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.92);
+      backdrop-filter: blur(12px);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+    }
+    .lightbox.active {
+      display: flex;
+    }
+    .lightbox-content {
+      max-width: 92vw;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+    .lightbox-img {
+      max-width: 100%;
+      max-height: 82vh;
+      border-radius: 12px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .lightbox-caption {
+      margin-top: 1rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #fff;
+    }
+    .close-btn {
+      position: absolute;
+      top: -2.5rem;
+      right: 0;
+      color: #fff;
+      font-size: 2rem;
+      cursor: pointer;
+      line-height: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="badge-top">UI/UX Pro Max Intelligence</div>
+    <h1>Muestrario de 10 Estilos Visuales</h1>
+    <p class="subtitle">
+      Explora las 10 maquetas conceptuales generadas para <strong>PROTEUS NACIONAL</strong> y el <strong>Sistema Gobernación</strong>. Haz clic sobre cualquier imagen para ampliarla en alta definición.
+    </p>
+  </header>
+
+  <main class="grid">
+
+    <!-- Estilo 1 -->
+    <article class="card">
+      <div class="img-container" onclick="openLightbox('muestras_diseno/01_oled_command_center.jpg', '01. Dark Mode OLED Tactical')">
+        <span class="style-num">01</span>
+        <span class="category-badge">Táctico / Cyber</span>
+        <img src="muestras_diseno/01_oled_command_center.jpg" alt="Dark Mode OLED Tactical">
+      </div>
+      <div class="card-body">
+        <h2 class="card-title">Dark Mode OLED Tactical</h2>
+        <p class="card-desc">Fondo negro absoluto (#000000) con acentos de radar verde fósforo y cian eléctrico. Alto contraste para operaciones continuas de monitoreo e inteligencia.</p>
+        <div class="tag-container">
+          <span class="tag">#000000</span>
+          <span class="tag">Verde Radar</span>
+          <span class="tag">Cyber Grid</span>
+          <span class="tag">Inteligencia 24/7</span>
+        </div>
+        <button class="btn-choose" onclick="alert('Copia este nombre en el chat: Estilo 01 (Dark Mode OLED Tactical)')">✓ Elegir Estilo 01</button>
+      </div>
+    </article>
+
+    <!-- Estilo 2 -->
+    <article class="card">
+      <div class="img-container" onclick="openLightbox('muestras_diseno/02_glassmorphism_frost.jpg', '02. Glassmorphism Frost / Modern Aero')">
+        <span class="style-num">02</span>
+        <span class="category-badge">Translúcido</span>
+        <img src="muestras_diseno/02_glassmorphism_frost.jpg" alt="Glassmorphism Frost">
+      </div>
+      <div class="card-body">
+        <h2 class="card-title">Glassmorphism Frost</h2>
+        <p class="card-desc">Paneles acrílicos translúcidos con desenfoque de fondo (backdrop blur), bordes iridiscentes sutiles y gradientes violeta-azul en capas flotantes.</p>
+        <div class="tag-container">
+          <span class="tag">Backdrop Blur</span>
+          <span class="tag">Aero Glass</span>
+          <span class="tag">Flotante</span>
+          <span class="tag">Modern UI</span>
+        </div>
+        <button class="btn-choose" onclick="alert('Copia este nombre en el chat: Estilo 02 (Glassmorphism Frost)')">✓ Elegir Estilo 02</button>
+      </div>
+    </article>
+
+    <!-- Estilo 3 -->
+    <article class="card">
+      <div class="img-container" onclick="openLightbox('muestras_diseno/03_swiss_minimalist_dense.jpg', '03. Swiss Minimalist Editorial')">
+        <span class="style-num">03</span>
+        <span class="category-badge">Editorial / Claro</span>
+        <img src="muestras_diseno/03_swiss_minimalist_dense.jpg" alt="Swiss Minimalist Editorial">
+      </div>
+      <div class="card-body">
+        <h2 class="card-title">Swiss Minimalist Editorial</h2>
+        <p class="card-desc">Estilo suizo de alta densidad tipográfica: fondo marfil neutro, líneas divisorias nítidas de 1px, acento rojo bermellón internacional y jerarquía editorial.</p>
+        <div class="tag-container">
+          <span class="tag">Fondo Claro</span>
+          <span class="tag">Helvética / Grotesk</span>
+          <span class="tag">Rojo Suizo</span>
+          <span class="tag">Alta Densidad</span>
+        </div>
+        <button class="btn-choose" onclick="alert('Copia este nombre en el chat: Estilo 03 (Swiss Minimalist)')">✓ Elegir Estilo 03</button>
+      </div>
+    </article>
+
+    <!-- Estilo 4 -->
+    <article class="card">
+      <div class="img-container" onclick="openLightbox('muestras_diseno/04_tactical_war_room.jpg', '04. Tactical War Room (Heatmap & Alerts)')">
+        <span class="style-num">04</span>
+        <span class="category-badge">Defensa / Monitoreo</span>
+        <img src="muestras_diseno/04_tactical_war_room.jpg" alt="Tactical War Room">
+      </div>
+      <div class="card-body">
+        <h2 class="card-title">Tactical War Room</h2>
+        <p class="card-desc">Atmósfera de sala de crisis y comando estratégico: mapas térmicos geográficos, alertas en ámbar/naranja de advertencia, gráficos de ondas y telemetría.</p>
+        <div class="tag-container">
+          <span class="tag">Heatmaps</span>
+          <span class="tag">Ámbar Alerta</span>
+          <span class="tag">Telemetría</span>
+          <span class="tag">Sala de Crisis</span>
+        </div>
+        <button class="btn-choose" onclick="alert('Copia este nombre en el chat: Estilo 04 (Tactical War Room)')">✓ Elegir Estilo 04</button>
+      </div>
+    </article>
+
+    <!-- Estilo 5 -->
+    <article class="card">
+      <div class="img-container" onclick="openLightbox('muestras_diseno/05_neumorphism_soft_ui.jpg', '05. Neumorphism / Soft UI Clay')">
+        <span class="style-num">05</span>
+        <span class="category-badge">Relieve Suave</span>
+        <img src="muestras_diseno/05_neumorphism_soft_ui.jpg" alt="Neumorphism Soft UI">
+      </div>
+      <div class="card-body">
+        <h2 class="card-title">Neumorphism / Soft UI</h2>
+        <p class="card-desc">Superficies con relieves suaves en gris grafito oscuro, sombras duales internas y externas que simulan botones y paneles extruidos de plástico mate.</p>
+        <div class="tag-container">
+          <span class="tag">Dual Shadows</span>
+          <span class="tag">Relieve Táctil</span>
+          <span class="tag">Grafito Mate</span>
+          <span class="tag">Soft UI</span>
+        </div>
+        <button class="btn-choose" onclick="alert('Copia este nombre en el chat: Estilo 05 (Neumorphism Soft UI)')">✓ Elegir Estilo 05</button>
+      </div>
+    </article>
+
+    <!-- Estilo 6 -->
+    <article class="card">
+      <div class="img-container" onclick="openLightbox('muestras_diseno/06_apple_cupertino_clean.jpg', '06. Apple Silicon / Cupertino Clean Pro')">
+        <span class="style-num">06</span>
+        <span class="category-badge">Premium Minimal</span>
+        <img src="muestras_diseno/06_apple_cupertino_clean.jpg" alt="Cupertino Clean Pro">
+      </div>
+      <div class="card-body">
+        <h2 class="card-title">Cupertino Clean Pro</h2>
+        <p class="card-desc">Inspirado en macOS y iPadOS Pro: esquinas amplias y suaves (continuous corners), tipografía SF Pro impecable, micro-sombras difusas y acentos azul zafiro.</p>
+        <div class="tag-container">
+          <span class="tag">SF Pro</span>
+          <span class="tag">Curvas Suaves</span>
+          <span class="tag">Azul Zafiro</span>
+          <span class="tag">Elegancia Sobria</span>
+        </div>
+        <button class="btn-choose" onclick="alert('Copia este nombre en el chat: Estilo 06 (Cupertino Clean Pro)')">✓ Elegir Estilo 06</button>
+      </div>
+    </article>
+
+    <!-- Estilo 7 -->
+    <article class="card">
+      <div class="img-container" onclick="openLightbox('muestras_diseno/07_obsidian_champagne_gold.jpg', '07. Luxury Obsidian & Champagne Gold')">
+        <span class="style-num">07</span>
+        <span class="category-badge">VIP / Ejecutivo</span>
+        <img src="muestras_diseno/07_obsidian_champagne_gold.jpg" alt="Obsidian & Gold">
+      </div>
+      <div class="card-body">
+        <h2 class="card-title">Obsidian & Champagne Gold</h2>
+        <p class="card-desc">Diseño ejecutivo gubernamental de alto nivel: obsidiana profunda, detalles metalizados en oro champán, bordes biselados sutiles y métricas de prestigio.</p>
+        <div class="tag-container">
+          <span class="tag">Oro Champán</span>
+          <span class="tag">Obsidiana</span>
+          <span class="tag">Nivel Ministerial</span>
+          <span class="tag">Biselado</span>
+        </div>
+        <button class="btn-choose" onclick="alert('Copia este nombre en el chat: Estilo 07 (Obsidian & Champagne Gold)')">✓ Elegir Estilo 07</button>
+      </div>
+    </article>
+
+    <!-- Estilo 8 -->
+    <article class="card">
+      <div class="img-container" onclick="openLightbox('muestras_diseno/08_bento_grid_3d.jpg', '08. Bento Grid 3D Modern Vanguard')">
+        <span class="style-num">08</span>
+        <span class="category-badge">Vanguardia Bento</span>
+        <img src="muestras_diseno/08_bento_grid_3d.jpg" alt="Bento Grid 3D">
+      </div>
+      <div class="card-body">
+        <h2 class="card-title">Bento Grid 3D Vanguard</h2>
+        <p class="card-desc">Composición modular asimétrica tipo Bento Box: tarjetas independientes con sombras de profundidad, micro-ilustraciones 3D y acentos dinámicos.</p>
+        <div class="tag-container">
+          <span class="tag">Bento Grid</span>
+          <span class="tag">Tarjetas Asimétricas</span>
+          <span class="tag">Elementos 3D</span>
+          <span class="tag">Alta Usabilidad</span>
+        </div>
+        <button class="btn-choose" onclick="alert('Copia este nombre en el chat: Estilo 08 (Bento Grid 3D)')">✓ Elegir Estilo 08</button>
+      </div>
+    </article>
+
+    <!-- Estilo 9 -->
+    <article class="card">
+      <div class="img-container" onclick="openLightbox('muestras_diseno/09_corporate_slate_emerald.jpg', '09. Cyber-Corporate Slate & Emerald')">
+        <span class="style-num">09</span>
+        <span class="category-badge">Gubernamental Seguro</span>
+        <img src="muestras_diseno/09_corporate_slate_emerald.jpg" alt="Corporate Slate & Emerald">
+      </div>
+      <div class="card-body">
+        <h2 class="card-title">Slate & Emerald Corporate</h2>
+        <p class="card-desc">Gris pizarra corporativo (#0f172a) con verde esmeralda y menta (#10b981). Denota solidez institucional, auditoría rigurosa y estabilidad analítica.</p>
+        <div class="tag-container">
+          <span class="tag">Gris Pizarra</span>
+          <span class="tag">Verde Esmeralda</span>
+          <span class="tag">Institucional</span>
+          <span class="tag">Auditoría</span>
+        </div>
+        <button class="btn-choose" onclick="alert('Copia este nombre en el chat: Estilo 09 (Slate & Emerald)')">✓ Elegir Estilo 09</button>
+      </div>
+    </article>
+
+    <!-- Estilo 10 -->
+    <article class="card">
+      <div class="img-container" onclick="openLightbox('muestras_diseno/10_spatial_holographic.jpg', '10. Futuristic Spatial Holographic')">
+        <span class="style-num">10</span>
+        <span class="category-badge">Sci-Fi Futurista</span>
+        <img src="muestras_diseno/10_spatial_holographic.jpg" alt="Spatial Holographic">
+      </div>
+      <div class="card-body">
+        <h2 class="card-title">Spatial Holographic</h2>
+        <p class="card-desc">Inspirado en interfaces holográficas de computación espacial: proyecciones volumétricas cian y magenta neón sobre fondo cósmico ultra oscuro.</p>
+        <div class="tag-container">
+          <span class="tag">Holográfico</span>
+          <span class="tag">Cian Neón</span>
+          <span class="tag">Profundidad Z</span>
+          <span class="tag">Sci-Fi Vanguardia</span>
+        </div>
+        <button class="btn-choose" onclick="alert('Copia este nombre en el chat: Estilo 10 (Spatial Holographic)')">✓ Elegir Estilo 10</button>
+      </div>
+    </article>
+
+  </main>
+
+  <!-- Lightbox Modal -->
+  <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+    <div class="lightbox-content" onclick="event.stopPropagation()">
+      <span class="close-btn" onclick="closeLightbox()">&times;</span>
+      <img id="lightbox-img" class="lightbox-img" src="" alt="Vista previa">
+      <div id="lightbox-caption" class="lightbox-caption"></div>
+    </div>
+  </div>
+
+  <script>
+    function openLightbox(src, caption) {
+      document.getElementById('lightbox-img').src = src;
+      document.getElementById('lightbox-caption').innerText = caption;
+      document.getElementById('lightbox').classList.add('active');
+    }
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('active');
+    }
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeLightbox();
+    });
+  </script>
+</body>
+</html>

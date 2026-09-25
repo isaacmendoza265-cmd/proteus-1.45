@@ -1,3 +1,4 @@
+import { CENSUS_SOURCE_LABEL, formatCensus, officialCensusOr } from '../../services/electoralCensusService';
 import { MunicipalityAnalystItem, ComunaAnalysisData } from './analystTypes';
 
 const SOURCE_WEB = '(información obtenida de la web)';
@@ -319,7 +320,7 @@ export const ITAGUI_ANALYST: MunicipalityAnalystItem = {
   subregion: 'Valle de Aburrá (Sur)',
   badgeColor: 'blue',
   poblacionEstimada: 290000,
-  censoElectoral: 235000,
+  censoElectoral: officialCensusOr('Itagüí', 235000),
   tieneComunas: true,
   cantidadComunas: 6,
   detalleComunasOBarrios: '1. Comuna 1 (Centro/Ind.), 2. Comuna 2 (Yarumito), 3. Comuna 3 (Bariloche), 4. Comuna 4 (Santa María), 5. Comuna 5 (El Tablazo), 6. Comuna 6 (San Fernando).',
@@ -327,7 +328,7 @@ export const ITAGUI_ANALYST: MunicipalityAnalystItem = {
   panelGeneral: {
     censoPoblacional: {
       poblacionTotal: '290.000 habitantes (DANE)',
-      censoElectoral: '235.000 ciudadanos habilitados',
+      censoElectoral: `${formatCensus(officialCensusOr('Itagüí', 235000))} ciudadanos habilitados (${CENSUS_SOURCE_LABEL})`,
       distribucionSexo: { hombres: '47.7%', mujeres: '52.3%' },
       distribucionEdades: { rango0_14: '18.6%', rango15_29: '25.6%', rango30_59: '40.6%', rango60_mas: '15.2%' },
       fuenteNota: SOURCE_WEB,

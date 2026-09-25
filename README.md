@@ -124,38 +124,53 @@ Arquitectura multi-agente epistemológica orientada a la evolución continua y a
 ## 🚀 Instalación y Puesta en Marcha
 
 ### Prerrequisitos
-* Node.js v18 o superior
-* npm, pnpm o bun
+* Node.js 22 (o 18+) y npm
+* Python 3 (solo para el puente con el Subproyecto Gobernación)
 
 ### 1. Clonar el repositorio
 ```bash
-git clone https://github.com/TU_USUARIO/proyecto-proteus.git
-cd proyecto-proteus
+git clone https://github.com/isaacmendoza265-cmd/proteus-1.45.git
+cd proteus-1.45
 ```
 
 ### 2. Instalar dependencias
 ```bash
-npm install
+npm ci
 ```
+> El proyecto usa **npm**; `package-lock.json` fija las versiones exactas.
 
 ### 3. Configurar variables de entorno
-Crea un archivo `.env` en la raíz (puedes basarte en `.env.example`):
-```env
-GEMINI_API_KEY=tu_api_key_de_google_gemini
-PORT=3000
-```
-> *Nota: Puedes obtener tu clave gratuita de Gemini en [Google AI Studio](https://aistudio.google.com/).*
+Copia `.env.example` como `.env` y completa:
 
-### 4. Iniciar en modo desarrollo
+| Variable | Obligatoria | Uso |
+| :--- | :--- | :--- |
+| `GEMINI_API_KEY` | Sí | Clave de Google Gemini ([Google AI Studio](https://aistudio.google.com/)) |
+| `PORT` | No | Puerto del servidor (3000 por defecto) |
+| `GOBERNACION_DIR` | No | Carpeta del Proyecto Independencia (base SQLite e informes) |
+| `PYTHON_PATH` | No | Ejecutable de Python para el puente de Gobernación |
+
+### 4. Desarrollo
 ```bash
-npm run dev
+npm run dev          # servidor Express + Vite en http://localhost:3000
 ```
-La aplicación estará disponible en `http://localhost:3000` (o el puerto asignado).
 
-### 5. Compilar para producción
+### 5. Verificación (lo mismo que corre el CI en cada push)
+```bash
+npm run typecheck    # revisión de tipos (TypeScript)
+npm run lint         # ESLint
+npm test             # pruebas (Vitest)
+npm run build        # build de producción
+```
+
+### 6. Producción
 ```bash
 npm run build
 npm start
+```
+
+### 7. Paquete para Google AI Studio
+```bash
+python scripts/make_aistudio_zip.py   # genera PROTEUS_ACTUALIZADO_AI_STUDIO.zip
 ```
 
 ---
@@ -163,71 +178,50 @@ npm start
 ## 📁 Estructura del Proyecto
 
 ```
-proyecto-proteus/
-├── .github/
-│   └── workflows/
-│       └── ci.yml                 # Integración continua (Typecheck y validación)
-├── public/
-│   └── data/
-│       ├── colombia_municipios_dane.geojson
-│       └── municipios_colombia_original.geojson
-├── scripts/
-│   ├── verify_imports.py          # Verificador de resolución de módulos
-│   └── verify_geojson_integrity.py# Verificador de integridad cartográfica
+proteus-1.45/
+├── .github/workflows/ci.yml       # CI: tipos, lint, pruebas y build
+├── docs/
+│   ├── informes/                  # Informes técnicos y ejecutivos (md/html)
+│   └── diseno/                    # Maquetas de referencia de la interfaz
+├── protocolos_de_automejora/      # Protocolos PA-001…PA-011 y actas de sesiones
+├── public/data/                   # GeoJSON nacionales servidos como archivos estáticos
+├── scripts/                       # Pipelines de datos (Python), bridge Gobernación, zip AI Studio
 ├── src/
-│   ├── components/
-│   │   ├── drive/                 # Modal y conector Google Drive
-│   │   ├── layout/                # AppShell, SidebarNav, TopStatusBar
-│   │   ├── maps/                  # MultiLevelZoomMap, CommuneDeepAnalyticsDrawer, E24Viewer
-│   │   ├── CandidateProfileManager.tsx
-│   │   └── CandidateVideoAnalyzer.tsx
-│   ├── data/
-│   │   ├── agentic/               # Definiciones del equipo de 5 agentes IA
-│   │   ├── geojson/               # Cartografía oficial (Colombia, Antioquia 125, Comunas, Barrios)
-│   │   ├── observatorioAntioquia/ # Datos electorales de municipios y concejos
-│   │   ├── observatorioComunas/   # IPM, criminalidad y población DANE
-│   │   └── metropolitanAndMedellinData.ts
-│   ├── modules/
-│   │   ├── agents/                # Consola del equipo multi-agente
-│   │   ├── analytics/             # Motor de segmentación y arquetipos
-│   │   ├── content/               # Director de briefs de campaña
-│   │   ├── multimedia/            # Estudio de video y colorimetría
-│   │   ├── repository/            # Explorador del Repositorio Municipal
-│   │   └── territorial/           # Hub de Zoom Continuo (5 Escalas)
-│   ├── services/
-│   │   ├── geminiService.ts       # Cliente Google GenAI con Google Search
-│   │   ├── googleDriveService.ts  # Servicio de persistencia en Drive
-│   │   └── municipalRepositoryService.ts # API del Repositorio Municipal
-│   ├── App.tsx                    # Orquestador raíz de vistas
-│   └── main.tsx                   # Punto de entrada React 19
-├── .env.example
-├── .gitignore
-├── LICENSE                        # Licencia MIT
-├── package.json
-├── server.ts                      # Servidor Express/Vite full-stack
-├── tsconfig.json
-└── vite.config.ts
+│   ├── components/                # Componentes de interfaz (layout, mapas, drive, grafos…)
+│   ├── data/                      # Datos electorales, demográficos y cartografía (.geo.json)
+│   ├── modules/                   # Las vistas de la app (se cargan bajo demanda)
+│   ├── services/                  # Lógica: simulador D'Hondt, Benford, Gemini, territorio…
+│   │   └── __tests__/             # Pruebas automáticas (Vitest)
+│   ├── App.tsx                    # Enrutador de vistas con carga diferida
+│   └── main.tsx
+├── server.ts                      # Servidor Express (API + Vite)
+├── subir_a_github.bat             # Sube los commits a GitHub (doble clic en Windows)
+├── eslint.config.js · vitest.config.ts · tsconfig.json · vite.config.ts
+└── package.json · package-lock.json
 ```
+
+Carpetas locales que **no** se suben al repositorio: `_archivo/`, `_originales/`, `temp_*/`,
+`muestras_diseno/`, `SUBIR_A_GITHUB/` (copia antigua), zips y PDFs.
 
 ---
 
-## 📤 Cómo Subir esta Carpeta a tu Repositorio en GitHub
+## 📤 Subir cambios a GitHub
 
-Si descargaste esta carpeta y deseas publicarla en un nuevo repositorio de GitHub:
+Los cambios se guardan como commits en la carpeta del proyecto. Para enviarlos a GitHub:
 
-1. Abre tu terminal en la carpeta `SUBIR_A_GITHUB` (o en la carpeta que contiene estos archivos):
-   ```bash
-   git init
-   git add .
-   git commit -m "feat: Lanzamiento Proyecto Proteus 1.2 - Centro Estratégico y Multi-Agente"
-   ```
-2. Crea un nuevo repositorio en [GitHub](https://github.com/new) (vacío, sin README ni .gitignore).
-3. Vincula el remoto y sube tus cambios:
-   ```bash
-   git branch -M main
-   git remote add origin https://github.com/TU_USUARIO/proyecto-proteus.git
-   git push -u origin main
-   ```
+* **Windows:** doble clic en `subir_a_github.bat`. La primera vez abre el navegador para iniciar
+  sesión en GitHub (GitHub CLI); no se guardan tokens en archivos.
+* **Terminal:** `git push origin main`
+
+---
+
+## ⚠️ Limitaciones conocidas
+
+* **Clave de Gemini en el navegador:** varios componentes llaman a Gemini desde el cliente y
+  `vite.config.ts` incrusta `GEMINI_API_KEY` en el bundle. Antes de publicar la app fuera de
+  AI Studio, las llamadas deben pasar por el servidor.
+* **Google Drive:** la sincronización es una simulación local (no usa la API de Google Drive).
+* **Persistencia:** el perfil del candidato vive en `localStorage` del navegador.
 
 ---
 

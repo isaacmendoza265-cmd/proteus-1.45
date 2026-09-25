@@ -151,13 +151,15 @@ Realiza una AUDITORÍA INTEGRAL DE IMAGEN POLÍTICA Y COLORIMETRÍA para este ca
         <div className="space-y-4">
           <CandidateVideoAnalyzer
             candidateName={candidateProfile.nombre}
-            onAnalysisComplete={(res) => {
+            existingAnalysis={candidateProfile.videoAnalysisData ?? null}
+            onApplyToProfile={({ videoAnalysisResult, ...profileUpdates }) => {
               onSaveProfile({
                 ...candidateProfile,
-                videoAnalysisData: res
+                ...profileUpdates,
+                videoAnalysisData: videoAnalysisResult
               });
               if (onSaveToDrive) {
-                onSaveToDrive(`VideoAnalysis_${candidateProfile.nombre}`, res);
+                onSaveToDrive(`VideoAnalysis_${candidateProfile.nombre}`, videoAnalysisResult);
               }
             }}
           />

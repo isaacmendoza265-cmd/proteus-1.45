@@ -1,0 +1,1745 @@
+[
+  {
+    "municipio": "Medellín, Distrito de Ciencia, Tecnología e Innovación",
+    "nombre": "FEDERICO GUTIÉRREZ ZULUAGA",
+    "titulo": "Alcalde",
+    "telefono": "4444144-3855208-3855209",
+    "correoelectronico": "federico.gutierrez@medellin.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.573826,
+        6.244754
+      ]
+    }
+  },
+  {
+    "municipio": "Abejorral",
+    "nombre": "MANUEL ALBERTO GUZMÁN MARÍN",
+    "titulo": "Alcalde",
+    "telefono": "8647611-8647384 Ext 102 - 8647182-8647004)",
+    "correoelectronico": "alcalde@abejorral-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.426616,
+        5.791612
+      ]
+    }
+  },
+  {
+    "municipio": "Abriaquí",
+    "nombre": "DANIEL ALBERTO SALAS GALLEGO",
+    "titulo": "Alcalde",
+    "telefono": "8520024-8520086-8520019-8520120",
+    "correoelectronico": "alcaldia@abriaqui-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -76.064563,
+        6.63197
+      ]
+    }
+  },
+  {
+    "municipio": "Alejandría",
+    "nombre": "GLORIA CECILIA NARANJO OSORIO",
+    "titulo": "Alcaldesa",
+    "telefono": "8660102-8660016-866 0140-8660133",
+    "correoelectronico": "alcaldia@alejandria-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.141258,
+        6.376923
+      ]
+    }
+  },
+  {
+    "municipio": "Amagá",
+    "nombre": "WILSER DARÍO MOLINA MOLINA",
+    "titulo": "Alcalde",
+    "telefono": "8472122-8474920-8470126",
+    "correoelectronico": "alcaldia@amaga-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.703216,
+        6.04063
+      ]
+    }
+  },
+  {
+    "municipio": "Amalfi",
+    "nombre": "WILMAR ALONSO VÉLEZ LONDOÑO",
+    "titulo": "Alcalde",
+    "telefono": "8301919 - 8300155",
+    "correoelectronico": "alcaldia@amalfi-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.074896,
+        6.90831
+      ]
+    }
+  },
+  {
+    "municipio": "Andes",
+    "nombre": "GERMÁN ALEXANDER VÉLEZ OROZCO",
+    "titulo": "Alcalde",
+    "telefono": "8414101-8414619-8414291-8414652",
+    "correoelectronico": "alcaldia@andes-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.875837,
+        5.655113
+      ]
+    }
+  },
+  {
+    "municipio": "Angelópolis",
+    "nombre": "JOSÉ LUIS MONTOYA QUICENO",
+    "titulo": "Alcalde",
+    "telefono": "8421948-8421793",
+    "correoelectronico": "alcaldia@angelopolis-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.710054,
+        6.111382
+      ]
+    }
+  },
+  {
+    "municipio": "Angostura",
+    "nombre": "VÍCTOR IGNACIO MEDINA GÓMEZ",
+    "titulo": "Alcalde",
+    "telefono": "8645161-8645046-8645162",
+    "correoelectronico": "alcaldia@angostura-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.334973,
+        6.885789
+      ]
+    }
+  },
+  {
+    "municipio": "Anorí",
+    "nombre": "GUSTAVO ALFREDO SILVA GUTIÉRREZ",
+    "titulo": "Alcalde",
+    "telefono": "8350842-8350404-8350449-8350849",
+    "correoelectronico": "alcaldia@anori-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.146359,
+        7.074021
+      ]
+    }
+  },
+  {
+    "municipio": "Anzá",
+    "nombre": "JUAN GUILLERMO HINCAPIÉ FIGUEROA",
+    "titulo": "Alcalde",
+    "telefono": "8522082-8522042-8522102",
+    "correoelectronico": "alcaldia@anza-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.857772,
+        6.306564
+      ]
+    }
+  },
+  {
+    "municipio": "Apartadó",
+    "nombre": "HÉCTOR RANGEL PALACIOS RODRÍGUEZ",
+    "titulo": "Alcalde",
+    "telefono": "8280457-8281038-8282188",
+    "correoelectronico": "alcaldia@apartado.gov.co;contactenos@apartado.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -76.630799,
+        7.887281
+      ]
+    }
+  },
+  {
+    "municipio": "Arboletes",
+    "nombre": "ÁLVARO GONZÁLEZ ÁVILA",
+    "titulo": "Alcalde",
+    "telefono": "8200367-8200973-8201289-8200130",
+    "correoelectronico": "alcaldia@arboletes-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -76.426578,
+        8.853354
+      ]
+    }
+  },
+  {
+    "municipio": "Argelia",
+    "nombre": "DIEGO ALEXANDER LÓPEZ GIRALDO",
+    "titulo": "Alcalde",
+    "telefono": "8650077-8650106-8650405-8650057",
+    "correoelectronico": "alcaldia@argelia-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.142373,
+        5.731108
+      ]
+    }
+  },
+  {
+    "municipio": "Armenia",
+    "nombre": "MARTHA LIBIA PARRA GIL",
+    "titulo": "Alcaldesa",
+    "telefono": "8559015-8559064",
+    "correoelectronico": "alcaldia@armenia-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.787762,
+        6.15675
+      ]
+    }
+  },
+  {
+    "municipio": "Barbosa",
+    "nombre": "JUAN DAVID ROJAS AGUDELO",
+    "titulo": "Alcalde",
+    "telefono": "4548300-4548311-4548311-4065441-4065441",
+    "correoelectronico": "alcaldia@barbosa.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.324471,
+        6.444177
+      ]
+    }
+  },
+  {
+    "municipio": "Bello",
+    "nombre": "YULIETH LORENA GONZÁLEZ OSPINA",
+    "titulo": "Alcaldesa",
+    "telefono": "604 79 44",
+    "correoelectronico": "contactenos@bello.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.558461,
+        6.335256
+      ]
+    }
+  },
+  {
+    "municipio": "Belmira",
+    "nombre": "DARCY ESTEBAN ARBOLEDA RUA",
+    "titulo": "Alcalde",
+    "telefono": "8674030",
+    "correoelectronico": "alcaldia@belmira-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.667024,
+        6.606213
+      ]
+    }
+  },
+  {
+    "municipio": "Betania",
+    "nombre": "DIEGO ARLEY DE JESÚS GUERRA GUTIÉRREZ",
+    "titulo": "Alcalde",
+    "telefono": "8435127 Ext 105- 8435180",
+    "correoelectronico": "alcaldia@betania-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.976711,
+        5.745726
+      ]
+    }
+  },
+  {
+    "municipio": "Betulia",
+    "nombre": "NÉSTOR CAMILO SERNA HERNÁNDEZ",
+    "titulo": "Alcalde",
+    "telefono": "8436093-8436157-8430631",
+    "correoelectronico": "alcaldia@betulia-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.984232,
+        6.11329
+      ]
+    }
+  },
+  {
+    "municipio": "Briceño",
+    "nombre": "NOÉ DE JESÚS ESPINOSA VÁSQUEZ",
+    "titulo": "Alcalde",
+    "telefono": "8570051-8570140",
+    "correoelectronico": "alcaldia@briceno-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.551532,
+        7.110465
+      ]
+    }
+  },
+  {
+    "municipio": "Buriticá",
+    "nombre": "JOSÉ LUIS RODRÍGUEZ ÚSUGA",
+    "titulo": "Alcalde",
+    "telefono": "8527015-8527041",
+    "correoelectronico": "alcaldia@buritica-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.907102,
+        6.719872
+      ]
+    }
+  },
+  {
+    "municipio": "Cáceres",
+    "nombre": "DAMIANA MARÍA MONTERROSA PÉREZ",
+    "titulo": "Alcaldesa",
+    "telefono": "8362201-8362203-8362202",
+    "correoelectronico": "alcaldia@caceres-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.347697,
+        7.582521
+      ]
+    }
+  },
+  {
+    "municipio": "Caicedo",
+    "nombre": "YÚBER FELIPE MOLINA MURILLO",
+    "titulo": "Alcalde",
+    "telefono": "8572002 Ext 103 - 8572134",
+    "correoelectronico": "alcaldia@caicedo-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.982241,
+        6.405649
+      ]
+    }
+  },
+  {
+    "municipio": "Caldas",
+    "nombre": "JORGE MARIO RENDÓN VÉLEZ",
+    "titulo": "Alcalde",
+    "telefono": "3788500 - 3788504 - 3788515 - 3788502",
+    "correoelectronico": "alcaldia@caldasantioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.634928,
+        6.091947
+      ]
+    }
+  },
+  {
+    "municipio": "Campamento",
+    "nombre": "CRISTIÁN ÁNDRÉS AGUDELO POSADA",
+    "titulo": "Alcalde",
+    "telefono": "8614020-8614055-8614229",
+    "correoelectronico": "alcaldia@campamento-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.29634,
+        6.979113
+      ]
+    }
+  },
+  {
+    "municipio": "Cañasgordas",
+    "nombre": "DIEGO ALONSO VANEGAS ARANGO",
+    "titulo": "Alcalde",
+    "telefono": "8564101-8564903-8564319",
+    "correoelectronico": "alcaldia@canasgordas-antioquia.gov.co;contactenos@canasgordas-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -76.024503,
+        6.748005
+      ]
+    }
+  },
+  {
+    "municipio": "Caracolí",
+    "nombre": "RODRIGO ALVEIRO CADAVID HERRERA",
+    "titulo": "Alcalde",
+    "telefono": "8336025 Ext 102-8336045",
+    "correoelectronico": "alcaldia@caracoli-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -74.756712,
+        6.410876
+      ]
+    }
+  },
+  {
+    "municipio": "Caramanta",
+    "nombre": "JUAN ESTEBAN CORREA CÁRDENAS",
+    "titulo": "Alcalde",
+    "telefono": "8553354 - 8553414 - 8553310",
+    "correoelectronico": "alcaldia@caramanta-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.644483,
+        5.548681
+      ]
+    }
+  },
+  {
+    "municipio": "Carepa",
+    "nombre": "AGAPITO MURILLO PALACIOS",
+    "titulo": "Alcalde",
+    "telefono": "8239402- 8236706- 8236581-8237131",
+    "correoelectronico": "alcaldia@carepa-antioquia.gov.co;contactenos@carepa-antioquia.gov.co;comunicaciones@carepa-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -76.658245,
+        7.756784
+      ]
+    }
+  },
+  {
+    "municipio": "Carolina del Príncipe",
+    "nombre": "ANA ISABEL AVENDAÑO DUQUE",
+    "titulo": "Alcaldesa",
+    "telefono": "8634033-8634259 Ext 103 - 8434029",
+    "correoelectronico": "alcaldia@carolinadelprincipe-antioquia.gov.co;contactenos@carolinadelprincipe-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.282036,
+        6.723384
+      ]
+    }
+  },
+  {
+    "municipio": "Caucasia",
+    "nombre": "JHOAN ODERIS MONTES CORTÉS",
+    "titulo": "Alcalde",
+    "telefono": "8391595 - 8394444",
+    "correoelectronico": "alcaldia@caucasia-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.197357,
+        7.988832
+      ]
+    }
+  },
+  {
+    "municipio": "Chigorodó",
+    "nombre": "TULIA IRENE RUIZ GARCÍA",
+    "titulo": "Alcaldesa",
+    "telefono": "8253630 - 8253868 - 8255885",
+    "correoelectronico": "alcaldia@chigorodo-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -76.684071,
+        7.672572
+      ]
+    }
+  },
+  {
+    "municipio": "Cisneros",
+    "nombre": "LINA MARÍA CORREA VALENCIA",
+    "titulo": "Alcaldesa",
+    "telefono": "8631567",
+    "correoelectronico": "alcaldia@cisneros-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.091277,
+        6.546685
+      ]
+    }
+  },
+  {
+    "municipio": "Ciudad Bolívar",
+    "nombre": "LEÓN DARÍO ACEVEDO VARGAS",
+    "titulo": "Alcalde",
+    "telefono": "8411183 Ext 12-8412552 - 8411144",
+    "correoelectronico": "alcaldia@ciudadbolivar-antioquia.gov.co;contactenos@ciudadbolivar-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -76.022174,
+        5.850548
+      ]
+    }
+  },
+  {
+    "municipio": "Cocorná",
+    "nombre": "DAVID ALEJANDRO GÓMEZ HOYOS",
+    "titulo": "Alcalde",
+    "telefono": "8343404-8343425-8343096-8343529",
+    "correoelectronico": "alcaldia@cocorna-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.185219,
+        6.057483
+      ]
+    }
+  },
+  {
+    "municipio": "Concepción",
+    "nombre": "ADRIÁN HENAO CARVAJAL",
+    "titulo": "Alcalde",
+    "telefono": "8567084-8567274-8567176-8567034",
+    "correoelectronico": "alcaldia@concepcion-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.259317,
+        6.395569
+      ]
+    }
+  },
+  {
+    "municipio": "Concordia",
+    "nombre": "ALEXANDRA MARÍA HERRERA QUIJANO",
+    "titulo": "Alcaldesa",
+    "telefono": "8446089-8446101-8446275-8447492",
+    "correoelectronico": "alcaldia@concordia-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.907256,
+        6.046154
+      ]
+    }
+  },
+  {
+    "municipio": "Copacabana",
+    "nombre": "JOHNNATAN ANDRÉS PINEDA AGUDELO",
+    "titulo": "Alcalde",
+    "telefono": "2740069-2740041-2742582",
+    "correoelectronico": "alcaldia@copacabana.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.507958,
+        6.34674
+      ]
+    }
+  },
+  {
+    "municipio": "Dabeiba",
+    "nombre": "DANIEL HIGUITA HERRERA",
+    "titulo": "Alcalde",
+    "telefono": "8590300-8590475-8591234-8591293",
+    "correoelectronico": "alcaldia@dabeiba-antioquia.gov.co;contactenos@dabeiba-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -76.266741,
+        7.001549
+      ]
+    }
+  },
+  {
+    "municipio": "Donmatías",
+    "nombre": "JAVIER DARÍO LÓPEZ RESTREPO",
+    "titulo": "Alcalde",
+    "telefono": "8663243-8666230 Ext 109",
+    "correoelectronico": "alcaldia@donmatias-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.394275,
+        6.486525
+      ]
+    }
+  },
+  {
+    "municipio": "Ebéjico",
+    "nombre": "DAVID ALONSO RESTREPO CASTRILLÓN",
+    "titulo": "Alcalde",
+    "telefono": "8562190 EXT 101-8562016",
+    "correoelectronico": "alcaldia@ebejico-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.768453,
+        6.326947
+      ]
+    }
+  },
+  {
+    "municipio": "El Bagre",
+    "nombre": "MARCO FIDEL TRESPALACIO BULLOSO",
+    "titulo": "Alcalde",
+    "telefono": "8372429",
+    "correoelectronico": "alcaldia@elbagre-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -74.819303,
+        7.602519
+      ]
+    }
+  },
+  {
+    "municipio": "El Carmen de Viboral",
+    "nombre": "HUGO ALFONSO JÍMENEZ CUERVO",
+    "titulo": "Alcalde",
+    "telefono": "5432000 Ext 129 - 5432467-5432116-5432020-5432149",
+    "correoelectronico": "alcaldia@elcarmendeviboral-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.335226,
+        6.084006
+      ]
+    }
+  },
+  {
+    "municipio": "El Peñol",
+    "nombre": "SANDRA ARELIS DUQUE VELÁSQUEZ",
+    "titulo": "Alcaldesa",
+    "telefono": "8515855-8515851-8515944",
+    "correoelectronico": "alcaldia@elpenol-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.243935,
+        6.2169
+      ]
+    }
+  },
+  {
+    "municipio": "El Retiro",
+    "nombre": "SANTIAGO MONTOYA GIRALDO",
+    "titulo": "Alcalde",
+    "telefono": "5411860-5410175-5413067-5410180-5410190",
+    "correoelectronico": "alcaldia@elretiro.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.502883,
+        6.058012
+      ]
+    }
+  },
+  {
+    "municipio": "El Santuario",
+    "nombre": "MARTÍN ALBERTO DUQUE GALLO",
+    "titulo": "Alcalde",
+    "telefono": "5460080 Ext 2",
+    "correoelectronico": "despachoalcaldia@elsantuario-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.266014,
+        6.139484
+      ]
+    }
+  },
+  {
+    "municipio": "Entrerríos",
+    "nombre": "JULIO CÉSAR LOPERA POSADA",
+    "titulo": "Alcalde",
+    "telefono": "8670411-8670147-8670412",
+    "correoelectronico": "alcaldia@entrerrios-antioquia.gov.co;contactenos@entrerrios-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.517069,
+        6.567837
+      ]
+    }
+  },
+  {
+    "municipio": "Envigado",
+    "nombre": "RAÚL EDUARDO CARDONA GONZÁLEZ",
+    "titulo": "Alcalde",
+    "telefono": "3394000 - 3394017  - 3394018",
+    "correoelectronico": "alcaldia@envigado.gov.co;liliana.garcia@envigado.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.588186,
+        6.170669
+      ]
+    }
+  },
+  {
+    "municipio": "Fredonia",
+    "nombre": "ALDUBAR DE JESÚS VANEGAS MARÍN",
+    "titulo": "Alcalde",
+    "telefono": "8401264-8401026-8402096-8401393-8402334",
+    "correoelectronico": "alcaldia@fredonia-antioquia.gov.co;contactenos@fredonia-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.672258,
+        5.927261
+      ]
+    }
+  },
+  {
+    "municipio": "Frontino",
+    "nombre": "LUZ GABRIELA RIVERA CANO",
+    "titulo": "Alcaldesa",
+    "telefono": "8595032 Ext 0-8595037-8595835",
+    "correoelectronico": "alcaldia@frontino-antioquia.gov.co;contactenos@frontino-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -76.128416,
+        6.78051
+      ]
+    }
+  },
+  {
+    "municipio": "Giraldo",
+    "nombre": "MARÍA CAMILA MANCO SUÁREZ",
+    "titulo": "Alcaldesa",
+    "telefono": "8571107 Ext 108-8571106",
+    "correoelectronico": "alcaldia@giraldo-antioquia.gov.co;contactenos@giraldo-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.953365,
+        6.680421
+      ]
+    }
+  },
+  {
+    "municipio": "Girardota",
+    "nombre": "KEVIN RENÉ BERNAL MORALES",
+    "titulo": "Alcalde",
+    "telefono": "4054200 Ext 102-4052050",
+    "correoelectronico": "contactenos@girardota.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.445702,
+        6.377638
+      ]
+    }
+  },
+  {
+    "municipio": "Gómez Plata",
+    "nombre": "LUIS GUILLERMO PÉREZ ECHEVERRI",
+    "titulo": "Alcalde",
+    "telefono": "8627704-8627806-8627522",
+    "correoelectronico": "alcaldia@gomezplata-antioquia.gov.co;comunicaciones@gomezplata-antioquia.gov.co;contactenos@gomezplata-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.219688,
+        6.68087
+      ]
+    }
+  },
+  {
+    "municipio": "Granada",
+    "nombre": "DANIEL ANDRÉS HOYOS YEPES",
+    "titulo": "Alcalde",
+    "telefono": "8320549 - 8320802",
+    "correoelectronico": "alcalde@granada-antioquia.gov.co;info@granada-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.184164,
+        6.144322
+      ]
+    }
+  },
+  {
+    "municipio": "Guadalupe",
+    "nombre": "JOSÉ FERNANDO SALAZAR OSPINA",
+    "titulo": "Alcalde",
+    "telefono": "8616440 Ext 103 - 8616066",
+    "correoelectronico": "alcaldia@guadalupe-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.240632,
+        6.814899
+      ]
+    }
+  },
+  {
+    "municipio": "Guarne",
+    "nombre": "DIEGO MAURICIO GRISALES GALLEGO",
+    "titulo": "Alcalde",
+    "telefono": "5510025-5511026-5510044-5511733",
+    "correoelectronico": "alcaldia@guarne-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.442314,
+        6.280015
+      ]
+    }
+  },
+  {
+    "municipio": "Guatapé",
+    "nombre": "DAVID ESTEBAN FRANCO VALLEJO",
+    "titulo": "Alcalde",
+    "telefono": "8610539-8610555 Ext 12",
+    "correoelectronico": "alcaldia@guatape-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.161344,
+        6.234571
+      ]
+    }
+  },
+  {
+    "municipio": "Heliconia",
+    "nombre": "JORGE ALEXANDER ÁLVAREZ ARANGO",
+    "titulo": "Alcalde",
+    "telefono": "8549635 Ext 115",
+    "correoelectronico": "alcaldia@heliconia-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.733234,
+        6.206858
+      ]
+    }
+  },
+  {
+    "municipio": "Hispania",
+    "nombre": "ORLANDO ARTURO MARÍN ATEHORTUA",
+    "titulo": "Alcalde",
+    "telefono": "8432862-8432249",
+    "correoelectronico": "alcaldia@hispania-antioquia.gov.co;contactenos@hispania-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.90693,
+        5.799211
+      ]
+    }
+  },
+  {
+    "municipio": "Itagüí",
+    "nombre": "DIEGO LEÓN TORRES SÁNCHEZ",
+    "titulo": "Alcalde",
+    "telefono": "3737676-3764879",
+    "correoelectronico": "contactenos@itagui.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.609038,
+        6.173538
+      ]
+    }
+  },
+  {
+    "municipio": "Ituango",
+    "nombre": "JAVIER DE JESÚS PARIAS POSSO",
+    "titulo": "Alcalde",
+    "telefono": "8643020-8643174-8643175",
+    "correoelectronico": "alcaldia@ituango-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.76353,
+        7.172532
+      ]
+    }
+  },
+  {
+    "municipio": "Jardín",
+    "nombre": "CLAUDIA YANETH NARANJO AGUDELO",
+    "titulo": "Alcaldesa",
+    "telefono": "8455550-8455684-8455520",
+    "correoelectronico": "despachoalcalde@eljardin-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.818542,
+        5.599324
+      ]
+    }
+  },
+  {
+    "municipio": "Jericó",
+    "nombre": "SEBASTIÁN GARCÉS PIEDRAHITA",
+    "titulo": "Alcalde",
+    "telefono": "8523101-8523502-8523665-8524278",
+    "correoelectronico": "alcaldia@jerico-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.786266,
+        5.791055
+      ]
+    }
+  },
+  {
+    "municipio": "La Ceja",
+    "nombre": "MARÍA ILBED SANTA SANTA",
+    "titulo": "Alcaldesa",
+    "telefono": "5531414 Ext 101-114\n5530785 - 5531525",
+    "correoelectronico": "alcaldia@laceja-antioquia.gov.co;alcaldedelaceja@gmail.com;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.431263,
+        6.030752
+      ]
+    }
+  },
+  {
+    "municipio": "La Estrella",
+    "nombre": "CARLOS MARIO GUTIÉRREZ ARRUBLA",
+    "titulo": "Alcalde",
+    "telefono": "3092687 - 2795841 - 2790058",
+    "correoelectronico": "alcalde@laestrella.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.641988,
+        6.157705
+      ]
+    }
+  },
+  {
+    "municipio": "La Pintada",
+    "nombre": "HERMÁN ANTONIO CORREA BEDOYA",
+    "titulo": "Alcalde",
+    "telefono": "8453562-8454216",
+    "correoelectronico": "alcaldia@lapintada-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.607051,
+        5.741157
+      ]
+    }
+  },
+  {
+    "municipio": "La Unión",
+    "nombre": "CARMEN JUDITH VALENCIA MORENO",
+    "titulo": "Alcaldesa",
+    "telefono": "5560610-5560654-5560630",
+    "correoelectronico": "alcaldia@launion-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.361584,
+        5.973469
+      ]
+    }
+  },
+  {
+    "municipio": "Liborina",
+    "nombre": "NANCY AMPARO AVENDAÑO MORENO",
+    "titulo": "Alcaldesa",
+    "telefono": "8561865-8561113",
+    "correoelectronico": "alcaldia@liborina-antioquia.gov.co;contactenos@liborina-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.811207,
+        6.677636
+      ]
+    }
+  },
+  {
+    "municipio": "Maceo",
+    "nombre": "CAROLINA ANDREA SOSA GÓMEZ",
+    "titulo": "Alcaldesa",
+    "telefono": "8640209-8640277-8640217",
+    "correoelectronico": "alcaldia@maceo-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -74.787371,
+        6.553504
+      ]
+    }
+  },
+  {
+    "municipio": "Marinilla",
+    "nombre": "JULIO CÉSAR SERNA GÓMEZ",
+    "titulo": "Alcalde",
+    "telefono": "5484410-5484101-5484884-5480265",
+    "correoelectronico": "alcaldia@marinilla-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.334811,
+        6.173412
+      ]
+    }
+  },
+  {
+    "municipio": "Montebello",
+    "nombre": "ÓSCAR ERNESTO CUERVO VILLADA",
+    "titulo": "Alcalde",
+    "telefono": "8480564 Ext 103-8480561\n8480561 (directo 4419970)",
+    "correoelectronico": "alcaldia@montebello-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.52418,
+        5.945808
+      ]
+    }
+  },
+  {
+    "municipio": "Murindó",
+    "nombre": "EMPERATRIZ MENA PALACIO",
+    "titulo": "Alcaldesa",
+    "telefono": "8575015-8575021-8575085-8575041 8575017",
+    "correoelectronico": "alcaldia@murindo-antioquia.gov.co;contactenos@murindo-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -76.82131,
+        6.981328
+      ]
+    }
+  },
+  {
+    "municipio": "Mutatá",
+    "nombre": "JAIRO ENRIQUE ORTIZ PALACIOS",
+    "titulo": "Alcalde",
+    "telefono": "8578602-8578812-8578799-8578663-8578113-8578740",
+    "correoelectronico": "alcaldia@mutata-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -76.436928,
+        7.245319
+      ]
+    }
+  },
+  {
+    "municipio": "Nariño",
+    "nombre": "ÉRIKA CARDONA PÉREZ",
+    "titulo": "Alcaldesa",
+    "telefono": "8680077-8680113-8680084-8680117-8680259",
+    "correoelectronico": "alcaldia@narino-antioquia.gov.co;despachoalcalde@narino-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.176323,
+        5.609727
+      ]
+    }
+  },
+  {
+    "municipio": "Nechí",
+    "nombre": "YUMARIS PATRICIA HENRÍQUEZ BANQUET",
+    "titulo": "Alcaldesa",
+    "telefono": "8368156-8680204",
+    "correoelectronico": "alcaldia@nechi-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -74.775144,
+        8.096972
+      ]
+    }
+  },
+  {
+    "municipio": "Necoclí",
+    "nombre": "GUILLERMO JOSÉ CARDONA MORENO",
+    "titulo": "Alcalde",
+    "telefono": "8214166-8214564-8215039",
+    "correoelectronico": "alcaldia@necocli-antioquia.gov.co;contactenos@necocli-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -76.786353,
+        8.425846
+      ]
+    }
+  },
+  {
+    "municipio": "Olaya",
+    "nombre": "JESÚS DAVID HERNÁNDEZ LONDOÑO",
+    "titulo": "Alcalde",
+    "telefono": "8550117-8550116-8550119-8550221",
+    "correoelectronico": "alcaldia@olaya-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.813178,
+        6.628212
+      ]
+    }
+  },
+  {
+    "municipio": "Peque",
+    "nombre": "EMILSON DE JESÚS HERNÁNDEZ HERNÁNDEZ",
+    "titulo": "Alcalde",
+    "telefono": "8552043-8552213-8552136",
+    "correoelectronico": "alcaldia@peque-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.908951,
+        7.022164
+      ]
+    }
+  },
+  {
+    "municipio": "Pueblorrico",
+    "nombre": "CRISTIAN CAMILO ZAPATA RAMÍREZ",
+    "titulo": "Alcalde",
+    "telefono": "8498865-8498020-8498324",
+    "correoelectronico": "alcalde@pueblorrico-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.842187,
+        5.790626
+      ]
+    }
+  },
+  {
+    "municipio": "Puerto Berrío",
+    "nombre": "ROBINSON ALBERTO BAENA ZULUAGA",
+    "titulo": "Alcalde",
+    "telefono": "8332120-8332517 Ext 205",
+    "correoelectronico": "alcaldia@puertoberrio-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -74.402039,
+        6.489214
+      ]
+    }
+  },
+  {
+    "municipio": "Puerto Nare",
+    "nombre": "JUAN CARLOS ACEVEDO ALZATE",
+    "titulo": "Alcalde",
+    "telefono": "8347047-8346201",
+    "correoelectronico": "alcaldia@puertonare-antioquia.gov.co;contactenos@puertonare-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -74.582201,
+        6.187785
+      ]
+    }
+  },
+  {
+    "municipio": "Puerto Triunfo",
+    "nombre": "FRANKLIN PORTILLO GÓMEZ",
+    "titulo": "Alcalde",
+    "telefono": "8352025-8352117-8352566",
+    "correoelectronico": "alcaldia@puertotriunfo-antioquia.gov.co;contactenos@puertotriunfo-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -74.641213,
+        5.868508
+      ]
+    }
+  },
+  {
+    "municipio": "Remedios",
+    "nombre": "ALBEIRO ARENAS MOLINA",
+    "titulo": "Alcalde",
+    "telefono": "8303130-8303078-8303791-8303130",
+    "correoelectronico": "alcaldia@remedios-antioquia.gov.co;contactenos@remedios-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -74.69348,
+        7.028218
+      ]
+    }
+  },
+  {
+    "municipio": "Rionegro",
+    "nombre": "JORGE HUMBERTO RIVAS URREA",
+    "titulo": "Alcalde",
+    "telefono": "5204060",
+    "correoelectronico": "alcaldia@rionegro.gov.co;comunicaciones@rionegro.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.373883,
+        6.153068
+      ]
+    }
+  },
+  {
+    "municipio": "Sabanalarga",
+    "nombre": "CÉSAR ALONSO CUADROS GEORGE",
+    "titulo": "Alcalde",
+    "telefono": "8554201 - 8554154",
+    "correoelectronico": "alcaldia@sabanalarga-antioquia.gov.co;contactenos@sabanalarga-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.818516,
+        6.850752
+      ]
+    }
+  },
+  {
+    "municipio": "Sabaneta",
+    "nombre": "ALDER JAMES CRUZ OCAMPO",
+    "titulo": "Alcalde",
+    "telefono": "2880098-2885294-4440088 Ext 102-2885634",
+    "correoelectronico": "alcaldia@sabaneta.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.616682,
+        6.150871
+      ]
+    }
+  },
+  {
+    "municipio": "Salgar",
+    "nombre": "VÍCTOR RAÚL MAYA CEBALLOS",
+    "titulo": "Alcalde",
+    "telefono": "8442330-8442301-8442213-8442562",
+    "correoelectronico": "alcaldia@salgar-antioquia.gov.co;contactenos@salgar-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.979388,
+        5.964542
+      ]
+    }
+  },
+  {
+    "municipio": "San Andrés de Cuerquia",
+    "nombre": "JOSÉ FERNANDO CHAVARRÍA CHAVARRÍA",
+    "titulo": "Alcalde",
+    "telefono": "8618206-8618173-8618154-8618232",
+    "correoelectronico": "alcaldia@sanandresdecuerquia-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.67649,
+        6.914739
+      ]
+    }
+  },
+  {
+    "municipio": "San Carlos",
+    "nombre": "SANTIAGO DAZA ESPINOSA",
+    "titulo": "Alcalde",
+    "telefono": "8358090-8358051-8358253-8358066",
+    "correoelectronico": "alcaldia@sancarlos-antioquia.gov.co;contactenos@sancarlos-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -74.990961,
+        6.18779
+      ]
+    }
+  },
+  {
+    "municipio": "San Francisco",
+    "nombre": "ARTURO ALEXANDER ARIAS DUQUE",
+    "titulo": "Alcalde",
+    "telefono": "8323030 - 8323236",
+    "correoelectronico": "alcaldia@sanfrancisco-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.101745,
+        5.965276
+      ]
+    }
+  },
+  {
+    "municipio": "San Jerónimo",
+    "nombre": "DONALDO FERNÁN VIVARES GALLEGO",
+    "titulo": "Alcalde",
+    "telefono": "8582024-8582580-8582162-8582123",
+    "correoelectronico": "alcaldia@sanjeronimo-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.727921,
+        6.442394
+      ]
+    }
+  },
+  {
+    "municipio": "San José de la Montaña",
+    "nombre": "JULIÁN ANDRÉS GONZÁLEZ POSADA",
+    "titulo": "Alcalde",
+    "telefono": "8622714-8622904",
+    "correoelectronico": "alcaldia@sanjosedelamontana-antioquia.gov.co;contactenos@sanjosedelamontana-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.682623,
+        6.850097
+      ]
+    }
+  },
+  {
+    "municipio": "San Juan de Urabá",
+    "nombre": "JULIA ESPERANZA MEDRANO COA",
+    "titulo": "Alcaldesa",
+    "telefono": "8212100 Ext 108-8212375-8212630-8208100",
+    "correoelectronico": "alcaldia@sanjuandeuraba-antioquia.gov.co;contactenos@sanjuandeuraba-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -76.528593,
+        8.762426
+      ]
+    }
+  },
+  {
+    "municipio": "San Luis",
+    "nombre": "CÉSAR ABAD BUITRAGO ARIAS",
+    "titulo": "Alcalde",
+    "telefono": "8348115-8348102-8348720-8348716",
+    "correoelectronico": "contactenos@sanluis-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -74.991688,
+        6.041977
+      ]
+    }
+  },
+  {
+    "municipio": "San Pedro de los Milagros",
+    "nombre": "JOSÉ DANILO ÁLVAREZ RODRÍGUEZ",
+    "titulo": "Alcalde",
+    "telefono": "8687039-8205502-8205033",
+    "correoelectronico": "alcaldia@sanpedrodelosmilagros-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.555639,
+        6.461625
+      ]
+    }
+  },
+  {
+    "municipio": "San Pedro de Urabá",
+    "nombre": "NEVER JACINTO CARVAJAL MIRANDA",
+    "titulo": "Alcalde",
+    "telefono": "8205502-8205503-8205033",
+    "correoelectronico": "alcaldia@sanpedrodeuraba-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -76.383671,
+        8.28003
+      ]
+    }
+  },
+  {
+    "municipio": "San Rafael",
+    "nombre": "EDUIN ANICENO GIRALDO QUINTANA",
+    "titulo": "Alcalde",
+    "telefono": "8586681-8586927-8586836-8586681",
+    "correoelectronico": "alcaldia@sanrafael-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.028304,
+        6.295187
+      ]
+    }
+  },
+  {
+    "municipio": "San Roque",
+    "nombre": "LUIS ALEJANDRO VILLEGAS CANO",
+    "titulo": "Alcalde",
+    "telefono": "8656562-8656755-8656628",
+    "correoelectronico": "alcaldia@sanroque-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.019627,
+        6.485836
+      ]
+    }
+  },
+  {
+    "municipio": "San Vicente Ferrer",
+    "nombre": "NELSON DE JESÚS HENAO ZAPATA",
+    "titulo": "Alcalde",
+    "telefono": "8544938-8544212-8544154-8544856",
+    "correoelectronico": "alcaldia@sanvicente-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.331782,
+        6.282678
+      ]
+    }
+  },
+  {
+    "municipio": "Santa Bárbara",
+    "nombre": "JORGE MARIO QUINTANA CAÑAVERAL",
+    "titulo": "Alcalde",
+    "telefono": "8461060-8463607-8464151-8464302",
+    "correoelectronico": "alcaldia@santabarbara-antioquia.gov.co;contactenos@santabarbara-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.568167,
+        5.874215
+      ]
+    }
+  },
+  {
+    "municipio": "Santa Fe de Antioquia",
+    "nombre": "YAMID CARVAJAL CARVAJAL",
+    "titulo": "Alcalde",
+    "telefono": "8531136-8531793-8531152-8531841",
+    "correoelectronico": "alcaldia@santafedeantioquia-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.827423,
+        6.555923
+      ]
+    }
+  },
+  {
+    "municipio": "Santa Rosa de Osos",
+    "nombre": "LUIS BERNADO MOLINA GRANDA",
+    "titulo": "Alcalde",
+    "telefono": "8608020-8608336-8608120-8608416",
+    "correoelectronico": "alcaldia@santarosadeosos.gov.co;comunicaciones@santarosadeosos.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.460408,
+        6.64915
+      ]
+    }
+  },
+  {
+    "municipio": "Santo Domingo",
+    "nombre": "FABIO IGNACIO MIRA VALENCIA",
+    "titulo": "Alcalde",
+    "telefono": "8621069-8621101 Ext 103 - 8621313",
+    "correoelectronico": "contactenos@santodomingo-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.164398,
+        6.471292
+      ]
+    }
+  },
+  {
+    "municipio": "Segovia",
+    "nombre": "EDWIN ALEXANDER CASTAÑEDA VAHOS",
+    "titulo": "Alcalde",
+    "telefono": "8314351-8315613-8317196-8314031",
+    "correoelectronico": "alcaldia@segovia-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -74.700758,
+        7.081479
+      ]
+    }
+  },
+  {
+    "municipio": "Sonsón",
+    "nombre": "JUAN DIEGO ZULUAGA PULGARÍN",
+    "titulo": "Alcalde",
+    "telefono": "8694444-8691296",
+    "correoelectronico": "alcalde@sonson-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.310449,
+        5.709311
+      ]
+    }
+  },
+  {
+    "municipio": "Sopetrán",
+    "nombre": "TATIANA ALEXANDRA CARBALLO HOYOS",
+    "titulo": "Alcaldesa",
+    "telefono": "8541560 ext. 102 - 8541561",
+    "correoelectronico": "alcaldia@sopetran-antioquia.gov.co;contactenos@sopetran-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.742752,
+        6.501266
+      ]
+    }
+  },
+  {
+    "municipio": "Támesis",
+    "nombre": "JUAN PABLO PÉREZ RÁMIREZ",
+    "titulo": "Alcalde",
+    "telefono": "8494595-8496010-",
+    "correoelectronico": "alcaldia@tamesis-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.712622,
+        5.662407
+      ]
+    }
+  },
+  {
+    "municipio": "Tarazá",
+    "nombre": "YOMER FABIÁN ÁLVAREZ CORREA",
+    "titulo": "Alcalde",
+    "telefono": "8365628-8366288-8365817",
+    "correoelectronico": "alcaldia@taraza-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.400349,
+        7.580788
+      ]
+    }
+  },
+  {
+    "municipio": "Tarso",
+    "nombre": "HUGO ALEXANDER OCAMPO RÍOS",
+    "titulo": "Alcalde",
+    "telefono": "8458541-8458780-8458535-8458718-8458639-8458991",
+    "correoelectronico": "alcaldia@tarso-antioquia.gov.co;contactenos@tarso-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.822176,
+        5.865627
+      ]
+    }
+  },
+  {
+    "municipio": "Titiribí",
+    "nombre": "ALEX DAVID RESTREPO SALAZAR",
+    "titulo": "Alcalde",
+    "telefono": "8482649-8482344-8482790",
+    "correoelectronico": "alcaldia@titiribi-antioquia.gov.co;contactenos@titiribi-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.793343,
+        6.06355
+      ]
+    }
+  },
+  {
+    "municipio": "Toledo",
+    "nombre": "JHONNY ALBERTO MARÍN MUÑETÓN",
+    "titulo": "Alcalde",
+    "telefono": "8619020 - 8619012",
+    "correoelectronico": "alcaldia@toledo-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.691435,
+        7.011318
+      ]
+    }
+  },
+  {
+    "municipio": "Turbo, Distrito Portuario, Logístico, Industrial, Turístico y Comercial",
+    "nombre": "ALEJANDRO ABUCHAR GONZÁLEZ",
+    "titulo": "Alcalde",
+    "telefono": "8273273 Ext 11-8275159-8272140",
+    "correoelectronico": "alcaldia@turbo-antioquia.gov.co;"
+  },
+  {
+    "municipio": "Uramita",
+    "nombre": "LEONARDO ÚSUGA CORREA",
+    "titulo": "Alcalde",
+    "telefono": "8574062-8574066-8574131-8574240-8574169",
+    "correoelectronico": "alcaldia@uramita-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -76.266639,
+        7.001396
+      ]
+    }
+  },
+  {
+    "municipio": "Urrao",
+    "nombre": "NELSON JAVIER BARRERA HOLGUÍN",
+    "titulo": "Alcalde",
+    "telefono": "8502300-8502181-8502145-8502181",
+    "correoelectronico": "alcaldia@urrao-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -76.134084,
+        6.321471
+      ]
+    }
+  },
+  {
+    "municipio": "Valdivia",
+    "nombre": "CARLOS DANOBER MOLINA BETANCUR",
+    "titulo": "Alcalde",
+    "telefono": "8360412-8360246-8360406-8360400-8360264",
+    "correoelectronico": "alcaldia@valdivia-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.391627,
+        7.292119
+      ]
+    }
+  },
+  {
+    "municipio": "Valparaíso",
+    "nombre": "JOSÉ MARIO HERNÁNDEZ DEVIA",
+    "titulo": "Alcalde",
+    "telefono": "8493807-8493882-8492109",
+    "correoelectronico": "alcaldia@valparaiso-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.624281,
+        5.616023
+      ]
+    }
+  },
+  {
+    "municipio": "Vegachí",
+    "nombre": "JOSÉ MARÍA OCHOA MUÑOZ",
+    "titulo": "Alcalde",
+    "telefono": "8305625-8305626-8305006-8305318",
+    "correoelectronico": "alcaldia@vegachi-antioquia.gov.co;contactenos@vegachi-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -74.797973,
+        6.771132
+      ]
+    }
+  },
+  {
+    "municipio": "Venecia",
+    "nombre": "NATALIA OROZCO LOAIZA",
+    "titulo": "Alcaldesa",
+    "telefono": "8490042-8490023-8490052",
+    "correoelectronico": "alcaldia@venecia-antioquia.gov.co;contactenos@venecia-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.734171,
+        5.962963
+      ]
+    }
+  },
+  {
+    "municipio": "Vigía del Fuerte",
+    "nombre": "JHOSELIN LOZANO MENA",
+    "titulo": "Alcaldesa",
+    "telefono": "8678080-8678034-8678175",
+    "correoelectronico": "contactenos@vigiadelfuerte-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -76.896177,
+        6.589519
+      ]
+    }
+  },
+  {
+    "municipio": "Yalí",
+    "nombre": "JHON JAIRO GIRALDO POSADA",
+    "titulo": "Alcalde",
+    "telefono": "8675023-8675653-8675656",
+    "correoelectronico": "alcaldia@yali-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -74.842543,
+        6.674567
+      ]
+    }
+  },
+  {
+    "municipio": "Yarumal",
+    "nombre": "CRISTIAN DAVID CÉSPEDES CORREA",
+    "titulo": "Alcalde",
+    "telefono": "8537429-8537430-8537429",
+    "correoelectronico": "alcaldia@yarumal.gov.co;alcaldiayarumal@gmail.com;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.417545,
+        6.962722
+      ]
+    }
+  },
+  {
+    "municipio": "Yolombó",
+    "nombre": "JESÚS AMADOR PÉREZ PALACIO",
+    "titulo": "Alcalde",
+    "telefono": "8654181-8654337-8654200-8655312",
+    "correoelectronico": "alcaldia@yolombo-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -75.012655,
+        6.598773
+      ]
+    }
+  },
+  {
+    "municipio": "Yondó",
+    "nombre": "YERSON ANTONIO ARIZA RIVERA",
+    "titulo": "Alcalde",
+    "telefono": "8325109-8325461-8325025-8325212-8325111",
+    "correoelectronico": "alcaldia@yondo-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -73.910873,
+        7.005055
+      ]
+    }
+  },
+  {
+    "municipio": "Zaragoza",
+    "nombre": "ANDRÉS EMILIO LUJAN MONROY",
+    "titulo": "Alcalde",
+    "telefono": "8388209-8388221-8388209-8388123",
+    "correoelectronico": "alcaldia@zaragoza-antioquia.gov.co;contactenos@zaragoza-antioquia.gov.co;",
+    "geocoded_column": {
+      "type": "Point",
+      "coordinates": [
+        -74.868035,
+        7.492444
+      ]
+    }
+  }
+]

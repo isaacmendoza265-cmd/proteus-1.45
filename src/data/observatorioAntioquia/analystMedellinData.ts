@@ -1,3 +1,4 @@
+import { CENSUS_SOURCE_LABEL, formatCensus, officialCensusOr } from '../../services/electoralCensusService';
 import { MunicipalityAnalystItem, ComunaAnalysisData } from './analystTypes';
 
 const SOURCE_WEB = '(información obtenida de la web)';
@@ -1153,7 +1154,7 @@ export const MEDELLIN_ANALYST: MunicipalityAnalystItem = {
   subregion: 'Valle de Aburrá (Centro)',
   badgeColor: 'emerald',
   poblacionEstimada: 2600000,
-  censoElectoral: 1780000,
+  censoElectoral: officialCensusOr('Medellín', 1780000),
   tieneComunas: true,
   cantidadComunas: 16,
   detalleComunasOBarrios: '1. Popular, 2. Santa Cruz, 3. Manrique, 4. Aranjuez, 5. Castilla, 6. Doce de Octubre, 7. Robledo, 8. Villa Hermosa, 9. Buenos Aires, 10. La Candelaria (Centro), 11. Laureles - Estadio, 12. La América, 13. San Javier, 14. El Poblado, 15. Guayabal, 16. Belén.',
@@ -1161,7 +1162,7 @@ export const MEDELLIN_ANALYST: MunicipalityAnalystItem = {
   panelGeneral: {
     censoPoblacional: {
       poblacionTotal: '2.600.000 habitantes (Proyección DANE)',
-      censoElectoral: '1.780.000 ciudadanos habilitados',
+      censoElectoral: `${formatCensus(officialCensusOr('Medellín', 1780000))} ciudadanos habilitados (${CENSUS_SOURCE_LABEL})`,
       distribucionSexo: { hombres: '47.1%', mujeres: '52.9%' },
       distribucionEdades: { rango0_14: '17.8%', rango15_29: '24.9%', rango30_59: '40.8%', rango60_mas: '16.5%' },
       fuenteNota: SOURCE_WEB,

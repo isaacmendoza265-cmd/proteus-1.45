@@ -23,7 +23,8 @@ if hasattr(sys.stderr, "reconfigure"):
     sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-GOBERNACION_DIR = Path(r"c:\Users\isaac\OneDrive\Documentos\Poryecto independencia")
+# Carpeta del Proyecto Independencia; se puede cambiar con la variable de entorno GOBERNACION_DIR
+GOBERNACION_DIR = Path(os.environ.get("GOBERNACION_DIR", r"c:\Users\isaac\OneDrive\Documentos\Poryecto independencia"))
 DB_PATH = GOBERNACION_DIR / "datos" / "independencia.db"
 INFORMES_DIR = GOBERNACION_DIR / "informes" / "informes Gobernación"
 ULTIMO_MD = INFORMES_DIR / "ULTIMO_INFORME_GOBERNACION.md"

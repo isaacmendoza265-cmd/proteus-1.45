@@ -1,3 +1,4 @@
+import { CENSUS_SOURCE_LABEL, formatCensus, officialCensusOr } from '../../services/electoralCensusService';
 import { MunicipalityAnalystItem, ComunaAnalysisData } from './analystTypes';
 
 const SOURCE_WEB = '(información obtenida de la web)';
@@ -84,7 +85,7 @@ export const ENVIGADO_ANALYST: MunicipalityAnalystItem = {
   subregion: 'Valle de Aburrá (Sur)',
   badgeColor: 'emerald',
   poblacionEstimada: 250000,
-  censoElectoral: 215000,
+  censoElectoral: officialCensusOr('Envigado', 215000),
   tieneComunas: true,
   cantidadComunas: 13,
   detalleComunasOBarrios: '1. Las Casitas, 2. Las Vegas, 3. La Magnolia, 4. San Marcos, 5. Bucarest, 6. El Salado, 7. El Trianón, 8. San Rafael, 9. La Mina, 10. Los Naranjos, 11. San José, 12. Alcalá, 13. El Portal. (Zonas urbanas de gestión).',
@@ -92,7 +93,7 @@ export const ENVIGADO_ANALYST: MunicipalityAnalystItem = {
   panelGeneral: {
     censoPoblacional: {
       poblacionTotal: '250.000 habitantes (DANE)',
-      censoElectoral: '215.000 ciudadanos habilitados',
+      censoElectoral: `${formatCensus(officialCensusOr('Envigado', 215000))} ciudadanos habilitados (${CENSUS_SOURCE_LABEL})`,
       distribucionSexo: { hombres: '46.1%', mujeres: '53.9%' },
       distribucionEdades: { rango0_14: '14.8%', rango15_29: '22.8%', rango30_59: '42.1%', rango60_mas: '20.3%' },
       fuenteNota: SOURCE_WEB,
@@ -151,7 +152,7 @@ export const SABANETA_ANALYST: MunicipalityAnalystItem = {
   subregion: 'Valle de Aburrá (Sur)',
   badgeColor: 'emerald',
   poblacionEstimada: 90000,
-  censoElectoral: 85000,
+  censoElectoral: officialCensusOr('Sabaneta', 85000),
   tieneComunas: false,
   cantidadComunas: 0,
   detalleComunasOBarrios: 'No aplica. El área urbana se organiza directamente en 31 barrios.',
@@ -159,7 +160,7 @@ export const SABANETA_ANALYST: MunicipalityAnalystItem = {
   panelGeneral: {
     censoPoblacional: {
       poblacionTotal: '90.000 habitantes (DANE - Municipio más pequeño de Colombia en extensión y alta densidad vertical)',
-      censoElectoral: '85.000 ciudadanos habilitados',
+      censoElectoral: `${formatCensus(officialCensusOr('Sabaneta', 85000))} ciudadanos habilitados (${CENSUS_SOURCE_LABEL})`,
       distribucionSexo: { hombres: '46.5%', mujeres: '53.5%' },
       distribucionEdades: { rango0_14: '15.2%', rango15_29: '23.4%', rango30_59: '42.8%', rango60_mas: '18.6%' },
       fuenteNota: SOURCE_WEB,
@@ -217,7 +218,7 @@ export const CALDAS_ANALYST: MunicipalityAnalystItem = {
   subregion: 'Valle de Aburrá (Sur)',
   badgeColor: 'blue',
   poblacionEstimada: 85000,
-  censoElectoral: 65000,
+  censoElectoral: officialCensusOr('Caldas', 65000),
   tieneComunas: false,
   cantidadComunas: 0,
   detalleComunasOBarrios: 'No aplica. Estructurado directamente en barrios y sectores urbanos.',
@@ -225,7 +226,7 @@ export const CALDAS_ANALYST: MunicipalityAnalystItem = {
   panelGeneral: {
     censoPoblacional: {
       poblacionTotal: '85.000 habitantes (DANE - Puerta del Sur)',
-      censoElectoral: '65.000 ciudadanos habilitados',
+      censoElectoral: `${formatCensus(officialCensusOr('Caldas', 65000))} ciudadanos habilitados (${CENSUS_SOURCE_LABEL})`,
       distribucionSexo: { hombres: '48.2%', mujeres: '51.8%' },
       distribucionEdades: { rango0_14: '18.4%', rango15_29: '25.2%', rango30_59: '40.6%', rango60_mas: '15.8%' },
       fuenteNota: SOURCE_WEB,
@@ -280,7 +281,7 @@ export const COPACABANA_ANALYST: MunicipalityAnalystItem = {
   subregion: 'Valle de Aburrá (Norte)',
   badgeColor: 'blue',
   poblacionEstimada: 75000,
-  censoElectoral: 60000,
+  censoElectoral: officialCensusOr('Copacabana', 60000),
   tieneComunas: false,
   cantidadComunas: 0,
   detalleComunasOBarrios: 'No aplica. Dividido directamente en barrios urbanos.',
@@ -288,7 +289,7 @@ export const COPACABANA_ANALYST: MunicipalityAnalystItem = {
   panelGeneral: {
     censoPoblacional: {
       poblacionTotal: '75.000 habitantes (DANE - Fundadora de pueblos)',
-      censoElectoral: '60.000 ciudadanos habilitados',
+      censoElectoral: `${formatCensus(officialCensusOr('Copacabana', 60000))} ciudadanos habilitados (${CENSUS_SOURCE_LABEL})`,
       distribucionSexo: { hombres: '48.0%', mujeres: '52.0%' },
       distribucionEdades: { rango0_14: '18.9%', rango15_29: '25.6%', rango30_59: '40.1%', rango60_mas: '15.4%' },
       fuenteNota: SOURCE_WEB,
@@ -350,7 +351,7 @@ export const LA_ESTRELLA_ANALYST: MunicipalityAnalystItem = {
   subregion: 'Valle de Aburrá (Sur)',
   badgeColor: 'emerald',
   poblacionEstimada: 70000,
-  censoElectoral: 55000,
+  censoElectoral: officialCensusOr('La Estrella', 55000),
   tieneComunas: false,
   cantidadComunas: 0,
   detalleComunasOBarrios: 'No aplica. Organizado directamente en barrios y sectores.',
@@ -358,7 +359,7 @@ export const LA_ESTRELLA_ANALYST: MunicipalityAnalystItem = {
   panelGeneral: {
     censoPoblacional: {
       poblacionTotal: '70.000 habitantes (DANE - Municipio Verde)',
-      censoElectoral: '55.000 ciudadanos habilitados',
+      censoElectoral: `${formatCensus(officialCensusOr('La Estrella', 55000))} ciudadanos habilitados (${CENSUS_SOURCE_LABEL})`,
       distribucionSexo: { hombres: '47.5%', mujeres: '52.5%' },
       distribucionEdades: { rango0_14: '17.6%', rango15_29: '24.8%', rango30_59: '41.8%', rango60_mas: '15.8%' },
       fuenteNota: SOURCE_WEB,
@@ -413,7 +414,7 @@ export const GIRARDOTA_ANALYST: MunicipalityAnalystItem = {
   subregion: 'Valle de Aburrá (Norte)',
   badgeColor: 'blue',
   poblacionEstimada: 60000,
-  censoElectoral: 48000,
+  censoElectoral: officialCensusOr('Girardota', 48000),
   tieneComunas: false,
   cantidadComunas: 0,
   detalleComunasOBarrios: 'No aplica. División urbana estructurada directamente por barrios.',
@@ -421,7 +422,7 @@ export const GIRARDOTA_ANALYST: MunicipalityAnalystItem = {
   panelGeneral: {
     censoPoblacional: {
       poblacionTotal: '60.000 habitantes (DANE - Tierra del Señor Caído)',
-      censoElectoral: '48.000 ciudadanos habilitados',
+      censoElectoral: `${formatCensus(officialCensusOr('Girardota', 48000))} ciudadanos habilitados (${CENSUS_SOURCE_LABEL})`,
       distribucionSexo: { hombres: '48.5%', mujeres: '51.5%' },
       distribucionEdades: { rango0_14: '19.2%', rango15_29: '25.8%', rango30_59: '39.8%', rango60_mas: '15.2%' },
       fuenteNota: SOURCE_WEB,
@@ -476,7 +477,7 @@ export const BARBOSA_ANALYST: MunicipalityAnalystItem = {
   subregion: 'Valle de Aburrá (Norte)',
   badgeColor: 'blue',
   poblacionEstimada: 55000,
-  censoElectoral: 42000,
+  censoElectoral: officialCensusOr('Barbosa', 42000),
   tieneComunas: false,
   cantidadComunas: 0,
   detalleComunasOBarrios: 'No aplica. El casco urbano se organiza directamente en barrios.',
@@ -484,7 +485,7 @@ export const BARBOSA_ANALYST: MunicipalityAnalystItem = {
   panelGeneral: {
     censoPoblacional: {
       poblacionTotal: '55.000 habitantes (DANE - Puerta del Norte)',
-      censoElectoral: '42.000 ciudadanos habilitados',
+      censoElectoral: `${formatCensus(officialCensusOr('Barbosa', 42000))} ciudadanos habilitados (${CENSUS_SOURCE_LABEL})`,
       distribucionSexo: { hombres: '48.8%', mujeres: '51.2%' },
       distribucionEdades: { rango0_14: '20.1%', rango15_29: '26.4%', rango30_59: '38.9%', rango60_mas: '14.6%' },
       fuenteNota: SOURCE_WEB,

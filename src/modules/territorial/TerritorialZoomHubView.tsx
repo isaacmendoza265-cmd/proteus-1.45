@@ -29,6 +29,11 @@ import {
 } from 'lucide-react';
 import { E24HistoricalViewer } from '../../components/maps/E24HistoricalViewer';
 import { activeTerritoryService } from '../../services/activeTerritoryContextService';
+import { NATIONAL_CENSUS, formatCensusShort, getDepartmentCensus } from '../../services/electoralCensusService';
+import { ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA } from '../../data/antioquia125MunicipalitiesMasterData';
+
+// Censo oficial del Valle de Aburrá (suma de sus 10 municipios)
+const VALLE_ABURRA_CENSUS = ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA.filter((m) => m.subregionId === 'valle-de-aburra').reduce((s, m) => s + m.electoralCensus, 0);
 
 interface TerritorialZoomHubViewProps {
   onNavigateToContentDirector?: (feature?: TerritoryGeoFeature) => void;
@@ -43,6 +48,8 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
   const [activeLayer, setActiveLayer] = useState<ThematicMetricLayer>('electoral');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFeature, setSelectedFeature] = useState<TerritoryGeoFeature | null>(null);
+  // Municipio de los niveles 4 y 5 (ver src/data/geojson/municipalDivisions.ts)
+  const [selectedMunicipalityId, setSelectedMunicipalityId] = useState<string>('medellin');
   const [selectedDepartmentName, setSelectedDepartmentName] = useState<string>('Antioquia');
   const [e24ModalOpen, setE24ModalOpen] = useState(false);
 
@@ -201,6 +208,11 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
             onGenerateContent={handleGenerateContent}
             selectedDepartmentName={selectedDepartmentName}
             onSelectDepartmentName={setSelectedDepartmentName}
+            selectedMunicipalityId={selectedMunicipalityId}
+            onSelectMunicipality={(id) => {
+              setSelectedMunicipalityId(id);
+              setSelectedFeature(null);
+            }}
           />
         </div>
 
@@ -229,7 +241,7 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
                 Conexión Bidireccional Activa • GIS ➔ Inteligencia de Campaña
               </span>
               <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 font-mono font-bold">
-                {selectedFeature ? selectedFeature.properties.name : currentLevelConfig.title}
+                {selectedFeature ? selectedFeature.properties.name : currentLevelConfig.label}
               </span>
             </div>
             <div className="text-xs text-slate-300 mt-0.5">
@@ -295,7 +307,7 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
                 Colombia (32 Dptos)
               </div>
               <div className="text-[9px] text-slate-400 mt-1 font-mono">
-                Censo: 39.2M
+                Censo: {formatCensusShort(NATIONAL_CENSUS.total)}
               </div>
             </div>
           </button>
@@ -323,7 +335,9 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
                 {selectedDepartmentName === 'Antioquia' ? 'Antioquia (9 Subr. / 125 Mpios)' : `${selectedDepartmentName} (DANE Oficial)`}
               </div>
               <div className="text-[9px] text-slate-400 mt-1 font-mono">
-                {selectedDepartmentName === 'Antioquia' ? 'Censo: 5.2M • 125 DANE' : `${selectedDepartmentName} • DANE Oficial`}
+                {getDepartmentCensus(selectedDepartmentName)
+                  ? `Censo: ${formatCensusShort(getDepartmentCensus(selectedDepartmentName)!.total)} • ${getDepartmentCensus(selectedDepartmentName)!.municipios} mpios`
+                  : `${selectedDepartmentName} • DANE Oficial`}
               </div>
             </div>
           </button>
@@ -351,7 +365,7 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
                 Valle de Aburrá (10 Mpios)
               </div>
               <div className="text-[9px] text-slate-400 mt-1 font-mono">
-                Censo: 3.0M • Conurbación
+                Censo: {formatCensusShort(VALLE_ABURRA_CENSUS)} • Conurbación
               </div>
             </div>
           </button>
@@ -410,6 +424,7 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
                 Barrios & Puestos 2015-2023
               </div>
             </div>
+          </button>
         </div>
       </div>
 

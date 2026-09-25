@@ -43,6 +43,7 @@ import {
 } from '../../services/voterDemographicsService';
 import { TerritoryHierarchyService } from '../../services/territoryHierarchyService';
 import { useActiveTerritory, activeTerritoryService } from '../../services/activeTerritoryContextService';
+import { NATIONAL_CENSUS, formatCensusShort } from '../../services/electoralCensusService';
 
 interface VoterSegmentationEngineProps {
   candidateProfile: CandidateProfile;
@@ -105,7 +106,7 @@ export const VoterSegmentationEngine: React.FC<VoterSegmentationEngineProps> = (
         id: 'nacional',
         type: 'nacional',
         name: 'Colombia (Nacional)',
-        census: 39200000,
+        census: NATIONAL_CENSUS.total,
         nbiPercentage: 19.6,
         urbanPercentage: 77.0
       };
@@ -288,7 +289,7 @@ Elabora un DIAGNÓSTICO PSICOGRÁFICO Y GUÍA DE ACCIÓN DE MICRO-TARGETING en 4
                 }`}
               >
                 <span>🇨🇴 Nacional</span>
-                <span className="text-[9px] font-mono text-slate-400">(39.2M)</span>
+                <span className="text-[9px] font-mono text-slate-400">({formatCensusShort(NATIONAL_CENSUS.total)})</span>
               </button>
               <button
                 onClick={() => setCircumscriptionLevel('departamental')}

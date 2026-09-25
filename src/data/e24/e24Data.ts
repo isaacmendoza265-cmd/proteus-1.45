@@ -2,6 +2,7 @@ import { ComunaInfo, ZoneId, ZoneVotes, ComunaVotesAggregation, MunicipalSummary
 import { COMUNAS_INFO } from './comunasData';
 import { PARTIES, PARTY_CANDIDATES, ALL_PROMINENT_CANDIDATES } from './partiesData';
 import { ALL_ZONES, RAW_E24_PARTIES, RAW_VOTOS_EN_BLANCO, RAW_VOTOS_NO_MARCADOS, RAW_VOTOS_NULOS } from './e24RawData';
+import { CAMARA_PARTIES, CAMARA_CANDIDATES, RAW_ZONE_VOTES_CAMARA, MUNICIPAL_SUMMARY_CAMARA, COMUNA_AGGREGATIONS_CAMARA, getZonePartySummaryCamara } from './camaraData';
 import { 
   PRESIDENCIA_CANDIDATES, 
   RAW_ZONE_VOTES_PRESIDENCIA, 

@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PROTEUS 1.2 — Mapa Mental del Sistema y Flujo Operativo</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Plus+Jakarta+Sans:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: radial-gradient(circle at 50% 0%, #0f172a 0%, #030712 100%);
+      color: #f8fafc;
+      overflow-x: hidden;
+    }
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .glass-panel {
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7), inset 0 1px 1px 0 rgba(255, 255, 255, 0.25);
+    }
+    .glass-card {
+      background: rgba(30, 41, 59, 0.45);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .glass-card:hover {
+      background: rgba(30, 41, 59, 0.75);
+      border-color: rgba(56, 189, 248, 0.4);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px -10px rgba(14, 165, 233, 0.3);
+    }
+    .connector-line {
+      position: absolute;
+      background: linear-gradient(90deg, rgba(56, 189, 248, 0.4), rgba(99, 102, 241, 0.4));
+      z-index: 0;
+    }
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(3, 7, 18, 0.6);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(56, 189, 248, 0.4);
+    }
+  </style>
+</head>
+<body class="min-h-screen p-4 lg:p-8 flex flex-col">
+
+  <!-- Top Bar -->
+  <header class="glass-panel rounded-3xl p-6 mb-8 flex flex-col lg:flex-row items-center justify-between gap-6 relative overflow-hidden">
+    <div class="absolute -top-24 -left-24 w-96 h-96 bg-sky-500/10 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute -bottom-24 -right-24 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+    
+    <div class="flex items-center gap-4 z-10">
+      <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-sky-400 to-indigo-600 p-0.5 shadow-lg shadow-sky-500/20 flex items-center justify-center">
+        <div class="w-full h-full bg-slate-950/80 rounded-[14px] flex items-center justify-center">
+          <i data-lucide="network" class="w-7 h-7 text-sky-400"></i>
+        </div>
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="text-[10px] font-mono font-bold tracking-widest text-sky-400 uppercase bg-sky-500/10 px-2.5 py-0.5 rounded-full border border-sky-400/20">
+            Arquitectura Completa & Flujo de Datos
+          </span>
+          <span class="text-[10px] font-mono font-bold tracking-widest text-emerald-400 uppercase bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-400/20">
+            Proteus v1.2
+          </span>
+        </div>
+        <h1 class="text-2xl lg:text-3xl font-black tracking-tight text-white mt-1">
+          Mapa Mental del Sistema CMT Proteus
+        </h1>
+        <p class="text-slate-400 text-xs lg:text-sm mt-0.5">
+          Ecosistema integral de campaña: Flujo operativo de datos, desglose de herramientas y representación gráfica en interfaz.
+        </p>
+      </div>
+    </div>
+
+    <!-- Quick Stats & Filter -->
+    <div class="flex flex-wrap items-center gap-3 z-10">
+      <div class="relative">
+        <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-3"></i>
+        <input 
+          type="text" 
+          id="search-input"
+          placeholder="Filtrar herramienta o módulo..." 
+          class="bg-slate-900/80 border border-white/10 rounded-xl pl-9 pr-4 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-sky-400/50 w-64"
+          onkeyup="filterNodes()"
+        />
+      </div>
+      <button onclick="expandAll()" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-xs font-bold transition flex items-center gap-1.5">
+        <i data-lucide="maximize-2" class="w-3.5 h-3.5 text-sky-300"></i>
+        <span>Expandir Todo</span>
+      </button>
+      <button onclick="collapseAll()" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-xs font-bold transition flex items-center gap-1.5">
+        <i data-lucide="minimize-2" class="w-3.5 h-3.5 text-slate-300"></i>
+        <span>Colapsar</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Flow Explanation Banner (How Data Moves Through Proteus) -->
+  <section class="glass-panel rounded-3xl p-6 mb-8">
+    <div class="flex items-center gap-2 mb-3">
+      <i data-lucide="git-branch" class="w-5 h-5 text-amber-400"></i>
+      <h2 class="text-base font-extrabold text-white uppercase tracking-wide">
+        Flujo de Funcionamiento del Aplicativo (Pipeline Operativo de 5 Fases)
+      </h2>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-5 gap-4 relative">
+      
+      <!-- Step 1 -->
+      <div class="p-4 rounded-2xl bg-sky-500/10 border border-sky-400/30 flex flex-col justify-between relative group">
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[10px] font-mono font-black text-sky-400 bg-sky-400/20 px-2 py-0.5 rounded-md">FASE 1</span>
+            <i data-lucide="user-check" class="w-4 h-4 text-sky-400"></i>
+          </div>
+          <h3 class="text-xs font-bold text-white mb-1">Perfil del Candidato</h3>
+          <p class="text-[11px] text-slate-300 leading-relaxed">
+            Se parametriza el ADN político de Isaac Mendoza: pilares, tono narrativo, fototipo y colorimetría.
+          </p>
+        </div>
+        <div class="mt-3 text-[10px] font-mono text-sky-300 flex items-center gap-1">
+          <span>Fuente: LocalStorage / JSON</span>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-400/30 flex flex-col justify-between relative group">
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[10px] font-mono font-black text-emerald-400 bg-emerald-400/20 px-2 py-0.5 rounded-md">FASE 2</span>
+            <i data-lucide="map" class="w-4 h-4 text-emerald-400"></i>
+          </div>
+          <h3 class="text-xs font-bold text-white mb-1">Inteligencia Geoespacial</h3>
+          <p class="text-[11px] text-slate-300 leading-relaxed">
+            Navegación en 5 escalas GeoJSON (Colombia &rarr; Antioquia &rarr; Subregiones &rarr; 125 Municipios &rarr; Comunas y E-24).
+          </p>
+        </div>
+        <div class="mt-3 text-[10px] font-mono text-emerald-300 flex items-center gap-1">
+          <span>Fuente: DIVIPOLA / Registraduría</span>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="p-4 rounded-2xl bg-indigo-500/10 border border-indigo-400/30 flex flex-col justify-between relative group">
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[10px] font-mono font-black text-indigo-400 bg-indigo-400/20 px-2 py-0.5 rounded-md">FASE 3</span>
+            <i data-lucide="pie-chart" class="w-4 h-4 text-indigo-400"></i>
+          </div>
+          <h3 class="text-xs font-bold text-white mb-1">Microsegmentación 4D</h3>
+          <p class="text-[11px] text-slate-300 leading-relaxed">
+            Cruce de 4 variables (Sexo &times; Edad &times; Estrato &times; Educación = 54 cohortes) y cálculo de urnas reales.
+          </p>
+        </div>
+        <div class="mt-3 text-[10px] font-mono text-indigo-300 flex items-center gap-1">
+          <span>Motor: voterDemographicsService</span>
+        </div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="p-4 rounded-2xl bg-amber-500/10 border border-amber-400/30 flex flex-col justify-between relative group">
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[10px] font-mono font-black text-amber-400 bg-amber-400/20 px-2 py-0.5 rounded-md">FASE 4</span>
+            <i data-lucide="sparkles" class="w-4 h-4 text-amber-400"></i>
+          </div>
+          <h3 class="text-xs font-bold text-white mb-1">Contenido & Multimedia</h3>
+          <p class="text-[11px] text-slate-300 leading-relaxed">
+            Generación de briefs hiperlocales, encuadre cognitivo (Prospect Theory) y auditoría semiótica/video con IA.
+          </p>
+        </div>
+        <div class="mt-3 text-[10px] font-mono text-amber-300 flex items-center gap-1">
+          <span>IA: gemini-3.8-flash</span>
+        </div>
+      </div>
+
+      <!-- Step 5 -->
+      <div class="p-4 rounded-2xl bg-purple-500/10 border border-purple-400/30 flex flex-col justify-between relative group">
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[10px] font-mono font-black text-purple-400 bg-purple-400/20 px-2 py-0.5 rounded-md">FASE 5</span>
+            <i data-lucide="bot" class="w-4 h-4 text-purple-400"></i>
+          </div>
+          <h3 class="text-xs font-bold text-white mb-1">Ejecución Multi-Agente</h3>
+          <p class="text-[11px] text-slate-300 leading-relaxed">
+            Cuadrilla de 5 agentes IA autónomos, consola Antigravity y persistencia en Google Drive.
+          </p>
+        </div>
+        <div class="mt-3 text-[10px] font-mono text-purple-300 flex items-center gap-1">
+          <span>Salida: Nube Drive / PDF / Brief</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- MAIN MIND MAP CONTAINER (7 DOMAINS) -->
+  <main class="space-y-6 flex-1">
+
+    <!-- DOMAIN 1: ÁMBITO NACIONAL Y ESTRATEGIA MACRO -->
+    <div class="node-container glass-panel rounded-3xl p-6 border-l-4 border-l-sky-400" data-domain="nacional">
+      <div class="flex items-center justify-between cursor-pointer" onclick="toggleDomain('domain-1')">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-sky-500/20 border border-sky-400/40 flex items-center justify-center">
+            <i data-lucide="globe" class="w-5 h-5 text-sky-400"></i>
+          </div>
+          <div>
+            <span class="text-[10px] font-mono uppercase tracking-widest text-sky-400 font-bold">Dimensión Estratégica 1</span>
+            <h3 class="text-lg font-black text-white">Ámbito Nacional, Candidato y Demoscopia</h3>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="text-xs font-mono text-slate-400">3 Módulos / 5 Herramientas</span>
+          <i data-lucide="chevron-down" id="icon-domain-1" class="w-5 h-5 text-slate-400 transition-transform"></i>
+        </div>
+      </div>
+
+      <!-- Tools Sub-cards -->
+      <div id="domain-1" class="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-5">
+        
+        <!-- Tool 1.1 -->
+        <div class="tool-card glass-card rounded-2xl p-5 border border-white/10 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-sky-400/20 text-sky-300 border border-sky-400/30">
+                NationalDashboardView
+              </span>
+              <i data-lucide="flag" class="w-4 h-4 text-sky-400"></i>
+            </div>
+            <h4 class="text-sm font-bold text-white">Presidencia & 32 Departamentos</h4>
+            <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+              <strong>Funcionamiento:</strong> Agregador macro de datos electorales del país. Consolida el censo nacional (39.2M), abstención histórica, mapa de calor electoral por regiones (Caribe, Centro, Pacífico, Eje Cafetero, Orinoquía, Amazonía) y alertas de gobernabilidad.
+            </p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-white/10 bg-slate-950/40 -mx-5 -mb-5 p-4 rounded-b-2xl">
+            <span class="text-[10px] font-mono text-sky-400 uppercase font-bold block mb-1">Representación Gráfica:</span>
+            <p class="text-[11px] text-slate-300">
+              Kpis en diales numéricos, mapa vectorial SVG de Colombia con colorimetría por caudal de votos, y barras de distribución por bloques ideológicos.
+            </p>
+          </div>
+        </div>
+
+        <!-- Tool 1.2 -->
+        <div class="tool-card glass-card rounded-2xl p-5 border border-white/10 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-400/20 text-amber-300 border border-amber-400/30">
+                CandidateProfilesView
+              </span>
+              <i data-lucide="user" class="w-4 h-4 text-amber-400"></i>
+            </div>
+            <h4 class="text-sm font-bold text-white">Gestor de Perfil del Candidato Activo</h4>
+            <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+              <strong>Funcionamiento:</strong> Parametriza el ADN de la campaña (Isaac Mendoza). Registra biografía, partido, pilares programáticos, tono narrativo, atributos emocionales, estilo oratorio y reporte de colorimetría/fototipo. Estos parámetros se inyectan en todos los prompts de Gemini en tiempo real.
+            </p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-white/10 bg-slate-950/40 -mx-5 -mb-5 p-4 rounded-b-2xl">
+            <span class="text-[10px] font-mono text-amber-400 uppercase font-bold block mb-1">Representación Gráfica:</span>
+            <p class="text-[11px] text-slate-300">
+              Card de pasaporte político con avatar, switches de tono discursivo, badges de pilares y modal editable con persistencia local y sincronización en Google Drive.
+            </p>
+          </div>
+        </div>
+
+        <!-- Tool 1.3 -->
+        <div class="tool-card glass-card rounded-2xl p-5 border border-white/10 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-400/20 text-emerald-300 border border-emerald-400/30">
+                CampaignToolsView &middot; D'Hondt
+              </span>
+              <i data-lucide="calculator" class="w-4 h-4 text-emerald-400"></i>
+            </div>
+            <h4 class="text-sm font-bold text-white">Simulador Electoral D'Hondt & Demoscopia</h4>
+            <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+              <strong>Funcionamiento:</strong> Triple motor: 1) Procesador de encuestas (OCR y parsing JSON con Gemini); 2) Comparador político y FODA dinámico; 3) Simulador estocástico de cifra repartidora D'Hondt y umbral del 50% para listas a Senado, Cámara, Asamblea y Concejo.
+            </p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-white/10 bg-slate-950/40 -mx-5 -mb-5 p-4 rounded-b-2xl">
+            <span class="text-[10px] font-mono text-emerald-400 uppercase font-bold block mb-1">Representación Gráfica:</span>
+            <p class="text-[11px] text-slate-300">
+              Sliders interactivos de votación total, barra de umbral electoral superado/no superado, tabla de curules asignadas con cocientes coloreados y gráficos comparativos.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- DOMAIN 2: ARQUITECTURA GIS MULTI-ESCALA (5 ESCALAS CONTINUAS) -->
+    <div class="node-container glass-panel rounded-3xl p-6 border-l-4 border-l-emerald-400" data-domain="gis">
+      <div class="flex items-center justify-between cursor-pointer" onclick="toggleDomain('domain-2')">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center">
+            <i data-lucide="compass" class="w-5 h-5 text-emerald-400"></i>
+          </div>
+          <div>
+            <span class="text-[10px] font-mono uppercase tracking-widest text-emerald-400 font-bold">Dimensión Estratégica 2</span>
+            <h3 class="text-lg font-black text-white">Arquitectura GIS Multi-Escala Continua (5 Escalas GeoJSON)</h3>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="text-xs font-mono text-slate-400">5 Escalas / Dioramas 3D / Visor E-24</span>
+          <i data-lucide="chevron-down" id="icon-domain-2" class="w-5 h-5 text-slate-400 transition-transform"></i>
+        </div>
+      </div>
+
+      <div id="domain-2" class="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-5">
+        
+        <!-- Tool 2.1 -->
+        <div class="tool-card glass-card rounded-2xl p-5 border border-white/10 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-400/20 text-emerald-300 border border-emerald-400/30">
+                MultiLevelZoomMap
+              </span>
+              <i data-lucide="layers" class="w-4 h-4 text-emerald-400"></i>
+            </div>
+            <h4 class="text-sm font-bold text-white">Navegador Cartográfico Continuo</h4>
+            <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+              <strong>Funcionamiento:</strong> Motor Leaflet / GeoJSON que transiciona fluidamente entre: Escala 1 (Nacional: 32 Dptos) &rarr; Escala 2 (Antioquia) &rarr; Escala 3 (9 Subregiones) &rarr; Escala 4 (125 Municipios) &rarr; Escala 5 (Comunas de Medellín, Bello, Rionegro). Aplica capas coropléticas temáticas: Potencial Electoral, NBI/Pobreza, Seguridad y Participación.
+            </p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-white/10 bg-slate-950/40 -mx-5 -mb-5 p-4 rounded-b-2xl">
+            <span class="text-[10px] font-mono text-emerald-400 uppercase font-bold block mb-1">Representación Gráfica:</span>
+            <p class="text-[11px] text-slate-300">
+              Lienzo interactivo full-screen con polígonos GeoJSON retroiluminados, selector flotante de capas temáticas, breadcrumb dinámico y tooltips con métricas censales instantáneas.
+            </p>
+          </div>
+        </div>
+
+        <!-- Tool 2.2 -->
+        <div class="tool-card glass-card rounded-2xl p-5 border border-white/10 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-400/20 text-amber-300 border border-amber-400/30">
+                E24HistoricalViewer &middot; Comunas
+              </span>
+              <i data-lucide="file-spreadsheet" class="w-4 h-4 text-amber-400"></i>
+            </div>
+            <h4 class="text-sm font-bold text-white">Visor Histórico de Formularios E-24 Registraduría</h4>
+            <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+              <strong>Funcionamiento:</strong> Desagrega los resultados oficiales de la Registraduría Nacional (2015, 2018, 2019, 2022, 2023) por puesto de votación y mesa en cada comuna o corregimiento. Detecta mesas bisagra, mesas de alta abstención y concentración de votos.
+            </p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-white/10 bg-slate-950/40 -mx-5 -mb-5 p-4 rounded-b-2xl">
+            <span class="text-[10px] font-mono text-amber-400 uppercase font-bold block mb-1">Representación Gráfica:</span>
+            <p class="text-[11px] text-slate-300">
+              Drawer lateral deslizante con efecto Frost, tabla de puestos con semáforo de fidelidad de voto, gráficos de tendencia histórica por partido y buscador rápido de mesas.
+            </p>
+          </div>
+        </div>
+
+        <!-- Tool 2.3 -->
+        <div class="tool-card glass-card rounded-2xl p-5 border border-white/10 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-purple-400/20 text-purple-300 border border-purple-400/30">
+                Municipio3DDiorama &middot; ThreeDCard
+              </span>
+              <i data-lucide="box" class="w-4 h-4 text-purple-400"></i>
+            </div>
+            <h4 class="text-sm font-bold text-white">Dioramas 3D Territoriales Interactivos</h4>
+            <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+              <strong>Funcionamiento:</strong> Representación tridimensional de los centros urbanos (Medellín, Rionegro, Bello) para visualizar la densidad poblacional vertical, distribución de comunas, cuencas viales y barreras geográficas.
+            </p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-white/10 bg-slate-950/40 -mx-5 -mb-5 p-4 rounded-b-2xl">
+            <span class="text-[10px] font-mono text-purple-400 uppercase font-bold block mb-1">Representación Gráfica:</span>
+            <p class="text-[11px] text-slate-300">
+              Malla 3D renderizada con perspectiva axonométrica interactiva, efectos de iluminación ambiental y tarjetas en hover con datos de cada comuna.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- DOMAIN 3: EL TRIPLE PROPÓSITO ESTRATÉGICO -->
+    <div class="node-container glass-panel rounded-3xl p-6 border-l-4 border-l-indigo-400" data-domain="triple-proposito">
+      <div class="flex items-center justify-between cursor-pointer" onclick="toggleDomain('domain-3')">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-indigo-500/20 border border-indigo-400/40 flex items-center justify-center">
+            <i data-lucide="target" class="w-5 h-5 text-indigo-400"></i>
+          </div>
+          <div>
+            <span class="text-[10px] font-mono uppercase tracking-widest text-indigo-400 font-bold">Dimensión Estratégica 3</span>
+            <h3 class="text-lg font-black text-white">El Triple Propósito de Campaña</h3>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="text-xs font-mono text-slate-400">3 Pilares de Inteligencia Electoral</span>
+          <i data-lucide="chevron-down" id="icon-domain-3" class="w-5 h-5 text-slate-400 transition-transform"></i>
+        </div>
+      </div>
+
+      <div id="domain-3" class="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-5">
+        
+        <!-- Purpose 1 -->
+        <div class="tool-card glass-card rounded-2xl p-5 border border-white/10 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-sky-400/20 text-sky-300 border border-sky-400/30">
+                Propósito 1 &middot; Database
+              </span>
+              <i data-lucide="database" class="w-4 h-4 text-sky-400"></i>
+            </div>
+            <h4 class="text-sm font-bold text-white">Repositorio Municipal Universal</h4>
+            <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+              <strong>Funcionamiento:</strong> Base de datos estructurada con fichas técnicas para los 125 municipios de Antioquia. Almacena censo electoral, NBI, tasa de homicidios, déficit de vivienda, actividad económica predominante, actores políticos clave y proyectos inconclusos.
+            </p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-white/10 bg-slate-950/40 -mx-5 -mb-5 p-4 rounded-b-2xl">
+            <span class="text-[10px] font-mono text-sky-400 uppercase font-bold block mb-1">Representación Gráfica:</span>
+            <p class="text-[11px] text-slate-300">
+              Explorador en grid con filtros por subregión, barra de búsqueda con autocomplete, tarjetas municipales con badges de prioridad y modal de ficha técnica en profundidad.
+            </p>
+          </div>
+        </div>
+
+        <!-- Purpose 2 -->
+        <div class="tool-card glass-card rounded-2xl p-5 border border-white/10 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-indigo-400/20 text-indigo-300 border border-indigo-400/30">
+                Propósito 2 &middot; 54 Cohortes
+              </span>
+              <i data-lucide="brain" class="w-4 h-4 text-indigo-400"></i>
+            </div>
+            <h4 class="text-sm font-bold text-white">Motor de Segmentación Demográfica 4D</h4>
+            <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+              <strong>Funcionamiento:</strong> Cruza en tiempo real 4 variables: Sexo (2) &times; Grupo Etario (3) &times; Nivel Económico (3) &times; Grado Educativo (3) = 54 combinaciones exactas. Cuantifica censo, calcula abstención/urnas reales y activa micro-targeting con Gemini 3.8.
+            </p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-white/10 bg-slate-950/40 -mx-5 -mb-5 p-4 rounded-b-2xl">
+            <span class="text-[10px] font-mono text-indigo-400 uppercase font-bold block mb-1">Representación Gráfica:</span>
+            <p class="text-[11px] text-slate-300">
+              Panel interactivo de 4 cuadrantes con botones tipo pill, barra de resumen cuantitativo en tiempo real, tarjeta de cohorte con dial de afinidad y tabla completa de 54 filas.
+            </p>
+          </div>
+        </div>
+
+        <!-- Purpose 3 -->
+        <div class="tool-card glass-card rounded-2xl p-5 border border-white/10 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-400/20 text-amber-300 border border-amber-400/30">
+                Propósito 3 &middot; Content Director
+              </span>
+              <i data-lucide="megaphone" class="w-4 h-4 text-amber-400"></i>
+            </div>
+            <h4 class="text-sm font-bold text-white">Director de Contenido Estratégico & Briefs</h4>
+            <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+              <strong>Funcionamiento:</strong> Genera piezas de comunicación política hiperlocales calibradas con la Teoría de las Perspectivas (Kahneman & Tversky): Enfoque de Ganancia (esperanza), Enfoque de Pérdida (protección) y Equilibrado. Adapta a TikTok, plaza pública, WhatsApp o debate.
+            </p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-white/10 bg-slate-950/40 -mx-5 -mb-5 p-4 rounded-b-2xl">
+            <span class="text-[10px] font-mono text-amber-400 uppercase font-bold block mb-1">Representación Gráfica:</span>
+            <p class="text-[11px] text-slate-300">
+              Formulario de configuración de brief (selectores de territorio, formato, tono y sesgo cognitivo), visualizador de brief con formato Markdown y exportador directo a PDF y Google Drive.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- DOMAIN 4: ESTUDIO MULTIMEDIA Y SEMIÓTICA VISUAL -->
+    <div class="node-container glass-panel rounded-3xl p-6 border-l-4 border-l-pink-400" data-domain="multimedia">
+      <div class="flex items-center justify-between cursor-pointer" onclick="toggleDomain('domain-4')">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-pink-500/20 border border-pink-400/40 flex items-center justify-center">
+            <i data-lucide="video" class="w-5 h-5 text-pink-400"></i>
+          </div>
+          <div>
+            <span class="text-[10px] font-mono uppercase tracking-widest text-pink-400 font-bold">Dimensión Estratégica 4</span>
+            <h3 class="text-lg font-black text-white">Estudio de Analítica Multimedia & Semiótica Política</h3>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="text-xs font-mono text-slate-400">3 Herramientas de Consultoría de Imagen</span>
+          <i data-lucide="chevron-down" id="icon-domain-4" class="w-5 h-5 text-slate-400 transition-transform"></i>
+        </div>
+      </div>
+
+      <div id="domain-4" class="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-5">
+        
+        <!-- Tool 4.1 -->
+        <div class="tool-card glass-card rounded-2xl p-5 border border-white/10 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-pink-400/20 text-pink-300 border border-pink-400/30">
+                CandidateVideoAnalyzer
+              </span>
+              <i data-lucide="film" class="w-4 h-4 text-pink-400"></i>
+            </div>
+            <h4 class="text-sm font-bold text-white">Analizador de Video & Oratoria Política</h4>
+            <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+              <strong>Funcionamiento:</strong> Auditoría de discursos del candidato grabados en video. Evalúa cadencia de palabras por minuto (PPM), pausas enfáticas, detección de muletillas, gesticulación de manos, contacto visual y nivel de impacto emocional transmitido.
+            </p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-white/10 bg-slate-950/40 -mx-5 -mb-5 p-4 rounded-b-2xl">
+            <span class="text-[10px] font-mono text-pink-400 uppercase font-bold block mb-1">Representación Gráfica:</span>
+            <p class="text-[11px] text-slate-300">
+              Reproductor con línea de tiempo analítica, radar de oratoria (claridad, energía, empatía, autoridad), lista de muletillas detectadas y recomendaciones de cadencia.
+            </p>
+          </div>
+        </div>
+
+        <!-- Tool 4.2 -->
+        <div class="tool-card glass-card rounded-2xl p-5 border border-white/10 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-purple-400/20 text-purple-300 border border-purple-400/30">
+                Colorimetry &middot; AI Vision
+              </span>
+              <i data-lucide="palette" class="w-4 h-4 text-purple-400"></i>
+            </div>
+            <h4 class="text-sm font-bold text-white">Auditoría de Colorimetría & Fototipo</h4>
+            <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+              <strong>Funcionamiento:</strong> Analiza el rostro del candidato para determinar su estación cromática (fría vs cálida). Recomienda paletas de "Poder y Autoridad" (#0F172A, #1E3A8A) para debates y paletas de "Cercanía y Territorio" (#0284C7, blanco, beige) para visitas de barrio.
+            </p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-white/10 bg-slate-950/40 -mx-5 -mb-5 p-4 rounded-b-2xl">
+            <span class="text-[10px] font-mono text-purple-400 uppercase font-bold block mb-1">Representación Gráfica:</span>
+            <p class="text-[11px] text-slate-300">
+              Muestrario de swatches de color con códigos HEX, comparador visual de contrastes, advertencia de colores no recomendados y esquema de iluminación de 3 puntos.
+            </p>
+          </div>
+        </div>
+
+        <!-- Tool 4.3 -->
+        <div class="tool-card glass-card rounded-2xl p-5 border border-white/10 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-400/20 text-amber-300 border border-amber-400/30">
+                SemioticAudit
+              </span>
+              <i data-lucide="eye" class="w-4 h-4 text-amber-400"></i>
+            </div>
+            <h4 class="text-sm font-bold text-white">Auditoría Semiótica de Escenografía & Postura</h4>
+            <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+              <strong>Funcionamiento:</strong> Analiza los códigos visuales de la puesta en escena: posición de banderas, fondos institucionales vs comunitarios, tipos de encuadre de cámara (plano medio, primer plano) y lenguaje no verbal (cúpula de poder vs brazos cruzados).
+            </p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-white/10 bg-slate-950/40 -mx-5 -mb-5 p-4 rounded-b-2xl">
+            <span class="text-[10px] font-mono text-amber-400 uppercase font-bold block mb-1">Representación Gráfica:</span>
+            <p class="text-[11px] text-slate-300">
+              Checklist de auditoría con badges verde/rojo, visualizador de planos de encuadre recomendados y reporte descargable de semiótica visual.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- DOMAIN 5: COMMAND CENTER ANTIOQUIA (SALA DE GOBERNACIÓN) -->
+    <div class="node-container glass-panel rounded-3xl p-6 border-l-4 border-l-emerald-500" data-domain="antioquia">
+      <div class="flex items-center justify-between cursor-pointer" onclick="toggleDomain('domain-5')">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center">
+            <i data-lucide="shield-check" class="w-5 h-5 text-emerald-400"></i>
+          </div>
+          <div>
+            <span class="text-[10px] font-mono uppercase tracking-widest text-emerald-400 font-bold">Dimensión Estratégica 5</span>
+            <h3 class="text-lg font-black text-white">Command Center Antioquia (Gobernación)</h3>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="text-xs font-mono text-slate-400">3 Vistas Jerárquicas</span>
+          <i data-lucide="chevron-down" id="icon-domain-5" class="w-5 h-5 text-slate-400 transition-transform"></i>
+        </div>
+      </div>
+
+      <div id="domain-5" class="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-5">
+        
+        <!-- Tool 5.1 -->
+        <div class="tool-card glass-card rounded-2xl p-5 border border-white/10 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-400/20 text-emerald-300 border border-emerald-400/30">
+                GobernacionExecutiveView
+              </span>
+              <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i>
+            </div>
+            <h4 class="text-sm font-bold text-white">Sala Ejecutiva de Gobernación</h4>
+            <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+              <strong>Funcionamiento:</strong> Cuartel general de campaña para la Gobernación de Antioquia. Proyecta la meta de votos para la victoria (1.2M - 1.4M de votos), estado de alianzas con casas políticas subregionales, matriz de riesgos electorales y mapa de balance de poder.
+            </p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-white/10 bg-slate-950/40 -mx-5 -mb-5 p-4 rounded-b-2xl">
+            <span class="text-[10px] font-mono text-emerald-400 uppercase font-bold block mb-1">Representación Gráfica:</span>
+            <p class="text-[11px] text-slate-300">
+              Tablero de mando tipo sala de crisis militar con indicadores en tiempo real, velocímetro de meta de votación alcanzada y mapa de calor de Antioquia.
+            </p>
+          </div>
+        </div>
+
+        <!-- Tool 5.2 -->
+        <div class="tool-card glass-card rounded-2xl p-5 border border-white/10 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-sky-400/20 text-sky-300 border border-sky-400/30">
+                SubregionesView
+              </span>
+              <i data-lucide="layers" class="w-4 h-4 text-sky-400"></i>
+            </div>
+            <h4 class="text-sm font-bold text-white">Monitor de las 9 Subregiones Estratégicas</h4>
+            <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+              <strong>Funcionamiento:</strong> Analiza cada subregión como una unidad política diferenciada: Valle de Aburrá, Oriente, Urabá, Suroeste, Occidente, Norte, Bajo Cauca, Nordeste y Magdalena Medio. Pondera el peso de cada una en la balanza electoral departamental.
+            </p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-white/10 bg-slate-950/40 -mx-5 -mb-5 p-4 rounded-b-2xl">
+            <span class="text-[10px] font-mono text-sky-400 uppercase font-bold block mb-1">Representación Gráfica:</span>
+            <p class="text-[11px] text-slate-300">
+              Carrusel de 9 tarjetas subregionales con mini-mapas de silueta vectorial, barras de aporte al censo departamental y tabla de priorización de visitas.
+            </p>
+          </div>
+        </div>
+
+        <!-- Tool 5.3 -->
+        <div class="tool-card glass-card rounded-2xl p-5 border border-white/10 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-400/20 text-amber-300 border border-amber-400/30">
+                AntioquiaExplorerView
+              </span>
+              <i data-lucide="map-pin" class="w-4 h-4 text-amber-400"></i>
+            </div>
+            <h4 class="text-sm font-bold text-white">Directorio Exhaustivo de 125 Municipios</h4>
+            <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+              <strong>Funcionamiento:</strong> Directorio con fichas completas para cada uno de los 125 municipios antioqueños. Permite filtrar por subregión, clasificar por tamaño de censo, verificar presencia del candidato y lanzar el diorama 3D municipal.
+            </p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-white/10 bg-slate-950/40 -mx-5 -mb-5 p-4 rounded-b-2xl">
+            <span class="text-[10px] font-mono text-amber-400 uppercase font-bold block mb-1">Representación Gráfica:</span>
+            <p class="text-[11px] text-slate-300">
+              Tabla con búsqueda instantánea, paginación fluida, badges de subregión y botón de apertura rápida para el visor de E-24 y caracterización demográfica.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- DOMAIN 6: ESCUADRÓN MULTI-AGENTE Y AUTOMEJORA -->
+    <div class="node-container glass-panel rounded-3xl p-6 border-l-4 border-l-teal-400" data-domain="agentes">
+      <div class="flex items-center justify-between cursor-pointer" onclick="toggleDomain('domain-6')">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-teal-500/20 border border-teal-400/40 flex items-center justify-center">
+            <i data-lucide="bot" class="w-5 h-5 text-teal-400"></i>
+          </div>
+          <div>
+            <span class="text-[10px] font-mono uppercase tracking-widest text-teal-400 font-bold">Dimensión Estratégica 6</span>
+            <h3 class="text-lg font-black text-white">Escuadrón Multi-Agente & Automejora Autónoma</h3>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="text-xs font-mono text-slate-400">Cuadrilla de 5 Agentes + Unidad 7 Agentes</span>
+          <i data-lucide="chevron-down" id="icon-domain-6" class="w-5 h-5 text-slate-400 transition-transform"></i>
+        </div>
+      </div>
+
+      <div id="domain-6" class="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-5">
+        
+        <!-- Tool 6.1 -->
+        <div class="tool-card glass-card rounded-2xl p-5 border border-white/10 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-teal-400/20 text-teal-300 border border-teal-400/30">
+                AgentTeamConsoleView
+              </span>
+              <i data-lucide="cpu" class="w-4 h-4 text-teal-400"></i>
+            </div>
+            <h4 class="text-sm font-bold text-white">Consola de Cuadrilla de 5 Agentes IA</h4>
+            <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+              <strong>Funcionamiento:</strong> 1) SENTINEL-TERRITORY (Investigación oficial DANE/E-24); 2) STRAT-SEGMENT (Segmentación de clusters); 3) CHRONOS-CONTENT (Redacción de discursos y guiones); 4) VISION-SEMIOTIC (Auditoría semiótica y video); 5) ORION-SYNC (Búsqueda web y respaldo en Drive).
+            </p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-white/10 bg-slate-950/40 -mx-5 -mb-5 p-4 rounded-b-2xl">
+            <span class="text-[10px] font-mono text-teal-400 uppercase font-bold block mb-1">Representación Gráfica:</span>
+            <p class="text-[11px] text-slate-300">
+              Terminal tipo consola de ciberseguridad militar, selector lateral de agentes con luces LED de estado (online/idle), área de prompt y stream de log ejecutivo estructurado.
+            </p>
+          </div>
+        </div>
+
+        <!-- Tool 6.2 -->
+        <div class="tool-card glass-card rounded-2xl p-5 border border-white/10 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-400/20 text-amber-300 border border-amber-400/30">
+                Unidad de Automejora (7 Agentes)
+              </span>
+              <i data-lucide="shield-alert" class="w-4 h-4 text-amber-400"></i>
+            </div>
+            <h4 class="text-sm font-bold text-white">Protocolo Crítico & Protocolos de Automejora</h4>
+            <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+              <strong>Funcionamiento:</strong> 7 meta-agentes dedicados a auditar y optimizar Proteus: Orquestador, Investigador Académico, Organizador, Auditor Imparcial, Investigador de Datos, Analista de Software e Investigador Lex Artis. Produce y ejecuta los protocolos PA-001 a PA-005.
+            </p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-white/10 bg-slate-950/40 -mx-5 -mb-5 p-4 rounded-b-2xl">
+            <span class="text-[10px] font-mono text-amber-400 uppercase font-bold block mb-1">Representación Gráfica:</span>
+            <p class="text-[11px] text-slate-300">
+              Repositorio formal de protocolos en markdown, matrices de auditoría con sellos de aprobación de consistencia científica y registro de mejoras ejecutadas.
+            </p>
+          </div>
+        </div>
+
+        <!-- Tool 6.3 -->
+        <div class="tool-card glass-card rounded-2xl p-5 border border-white/10 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-purple-400/20 text-purple-300 border border-purple-400/30">
+                AntigravityAgentConsole
+              </span>
+              <i data-lucide="terminal" class="w-4 h-4 text-purple-400"></i>
+            </div>
+            <h4 class="text-sm font-bold text-white">Consola Antigravity & Telemetría</h4>
+            <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+              <strong>Funcionamiento:</strong> Monitor de telemetría de ejecución de subagentes y llamadas a APIs. Mide latencias, consumo de tokens, estado de la conexión con Google AI Studio y trazabilidad de eventos del sistema.
+            </p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-white/10 bg-slate-950/40 -mx-5 -mb-5 p-4 rounded-b-2xl">
+            <span class="text-[10px] font-mono text-purple-400 uppercase font-bold block mb-1">Representación Gráfica:</span>
+            <p class="text-[11px] text-slate-300">
+              Visualizador de logs en tiempo real con sintaxis coloreada en fuente JetBrains Mono, botones de copia de eventos y filtros de error/advertencia.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- DOMAIN 7: PERSISTENCIA, SISTEMA E IDENTIDAD -->
+    <div class="node-container glass-panel rounded-3xl p-6 border-l-4 border-l-slate-400" data-domain="sistema">
+      <div class="flex items-center justify-between cursor-pointer" onclick="toggleDomain('domain-7')">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-slate-500/20 border border-slate-400/40 flex items-center justify-center">
+            <i data-lucide="hard-drive" class="w-5 h-5 text-slate-300"></i>
+          </div>
+          <div>
+            <span class="text-[10px] font-mono uppercase tracking-widest text-slate-400 font-bold">Dimensión Estratégica 7</span>
+            <h3 class="text-lg font-black text-white">Persistencia en Nube & Sistema de Diseño</h3>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="text-xs font-mono text-slate-400">Google Drive / Tokens de Diseño</span>
+          <i data-lucide="chevron-down" id="icon-domain-7" class="w-5 h-5 text-slate-400 transition-transform"></i>
+        </div>
+      </div>
+
+      <div id="domain-7" class="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-5">
+        
+        <!-- Tool 7.1 -->
+        <div class="tool-card glass-card rounded-2xl p-5 border border-white/10 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-sky-400/20 text-sky-300 border border-sky-400/30">
+                googleDriveService
+              </span>
+              <i data-lucide="cloud" class="w-4 h-4 text-sky-400"></i>
+            </div>
+            <h4 class="text-sm font-bold text-white">Sincronización Bidireccional con Google Drive</h4>
+            <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+              <strong>Funcionamiento:</strong> Enlace con el almacenamiento en la nube del comando de campaña. Guarda automáticamente o bajo demanda los briefs generados, los informes de segmentación, los resultados de encuestas procesadas y los perfiles de candidato en carpetas categorizadas.
+            </p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-white/10 bg-slate-950/40 -mx-5 -mb-5 p-4 rounded-b-2xl">
+            <span class="text-[10px] font-mono text-sky-400 uppercase font-bold block mb-1">Representación Gráfica:</span>
+            <p class="text-[11px] text-slate-300">
+              Modal interactivo accesible desde la barra superior y lateral, con estado de autenticación, indicador de cuota usada y listado de archivos sincronizados con enlace de apertura directa.
+            </p>
+          </div>
+        </div>
+
+        <!-- Tool 7.2 -->
+        <div class="tool-card glass-card rounded-2xl p-5 border border-white/10 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-purple-400/20 text-purple-300 border border-purple-400/30">
+                BrandIdentityView &middot; Tokens
+              </span>
+              <i data-lucide="sparkles" class="w-4 h-4 text-purple-400"></i>
+            </div>
+            <h4 class="text-sm font-bold text-white">Manual de Identidad & Design System CMT Proteus</h4>
+            <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+              <strong>Funcionamiento:</strong> Estandarización visual de toda la suite: paleta Obsidian (#030712), vidrios esmerilados (Glassmorphism con backdrop-blur-28px), tipografía Plus Jakarta Sans y JetBrains Mono, y librería de isotipos vectoriales SVG oficiales de CMT Proteus.
+            </p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-white/10 bg-slate-950/40 -mx-5 -mb-5 p-4 rounded-b-2xl">
+            <span class="text-[10px] font-mono text-purple-400 uppercase font-bold block mb-1">Representación Gráfica:</span>
+            <p class="text-[11px] text-slate-300">
+              Guía de estilo interactiva con muestras de componentes (botones, badges, tarjetas, modales), tokens CSS copiables y visualización de logos en distintos contrastes de fondo.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="mt-12 text-center text-xs text-slate-500 font-mono py-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-2">
+    <div>PROYECTO PROTEUS 1.2 &middot; CENTRO ESTRATÉGICO DE CAMPAÑAS</div>
+    <div>CANDIDATO: ISAAC MENDOZA &middot; MODELO IA: GEMINI 3.8 FLASH</div>
+  </footer>
+
+  <script>
+    lucide.createIcons();
+
+    function toggleDomain(id) {
+      const el = document.getElementById(id);
+      const icon = document.getElementById('icon-' + id);
+      if (el.classList.contains('hidden')) {
+        el.classList.remove('hidden');
+        if (icon) icon.style.transform = 'rotate(0deg)';
+      } else {
+        el.classList.add('hidden');
+        if (icon) icon.style.transform = 'rotate(-90deg)';
+      }
+    }
+
+    function expandAll() {
+      for (let i = 1; i <= 7; i++) {
+        const el = document.getElementById('domain-' + i);
+        const icon = document.getElementById('icon-domain-' + i);
+        if (el) el.classList.remove('hidden');
+        if (icon) icon.style.transform = 'rotate(0deg)';
+      }
+    }
+
+    function collapseAll() {
+      for (let i = 1; i <= 7; i++) {
+        const el = document.getElementById('domain-' + i);
+        const icon = document.getElementById('icon-domain-' + i);
+        if (el) el.classList.add('hidden');
+        if (icon) icon.style.transform = 'rotate(-90deg)';
+      }
+    }
+
+    function filterNodes() {
+      const q = document.getElementById('search-input').value.toLowerCase();
+      const cards = document.querySelectorAll('.tool-card');
+      cards.forEach(card => {
+        const text = card.innerText.toLowerCase();
+        if (text.includes(q)) {
+          card.style.display = 'flex';
+          card.style.opacity = '1';
+        } else {
+          card.style.display = 'none';
+          card.style.opacity = '0';
+        }
+      });
+      // Automatically expand all when searching
+      if (q.trim() !== '') {
+        expandAll();
+      }
+    }
+  </script>
+</body>
+</html>

@@ -27,20 +27,26 @@ interface MunicipioInteractiveMapProps {
   onSelectArea: (areaId: string) => void;
 }
 
-export const MunicipioInteractiveMap: React.FC<MunicipioInteractiveMapProps> = ({
+export const MunicipioInteractiveMap: React.FC<MunicipioInteractiveMapProps> = (props) => {
+  // Bello tiene su propio mapa. El resto va en un componente aparte para que los
+  // hooks de React se llamen siempre en el mismo orden (antes, pasar de Bello a otro
+  // municipio rompía la vista con "Rendered more hooks than during the previous render").
+  if (props.muniId === 'bello') {
+    return (
+      <BelloInteractiveMap
+        selectedAreaId={props.selectedAreaId}
+        onSelectArea={props.onSelectArea}
+      />
+    );
+  }
+  return <GenericMunicipioInteractiveMap {...props} />;
+};
+
+const GenericMunicipioInteractiveMap: React.FC<MunicipioInteractiveMapProps> = ({
   muniId,
   selectedAreaId,
   onSelectArea
 }) => {
-  if (muniId === 'bello') {
-    return (
-      <BelloInteractiveMap
-        selectedAreaId={selectedAreaId}
-        onSelectArea={onSelectArea}
-      />
-    );
-  }
-
   const config = ALL_MUNICIPIOS_TERRITORIAL_DATA[muniId] || ALL_MUNICIPIOS_TERRITORIAL_DATA['rionegro'];
   const [activeTab, setActiveTab] = useState<'oficial' | 'satellite' | 'barrios'>('oficial');
   const [searchQuery, setSearchQuery] = useState('');
