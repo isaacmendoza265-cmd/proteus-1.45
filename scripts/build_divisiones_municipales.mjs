@@ -36,15 +36,15 @@ const titleCase = (s) => String(s).trim().replace(/\s+/g, ' ').toLowerCase()
 // del plano oficial del POT "Comunas y Barrios" (capa Comunas_POT_2009, 12 comunas), digitalizado y
 // georreferenciado (ver _originales/bello/FUENTE.md). asignacion_comunas.txt: clave = shape_area;
 // m = el 80 % o más del barrio cae en la comuna, p = mayoría parcial, c = por cercanía.
-// El plano numera las comunas sin nombre. Los nombres vienen del mapa de 10 comunas con nombre que
-// usa la Alcaldía, solo donde la comuna es la misma en ambos (decisión de Isaac, 25-sep-2026):
-// la Niquía de ese mapa se parte aquí en 8 y 9, Fontidueño pasa a ser la 10 y Acevedo la 11;
-// la 9, la 11 y la 12 quedan solo con número hasta tener su nombre oficial.
+// El plano numera las comunas sin nombre. Los nombres vienen de la Divipole 2023 de la Registraduría,
+// que usa la misma numeración del POT (1 París ... 9 Guasimalito, 10 Fontidueño, 11 Zamora) y coincide
+// con estas comunas en 34 de 35 puestos. La 12 del POT (El Pinar) no tiene nombre en ninguna fuente:
+// la Registraduría llama "Comuna 12" al corregimiento San Félix.
 // Las comunas se construyen disolviendo los barrios ya simplificados, para que los bordes coincidan.
 const BELLO_TOTAL_COMUNAS = 12;
 const BELLO_NOMBRES = {
   1: 'París', 2: 'La Madera', 3: 'Santa Ana', 4: 'Suárez', 5: 'La Cumbre',
-  6: 'Bellavista', 7: 'Altos de Niquía', 8: 'Niquía', 10: 'Fontidueño',
+  6: 'Bellavista', 7: 'Altos de Niquía', 8: 'Niquía', 9: 'Guasimalito', 10: 'Fontidueño', 11: 'Zamora',
 };
 const limpiarBarrioBello = (n) => String(n).trim()
   .replace(/^B\.\s*/, '').replace(/^Urb\.\s*/, 'Urb. ').replace(/^Asent\.\s*de Hecho/, 'Asentamiento de Hecho')
