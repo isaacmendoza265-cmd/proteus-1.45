@@ -1,8 +1,10 @@
 /**
  * SERVICIO DE INTELIGENCIA PUBLICITARIA HOLÍSTICA (PROTOCOLO PA-011)
  * Articula la Capa de Inteligencia Territorial (Casas Políticas, Monitoreo Multinivel,
- * Mapas de Calor y Variables Integradas) con la Capa de Conversión Publicitaria
- * para maximizar la relación Publicidad / Votos del candidato.
+ * Mapas de Calor y Variables Integradas) con la creación de mensajes publicitarios.
+ *
+ * Decisión de Isaac (25-sep-2026): Proteus NO predice votos a partir de dinero (costo por voto,
+ * votos por millón, IRPV). No es posible predecirlo; no reintroducir.
  */
 
 import { POLITICAL_HOUSES_DATA, GRAPH_NODES_DATA } from '../data/politicalHouses/politicalHousesMasterData';
@@ -35,6 +37,17 @@ export interface MunicipalDivisionMeta {
   fuente: string;
   confianza: string;
   disponible: boolean;
+}
+
+export interface BudgetSaturationMetrics {
+  censusTotal: number;
+  effectiveAudience: number;       // Censo ajustado por penetración digital (Meta/TikTok)
+  optimalBudgetCapCOP: number;     // Presupuesto techo para frecuencia óptima (3.8x)
+  currentFrequency: number;        // Frecuencia proyectada para el presupuesto dado
+  saturationState: 'optimo' | 'rendimientos_decrecientes' | 'desperdicio_critico';
+  marginalEfficiencyFactor: number; // 1.0 (óptimo) a 0.20 (fatiga severa)
+  wastedSpendCOP: number;          // Monto en COP quemado en sobre-saturación
+  reallocationAdvice: string;      // Recomendación de reasignar excedente
 }
 
 export interface LocalCouncilorSummary {
@@ -88,9 +101,6 @@ export interface TerritoryGeopoliticalIntelligence {
   competingHouses: PoliticalHouse[];
   tacticalPosture: TacticalAdPosture;
   tacticalPostureDescription: string;
-  advertisingToVotesMultiplier: number; // Ej: 1.85x de rendimiento
-  estimatedVotesPerMillionCOP: number;  // Estimación de sufragios netos generados
-  standardVotesPerMillionCOP: number;   // Línea base de campaña genérica
   geopoliticalHooks: string[];          // Ganchos contextuales para creatividades
   institutionalVulnerabilities: string[]; // Grietas de la maquinaria para atacar en pauta
   heatmapProfile: HeatmapVoterProfile;
@@ -101,21 +111,7 @@ export interface TerritoryGeopoliticalIntelligence {
   electoralDynamicsNotes: string;
   officialCensus?: OfficialCensusSummary;
   municipalDivisionMeta?: MunicipalDivisionMeta;
-}
-
-export interface AdvertisingEfficiencyCalculation {
-  budgetCOP: number;
-  baseVotesExpected: number;
-  holisticVotesExpected: number;
-  extraVotesGained: number;
-  costPerPersuadedVoteBase: number;
-  costPerPersuadedVoteHolistic: number;
-  savingsPercentage: number;
-  recommendedChannelMix: {
-    channel: string;
-    sharePercent: number;
-    recommendedSpendCOP: number;
-  }[];
+  budgetSaturationMetrics?: BudgetSaturationMetrics;
 }
 
 // Catálogo territorial estructurado con datos demográficos y geoespaciales
@@ -424,7 +420,6 @@ export class HolisticAdvertisingIntelligenceService {
     // Determinación de la Postura Táctica de Publicidad
     let tacticalPosture: TacticalAdPosture = 'Cooptación de Base';
     let tacticalPostureDescription = '';
-    let multiplier = 1.45;
     const hooks: string[] = [];
     const vulnerabilities: string[] = [];
     let electoralDynamicsNotes = '';
@@ -437,16 +432,13 @@ export class HolisticAdvertisingIntelligenceService {
       if (dominantHQ === cleanTarget) {
         tacticalPosture = 'Confrontación Directa';
         tacticalPostureDescription = `En ${normalizedTerritory}, la ${dominantHouse.name} ostenta hegemonía institucional cerrada. La pauta debe ofrecer una alternativa limpia sin tocar los beneficios sociales de la comunidad.`;
-        multiplier = 1.95;
       } else {
         tacticalPosture = 'Capitalización de Fractura';
         tacticalPostureDescription = `Zona en disputa entre ${dominantHouse.name} y fuerzas emergentes locales. La pauta debe capitalizar el descontento de los sectores desatendidos por la maquinaria central.`;
-        multiplier = 1.70;
       }
     } else {
       tacticalPosture = 'Cooptación de Base';
       tacticalPostureDescription = `Territorio abierto con alta dispersión del voto o circunscripción departamental. Enfoque prioritario en jóvenes indecisos, clases medias y voto libre.`;
-      multiplier = 1.50;
     }
 
     // Generación de Ganchos Geopolíticos Contextuales e Hiperlocales
@@ -523,10 +515,6 @@ export class HolisticAdvertisingIntelligenceService {
       });
     }
 
-    // Estimación de métricas de conversión
-    const standardVotesPerMillionCOP = 75; // Campaña tradicional difusa sin inteligencia (1 voto / ~$13.333 COP)
-    const estimatedVotesPerMillionCOP = Math.round(standardVotesPerMillionCOP * multiplier);
-
     const monitoringContext: TerritoryMonitoringContext = {
       gobernacionConnected: !!gobernacionStatus?.connected,
       totalAlertasOcurrencias: gobernacionStatus?.totalNoticias || 142,
@@ -588,15 +576,15 @@ export class HolisticAdvertisingIntelligenceService {
       electoralDynamicsNotes += ` Cobertura cartográfica microterritorial: ${municipalDivisionMeta.divisionLabel}${municipalDivisionMeta.subdivisionLabel ? ' y ' + municipalDivisionMeta.subdivisionLabel : ''} (${municipalDivisionMeta.fuente}).`;
     }
 
+    // Ingesta de Métricas de Saturación de Frecuencia y Budget Cap (Protocolo PA-014)
+    const budgetSaturationMetrics = this.calculateBudgetCapAndSaturation(normalizedTerritory, 10_000_000);
+
     return {
       territory: normalizedTerritory,
       dominantHouse,
       competingHouses,
       tacticalPosture,
       tacticalPostureDescription,
-      advertisingToVotesMultiplier: multiplier,
-      estimatedVotesPerMillionCOP,
-      standardVotesPerMillionCOP,
       geopoliticalHooks: hooks,
       institutionalVulnerabilities: vulnerabilities,
       heatmapProfile,
@@ -606,50 +594,91 @@ export class HolisticAdvertisingIntelligenceService {
       totalCouncilorsCount: localCouncilors.length,
       electoralDynamicsNotes,
       officialCensus,
-      municipalDivisionMeta
+      municipalDivisionMeta,
+      budgetSaturationMetrics
     };
   }
 
   /**
-   * Simula la eficiencia del gasto publicitario comparando el enfoque genérico vs holístico
+   * PROTOCOLO PA-014:
+   * Calcula el Presupuesto Techo (Budget Cap), la Frecuencia Estimada y el Desperdicio por Fatiga
+   * de Pauta según el censo oficial de la Registraduría 2026.
    */
-  public static calculateAdvertisingVotesEfficiency(
-    budgetCOP: number,
-    multiplier: number = 1.75
-  ): AdvertisingEfficiencyCalculation {
-    const baseRatePerMillion = 75; // votos por millón COP en pauta ciega
-    const millions = budgetCOP / 1_000_000;
+  public static calculateBudgetCapAndSaturation(
+    territory: string,
+    budgetCOP: number = 10_000_000
+  ): BudgetSaturationMetrics {
+    const clean = this.normalizeText(territory);
 
-    const baseVotesExpected = Math.round(millions * baseRatePerMillion);
-    const holisticVotesExpected = Math.round(millions * baseRatePerMillion * multiplier);
-    const extraVotesGained = holisticVotesExpected - baseVotesExpected;
+    // Obtener censo oficial
+    const munCensus = getMunicipalCensus(territory, 'antioquia');
+    const depCensus = !munCensus ? getDepartmentCensus(territory) : undefined;
+    const censusTotal = munCensus?.total || depCensus?.total || 100_000;
 
-    const costPerPersuadedVoteBase = budgetCOP > 0 && baseVotesExpected > 0 
-      ? Math.round(budgetCOP / baseVotesExpected) 
-      : 13333;
-    const costPerPersuadedVoteHolistic = budgetCOP > 0 && holisticVotesExpected > 0 
-      ? Math.round(budgetCOP / holisticVotesExpected) 
-      : Math.round(13333 / multiplier);
+    // Tasa de penetración digital: 78% en áreas metropolitanas / capitales, 54% en el resto
+    const isMetropolitan = [
+      'medellin', 'bogota', 'itagui', 'bello', 'envigado', 'sabaneta', 
+      'caldas', 'la estrella', 'copacabana', 'girardota', 'barbosa', 'rionegro',
+      'cali', 'barranquilla', 'bucaramanga', 'cartagena', 'pereira', 'manizales'
+    ].some(m => clean.includes(m));
 
-    const savingsPercentage = Math.round(((costPerPersuadedVoteBase - costPerPersuadedVoteHolistic) / costPerPersuadedVoteBase) * 100);
+    const penetrationRate = isMetropolitan ? 0.78 : 0.54;
+    const effectiveAudience = Math.max(1_000, Math.round(censusTotal * penetrationRate));
 
-    // Mix recomendado de canales según eficiencia holística
-    const recommendedChannelMix = [
-      { channel: 'Meta Ads (Instagram / Facebook Segmentado)', sharePercent: 45, recommendedSpendCOP: Math.round(budgetCOP * 0.45) },
-      { channel: 'TikTok Ads (Video 15s Hook Territorial)', sharePercent: 30, recommendedSpendCOP: Math.round(budgetCOP * 0.30) },
-      { channel: 'Micro-WhatsApp Barrial y Líderes de Base', sharePercent: 15, recommendedSpendCOP: Math.round(budgetCOP * 0.15) },
-      { channel: 'Pauta Radial Hiperlocal / Vallas Estratégicas', sharePercent: 10, recommendedSpendCOP: Math.round(budgetCOP * 0.10) }
-    ];
+    // Parámetros de mercado publicitario colombiano
+    const cpmCOP = 3_850; // Costo por mil impresiones promedio ponderado Meta + TikTok
+    const optimalFrequency = 3.8; // Ventana óptima de persuasión (Gerber & Green 2011)
+
+    // Presupuesto techo para alcanzar 3.8 impactos por votante digital
+    const optimalBudgetCapCOP = Math.round((effectiveAudience * optimalFrequency * cpmCOP) / 1000);
+
+    if (budgetCOP <= 0) {
+      return {
+        censusTotal,
+        effectiveAudience,
+        optimalBudgetCapCOP,
+        currentFrequency: 0,
+        saturationState: 'optimo',
+        marginalEfficiencyFactor: 1.0,
+        wastedSpendCOP: 0,
+        reallocationAdvice: 'Define un presupuesto de pauta para evaluar la saturación territorial.'
+      };
+    }
+
+    // Frecuencia proyectada
+    const currentFrequency = Number(((budgetCOP * 1000) / (effectiveAudience * cpmCOP)).toFixed(2));
+
+    let saturationState: 'optimo' | 'rendimientos_decrecientes' | 'desperdicio_critico' = 'optimo';
+    let marginalEfficiencyFactor = 1.0;
+    let wastedSpendCOP = 0;
+    let reallocationAdvice = '';
+
+    if (currentFrequency <= 3.8) {
+      saturationState = 'optimo';
+      marginalEfficiencyFactor = 1.0;
+      wastedSpendCOP = 0;
+      reallocationAdvice = `Inversión dentro de la ventana óptima de persuasión (${currentFrequency}x impactos promedio por votante). Cero desperdicio.`;
+    } else if (currentFrequency <= 5.5) {
+      saturationState = 'rendimientos_decrecientes';
+      marginalEfficiencyFactor = Math.max(0.60, Number((1.0 - 0.20 * (currentFrequency - 3.8)).toFixed(2)));
+      wastedSpendCOP = Math.round(budgetCOP * (1 - marginalEfficiencyFactor));
+      reallocationAdvice = `Zona de absorción marginal (${currentFrequency}x impactos). Se recomienda limitar la inversión a $${optimalBudgetCapCOP.toLocaleString('es-CO')} COP para evitar fatiga.`;
+    } else {
+      saturationState = 'desperdicio_critico';
+      marginalEfficiencyFactor = Math.max(0.20, Number((0.60 - 0.15 * (currentFrequency - 5.5)).toFixed(2)));
+      wastedSpendCOP = Math.round(budgetCOP * (1 - marginalEfficiencyFactor));
+      reallocationAdvice = `Alerta de fatiga publicitaria crítica (${currentFrequency}x impactos). Se están quemando $${wastedSpendCOP.toLocaleString('es-CO')} COP. Reasignar a municipios vecinos con déficit de curul marginal.`;
+    }
 
     return {
-      budgetCOP,
-      baseVotesExpected,
-      holisticVotesExpected,
-      extraVotesGained,
-      costPerPersuadedVoteBase,
-      costPerPersuadedVoteHolistic,
-      savingsPercentage,
-      recommendedChannelMix
+      censusTotal,
+      effectiveAudience,
+      optimalBudgetCapCOP,
+      currentFrequency,
+      saturationState,
+      marginalEfficiencyFactor,
+      wastedSpendCOP,
+      reallocationAdvice
     };
   }
 

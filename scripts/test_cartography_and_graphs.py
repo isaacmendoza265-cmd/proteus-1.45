@@ -185,5 +185,25 @@ assert 'resolveMunicipality' in divisions_ts, "Debe exportar resolveMunicipality
 
 print("✓ Censo Oficial Registraduría 2026 (41.4M) y Microdivisiones Niveles 4/5 (Bogotá, Medellín, Itagüí, Rionegro) verificados con éxito!")
 
-print("\n>>> TODAS LAS PRUEBAS DE CARTOGRAFÍA, GRAFOS, CENSO Y PUBLICIDAD PASARON EXITOSAMENTE (100% OK) <<<")
+print("\n=== 7. VERIFICANDO CURVA DE SATURACIÓN Y BUDGET CAP (PA-014) ===")
+with open('src/services/holisticAdvertisingIntelligenceService.ts', 'r', encoding='utf-8') as f:
+    ad_service = f.read()
+
+with open('src/components/advertising/TerritoryIntelligenceBridgeCard.tsx', 'r', encoding='utf-8') as f:
+    bridge_card = f.read()
+
+assert 'BudgetSaturationMetrics' in ad_service, "Holistic service debe definir BudgetSaturationMetrics"
+assert 'calculateBudgetCapAndSaturation' in ad_service, "Holistic service debe implementar calculateBudgetCapAndSaturation"
+assert 'budgetSaturationMetrics' in ad_service, "Holistic service debe incluir budgetSaturationMetrics"
+assert 'optimalBudgetCapCOP' in ad_service, "BudgetSaturationMetrics debe incluir optimalBudgetCapCOP"
+assert 'wastedSpendCOP' in ad_service, "BudgetSaturationMetrics debe incluir wastedSpendCOP"
+
+assert 'budgetSaturationMetrics' in bridge_card, "Bridge card debe renderizar budgetSaturationMetrics"
+assert 'Curva de Saturación de Frecuencia & Presupuesto Techo' in bridge_card, "Bridge card debe mostrar el banner de saturación"
+assert 'Presupuesto Techo' in bridge_card, "Bridge card debe mostrar Presupuesto Techo"
+assert 'Gauge' in bridge_card, "Bridge card debe incluir icono Gauge"
+
+print("✓ Curva de Saturación de Frecuencia y Presupuesto Techo (PA-014) verificados con éxito!")
+
+print("\n>>> TODAS LAS PRUEBAS DE CARTOGRAFÍA, GRAFOS, CENSO, SATURACIÓN Y PUBLICIDAD PASARON EXITOSAMENTE (100% OK) <<<")
 

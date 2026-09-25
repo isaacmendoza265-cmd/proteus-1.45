@@ -20,7 +20,8 @@ import {
   Layers,
   Users,
   RefreshCw,
-  UserCheck
+  UserCheck,
+  Gauge
 } from 'lucide-react';
 
 interface TerritoryIntelligenceBridgeCardProps {
@@ -68,7 +69,7 @@ export const TerritoryIntelligenceBridgeCard: React.FC<TerritoryIntelligenceBrid
 
   return (
     <div className="bg-gradient-to-br from-slate-900/90 via-slate-900/70 to-slate-950/90 backdrop-blur-2xl border border-white/10 rounded-2xl p-5 shadow-2xl space-y-5">
-      {/* Header with Territory Switcher and IRPV Multiplier */}
+      {/* Header with Territory Switcher */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-white/10">
         <div className="space-y-1.5">
           <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-amber-400 font-bold">
@@ -141,28 +142,74 @@ export const TerritoryIntelligenceBridgeCard: React.FC<TerritoryIntelligenceBrid
           )}
         </div>
 
-        {/* IRPV ROI Gauge Card */}
-        <div className="bg-gradient-to-r from-amber-950/40 via-slate-900/60 to-emerald-950/40 border border-amber-500/30 rounded-xl p-3.5 flex items-center gap-4 shrink-0 shadow-lg">
-          <div className="space-y-0.5">
-            <div className="text-[10px] font-mono uppercase tracking-wider text-amber-400 font-bold flex items-center gap-1">
-              <TrendingUp className="w-3.5 h-3.5 text-emerald-400" />
-              <span>Índice Retorno Publicidad/Votos (IRPV)</span>
+      </div>
+
+      {/* Banner de Saturación de Frecuencia y Presupuesto Techo (Protocolo PA-014) */}
+      {intelligence.budgetSaturationMetrics && (
+        <div className={`rounded-xl border p-4 transition-all shadow-lg ${
+          intelligence.budgetSaturationMetrics.saturationState === 'optimo'
+            ? 'bg-gradient-to-r from-emerald-950/40 via-slate-900/60 to-slate-950/80 border-emerald-500/40'
+            : intelligence.budgetSaturationMetrics.saturationState === 'rendimientos_decrecientes'
+            ? 'bg-gradient-to-r from-amber-950/40 via-slate-900/60 to-slate-950/80 border-amber-500/40'
+            : 'bg-gradient-to-r from-rose-950/50 via-slate-900/70 to-slate-950/80 border-rose-500/50'
+        }`}>
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider font-bold">
+                <Gauge className="w-4 h-4 text-emerald-400 shrink-0" />
+                <span className="text-white">Curva de Saturación de Frecuencia & Presupuesto Techo (Budget Cap)</span>
+                <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase shrink-0 ${
+                  intelligence.budgetSaturationMetrics.saturationState === 'optimo'
+                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                    : intelligence.budgetSaturationMetrics.saturationState === 'rendimientos_decrecientes'
+                    ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                    : 'bg-rose-500/20 text-rose-300 border border-rose-500/30 animate-pulse'
+                }`}>
+                  {intelligence.budgetSaturationMetrics.saturationState === 'optimo'
+                    ? '🟢 Eficiencia Óptima'
+                    : intelligence.budgetSaturationMetrics.saturationState === 'rendimientos_decrecientes'
+                    ? '🟡 Rendimientos Decrecientes'
+                    : '🔴 Desperdicio Crítico / Fatiga'}
+                </span>
+              </div>
+              <p className="text-xs text-slate-300">
+                {intelligence.budgetSaturationMetrics.reallocationAdvice}
+              </p>
             </div>
-            <div className="flex items-baseline gap-2">
-              <span className="text-2xl sm:text-3xl font-black text-emerald-400 font-mono">
-                {intelligence.advertisingToVotesMultiplier.toFixed(2)}x
-              </span>
-              <span className="text-xs text-slate-300 font-medium">
-                multiplicador de impacto
-              </span>
-            </div>
-            <div className="text-[11px] font-mono text-slate-400">
-              <strong className="text-white">{intelligence.estimatedVotesPerMillionCOP}</strong> votos est. / M COP 
-              <span className="text-slate-500"> (vs {intelligence.standardVotesPerMillionCOP} en pauta ciega)</span>
+
+            <div className="flex flex-wrap items-center gap-3 shrink-0 font-mono text-xs">
+              <div className="bg-slate-900/80 px-3 py-1.5 rounded-lg border border-white/10">
+                <span className="text-[10px] text-slate-400 block uppercase">Frecuencia Proyectada</span>
+                <strong className={`text-sm ${
+                  intelligence.budgetSaturationMetrics.currentFrequency <= 3.8
+                    ? 'text-emerald-400'
+                    : intelligence.budgetSaturationMetrics.currentFrequency <= 5.5
+                    ? 'text-amber-400'
+                    : 'text-rose-400'
+                }`}>
+                  {intelligence.budgetSaturationMetrics.currentFrequency}x <span className="text-[10px] text-slate-400 font-normal">(Opt: 3.8x)</span>
+                </strong>
+              </div>
+
+              <div className="bg-slate-900/80 px-3 py-1.5 rounded-lg border border-white/10">
+                <span className="text-[10px] text-slate-400 block uppercase">Presupuesto Techo</span>
+                <strong className="text-sm text-sky-400">
+                  ${(Math.round(intelligence.budgetSaturationMetrics.optimalBudgetCapCOP / 100_000) / 10).toLocaleString('es-CO')}M COP
+                </strong>
+              </div>
+
+              {intelligence.budgetSaturationMetrics.wastedSpendCOP > 0 && (
+                <div className="bg-rose-950/60 px-3 py-1.5 rounded-lg border border-rose-500/30">
+                  <span className="text-[10px] text-rose-300 block uppercase font-bold">Desperdicio Estimado</span>
+                  <strong className="text-sm text-rose-400">
+                    -${(Math.round(intelligence.budgetSaturationMetrics.wastedSpendCOP / 100_000) / 10).toLocaleString('es-CO')}M COP
+                  </strong>
+                </div>
+              )}
             </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Grid: 3 Pillars (Dominant House, Heatmap/Demographics, Monitoring Multinivel) */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
