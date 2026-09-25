@@ -211,7 +211,8 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
     setCustomMuniDataset(null);
     if (!usesCustomMuni) return;
     const entry = MUNICIPAL_DIVISIONS_REGISTRY[selectedMunicipalityId];
-    const loader = currentLevel === 'comunas-barrios'
+    // Sin nivel de comunas (regla de niveles en municipalDivisions.ts), el nivel 4 ya muestra barrios/veredas
+    const loader = currentLevel === 'comunas-barrios' || entry?.nivelComunas === false
       ? (entry?.loadSubdivisions ?? entry?.loadDivisions)
       : entry?.loadDivisions;
     if (!loader) return;
@@ -594,7 +595,7 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
           <div className="px-2 py-1 text-xs">
             <div className="font-black text-amber-300 flex items-center gap-1.5">
               <Building className="w-3.5 h-3.5 text-amber-400" />
-              {activeMuni.name}: {currentLevel === 'comunas-barrios' ? (activeMuni.subdivisionLabel || activeMuni.divisionLabel) : activeMuni.divisionLabel}
+              {activeMuni.name}: {currentLevel === 'comunas-barrios' || !activeMuni.nivelComunas ? (activeMuni.subdivisionLabel || activeMuni.divisionLabel) : activeMuni.divisionLabel}
               {isLoadingMuni && <span className="text-slate-400 font-medium">(cargando…)</span>}
             </div>
             <div className={`text-[10px] ${activeMuni.confianza === 'oficial' ? 'text-emerald-300' : 'text-amber-200/80'}`}>

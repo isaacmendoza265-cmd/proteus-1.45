@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { MUNICIPAL_DIVISIONS_REGISTRY, resolveMunicipality } from '../municipalDivisions';
+import { MUNICIPAL_DIVISIONS_REGISTRY, resolveMunicipality, CIUDADES_CON_COMUNAS, nivelesMunicipales } from '../municipalDivisions';
 
 describe('Registro de divisiones municipales', () => {
   it('encuentra municipios por id, nombre con tildes o código DANE', () => {
@@ -25,5 +25,30 @@ describe('Registro de divisiones municipales', () => {
     const huerfanas = subdivisiones.features.filter((f) => !ids.has(f.properties.parentId));
     // Itagüí: la cabecera del corregimiento El Manzanillo queda fuera de las 7 comunas de la fuente
     expect(huerfanas.map((f) => f.properties.name)).toEqual(m.id === 'itagui' ? ['Cabecera Corregimental'] : []);
+  });
+});
+
+describe('Regla de niveles del zoom municipal', () => {
+  it('solo las ciudades definidas tienen nivel de comunas', () => {
+    for (const m of Object.values(MUNICIPAL_DIVISIONS_REGISTRY)) {
+      expect(m.nivelComunas).toBe(CIUDADES_CON_COMUNAS.includes(m.id));
+    }
+    expect(MUNICIPAL_DIVISIONS_REGISTRY.rionegro.nivelComunas).toBe(false);
+  });
+
+  it('el último nivel solo existe con más de 20.000 en el censo electoral', () => {
+    for (const m of Object.values(MUNICIPAL_DIVISIONS_REGISTRY).filter((x) => x.disponible && x.department === 'Antioquia')) {
+      expect(nivelesMunicipales(m.id, m.name).ultimoNivel).toBe(true);
+    }
+    expect(nivelesMunicipales('abriaqui', 'Abriaquí').ultimoNivel).toBe(false); // 2.029
+    expect(nivelesMunicipales('amaga', 'Amagá').ultimoNivel).toBe(true); // 24.772
+  });
+
+  it('Bello: 10 comunas y 132 barrios, todos con comuna', async () => {
+    const b = MUNICIPAL_DIVISIONS_REGISTRY.bello;
+    const [div, sub] = await Promise.all([b.loadDivisions!(), b.loadSubdivisions!()]);
+    expect(div.features).toHaveLength(10);
+    expect(sub.features).toHaveLength(132);
+    expect(sub.features.every((f) => f.properties.parentId)).toBe(true);
   });
 });

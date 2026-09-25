@@ -32,8 +32,50 @@ const SMALL = new Set(['de', 'del', 'la', 'las', 'los', 'el', 'y', 'e', 'en']);
 const titleCase = (s) => String(s).trim().replace(/\s+/g, ' ').toLowerCase()
   .split(' ').map((w, i) => (i > 0 && SMALL.has(w) ? w : w.charAt(0).toUpperCase() + w.slice(1))).join(' ');
 
+// Bello: la Alcaldía publica solo los barrios (POT, Acuerdo 033 de 2009). La comuna de cada barrio
+// se asignó con la capa Admin_Comunas (EAFIT, 2023) en asignacion_comunas.txt (clave = shape_area;
+// m = mayoría clara, p = parcial, c = por cercanía). Las comunas se construyen disolviendo los barrios
+// ya simplificados, para que sus bordes coincidan exactamente.
+const BELLO_COMUNAS = {
+  1: 'París', 2: 'La Madera', 3: 'Santa Ana', 4: 'Suárez', 5: 'La Cumbre',
+  6: 'Bellavista', 7: 'Altos de Niquía', 8: 'Niquía', 9: 'Fontidueño', 10: 'Acevedo',
+};
+const limpiarBarrioBello = (n) => String(n).trim()
+  .replace(/^B\.\s*/, '').replace(/^Urb\.\s*/, 'Urb. ').replace(/^Asent\.\s*de Hecho/, 'Asentamiento de Hecho')
+  .replace(/\bSn\.?\s/g, 'San ').replace(/\bSta\.\s*/g, 'Santa ').replace(/\.$/, '')
+  .replace('Panamaricano', 'Panamericano').replace('Marco T. Heao', 'Marco T. Heao');
+function prepBello() {
+  const dir = path.join(ORIG, 'bello');
+  const asign = Object.fromEntries(fs.readFileSync(path.join(dir, 'asignacion_comunas.txt'), 'utf8').trim().split(';')
+    .map((r) => r.split('|')).map(([area, comuna, tipo]) => [area, { comuna, tipo }]));
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'bello-'));
+  const conComuna = path.join(tmp, 'barrios.geojson');
+  const src = JSON.parse(fs.readFileSync(path.join(dir, 'Bello_Barrios_POT2009.geojson'), 'utf8'));
+  src.features.forEach((f, i) => {
+    const a = asign[f.properties.shape_area];
+    if (!a) throw new Error(`Barrio de Bello sin comuna asignada: ${f.properties.nombre}`);
+    f.properties = { BARRIO: `B${String(i + 1).padStart(3, '0')}`, NOMBRE: limpiarBarrioBello(f.properties.nombre), COMUNA: a.comuna, ASIGNACION: a.tipo };
+  });
+  fs.writeFileSync(conComuna, JSON.stringify(src));
+  mapshaper([conComuna, '-clean', '-simplify', '20%', 'keep-shapes', '-o', path.join(dir, 'Bello_Barrios_con_comuna.geojson'),
+    'precision=0.00001', 'format=geojson', 'geojson-type=FeatureCollection']);
+  mapshaper([path.join(dir, 'Bello_Barrios_con_comuna.geojson'), '-dissolve', 'COMUNA', '-clean',
+    '-o', path.join(dir, 'Bello_Comunas_desde_barrios.geojson'), 'precision=0.00001', 'format=geojson', 'geojson-type=FeatureCollection']);
+  fs.rmSync(tmp, { recursive: true, force: true });
+}
+
 /** Configuración por municipio: capas de origen y cómo leer sus campos. */
 const MUNICIPIOS = {
+  bello: {
+    prep: prepBello,
+    divisiones: [
+      { file: 'bello/Bello_Comunas_desde_barrios.geojson', tipo: 'Comuna', code: (p) => String(p.COMUNA), name: (p) => `Comuna ${p.COMUNA} - ${BELLO_COMUNAS[p.COMUNA]}` },
+    ],
+    subdivisiones: [
+      { file: 'bello/Bello_Barrios_con_comuna.geojson', tipo: 'Barrio', code: (p) => p.BARRIO, name: (p) => p.NOMBRE },
+    ],
+    simplify: '100%',
+  },
   itagui: {
     divisiones: [
       { file: 'itagui/Itagui_Comunas.geojson', tipo: 'Comuna', code: (p) => String(p.COMUNA).replace(/\D/g, ''), name: (p) => p.COMUNA },
@@ -97,6 +139,7 @@ function inGeometry(x, y, g) {
 const round5 = (v) => Math.round(v * 1e5) / 1e5;
 
 function build(id, cfg) {
+  cfg.prep?.();
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), `div-${id}-`));
   const divisiones = [];
   for (const src of cfg.divisiones) {
