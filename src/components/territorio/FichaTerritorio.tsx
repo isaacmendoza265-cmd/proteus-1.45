@@ -69,7 +69,7 @@ export const FichaTerritorio: React.FC<FichaTerritorioProps> = ({
   const dem = useMemo(() => demografia(t), [t]);
   const cen = useMemo(() => censoElectoral(t, puestosDentro, sinUbicar), [t, puestosDentro, sinUbicar]);
   const gru = useMemo(() => grupos(dem, cen), [dem, cen]);
-  const pol = useMemo(() => politica(t), [t]);
+  const pol = useMemo(() => politica(t, puestosDentro), [t, puestosDentro]);
 
   const tipoLabel = t.tipo === 'municipio' ? `Municipio · ${t.municipio}` : `${t.clase ?? ''} · ${t.municipio}`;
   const d = dem.datos;
@@ -118,7 +118,7 @@ export const FichaTerritorio: React.FC<FichaTerritorioProps> = ({
       {seccion === 'politica' && (
         <div className="flex flex-col gap-3" role="tabpanel">
           <div className="flex flex-col gap-2 px-3 py-2.5 rounded-xl bg-[var(--c-sunken)]">
-            <Cabecera titulo={pol.resultados.ambito === 'municipio' ? 'Alcaldía 2023' : 'Resultados electorales históricos'} estado={pol.resultados.estado} />
+            <Cabecera titulo={pol.resultados.ambito === 'municipio' ? 'Alcaldía 2023' : pol.porPuestos ? 'Alcaldía 2023 en sus puestos' : 'Resultados electorales históricos'} estado={pol.resultados.estado} />
             <span className="text-sm text-[var(--c-muted)]">{pol.resultados.texto}</span>
             {pol.resultados.ambito === 'municipio' && pol.resultados.alcaldia && (
               <div className="flex flex-col gap-1">
@@ -133,12 +133,38 @@ export const FichaTerritorio: React.FC<FichaTerritorioProps> = ({
                 ))}
               </div>
             )}
-            {pol.resultados.ambito === 'territorio' && pol.resultados.alcaldia && (
+            {pol.porPuestos && pol.resultados.ambito === 'territorio' && (
+              <div className="flex flex-col gap-1">
+                <span className="text-xs text-[var(--c-muted)]">Alcaldía 2023 · {fmt(pol.porPuestos.votantes)} votantes de {fmt(pol.porPuestos.habilitados)} habilitados ({pct((100 * pol.porPuestos.votantes) / Math.max(1, pol.porPuestos.habilitados))})</span>
+                {pol.porPuestos.alcaldia.slice(0, 5).map((c, i) => (
+                  <div key={c.nombre} className="flex items-center gap-2 text-sm">
+                    <span className="w-44 truncate font-semibold" title={c.partido}>{c.nombre}</span>
+                    <span className="grow h-2 rounded bg-[var(--c-border)] overflow-hidden">
+                      <span className="block h-2" style={{ width: `${c.pct}%`, background: i === 0 ? 'var(--c-accent)' : 'var(--c-muted)' }} />
+                    </span>
+                    <span className="w-14 text-right tabular-nums">{pct(c.pct)}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+            {pol.resultados.ambito === 'territorio' && pol.resultados.alcaldia && !pol.porPuestos && (
               <span className="text-xs text-[var(--c-muted)]">
                 Referencia municipal: ganó {pol.resultados.alcaldia.candidatos[0]?.nombre} ({pol.resultados.alcaldia.candidatos[0]?.partido}) con {pct(pol.resultados.alcaldia.candidatos[0]?.pctValidos)}; participación {pct(pol.resultados.alcaldia.participacion)}.
               </span>
             )}
           </div>
+          {pol.porPuestos && (
+            <div className="flex flex-col gap-1.5 px-3 py-2.5 rounded-xl border border-[var(--c-border)]">
+              <Cabecera titulo={pol.resultados.ambito === 'municipio' ? 'Concejo 2023 por partido (preconteo)' : 'Concejo 2023 en sus puestos'} estado="oficial" fuente="Registraduría, preconteo 29-oct-2023 · puede diferir levemente del escrutinio" />
+              {pol.porPuestos.concejo.slice(0, 6).map((c) => (
+                <div key={c.partido} className="flex items-center gap-2 text-sm">
+                  <span className="w-44 truncate font-semibold" title={c.partido}>{c.partido}</span>
+                  <span className="grow h-2 rounded bg-[var(--c-sunken)] overflow-hidden"><span className="block h-2 bg-[#3E5C8A]" style={{ width: `${c.pct}%` }} /></span>
+                  <span className="w-14 text-right tabular-nums">{pct(c.pct)}</span>
+                </div>
+              ))}
+            </div>
+          )}
           <Cabecera titulo="Actores con presencia declarada" estado="estimado" etiqueta="Sin verificar" fuente={pol.fuenteActores} />
           {pol.actores.length ? (
             <ul className="m-0 p-0 list-none flex flex-col">

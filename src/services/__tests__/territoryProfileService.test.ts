@@ -1,7 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import {
-  territorioBello, tieneFicha, demografia, censoElectoral, grupos, politica, actoresDeTerritorio, sumarDemografia,
+  territorioBello, territorioFicha, tieneFicha, demografia, censoElectoral, grupos, politica, actoresDeTerritorio, sumarDemografia, sumarResultadosPuestos,
 } from '../territoryProfileService';
+import RIONEGRO from '../../data/electoral/resultadosPuesto2023/rionegro.json';
 import type { PuestoVotacion } from '../pollingStationsService';
 
 const puesto = (total: number, mujeres: number, mesas = 10, cod = String(total)): PuestoVotacion => ({
@@ -91,5 +92,28 @@ describe('política', () => {
     const comuna = territorioBello('bello-div-6')!;
     expect(actoresDeTerritorio(barrio).map((a) => a.id)).toEqual(actoresDeTerritorio(comuna).map((a) => a.id));
     for (const a of actoresDeTerritorio(territorioBello('bello')!)) expect(Object.keys(a)).not.toContain('cedula');
+  });
+});
+
+describe('Rionegro (piloto de resultados por puesto)', () => {
+  it('tiene ficha de municipio, comuna y vereda', () => {
+    expect(territorioFicha('rionegro')?.dane).toBe('05615');
+    expect(territorioFicha('rionegro-div-C2')?.clase).toBe('Comuna');
+    expect(territorioFicha('rionegro-sub-042')?.padreId).toBe('rionegro-div-C4');
+  });
+  it('la suma de los 20 puestos reproduce el total municipal del preconteo', () => {
+    const r = sumarResultadosPuestos('05615', Object.keys(RIONEGRO.puestos))!;
+    expect(r.votantes).toBe(83354);
+    expect(r.alcaldia[0].nombre).toMatch(/Rivas Urrea/);
+    expect(r.alcaldia[0].votos).toBe(41092);
+  });
+  it('un territorio suma solo sus puestos', () => {
+    const t = territorioFicha('rionegro-div-C2')!;
+    const p = politica(t, [puesto(100, 50, 3, '012140301')]);
+    expect(p.resultados.estado).toBe('oficial');
+    expect(p.porPuestos!.puestos).toBe(1);
+  });
+  it('sin DANE por barrio, Rionegro dice que no hay demografía', () => {
+    expect(demografia(territorioFicha('rionegro-div-C2')!).estado).toBe('sin-informacion');
   });
 });

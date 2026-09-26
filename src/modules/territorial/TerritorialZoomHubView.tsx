@@ -15,7 +15,7 @@ import { PollingStationsPanel } from '../../components/maps/PollingStationsPanel
 import { FichaTerritorio } from '../../components/territorio/FichaTerritorio';
 import { RedDePoder3D } from '../../components/territorio/RedDePoder3D';
 import { usePuestosTerritorio, puestosDe } from '../../components/territorio/usePuestosTerritorio';
-import { territorioBello, tieneFicha } from '../../services/territoryProfileService';
+import { territorioFicha, tieneFicha, municipioFichaPorDane, MUNICIPIOS_CON_FICHA } from '../../services/territoryProfileService';
 import { MUNICIPAL_DIVISIONS_REGISTRY } from '../../data/geojson/municipalDivisions';
 import { 
   Compass, 
@@ -66,15 +66,16 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
   const fichaId: string | null = (() => {
     const id = selectedFeature ? String(selectedFeature.id) : '';
     if (id && tieneFicha(id)) return id;
-    if (selectedFeature && /(^|-)05088$/.test(id)) return 'bello';
-    if (!selectedFeature && isMunicipalScale && selectedMunicipalityId === 'bello') return 'bello';
+    const dane = /(\d{5})$/.exec(id)?.[1];
+    if (selectedFeature && dane && municipioFichaPorDane(dane)) return municipioFichaPorDane(dane);
+    if (!selectedFeature && isMunicipalScale && MUNICIPIOS_CON_FICHA.includes(selectedMunicipalityId)) return selectedMunicipalityId;
     return null;
   })();
-  const territorioFicha = useMemo(() => (fichaId ? territorioBello(fichaId) : null), [fichaId]);
-  const puestosMuni = usePuestosTerritorio(territorioFicha ? 'bello' : null);
+  const fichaTerritorio = useMemo(() => (fichaId ? territorioFicha(fichaId) : null), [fichaId]);
+  const puestosMuni = usePuestosTerritorio(fichaTerritorio ? municipioFichaPorDane(fichaTerritorio.dane) : null);
   const puestosFicha = useMemo(
-    () => (territorioFicha ? puestosDe(puestosMuni, territorioFicha.tipo, territorioFicha.id) : []),
-    [territorioFicha, puestosMuni],
+    () => (fichaTerritorio ? puestosDe(puestosMuni, fichaTerritorio.tipo, fichaTerritorio.id) : []),
+    [fichaTerritorio, puestosMuni],
   );
 
   const currentDataset = GEOJSON_LAYERS_BY_ZOOM[currentLevel];
@@ -218,7 +219,7 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
 
       {vista === 'redes' && (
         <RedDePoder3D
-          municipioInicial={territorioFicha?.municipio ?? (MUNICIPAL_DIVISIONS_REGISTRY[selectedMunicipalityId]?.name)}
+          municipioInicial={fichaTerritorio?.municipio ?? (MUNICIPAL_DIVISIONS_REGISTRY[selectedMunicipalityId]?.name)}
           onVerMunicipio={(nombre) => {
             const entry = Object.values(MUNICIPAL_DIVISIONS_REGISTRY).find((e) => e.name === nombre);
             if (entry) {
@@ -252,7 +253,7 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
 
       {/* 4. Interactive GIS Map & Deep Analytics Multi-Tab Drawer */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
-        <div className={`${selectedFeature || territorioFicha ? 'lg:col-span-8' : 'lg:col-span-12'} transition-all duration-300`}>
+        <div className={`${selectedFeature || fichaTerritorio ? 'lg:col-span-8' : 'lg:col-span-12'} transition-all duration-300`}>
           <MultiLevelZoomMap
             currentLevel={currentLevel}
             activeLayer={activeLayer}
@@ -271,11 +272,11 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
           />
         </div>
 
-        {territorioFicha && (
+        {fichaTerritorio && (
           <div className="lg:col-span-4 animate-fadeIn">
             <FichaTerritorio
-              key={territorioFicha.id}
-              territorio={territorioFicha}
+              key={fichaTerritorio.id}
+              territorio={fichaTerritorio}
               puestosDentro={puestosFicha}
               sinUbicar={puestosMuni.sinUbicar}
               cargandoPuestos={puestosMuni.cargando}
@@ -285,7 +286,7 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
           </div>
         )}
 
-        {selectedFeature && !territorioFicha && (
+        {selectedFeature && !fichaTerritorio && (
           <div className="lg:col-span-4 transition-all duration-300 animate-fadeIn">
             <CommuneDeepAnalyticsDrawer
               feature={selectedFeature}

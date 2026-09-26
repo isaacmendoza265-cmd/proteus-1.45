@@ -3,14 +3,17 @@
  *
  * Reúne en cuatro secciones lo que Proteus sabe de un territorio y marca cada dato como
  * Oficial, Estimado o Sin información:
- *  1. Política: resultado oficial de la Alcaldía 2023 (nivel municipal) y actores de la base curada.
- *  2. Demografía: DANE, CNPV 2018 por manzana (solo Bello por ahora) y proyección 2026.
+ *  1. Política: Alcaldía 2023 (escrutinio a nivel municipal; preconteo por puesto donde está cargado,
+ *     hoy Rionegro) y actores de la base curada.
+ *  2. Demografía: DANE, CNPV 2018 por manzana (hoy Bello) y proyección 2026.
  *  3. Censo electoral: suma de los puestos de votación ubicados dentro del territorio.
  *  4. Grupos: composición estimada por edad y sexo de los votantes.
  *
  * Nada se inventa: cuando no hay dato, la ficha lo dice y explica por qué.
  */
 import rawBello from '../data/dane/belloCnpv2018Barrios.json';
+import rawIndice from '../data/territorio/indiceTerritorios.json';
+import rawRionegro2023 from '../data/electoral/resultadosPuesto2023/rionegro.json';
 import { getDaneMunicipio } from './daneMunicipalService';
 import { getResultado2023, type Resultado2023 } from './electoralResults2023Service';
 import type { PuestoVotacion } from './pollingStationsService';
@@ -58,34 +61,54 @@ export interface TerritorioFicha {
   padreId?: string;
 }
 
-interface BelloData {
+interface DemografiaData {
   meta: { fuente: string; nota: string; campos: string[] };
   porTerritorio: Record<string, number[]>;
+}
+interface IndiceMunicipio {
+  dane: string;
+  nombre: string;
   divisiones: Record<string, { nombre: string; tipo: string }>;
   subdivisiones: Record<string, { nombre: string; tipo: string; padre: string }>;
 }
-const BELLO = rawBello as unknown as BelloData;
+const INDICE = rawIndice as unknown as Record<string, IndiceMunicipio>;
+const BELLO = rawBello as unknown as DemografiaData;
 export const DEMOGRAFIA_BELLO_META = BELLO.meta;
 
-/** Municipios con demografía por barrio cargada */
-const DEMOGRAFIA_POR_MUNICIPIO: Record<string, BelloData> = { '05088': BELLO };
+/** Municipios con demografía por barrio cargada (código DANE) */
+const DEMOGRAFIA_POR_MUNICIPIO: Record<string, DemografiaData> = { '05088': BELLO };
 
-/** Construye la ficha de un id de la capa de divisiones o subdivisiones de Bello */
-export function territorioBello(id: string): TerritorioFicha | null {
-  if (id === 'bello') return { tipo: 'municipio', id, nombre: 'Bello', dane: '05088', municipio: 'Bello' };
-  const d = BELLO.divisiones[id];
-  if (d) return { tipo: 'division', id, nombre: d.nombre, dane: '05088', municipio: 'Bello', clase: d.tipo };
-  const s = BELLO.subdivisiones[id];
-  if (s) return { tipo: 'subdivision', id, nombre: s.nombre, dane: '05088', municipio: 'Bello', clase: s.tipo, padreId: s.padre };
+/** Municipios con ficha territorial (id del registro de divisiones) */
+export const MUNICIPIOS_CON_FICHA = Object.keys(INDICE);
+
+/** Construye la ficha a partir del id del municipio ('rionegro') o de una división/subdivisión */
+export function territorioFicha(id: string): TerritorioFicha | null {
+  for (const [muniId, m] of Object.entries(INDICE)) {
+    if (id === muniId) return { tipo: 'municipio', id, nombre: m.nombre, dane: m.dane, municipio: m.nombre };
+    if (!id.startsWith(`${muniId}-`)) continue;
+    const d = m.divisiones[id];
+    if (d) return { tipo: 'division', id, nombre: d.nombre, dane: m.dane, municipio: m.nombre, clase: d.tipo };
+    const sd = m.subdivisiones[id];
+    if (sd) return { tipo: 'subdivision', id, nombre: sd.nombre, dane: m.dane, municipio: m.nombre, clase: sd.tipo, padreId: sd.padre };
+  }
   return null;
 }
 
-/** ¿Tiene este territorio ficha completa? (hoy: Bello, sus comunas, barrios y veredas) */
+/** Compatibilidad: ficha de Bello */
+export const territorioBello = (id: string) => territorioFicha(id);
+
+/** ¿Tiene este territorio ficha completa? (hoy: Bello y Rionegro, con sus comunas, barrios y veredas) */
 export function tieneFicha(id: string): boolean {
-  return territorioBello(id) !== null;
+  return territorioFicha(id) !== null;
 }
 
-const esRural = (t: TerritorioFicha) => t.clase === 'Zona rural' || t.clase === 'Vereda';
+/** id del municipio del registro a partir de su código DANE */
+export function municipioFichaPorDane(dane: string): string | null {
+  return Object.entries(INDICE).find(([, m]) => m.dane === dane)?.[0] ?? null;
+}
+
+const indiceDe = (t: TerritorioFicha) => Object.values(INDICE).find((m) => m.dane === t.dane)!;
+const esRural = (t: TerritorioFicha) => t.clase === 'Zona rural' || t.clase === 'Vereda' || t.clase === 'Corregimiento';
 
 // --- 2. Demografía -------------------------------------------------------------------------
 
@@ -112,10 +135,11 @@ export interface SeccionDemografia {
   proyeccion: { estado: EstadoDato; valor: number | null; texto: string };
 }
 
-function idsBarrios(t: TerritorioFicha, data: BelloData): string[] {
+function idsBarrios(t: TerritorioFicha): string[] {
+  const subs = indiceDe(t).subdivisiones;
   if (t.tipo === 'subdivision') return [t.id];
-  if (t.tipo === 'division') return Object.keys(data.subdivisiones).filter((k) => data.subdivisiones[k].padre === t.id);
-  return Object.keys(data.subdivisiones);
+  if (t.tipo === 'division') return Object.keys(subs).filter((k) => subs[k].padre === t.id);
+  return Object.keys(subs);
 }
 
 export function sumarDemografia(filas: number[][]): Demografia {
@@ -141,13 +165,13 @@ export function demografia(t: TerritorioFicha): SeccionDemografia {
   if (!data) {
     return {
       estado: 'sin-informacion', datos: null, conDetalle: false, fuente,
-      motivo: 'Proteus todavía no tiene la población por manzana de este municipio.',
+      motivo: `Proteus todavía no tiene la población por manzana de ${t.municipio}. Se puede cargar con la misma consulta al Geoportal del DANE que se usó para Bello.`,
       proyeccion: dane
         ? { estado: 'oficial', valor: dane.poblacion, texto: `DANE proyecta ${fmt(dane.poblacion)} habitantes para el municipio en 2026.` }
         : { estado: 'sin-informacion', valor: null, texto: 'Sin proyección cargada.' },
     };
   }
-  const datos = sumarDemografia(idsBarrios(t, data).map((id) => data.porTerritorio[id]).filter(Boolean));
+  const datos = sumarDemografia(idsBarrios(t).map((id) => data.porTerritorio[id]).filter(Boolean));
   const conDetalle = datos.personas > 0 && datos.hombres + datos.mujeres > 0;
   let motivo: string | undefined;
   if (!conDetalle) {
@@ -155,8 +179,9 @@ export function demografia(t: TerritorioFicha): SeccionDemografia {
     else if (esRural(t)) motivo = 'El DANE no publica la población rural dispersa por manzana, así que aquí no hay conteo por sexo ni edad.';
     else motivo = 'No hay manzanas censadas por el DANE dentro de este polígono (zona industrial, verde o en desarrollo).';
   }
-  const urbano2018 = Object.keys(data.subdivisiones)
-    .filter((k) => data.subdivisiones[k].tipo === 'Barrio')
+  const subs = indiceDe(t).subdivisiones;
+  const urbano2018 = Object.keys(subs)
+    .filter((k) => subs[k].tipo === 'Barrio')
     .reduce((s, k) => s + (data.porTerritorio[k]?.[0] ?? 0), 0);
 
   let proyeccion: SeccionDemografia['proyeccion'];
@@ -285,8 +310,23 @@ export interface ActorFicha {
   casa: string;
 }
 
+/** Resultado sumado por puesto (preconteo) */
+export interface ResultadoPuestos {
+  fuente: string;
+  habilitados: number;
+  votantes: number;
+  blanco: number;
+  nulos: number;
+  noMarcados: number;
+  puestos: number;
+  alcaldia: { nombre: string; partido: string; votos: number; pct: number }[];
+  concejo: { partido: string; votos: number; pct: number }[];
+}
+
 export interface SeccionPolitica {
   resultados: { estado: EstadoDato; texto: string; alcaldia: Resultado2023['alcaldia'] | null; ambito: 'municipio' | 'territorio' };
+  /** Resultados 2023 sumando los puestos del territorio (si el municipio los tiene cargados) */
+  porPuestos: ResultadoPuestos | null;
   actores: ActorFicha[];
   fuenteActores: string;
 }
@@ -309,6 +349,53 @@ const ANCLAS_BELLO: Record<string, (a: string) => boolean> = {
   'bello-div-RUR': (a) => /vereda/.test(a),
 };
 
+interface ResultadosPuestoData {
+  meta: { fuente: string; tipo: string; nota: string };
+  candidatos: { n: string; p: number }[];
+  partidos: string[];
+  puestos: Record<string, {
+    alcaldia: { habilitados: number; votantes: number; blanco: number; nulos: number; noMarcados: number; candidatos: [number, number][] };
+    concejo: { votantes: number; blanco: number; partidos: [number, number][] };
+  }>;
+}
+/** Resultados 2023 por puesto (preconteo) cargados, por código DANE */
+const RESULTADOS_PUESTO_2023: Record<string, ResultadosPuestoData> = { '05615': rawRionegro2023 as unknown as ResultadosPuestoData };
+
+export function tieneResultadosPorPuesto(dane: string): boolean {
+  return !!RESULTADOS_PUESTO_2023[dane];
+}
+
+/** Suma los resultados de los puestos dados (no reparte ni estima: solo puestos con resultado) */
+export function sumarResultadosPuestos(dane: string, codPuestos: string[]): ResultadoPuestos | null {
+  const data = RESULTADOS_PUESTO_2023[dane];
+  if (!data) return null;
+  const filas = codPuestos.map((c) => data.puestos[c]).filter(Boolean);
+  if (!filas.length) return null;
+  const al = new Map<number, number>();
+  const co = new Map<number, number>();
+  let habilitados = 0, votantes = 0, blanco = 0, nulos = 0, noMarcados = 0, blancoCo = 0;
+  for (const f of filas) {
+    habilitados += f.alcaldia.habilitados;
+    votantes += f.alcaldia.votantes;
+    blanco += f.alcaldia.blanco;
+    nulos += f.alcaldia.nulos;
+    noMarcados += f.alcaldia.noMarcados;
+    blancoCo += f.concejo.blanco;
+    for (const [i, v] of f.alcaldia.candidatos) al.set(i, (al.get(i) ?? 0) + v);
+    for (const [i, v] of f.concejo.partidos) co.set(i, (co.get(i) ?? 0) + v);
+  }
+  const validosAl = [...al.values()].reduce((s, v) => s + v, 0) + blanco;
+  const validosCo = [...co.values()].reduce((s, v) => s + v, 0) + blancoCo;
+  return {
+    fuente: data.meta.fuente,
+    habilitados, votantes, blanco, nulos, noMarcados, puestos: filas.length,
+    alcaldia: [...al.entries()].sort((a, b) => b[1] - a[1]).map(([i, v]) => ({
+      nombre: data.candidatos[i].n, partido: data.partidos[data.candidatos[i].p], votos: v, pct: validosAl ? (100 * v) / validosAl : 0,
+    })),
+    concejo: [...co.entries()].sort((a, b) => b[1] - a[1]).map(([i, v]) => ({ partido: data.partidos[i], votos: v, pct: validosCo ? (100 * v) / validosCo : 0 })),
+  };
+}
+
 const casaNombre = new Map(POLITICAL_HOUSES_DATA.map((h) => [h.id, h.name]));
 
 export function actoresDeTerritorio(t: TerritorioFicha): ActorFicha[] {
@@ -325,23 +412,39 @@ export function actoresDeTerritorio(t: TerritorioFicha): ActorFicha[] {
   }));
 }
 
-export function politica(t: TerritorioFicha): SeccionPolitica {
+/**
+ * @param puestosDentro puestos del territorio; si el municipio tiene resultados por puesto, se suman
+ */
+export function politica(t: TerritorioFicha, puestosDentro: PuestoVotacion[] = []): SeccionPolitica {
   const r = getResultado2023(t.dane);
   const fuenteActores = 'Base curada del desarrollador (casas políticas). Sin verificar.';
+  const porPuestos = sumarResultadosPuestos(t.dane, puestosDentro.map((p) => p.codPuesto));
   if (t.tipo === 'municipio') {
     return {
       resultados: r
-        ? { estado: 'oficial', ambito: 'municipio', alcaldia: r.alcaldia, texto: `Alcaldía 2023: participación ${pct(r.alcaldia.participacion)} de ${fmt(r.alcaldia.censo)} habilitados. Resultados por comuna: pendientes; se sumarán al cargar los resultados por mesa (E-14) de cada puesto.` }
+        ? { estado: 'oficial', ambito: 'municipio', alcaldia: r.alcaldia, texto: `Escrutinio oficial: participación ${pct(r.alcaldia.participacion)} de ${fmt(r.alcaldia.censo)} habilitados. ${tieneResultadosPorPuesto(t.dane) ? 'Los resultados por comuna, barrio y vereda salen de sumar el preconteo de sus puestos.' : 'Resultados por comuna: pendientes; se sumarán al cargar los resultados por puesto.'}` }
         : { estado: 'sin-informacion', ambito: 'municipio', alcaldia: null, texto: 'Sin resultados 2023 cargados para este municipio.' },
-      actores: actoresDeTerritorio(t), fuenteActores,
+      actores: actoresDeTerritorio(t), fuenteActores, porPuestos,
     };
   }
+  if (porPuestos) {
+    return {
+      resultados: {
+        estado: 'oficial', ambito: 'territorio', alcaldia: r?.alcaldia ?? null,
+        texto: `Suma de ${fmt(porPuestos.puestos)} puesto(s) ubicados dentro, según el preconteo de la Registraduría. Los votos se cuentan donde está el puesto, no donde vive el votante.`,
+      },
+      actores: actoresDeTerritorio(t), fuenteActores, porPuestos,
+    };
+  }
+  const tieneDatos = tieneResultadosPorPuesto(t.dane);
   return {
     resultados: {
       estado: 'sin-informacion', ambito: 'territorio', alcaldia: r?.alcaldia ?? null,
-      texto: 'Proteus aún no tiene resultados por puesto de votación, así que no puede sumar los de este territorio. Se agregarán al cargar los E-14 (resultados por mesa) de 2019, 2022 y 2023.',
+      texto: tieneDatos
+        ? 'No hay puestos de votación dentro de este territorio: sus residentes votan en puestos vecinos, así que no tiene resultados propios.'
+        : 'Proteus aún no tiene resultados por puesto de votación para este municipio, así que no puede sumar los de este territorio.',
     },
-    actores: actoresDeTerritorio(t), fuenteActores,
+    actores: actoresDeTerritorio(t), fuenteActores, porPuestos: null,
   };
 }
 
