@@ -153,68 +153,26 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
 
   return (
     <div className="space-y-6 pb-12 animate-fadeIn">
-      {/* 1. Header Banner with Glassmorphism Frost */}
-      <div className="relative overflow-hidden rounded-3xl p-6 bg-slate-950/40 backdrop-blur-3xl border border-white/20 shadow-[0_20px_50px_rgba(0,0,0,0.5),inset_0_1.5px_2px_rgba(255,255,255,0.4)]">
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-              <span className="px-3 py-1 rounded-full text-[10px] font-mono font-black uppercase tracking-wider bg-gradient-to-r from-amber-400/20 via-sky-400/20 to-blue-500/30 text-amber-300 border border-amber-400/50 shadow-[0_0_12px_rgba(251,191,36,0.3)] flex items-center gap-1.5">
-                <Sparkles className="w-3 h-3 text-amber-400" />
-                Arquitectura de Zoom Continuo • 5 Escalas Jerárquicas GeoJSON
-              </span>
-              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
-                4 APLICATIVOS INTEGRADOS EN 1
-              </span>
-            </div>
-            <h1 className="text-2xl lg:text-3xl font-black tracking-tight text-white flex items-center gap-3">
-              <span>PROTEUS GIS MULTI-ESCALA</span>
-              <span className="text-xs px-2.5 py-1 rounded-xl bg-sky-500/20 text-sky-300 border border-sky-400/40 font-mono">
-                5 Escalas
-              </span>
-            </h1>
-            <p className="text-slate-300 text-xs sm:text-sm mt-1 max-w-3xl">
-              Navegación jerárquica integrada: <strong className="text-sky-300">Colombia</strong> (32 Departamentos) ➔ <strong className="text-emerald-300">Antioquia</strong> (9 Subregiones) ➔ <strong className="text-indigo-300">Valle de Aburrá</strong> (10 Municipios y Redes de Poder) ➔ <strong className="text-purple-300">Medellín & AMVA</strong> (Comunas de Cabecera) ➔ <strong className="text-amber-300">Comunas y Barrios</strong> (Microdatos E-24 históricos 2015-2023, IPM, Criminalidad y Pirámides DANE).
-            </p>
-          </div>
-
-          {/* Aggregated KPI badges & E24 Quick Action */}
-          <div className="flex flex-wrap lg:flex-col gap-2 shrink-0">
-            <button
-              onClick={() => setE24ModalOpen(true)}
-              className="px-3.5 py-2 rounded-2xl bg-gradient-to-r from-amber-500/25 via-orange-500/25 to-amber-600/30 hover:from-amber-500/40 hover:to-orange-500/40 border border-amber-400/50 hover:border-amber-300 text-amber-200 hover:text-white text-xs font-black shadow-[0_0_20px_rgba(251,191,36,0.3)] flex items-center justify-center gap-2 transition-all transform hover:scale-[1.02] active:scale-95 cursor-pointer"
-            >
-              <FileSpreadsheet className="w-4 h-4 text-amber-400" />
-              <span>Matriz E-24 Histórica Oficial</span>
-            </button>
-            <div className="px-3.5 py-2 rounded-2xl bg-white/05 border border-white/15 backdrop-blur-xl">
-              <div className="text-[10px] font-mono uppercase text-slate-400 font-bold">Población en Escala Activa</div>
-              <div className="text-base font-black text-sky-300 font-mono">
-                {totalPopulation.toLocaleString()} hab.
-              </div>
-            </div>
-            <div className="px-3.5 py-2 rounded-2xl bg-white/05 border border-white/15 backdrop-blur-xl">
-              <div className="text-[10px] font-mono uppercase text-slate-400 font-bold">Censo Electoral Consolidado</div>
-              <div className="text-base font-black text-emerald-300 font-mono">
-                {totalCensus.toLocaleString()} votantes
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Vista: mapa con ficha o red de poder */}
-      <div role="tablist" aria-label="Vista del territorio" className="inline-flex p-1 gap-1 rounded-xl bg-[#F1EEE8] border border-[#E0DBD1]">
+      <div className="proteus-civico flex items-center gap-3 flex-wrap">
+      <div role="tablist" aria-label="Vista del territorio" className="inline-flex p-1 gap-1 rounded-xl bg-[var(--c-sunken)] border border-[var(--c-border)]">
         {([['mapa', 'Mapa'], ['redes', 'Redes de poder']] as const).map(([id, label]) => (
           <button
             key={id}
             role="tab"
             aria-selected={vista === id}
             onClick={() => setVista(id)}
-            className={`min-h-9 px-4 rounded-lg text-sm font-semibold ${vista === id ? 'bg-[#FFFFFF] text-[#17191C] shadow-sm' : 'text-[#50565C] hover:text-[#17191C]'}`}
+            className={`min-h-9 px-4 rounded-lg text-sm font-semibold ${vista === id ? 'bg-[var(--c-surface)] text-[var(--c-ink)] shadow-sm' : 'text-[var(--c-muted)] hover:text-[var(--c-ink)]'}`}
           >
             {label}
           </button>
         ))}
+      </div>
+      <span className="grow" />
+      <span className="text-sm text-[var(--c-muted)]">{(currentDataset?.features.length ?? 0).toLocaleString('es-CO')} territorios · censo {totalCensus.toLocaleString('es-CO')} · población {totalPopulation.toLocaleString('es-CO')}</span>
+      <button onClick={() => setE24ModalOpen(true)} className="min-h-9 px-3 rounded-lg border border-[var(--c-border)] bg-[var(--c-surface)] text-sm font-semibold flex items-center gap-2">
+        <FileSpreadsheet className="w-4 h-4" strokeWidth={1.7} />Matriz E-24 histórica
+      </button>
       </div>
 
       {vista === 'redes' && (

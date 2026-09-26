@@ -118,7 +118,7 @@ Fecha y Hora de Radicación: ${activeReclamation.timestamp}
         <div className="space-y-1">
           <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-amber-400">
             <Scale className="w-4 h-4" />
-            <span>Protocolo PA-002 • Unidad de Automejora</span>
+            <span>Día E</span>
           </div>
           <h1 className="text-xl sm:text-2xl font-black tracking-tight text-white flex items-center gap-2.5">
             Auditoría Forense Electoral & Escrutinios

@@ -239,7 +239,7 @@ export const PoliticalHousesGraphView: React.FC<PoliticalHousesGraphViewProps> =
             </div>
 
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight leading-tight">
-              MAPEO RELACIONAL DE CASAS POLÍTICAS
+              Casas políticas
             </h1>
 
             <p className="text-xs sm:text-sm text-slate-300 max-w-3xl leading-relaxed">

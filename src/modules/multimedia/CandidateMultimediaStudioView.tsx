@@ -89,7 +89,7 @@ Realiza una AUDITORÍA INTEGRAL DE IMAGEN POLÍTICA Y COLORIMETRÍA para este ca
               </span>
             </div>
             <h1 className="text-2xl lg:text-3xl font-black tracking-tight text-white flex items-center gap-3">
-              <span>ESTUDIO DE IMAGEN & ANALISTA MULTIMEDIA</span>
+              <span>Estudio de imagen y video</span>
             </h1>
             <p className="text-slate-300 text-xs sm:text-sm mt-1 max-w-3xl">
               Auditoría multimodal de video (oratoria, dicción, pausas, encuadre, muletillas) y fotografía política (colorimetría, fototipo, vestuario e iluminación) para <strong className="text-amber-300">{candidateProfile.nombre}</strong>.

@@ -101,14 +101,14 @@ export const FichaTerritorio: React.FC<FichaTerritorioProps> = ({
         </div>
       )}
 
-      <div role="tablist" aria-label="Información del territorio" className="flex gap-0.5 border-b border-[var(--c-border)]">
+      <div role="tablist" aria-label="Información del territorio" className="flex gap-0.5 border-b border-[var(--c-border)] overflow-x-auto">
         {SECCIONES.map(([id, label]) => (
           <button
             key={id}
             role="tab"
             aria-selected={seccion === id}
             onClick={() => setSeccion(id)}
-            className={`min-h-9 px-2 -mb-px text-sm font-semibold border-b-2 ${seccion === id ? 'border-[var(--c-accent)] text-[var(--c-ink)]' : 'border-transparent text-[var(--c-muted)] hover:text-[var(--c-ink)]'}`}
+            className={`min-h-9 px-2 -mb-px whitespace-nowrap text-sm font-semibold border-b-2 ${seccion === id ? 'border-[var(--c-accent)] text-[var(--c-ink)]' : 'border-transparent text-[var(--c-muted)] hover:text-[var(--c-ink)]'}`}
           >
             {label}
           </button>

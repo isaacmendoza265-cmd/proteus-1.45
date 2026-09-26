@@ -82,7 +82,7 @@ Enfoque Narrativo: ${candidateProfile.tonoNarrativo || 'Firmeza y honestidad'}.`
               </span>
             </div>
             <h1 className="text-2xl lg:text-3xl font-black tracking-tight text-white flex items-center gap-3">
-              <span>CENTRO DE OPERACIONES MULTI-AGENTE</span>
+              <span>Revisores: equipo de agentes</span>
             </h1>
             <p className="text-slate-300 text-xs sm:text-sm mt-1 max-w-3xl">
               Equipo de agentes autónomos para investigar, filtrar e interpretar información territorial, segmentar votantes, redactar discursos y auditar la semiótica del candidato.

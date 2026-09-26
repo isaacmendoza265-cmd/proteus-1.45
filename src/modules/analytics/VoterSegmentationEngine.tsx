@@ -250,17 +250,17 @@ Elabora un DIAGNÓSTICO PSICOGRÁFICO Y GUÍA DE ACCIÓN DE MICRO-TARGETING en 4
             <div className="flex items-center gap-2 mb-2">
               <span className="px-3 py-1 rounded-full text-[10px] font-mono font-black uppercase tracking-wider bg-gradient-to-r from-sky-400/20 via-indigo-400/20 to-purple-500/30 text-sky-300 border border-sky-400/50 shadow-[0_0_12px_rgba(56,189,248,0.3)] flex items-center gap-1.5">
                 <Brain className="w-3.5 h-3.5 text-sky-400" />
-                Propósito 2: Analista y Recopilador de Información
+                Electorado
               </span>
               <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-400/30">
                 Segmentación Cuatridimensional (54 Cohortes)
               </span>
             </div>
             <h1 className="text-2xl lg:text-3xl font-black tracking-tight text-white flex items-center gap-3">
-              <span>IDENTIFICACIÓN & CUANTIFICACIÓN DEMOGRÁFICA 4D</span>
+              <span>Segmentos de votantes</span>
             </h1>
             <p className="text-slate-300 text-xs sm:text-sm mt-1 max-w-3xl">
-              Cruce exhaustivo de 4 variables: <strong className="text-white">Sexo</strong> (Hombre/Mujer) $\times$ <strong className="text-white">Grupo Etario</strong> (Joven/Adulto/Adulto Mayor) $\times$ <strong className="text-white">Nivel Económico</strong> (Alto/Medio/Bajo) $\times$ <strong className="text-white">Grado Educativo</strong> (Primaria/Secundaria/Superior).
+              Cruce exhaustivo de 4 variables: <strong className="text-white">Sexo</strong> (Hombre/Mujer) × <strong className="text-white">Grupo Etario</strong> (Joven/Adulto/Adulto Mayor) × <strong className="text-white">Nivel Económico</strong> (Alto/Medio/Bajo) × <strong className="text-white">Grado Educativo</strong> (Primaria/Secundaria/Superior).
             </p>
           </div>
 

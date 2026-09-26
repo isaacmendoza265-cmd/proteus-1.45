@@ -111,14 +111,14 @@ export const MunicipalRepositoryExplorerView: React.FC = () => {
             <div className="flex items-center gap-2 mb-2">
               <span className="px-3 py-1 rounded-full text-[10px] font-mono font-black uppercase tracking-wider bg-gradient-to-r from-sky-400/20 via-teal-400/20 to-blue-500/30 text-sky-300 border border-sky-400/50 shadow-[0_0_12px_rgba(56,189,248,0.3)] flex items-center gap-1.5">
                 <Database className="w-3.5 h-3.5 text-sky-400" />
-                Propósito 1: Repositorio Municipal Universal
+                Territorio
               </span>
               <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
                 125 Municipios Auténticos • DANE & Registraduría
               </span>
             </div>
             <h1 className="text-2xl lg:text-3xl font-black tracking-tight text-white flex items-center gap-3">
-              <span>REPOSITORIO DE INFORMACIÓN TERRITORIAL MUNICIPAL</span>
+              <span>Municipios de Antioquia</span>
             </h1>
             <p className="text-slate-300 text-xs sm:text-sm mt-1 max-w-3xl">
               Base de conocimiento masiva, fidedigna y accesible de los 125 municipios de Antioquia (censo oficial DANE, censo electoral de la Registraduría, alcaldías 2024-2027, concejos, NBI y seguridad territorial). Inyecta contexto local exacto a Gemini con Google Search.

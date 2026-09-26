@@ -5,8 +5,10 @@
 
 import React, { useState, lazy, Suspense } from 'react';
 import { AppShell } from './components/layout/AppShell';
-import { NavViewId } from './components/layout/SidebarNav';
+import type { NavViewId } from './components/layout/navigation';
 import { ErrorBoundary } from './components/ui/ErrorBoundary';
+
+const InicioView = lazy(() => import('./modules/inicio/InicioView').then((m) => ({ default: m.InicioView })));
 
 // National Views
 const NationalDashboardView = lazy(() => import('./modules/national/NationalDashboardView').then((m) => ({ default: m.NationalDashboardView })));
@@ -48,7 +50,7 @@ import { googleDriveService } from './services/googleDriveService';
 const STORAGE_PROFILE_KEY = "cmt_proteus_active_profile";
 
 export default function App() {
-  const [currentView, setCurrentView] = useState<NavViewId>('national-candidates');
+  const [currentView, setCurrentView] = useState<NavViewId>('inicio');
   const [candidateModalOpen, setCandidateModalOpen] = useState(false);
   
   // Manage candidate profile state
@@ -96,6 +98,8 @@ export default function App() {
       {/* Cada módulo se descarga solo cuando se abre (carga diferida) */}
       <ErrorBoundary resetKey={currentView}>
       <Suspense fallback={<ViewLoading />}>
+      {currentView === 'inicio' && <InicioView onNavigate={setCurrentView} />}
+
       {/* 1. ÁMBITO NACIONAL */}
       {currentView === 'national-overview' && (
         <NationalDashboardView />
@@ -226,7 +230,7 @@ export default function App() {
 
 function ViewLoading() {
   return (
-    <div className="flex items-center justify-center py-24 text-sm text-slate-400">
+    <div className="flex items-center justify-center py-24 text-sm text-[var(--c-muted)]">
       Cargando módulo…
     </div>
   );

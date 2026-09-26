@@ -61,7 +61,7 @@ export const CandidateProfilesView: React.FC<CandidateProfilesViewProps> = ({
             </div>
 
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight leading-tight">
-              PERFIL & PERSONALIZACIÓN DEL CANDIDATO
+              Perfil del candidato
             </h1>
 
             <p className="text-xs sm:text-sm text-slate-300 max-w-3xl leading-relaxed">

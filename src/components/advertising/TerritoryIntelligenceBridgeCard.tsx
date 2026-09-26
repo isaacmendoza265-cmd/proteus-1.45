@@ -74,7 +74,7 @@ export const TerritoryIntelligenceBridgeCard: React.FC<TerritoryIntelligenceBrid
         <div className="space-y-1.5">
           <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-amber-400 font-bold">
             <Layers className="w-4 h-4 text-amber-400" />
-            <span>Capa de Inteligencia Estratégica Territorial • Protocolo PA-011</span>
+            <span>Inteligencia territorial</span>
           </div>
           <div className="flex flex-wrap items-center gap-3">
             <h2 className="text-lg sm:text-xl font-black text-white flex items-center gap-2">

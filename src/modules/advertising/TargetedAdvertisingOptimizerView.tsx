@@ -116,7 +116,7 @@ export const TargetedAdvertisingOptimizerView: React.FC<TargetedAdvertisingOptim
         <div className="space-y-1">
           <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-amber-400 font-bold">
             <Target className="w-4 h-4" />
-            <span>Propósito Supremo • Protocolos PA-010 y PA-011 (Unidad de Automejora)</span>
+            <span>Publicidad segmentada</span>
           </div>
           <h1 className="text-xl sm:text-2xl font-black tracking-tight text-white flex items-center gap-2.5">
             Optimizador de Publicidad Electoral Segmentada

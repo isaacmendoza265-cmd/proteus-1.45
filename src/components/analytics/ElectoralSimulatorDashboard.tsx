@@ -249,14 +249,14 @@ Diseña un PLAN DE ACCIÓN ELECTORAL DE CHOQUE PARA CONQUISTAR LA CURUL MARGINAL
             <div className="flex items-center gap-2 mb-2">
               <span className="px-3 py-1 rounded-full text-[10px] font-mono font-black uppercase tracking-wider bg-gradient-to-r from-blue-500/20 via-sky-400/20 to-emerald-400/20 text-sky-300 border border-sky-400/50 shadow-[0_0_12px_rgba(56,189,248,0.3)] flex items-center gap-1.5">
                 <Calculator className="w-3.5 h-3.5 text-sky-400" />
-                Protocolo PA-001 • Motor Determinista D'Hondt
+                Motor D'Hondt
               </span>
               <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-400/30">
                 {totalSeats} Curules en Disputa
               </span>
             </div>
             <h1 className="text-2xl lg:text-3xl font-black tracking-tight text-white flex items-center gap-3">
-              <span>SIMULADOR ELECTORAL D'HONDT, UMBRAL Y CURUL MARGINAL</span>
+              <span>Simulador D'Hondt, umbral y curul marginal</span>
             </h1>
             <p className="text-slate-300 text-xs sm:text-sm mt-1 max-w-3xl">
               Cálculo matemático de asignación de escaños (Art. 263 C.P.). Proyecta umbrales legales, cifra repartidora y la cantidad exacta de votos adicionales requeridos para ganar o blindar una curul.
@@ -379,7 +379,7 @@ Diseña un PLAN DE ACCIÓN ELECTORAL DE CHOQUE PARA CONQUISTAR LA CURUL MARGINAL
           <div>
             <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-sky-400 flex items-center gap-1">
               <MapPin className="w-3 h-3 text-sky-400" />
-              Territorialización del Déficit Marginal (Protocolo PA-001)
+              Territorialización del déficit marginal
             </span>
             <h3 className="text-sm font-black text-white mt-0.5">
               Matriz de Asignación de Cuotas de Voto por Subregión

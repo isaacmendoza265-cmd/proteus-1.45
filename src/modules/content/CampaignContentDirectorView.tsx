@@ -392,14 +392,14 @@ Diseña un BRIEF ESTRATÉGICO DE ALTO IMPACTO estructurado exactamente en los si
             <div className="flex items-center gap-2 mb-2">
               <span className="px-3 py-1 rounded-full text-[10px] font-mono font-black uppercase tracking-wider bg-gradient-to-r from-amber-400/20 via-sky-400/20 to-purple-500/30 text-amber-300 border border-amber-400/50 shadow-[0_0_12px_rgba(251,191,36,0.3)] flex items-center gap-1.5">
                 <Megaphone className="w-3.5 h-3.5 text-amber-400" />
-                Propósito 3: Director de Creación de Contenido & Briefs
+                Contenido
               </span>
               <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
                 5 Escalas Territoriales + 40 Segmentos
               </span>
             </div>
             <h1 className="text-2xl lg:text-3xl font-black tracking-tight text-white flex items-center gap-3">
-              <span>DIRECTOR DE CONTENIDO & DISCURSOS DE CAMPAÑA</span>
+              <span>Redactar discursos y piezas</span>
             </h1>
             <p className="text-slate-300 text-xs sm:text-sm mt-1 max-w-3xl">
               Navega desde la escala <strong className="text-sky-300">Nacional</strong> hasta <strong className="text-amber-300">Comuna o Barrio</strong>. Selecciona con precisión quirúrgica el grupo de votantes y genera briefs respaldados por microdatos oficiales y persuasión cognitiva.
@@ -866,7 +866,7 @@ Diseña un BRIEF ESTRATÉGICO DE ALTO IMPACTO estructurado exactamente en los si
               <label className="text-xs text-slate-300 font-semibold flex items-center justify-between">
                 <span className="flex items-center gap-1.5">
                   <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-                  Persuasión Cognitiva (Protocolo PA-003):
+                  Persuasión cognitiva:
                 </span>
                 <span className="text-[10px] font-mono text-sky-400">Prospect Theory</span>
               </label>
