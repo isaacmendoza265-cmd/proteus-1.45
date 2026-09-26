@@ -8,6 +8,7 @@ import {
   type TerritorioFicha, type EstadoDato, ETIQUETA_ESTADO, EDADES_DANE,
   demografia, censoElectoral, grupos, politica, fmt, pct,
   cargarElecciones2026, sumarEleccion, ELECCIONES_PENDIENTES, type EleccionPuestos,
+  puestosConResultados, sumarResultadosPuestos,
 } from '../../services/territoryProfileService';
 import type { PuestoVotacion } from '../../services/pollingStationsService';
 
@@ -82,6 +83,33 @@ export const FichaTerritorio: React.FC<FichaTerritorioProps> = ({
     return sumarEleccion(e, t.tipo === 'municipio' ? 'todos' : puestosDentro.map((p) => p.codPuesto));
   }, [elecciones2026, eleccion, t.tipo, puestosDentro]);
   const pendiente = ELECCIONES_PENDIENTES.find((x) => x.id === eleccion);
+  const [verTodosPuestos, setVerTodosPuestos] = useState(false);
+  const [puestoAbierto, setPuestoAbierto] = useState<string | null>(null);
+  // Resultados de cada puesto del territorio en la elección elegida
+  const porPuesto = useMemo(() => {
+    type Fila = { codigo: string; nombre: string; votantes: number; habilitados: number; top: { nombre: string; detalle: string; pct: number }[] };
+    const filas: Fila[] = [];
+    if (eleccion === 'local-2023') {
+      const lista = puestosConResultados(t.dane);
+      const dentro = new Set(codigosResultados);
+      for (const p of lista) {
+        if (t.tipo !== 'municipio' && !dentro.has(p.codigo)) continue;
+        const r = sumarResultadosPuestos(t.dane, [p.codigo]);
+        if (r) filas.push({ codigo: p.codigo, nombre: p.nombre, votantes: r.votantes, habilitados: r.habilitados, top: r.alcaldia.slice(0, 5).map((c) => ({ nombre: c.nombre, detalle: c.partido, pct: c.pct })) });
+      }
+    } else {
+      const e = elecciones2026.find((x) => x.id === eleccion);
+      if (e) {
+        const nombres = new Map(puestosDentro.map((p) => [p.codPuesto, p.puesto]));
+        const codigos = t.tipo === 'municipio' ? Object.keys(e.puestos) : puestosDentro.map((p) => p.codPuesto);
+        for (const c of codigos) {
+          const r = sumarEleccion(e, [c]);
+          if (r) filas.push({ codigo: c, nombre: titulo(nombres.get(c) ?? `Puesto ${c}`), votantes: r.votantes, habilitados: r.habilitados, top: r.partidos.slice(0, 5).map((x) => ({ nombre: x.nombre, detalle: 'Partido o lista', pct: x.pct })) });
+        }
+      }
+    }
+    return filas.sort((a, b) => b.votantes - a.votantes);
+  }, [eleccion, t, codigosResultados, elecciones2026, puestosDentro]);
   const dem = useMemo(() => demografia(t), [t]);
   const cen = useMemo(() => censoElectoral(t, puestosDentro, sinUbicar), [t, puestosDentro, sinUbicar]);
   const gru = useMemo(() => grupos(dem, cen), [dem, cen]);
@@ -222,6 +250,49 @@ export const FichaTerritorio: React.FC<FichaTerritorioProps> = ({
           ) : (
             <Aviso>{elecciones2026.length ? 'No hay puestos de votación de 2026 dentro de este territorio: sus residentes votan en puestos vecinos.' : 'Cargando…'}</Aviso>
           ))}
+          {porPuesto.length > 0 && (
+            <div className="flex flex-col gap-1">
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-bold grow">Resultados por puesto de votación ({fmt(porPuesto.length)})</span>
+                <span className="text-xs text-[var(--c-muted)]">Clic para ver el detalle</span>
+              </div>
+              {(verTodosPuestos ? porPuesto : porPuesto.slice(0, 10)).map((f) => {
+                const abierto = puestoAbierto === f.codigo;
+                const lider = f.top[0];
+                return (
+                  <div key={f.codigo} className="border-t border-[var(--c-border)]">
+                    <button onClick={() => setPuestoAbierto(abierto ? null : f.codigo)} aria-expanded={abierto} className="w-full flex items-center gap-2 py-1.5 text-left">
+                      <span className="flex flex-col grow min-w-0">
+                        <span className="text-sm font-semibold truncate">{f.nombre}</span>
+                        <span className="text-xs text-[var(--c-muted)] truncate">{lider ? `Gana ${lider.nombre} (${pct(lider.pct)})` : 'Sin votos'}</span>
+                      </span>
+                      <span className="text-right shrink-0">
+                        <span className="block text-sm tabular-nums font-semibold">{fmt(f.votantes)}</span>
+                        <span className="block text-xs text-[var(--c-muted)]">{pct((100 * f.votantes) / Math.max(1, f.habilitados))} particip.</span>
+                      </span>
+                    </button>
+                    {abierto && (
+                      <div className="flex flex-col gap-1 pb-2 pl-1">
+                        {f.top.map((c, i) => (
+                          <div key={c.nombre} className="flex items-center gap-2 text-xs">
+                            <span className="w-40 truncate font-semibold" title={c.detalle}>{c.nombre}</span>
+                            <span className="grow h-1.5 rounded bg-[var(--c-border)] overflow-hidden"><span className="block h-1.5" style={{ width: `${(100 * c.pct) / Math.max(0.01, f.top[0].pct)}%`, background: i === 0 ? 'var(--c-accent)' : 'var(--c-muted)' }} /></span>
+                            <span className="w-12 text-right tabular-nums">{pct(c.pct)}</span>
+                          </div>
+                        ))}
+                        <span className="text-xs text-[var(--c-muted)]">{fmt(f.votantes)} votantes de {fmt(f.habilitados)} habilitados.</span>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+              {porPuesto.length > 10 && (
+                <button onClick={() => setVerTodosPuestos(!verTodosPuestos)} className="self-start min-h-8 px-2.5 rounded-md border border-[var(--c-border)] text-xs font-semibold">
+                  {verTodosPuestos ? 'Ver menos' : `Ver los ${fmt(porPuesto.length)} puestos`}
+                </button>
+              )}
+            </div>
+          )}
           <Cabecera titulo="Actores con presencia declarada" estado="estimado" etiqueta="Sin verificar" fuente={pol.fuenteActores} />
           {pol.actores.length ? (
             <ul className="m-0 p-0 list-none flex flex-col">
