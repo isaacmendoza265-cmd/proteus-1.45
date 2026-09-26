@@ -110,3 +110,18 @@ describe('Medellín', () => {
     expect(territorioFicha('medellin-base-outline')).toBeNull();
   });
 });
+
+describe('Medellín: demografía y economía por manzana', () => {
+  it('estrato por barrio y demografía decenal', async () => {
+    const { cargarDemografia, cargarEconomia, economia } = await import('../territoryProfileService');
+    expect(await cargarDemografia('05001')).toBe(true);
+    expect(await cargarEconomia('05001')).toBe(true);
+    const d = demografia(territorioFicha('barrio-0101')!);
+    expect(d.datos!.etiquetasEdad).toHaveLength(9);
+    expect(d.datos!.personas).toBeGreaterThan(20000);
+    const e = economia(territorioFicha('barrio-0101')!)!;
+    expect(e.estratoModa).toBe(2);
+    expect(economia(territorioFicha('barrio-1403')!)!.estratoModa).toBe(5);
+    expect(economia(territorioFicha('comuna-14')!)!.estratoPromedio!).toBeGreaterThan(4.5);
+  });
+});

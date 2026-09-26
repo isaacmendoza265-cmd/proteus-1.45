@@ -5,9 +5,9 @@
  */
 import React, { useEffect, useMemo, useState } from 'react';
 import {
-  type TerritorioFicha, type EstadoDato, ETIQUETA_ESTADO, EDADES_DANE,
+  type TerritorioFicha, type EstadoDato, ETIQUETA_ESTADO,
   demografia, censoElectoral, grupos, politica, fmt, pct,
-  cargarDemografia,
+  cargarDemografia, cargarEconomia, economia,
 } from '../../services/territoryProfileService';
 import { cargarElecciones, sumarEleccion, ELECCIONES_PENDIENTES, type EleccionPuestos } from '../../services/electionResultsService';
 import type { PuestoVotacion } from '../../services/pollingStationsService';
@@ -111,10 +111,13 @@ export const FichaTerritorio: React.FC<FichaTerritorioProps> = ({
   useEffect(() => {
     let activo = true;
     cargarDemografia(t.dane).then((ok) => { if (activo && ok) setDemLista((n) => n + 1); });
+    cargarEconomia(t.dane).then((ok) => { if (activo && ok) setDemLista((n) => n + 1); });
     return () => { activo = false; };
   }, [t.dane]);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const dem = useMemo(() => demografia(t), [t, demLista]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const eco = useMemo(() => economia(t), [t, demLista]);
   const cen = useMemo(() => censoElectoral(t, puestosDentro, sinUbicar), [t, puestosDentro, sinUbicar]);
   const gru = useMemo(() => grupos(dem, cen), [dem, cen]);
   const pol = useMemo(() => politica(t), [t]);
@@ -317,8 +320,8 @@ export const FichaTerritorio: React.FC<FichaTerritorioProps> = ({
               <span className="text-xs font-bold text-[var(--c-muted)]">Población por edad (2018)</span>
               <div className="flex flex-col gap-0.5">
                 {d.edades.map((v, i) => (
-                  <div key={EDADES_DANE[i]} className="flex items-center gap-1.5 text-xs">
-                    <span className="w-14 text-[var(--c-muted)] tabular-nums">{EDADES_DANE[i]}</span>
+                  <div key={d.etiquetasEdad[i]} className="flex items-center gap-1.5 text-xs">
+                    <span className="w-14 text-[var(--c-muted)] tabular-nums">{d.etiquetasEdad[i]}</span>
                     <span className="grow h-2 rounded-sm bg-[var(--c-sunken)] overflow-hidden"><span className="block h-2 bg-[#A84A5E]" style={{ width: `${(100 * v) / maxEdad}%` }} /></span>
                     <span className="w-14 text-right tabular-nums">{fmt(v)}</span>
                   </div>
@@ -329,6 +332,34 @@ export const FichaTerritorio: React.FC<FichaTerritorioProps> = ({
             <Aviso>
               <strong className="text-[var(--c-ink)]">Población: sin información por sexo y edad.</strong> {dem.motivo}
             </Aviso>
+          )}
+          {eco && eco.estado === 'oficial' && (
+            <div className="flex flex-col gap-2 px-3 py-2.5 rounded-xl bg-[var(--c-sunken)]">
+              <Cabecera titulo="Condiciones económicas (2018)" estado="oficial" fuente={eco.fuente} />
+              <div className="grid grid-cols-3 gap-1.5">
+                <Cifra label="Estrato típico" value={String(eco.estratoModa)} />
+                <Cifra label="Estrato prom." value={eco.estratoPromedio!.toLocaleString('es-CO', { maximumFractionDigits: 1 })} />
+                <Cifra label="IPM" value={eco.ipm == null ? '—' : pct(eco.ipm)} />
+              </div>
+              <span className="text-xs font-bold text-[var(--c-muted)]">Viviendas por estrato</span>
+              <div className="flex h-5 rounded overflow-hidden text-[11px] font-bold text-white">
+                {eco.estratos.slice(0, 6).map((v, i) => {
+                  const tot = eco.estratos.slice(0, 6).reduce((a, b) => a + b, 0) || 1;
+                  const w = (100 * v) / tot;
+                  return w > 0 ? <div key={i} title={`Estrato ${i + 1}: ${fmt(v)} viviendas`} className="flex items-center justify-center" style={{ width: `${w}%`, background: ['#9B2C2C', '#C05621', '#B7791F', '#2F855A', '#2B6CB0', '#553C9A'][i] }}>{w >= 7 ? `E${i + 1} ${Math.round(w)} %` : ''}</div> : null;
+                })}
+              </div>
+              <span className="text-xs font-bold text-[var(--c-muted)] mt-1">Servicios en la vivienda</span>
+              <div className="grid grid-cols-2 gap-x-3 gap-y-0.5 text-xs">
+                {eco.servicios.map((x) => <div key={x.nombre} className="flex justify-between"><span className="text-[var(--c-muted)]">{x.nombre}</span><span className="tabular-nums font-semibold">{pct(x.pct)}</span></div>)}
+              </div>
+              <span className="text-xs font-bold text-[var(--c-muted)] mt-1">Nivel educativo alcanzado (personas)</span>
+              <div className="grid grid-cols-2 gap-x-3 gap-y-0.5 text-xs">
+                {eco.educacion.map((x) => <div key={x.nombre} className="flex justify-between"><span className="text-[var(--c-muted)]">{x.nombre}</span><span className="tabular-nums font-semibold">{pct(x.pct)}</span></div>)}
+              </div>
+              <span className="text-xs text-[var(--c-muted)]">Unidades económicas: {fmt(eco.unidadesEconomicas.total)} ({fmt(eco.unidadesEconomicas.comercio)} de comercio, {fmt(eco.unidadesEconomicas.servicios)} de servicios, {fmt(eco.unidadesEconomicas.industria)} de industria).</span>
+              <span className="text-xs text-[var(--c-muted)]">{eco.nota}</span>
+            </div>
           )}
           <div className="flex flex-col gap-1 px-3 py-2.5 rounded-xl border border-[var(--c-border)]">
             <Cabecera titulo="Proyección 2026" estado={dem.proyeccion.estado} />

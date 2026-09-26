@@ -34,6 +34,12 @@ export const EDADES_DANE = ['0–4', '5–9', '10–14', '15–19', '20–24', '
  * Grupos de edad para votantes: [etiqueta, [[índice DANE, fracción], ...]].
  * 18 y 19 años son el 40 % del grupo 15–19 (dos de cinco edades).
  */
+/** Grupos decenales del CNPV por manzana (0–9 … 80 o más), usados cuando la demografía sale de las manzanas */
+export const EDADES_DANE_10 = ['0–9', '10–19', '20–29', '30–39', '40–49', '50–59', '60–69', '70–79', '80 o más'];
+/** Grupos de votantes con edades decenales: 18 y 19 años son el 20 % del grupo 10–19 */
+export const GRUPOS_EDAD_VOTANTES_10: [string, [number, number][]][] = [
+  ['18–29', [[1, 0.2], [2, 1]]], ['30–39', [[3, 1]]], ['40–49', [[4, 1]]], ['50–59', [[5, 1]]], ['60–69', [[6, 1]]], ['70 o más', [[7, 1], [8, 1]]],
+];
 export const GRUPOS_EDAD_VOTANTES: [string, [number, number][]][] = [
   ['18–24', [[3, 0.4], [4, 1]]],
   ['25–34', [[5, 1], [6, 1]]],
@@ -138,6 +144,8 @@ export interface Demografia {
   unidadesEconomicas: number;
   /** Personas en zonas anonimizadas (el DANE solo da el total, sin sexo ni edad) */
   personasAnonimizadas: number;
+  /** Etiquetas de `edades`: 17 grupos quinquenales o 9 decenales (datos por manzana) */
+  etiquetasEdad: string[];
 }
 
 export interface SeccionDemografia {
@@ -157,17 +165,19 @@ function idsBarrios(t: TerritorioFicha): string[] {
   return Object.keys(subs);
 }
 
-export function sumarDemografia(filas: number[][]): Demografia {
-  const d: Demografia = { personas: 0, hombres: 0, mujeres: 0, edades: new Array(17).fill(0), viviendas: 0, hogares: 0, unidadesEconomicas: 0, personasAnonimizadas: 0 };
+export function sumarDemografia(filas: number[][], decenal = false): Demografia {
+  // quinquenal: total, hombres, mujeres, 17 edades, edad no informa, viviendas, hogares, unidades económicas
+  // decenal (manzanas): total, hombres, mujeres, 9 edades, viviendas, hogares, unidades económicas
+  const nE = decenal ? 9 : 17, iV = decenal ? 12 : 21;
+  const d: Demografia = { personas: 0, hombres: 0, mujeres: 0, edades: new Array(nE).fill(0), viviendas: 0, hogares: 0, unidadesEconomicas: 0, personasAnonimizadas: 0, etiquetasEdad: decenal ? EDADES_DANE_10 : EDADES_DANE };
   for (const v of filas) {
-    // campos: total, hombres, mujeres, 17 edades, edad no informa, viviendas, hogares, unidades económicas
     d.personas += v[0];
     d.hombres += v[1];
     d.mujeres += v[2];
-    for (let i = 0; i < 17; i++) d.edades[i] += v[3 + i];
-    d.viviendas += v[21];
-    d.hogares += v[22];
-    d.unidadesEconomicas += v[23];
+    for (let i = 0; i < nE; i++) d.edades[i] += v[3 + i];
+    d.viviendas += v[iV];
+    d.hogares += v[iV + 1];
+    d.unidadesEconomicas += v[iV + 2];
     if (v[0] > 0 && v[1] + v[2] === 0) d.personasAnonimizadas += v[0];
   }
   return d;
@@ -186,7 +196,7 @@ export function demografia(t: TerritorioFicha): SeccionDemografia {
         : { estado: 'sin-informacion', valor: null, texto: 'Sin proyección cargada.' },
     };
   }
-  const datos = sumarDemografia(idsBarrios(t).map((id) => data.porTerritorio[id]).filter(Boolean));
+  const datos = sumarDemografia(idsBarrios(t).map((id) => data.porTerritorio[id]).filter(Boolean), data.meta.campos.includes('E0_9'));
   const conDetalle = datos.personas > 0 && datos.hombres + datos.mujeres > 0;
   let motivo: string | undefined;
   if (!conDetalle) {
@@ -221,6 +231,64 @@ export function demografia(t: TerritorioFicha): SeccionDemografia {
     proyeccion = { ...proyeccion, texto: `${proyeccion.texto} Incluye ${fmt(datos.personasAnonimizadas)} personas en zonas anonimizadas, sin sexo ni edad.` };
   }
   return { estado: conDetalle ? 'oficial' : 'sin-informacion', datos, conDetalle, motivo, fuente, proyeccion };
+}
+
+// --- 2b. Condiciones económicas (datos por manzana del DANE, sumados por barrio/vereda) ----------------
+
+interface FilaEconomia { p: number; v: number; h: number; e: number[]; s: number[]; ed: number[]; ipm: number[]; ue: number[]; tv: number[] }
+interface EconomiaData { meta: { fuente: string; nota: string }; porTerritorio: Record<string, FilaEconomia> }
+const ECONOMIA_POR_MUNICIPIO: Record<string, EconomiaData> = {};
+const CARGADORES_ECO = import.meta.glob<{ default: unknown }>('../data/dane/manzanas/*.json');
+const cargasEco = new Map<string, Promise<boolean>>();
+export function cargarEconomia(dane: string): Promise<boolean> {
+  if (ECONOMIA_POR_MUNICIPIO[dane]) return Promise.resolve(true);
+  if (!cargasEco.has(dane)) {
+    const muni = Object.entries(INDICE).find(([, m]) => m.dane === dane)?.[0];
+    const cargar = muni ? CARGADORES_ECO[`../data/dane/manzanas/${muni}.json`] : undefined;
+    cargasEco.set(dane, cargar
+      ? cargar().then((m) => { ECONOMIA_POR_MUNICIPIO[dane] = m.default as EconomiaData; return true; }).catch(() => false)
+      : Promise.resolve(false));
+  }
+  return cargasEco.get(dane)!;
+}
+
+export interface SeccionEconomia {
+  estado: EstadoDato;
+  fuente: string;
+  nota: string;
+  /** Viviendas por estrato 1–6 y sin estrato */
+  estratos: number[];
+  estratoPromedio: number | null;
+  estratoModa: number | null;
+  /** % de viviendas (que respondieron) con cada servicio */
+  servicios: { nombre: string; pct: number }[];
+  /** % de personas por nivel educativo alcanzado */
+  educacion: { nombre: string; pct: number }[];
+  ipm: number | null;
+  unidadesEconomicas: { total: number; comercio: number; industria: number; servicios: number; otras: number };
+}
+
+export function economia(t: TerritorioFicha): SeccionEconomia | null {
+  const data = ECONOMIA_POR_MUNICIPIO[t.dane];
+  if (!data) return null;
+  const filas = idsBarrios(t).map((id) => data.porTerritorio[id]).filter(Boolean);
+  const suma = (k: 'e' | 's' | 'ed' | 'ipm' | 'ue', n: number) => filas.reduce((acc, f) => acc.map((v, i) => v + (f[k][i] ?? 0)), new Array(n).fill(0) as number[]);
+  const e = suma('e', 7), sv = suma('s', 7), ed = suma('ed', 6), ipm = suma('ipm', 3), ue = suma('ue', 7);
+  const conEstrato = e.slice(0, 6).reduce((a, b) => a + b, 0);
+  const pctDe = (v: number, base: number) => (base ? (100 * v) / base : 0);
+  const baseEd = ed.reduce((a, b) => a + b, 0) - ed[5];
+  return {
+    estado: conEstrato ? 'oficial' : 'sin-informacion',
+    fuente: 'DANE, CNPV 2018 por manzana · IPM por manzana · conteo de unidades económicas',
+    nota: data.meta.nota,
+    estratos: e,
+    estratoPromedio: conEstrato ? e.slice(0, 6).reduce((a, v, i) => a + v * (i + 1), 0) / conEstrato : null,
+    estratoModa: conEstrato ? e.slice(0, 6).indexOf(Math.max(...e.slice(0, 6))) + 1 : null,
+    servicios: ['Energía', 'Acueducto', 'Alcantarillado', 'Gas natural', 'Recolección de basuras', 'Internet'].map((nombre, i) => ({ nombre, pct: pctDe(sv[i], sv[6]) })),
+    educacion: ['Ninguno', 'Primaria', 'Secundaria', 'Técnica o universitaria', 'Posgrado'].map((nombre, i) => ({ nombre, pct: pctDe(ed[i], baseEd) })),
+    ipm: ipm[1] ? ipm[0] / ipm[1] : null,
+    unidadesEconomicas: { total: ue[0], comercio: ue[1], industria: ue[2], servicios: ue[3], otras: ue[4] + ue[5] + ue[6] },
+  };
 }
 
 // --- 3. Censo electoral --------------------------------------------------------------------
@@ -283,7 +351,9 @@ export function grupos(dem: SeccionDemografia, censo: SeccionCenso): SeccionGrup
   if (!d || !dem.conDetalle) {
     return { estado: 'sin-informacion', filas: [], segmentos: [], nota: `Sin información para estimar. ${dem.motivo ?? ''}`.trim() };
   }
-  const adultos = GRUPOS_EDAD_VOTANTES.map(([, partes]) => partes.reduce((s, [i, f]) => s + d.edades[i] * f, 0));
+  const decenal = d.edades.length === 9;
+  const GRUPOS = decenal ? GRUPOS_EDAD_VOTANTES_10 : GRUPOS_EDAD_VOTANTES;
+  const adultos = GRUPOS.map(([, partes]) => partes.reduce((s, [i, f]) => s + d.edades[i] * f, 0));
   const total = adultos.reduce((s, v) => s + v, 0);
   if (!total) return { estado: 'sin-informacion', filas: [], segmentos: [], nota: 'Sin población adulta registrada para estimar.' };
   const fm = d.mujeres / (d.mujeres + d.hombres);
@@ -291,7 +361,7 @@ export function grupos(dem: SeccionDemografia, censo: SeccionCenso): SeccionGrup
   // El sexo de los votantes es oficial (Registraduría, por puesto); la edad se reparte con la del DANE
   const vm = hayCenso ? censo.mujeres : 0;
   const vh = hayCenso ? censo.hombres : 0;
-  const filas: FilaGrupo[] = GRUPOS_EDAD_VOTANTES.map(([grupo], i) => ({
+  const filas: FilaGrupo[] = GRUPOS.map(([grupo], i) => ({
     grupo,
     mujeresPoblacion: Math.round(adultos[i] * fm),
     hombresPoblacion: Math.round(adultos[i] * (1 - fm)),
@@ -299,7 +369,7 @@ export function grupos(dem: SeccionDemografia, censo: SeccionCenso): SeccionGrup
     votantesMujeres: hayCenso ? Math.round((vm * adultos[i]) / total) : null,
     votantesHombres: hayCenso ? Math.round((vh * adultos[i]) / total) : null,
   }));
-  const tramos: [string, number[]][] = [['18–34', [0, 1]], ['35–54', [2, 3]], ['55 o más', [4, 5]]];
+  const tramos: [string, number[]][] = decenal ? [['18–29', [0]], ['30–49', [1, 2]], ['50 o más', [3, 4, 5]]] : [['18–34', [0, 1]], ['35–54', [2, 3]], ['55 o más', [4, 5]]];
   const segmentos: SeccionGrupos['segmentos'] = [];
   for (const [et, idx] of tramos) {
     const a = idx.reduce((s, i) => s + adultos[i], 0) / total;
@@ -310,7 +380,7 @@ export function grupos(dem: SeccionDemografia, censo: SeccionCenso): SeccionGrup
       ? { etiqueta: `Hombres ${et}`, valor: Math.round(vh * a), unidad: 'votantes' }
       : { etiqueta: `Hombres ${et}`, valor: Math.round(total * a * (1 - fm)), unidad: 'habitantes' });
   }
-  let nota = 'Cruce estimado: el sexo de los votantes es oficial (Registraduría, por puesto) y la edad se reparte según la pirámide del DANE 2018 del territorio (18–19 años = 40 % del grupo 15–19). Se supone que la edad se distribuye igual entre mujeres y hombres, porque el DANE no publica sexo por edad a nivel de manzana.';
+  let nota = `Cruce estimado: el sexo de los votantes es oficial (Registraduría, por puesto) y la edad se reparte según la pirámide del DANE 2018 del territorio (${decenal ? '18–19 años = 20 % del grupo 10–19' : '18–19 años = 40 % del grupo 15–19'}). Se supone que la edad se distribuye igual entre mujeres y hombres, porque el DANE no publica sexo por edad a nivel de manzana.`;
   if (!hayCenso) nota += ' Este territorio no tiene puestos: se muestran habitantes, no votantes.';
   return { estado: 'estimado', filas, segmentos, nota };
 }
