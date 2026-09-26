@@ -2,16 +2,16 @@
 Descarga el preconteo del Congreso 2026 (Senado SE y Cámara CA) de un municipio, por puesto, desde
 https://resultadospreccongreso2026.registraduria.gov.co/json/ACT/<SE|CA>/<código>.json
 Necesita el índice del sitio (/json/nomenclator.json).
-Uso: python3 scripts/descargar_congreso_2026.py <carpeta> <nombre municipio> <código departamento 2 dígitos> <nomenclator.json>
+Uso: python3 scripts/descargar_congreso_2026.py <carpeta> <código del sitio, p. ej. 0100001> <nomenclator.json>
 Retoma: no vuelve a bajar archivos que ya existen y son JSON válidos.
 """
 import json, os, sys, time, urllib.request
 
-carpeta, nombre, dep, nom_path = sys.argv[1:5]
+carpeta, codigo, nom_path = sys.argv[1:4]
 base = f'_originales/registraduria/congreso2026/{carpeta}'
 os.makedirs(base, exist_ok=True)
 A = json.load(open(nom_path))['amb'][0]['ambitos']
-mun = next(a for a in A if a['n'] == nombre and a['l'] == 3 and a['c'].startswith(dep))
+mun = next(a for a in A if a['c'] == codigo and a['l'] == 3)
 puestos = []
 def hijos(a, nivel):
     return [i for g in a.get('h', []) if g['l'] == nivel for i in g['p']]

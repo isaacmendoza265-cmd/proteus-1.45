@@ -13,11 +13,9 @@
  */
 import rawBello from '../data/dane/belloCnpv2018Barrios.json';
 import rawIndice from '../data/territorio/indiceTerritorios.json';
-import rawRionegro2023 from '../data/electoral/resultadosPuesto2023/rionegro.json';
-import rawBello2023 from '../data/electoral/resultadosPuesto2023/bello.json';
-import rawMedellin2023 from '../data/electoral/resultadosPuesto2023/medellin.json';
 import { getDaneMunicipio } from './daneMunicipalService';
 import { getResultado2023, type Resultado2023 } from './electoralResults2023Service';
+import { tieneResultadosPorPuesto } from './electionResultsService';
 import type { PuestoVotacion } from './pollingStationsService';
 import { GRAPH_NODES_DATA, POLITICAL_HOUSES_DATA } from '../data/politicalHouses/politicalHousesMasterData';
 
@@ -311,23 +309,8 @@ export interface ActorFicha {
   casa: string;
 }
 
-/** Resultado sumado por puesto (preconteo) */
-export interface ResultadoPuestos {
-  fuente: string;
-  habilitados: number;
-  votantes: number;
-  blanco: number;
-  nulos: number;
-  noMarcados: number;
-  puestos: number;
-  alcaldia: { nombre: string; partido: string; votos: number; pct: number }[];
-  concejo: { partido: string; votos: number; pct: number }[];
-}
-
 export interface SeccionPolitica {
   resultados: { estado: EstadoDato; texto: string; alcaldia: Resultado2023['alcaldia'] | null; ambito: 'municipio' | 'territorio' };
-  /** Resultados 2023 sumando los puestos del territorio (si el municipio los tiene cargados) */
-  porPuestos: ResultadoPuestos | null;
   actores: ActorFicha[];
   fuenteActores: string;
 }
@@ -350,67 +333,6 @@ const ANCLAS_BELLO: Record<string, (a: string) => boolean> = {
   'bello-div-RUR': (a) => /vereda/.test(a),
 };
 
-interface ResultadosPuestoData {
-  meta: { fuente: string; tipo: string; nota: string };
-  candidatos: { n: string; p: number }[];
-  partidos: string[];
-  /** Por código de puesto de 2023 (no es el código del censo 2026) */
-  puestos: Record<string, {
-    n: string;
-    ubicacion: { lat: number; lon: number } | null;
-    alcaldia: { habilitados: number; votantes: number; blanco: number; nulos: number; noMarcados: number; candidatos: [number, number][] };
-    concejo: { votantes: number; blanco: number; partidos: [number, number][] };
-  }>;
-}
-/** Resultados 2023 por puesto (preconteo) cargados, por código DANE */
-const RESULTADOS_PUESTO_2023: Record<string, ResultadosPuestoData> = {
-  '05615': rawRionegro2023 as unknown as ResultadosPuestoData,
-  '05088': rawBello2023 as unknown as ResultadosPuestoData,
-  '05001': rawMedellin2023 as unknown as ResultadosPuestoData,
-};
-
-/** Puestos de 2023 con resultados y su ubicación (Divipole 2023), para asignarlos a comunas y barrios */
-export function puestosConResultados(dane: string): { codigo: string; nombre: string; lon: number | null; lat: number | null }[] {
-  const data = RESULTADOS_PUESTO_2023[dane];
-  if (!data) return [];
-  return Object.entries(data.puestos).map(([codigo, p]) => ({ codigo, nombre: p.n, lon: p.ubicacion?.lon ?? null, lat: p.ubicacion?.lat ?? null }));
-}
-
-export function tieneResultadosPorPuesto(dane: string): boolean {
-  return !!RESULTADOS_PUESTO_2023[dane];
-}
-
-/** Suma los resultados de los puestos dados (no reparte ni estima: solo puestos con resultado) */
-export function sumarResultadosPuestos(dane: string, codPuestos: string[]): ResultadoPuestos | null {
-  const data = RESULTADOS_PUESTO_2023[dane];
-  if (!data) return null;
-  const filas = codPuestos.map((c) => data.puestos[c]).filter(Boolean);
-  if (!filas.length) return null;
-  const al = new Map<number, number>();
-  const co = new Map<number, number>();
-  let habilitados = 0, votantes = 0, blanco = 0, nulos = 0, noMarcados = 0, blancoCo = 0;
-  for (const f of filas) {
-    habilitados += f.alcaldia.habilitados;
-    votantes += f.alcaldia.votantes;
-    blanco += f.alcaldia.blanco;
-    nulos += f.alcaldia.nulos;
-    noMarcados += f.alcaldia.noMarcados;
-    blancoCo += f.concejo.blanco;
-    for (const [i, v] of f.alcaldia.candidatos) al.set(i, (al.get(i) ?? 0) + v);
-    for (const [i, v] of f.concejo.partidos) co.set(i, (co.get(i) ?? 0) + v);
-  }
-  const validosAl = [...al.values()].reduce((s, v) => s + v, 0) + blanco;
-  const validosCo = [...co.values()].reduce((s, v) => s + v, 0) + blancoCo;
-  return {
-    fuente: data.meta.fuente,
-    habilitados, votantes, blanco, nulos, noMarcados, puestos: filas.length,
-    alcaldia: [...al.entries()].sort((a, b) => b[1] - a[1]).map(([i, v]) => ({
-      nombre: data.candidatos[i].n, partido: data.partidos[data.candidatos[i].p], votos: v, pct: validosAl ? (100 * v) / validosAl : 0,
-    })),
-    concejo: [...co.entries()].sort((a, b) => b[1] - a[1]).map(([i, v]) => ({ partido: data.partidos[i], votos: v, pct: validosCo ? (100 * v) / validosCo : 0 })),
-  };
-}
-
 const casaNombre = new Map(POLITICAL_HOUSES_DATA.map((h) => [h.id, h.name]));
 
 export function actoresDeTerritorio(t: TerritorioFicha): ActorFicha[] {
@@ -427,41 +349,27 @@ export function actoresDeTerritorio(t: TerritorioFicha): ActorFicha[] {
   }));
 }
 
-/**
- * @param codigosResultados códigos de 2023 de los puestos con resultados ubicados en el territorio
- *   (ver puestosConResultados). En el municipio se suman todos.
- */
-export function politica(t: TerritorioFicha, codigosResultados: string[] = []): SeccionPolitica {
+/** Resultado oficial municipal (escrutinio) y actores; los resultados por puesto están en electionResultsService */
+export function politica(t: TerritorioFicha): SeccionPolitica {
   const r = getResultado2023(t.dane);
   const fuenteActores = 'Base curada del desarrollador (casas políticas). Sin verificar.';
-  const todos = RESULTADOS_PUESTO_2023[t.dane] ? Object.keys(RESULTADOS_PUESTO_2023[t.dane].puestos) : [];
-  const porPuestos = sumarResultadosPuestos(t.dane, t.tipo === 'municipio' ? todos : codigosResultados);
+  const porPuesto = tieneResultadosPorPuesto(t.dane);
   if (t.tipo === 'municipio') {
     return {
       resultados: r
-        ? { estado: 'oficial', ambito: 'municipio', alcaldia: r.alcaldia, texto: `Escrutinio oficial: participación ${pct(r.alcaldia.participacion)} de ${fmt(r.alcaldia.censo)} habilitados. ${tieneResultadosPorPuesto(t.dane) ? 'Los resultados por comuna, barrio y vereda salen de sumar el preconteo de sus puestos.' : 'Resultados por comuna: pendientes; se sumarán al cargar los resultados por puesto.'}` }
+        ? { estado: 'oficial', ambito: 'municipio', alcaldia: r.alcaldia, texto: `Escrutinio oficial de la Alcaldía 2023: participación ${pct(r.alcaldia.participacion)} de ${fmt(r.alcaldia.censo)} habilitados.` }
         : { estado: 'sin-informacion', ambito: 'municipio', alcaldia: null, texto: 'Sin resultados 2023 cargados para este municipio.' },
-      actores: actoresDeTerritorio(t), fuenteActores, porPuestos,
+      actores: actoresDeTerritorio(t), fuenteActores,
     };
   }
-  if (porPuestos) {
-    return {
-      resultados: {
-        estado: 'oficial', ambito: 'territorio', alcaldia: r?.alcaldia ?? null,
-        texto: `Suma de ${fmt(porPuestos.puestos)} puesto(s) ubicados dentro, según el preconteo de la Registraduría. Los votos se cuentan donde está el puesto, no donde vive el votante.`,
-      },
-      actores: actoresDeTerritorio(t), fuenteActores, porPuestos,
-    };
-  }
-  const tieneDatos = tieneResultadosPorPuesto(t.dane);
   return {
     resultados: {
-      estado: 'sin-informacion', ambito: 'territorio', alcaldia: r?.alcaldia ?? null,
-      texto: tieneDatos
-        ? 'No hay puestos de votación dentro de este territorio: sus residentes votan en puestos vecinos, así que no tiene resultados propios.'
+      estado: porPuesto ? 'oficial' : 'sin-informacion', ambito: 'territorio', alcaldia: r?.alcaldia ?? null,
+      texto: porPuesto
+        ? 'Resultados de los puestos ubicados dentro, según el preconteo de la Registraduría. Los votos se cuentan donde está el puesto, no donde vive el votante.'
         : 'Proteus aún no tiene resultados por puesto de votación para este municipio, así que no puede sumar los de este territorio.',
     },
-    actores: actoresDeTerritorio(t), fuenteActores, porPuestos: null,
+    actores: actoresDeTerritorio(t), fuenteActores,
   };
 }
 
@@ -470,95 +378,3 @@ export function politica(t: TerritorioFicha, codigosResultados: string[] = []): 
 export const fmt = (n: number | null | undefined) => (n == null ? '—' : Math.round(n).toLocaleString('es-CO'));
 export const pct = (n: number | null | undefined) =>
   n == null ? '—' : `${n.toLocaleString('es-CO', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} %`;
-
-// --- Otras elecciones por puesto (Congreso 2026; presidencial cuando esté disponible) -------------
-
-/** Fila de resultados de un puesto en una elección */
-export interface FilaEleccion {
-  habilitados: number;
-  votantes: number;
-  blanco: number;
-  nulos: number;
-  noMarcados: number;
-  partidos?: [number, number][];
-  candidatos?: [number, number][];
-}
-
-/** Una elección con resultados por puesto. Las claves de `puestos` son códigos del censo 2026. */
-export interface EleccionPuestos {
-  id: string;
-  nombre: string;
-  fuente: string;
-  nota: string;
-  partidos: string[];
-  candidatos: { n: string; p: number }[];
-  municipio: FilaEleccion;
-  puestos: Record<string, FilaEleccion>;
-}
-
-export interface ResultadoEleccion {
-  id: string;
-  nombre: string;
-  fuente: string;
-  nota: string;
-  puestos: number;
-  habilitados: number;
-  votantes: number;
-  blanco: number;
-  nulos: number;
-  noMarcados: number;
-  partidos: { nombre: string; votos: number; pct: number }[];
-  candidatos: { nombre: string; partido: string; votos: number; pct: number }[];
-}
-
-interface ArchivoElecciones2026 {
-  meta: { fuente: string; nota: string };
-  elecciones: Record<string, Omit<EleccionPuestos, 'id' | 'fuente' | 'nota'>>;
-}
-
-const cargadores2026 = import.meta.glob<{ default: ArchivoElecciones2026 }>('../data/electoral/resultadosPuesto2026/*.json');
-const DANE_A_ARCHIVO: Record<string, string> = { '05001': 'medellin' };
-const cache2026 = new Map<string, Promise<EleccionPuestos[]>>();
-
-/** Elecciones de 2026 con resultados por puesto de un municipio (carga bajo demanda) */
-export function cargarElecciones2026(dane: string): Promise<EleccionPuestos[]> {
-  const archivo = DANE_A_ARCHIVO[dane];
-  const loader = archivo ? cargadores2026[`../data/electoral/resultadosPuesto2026/${archivo}.json`] : undefined;
-  if (!loader) return Promise.resolve([]);
-  if (!cache2026.has(dane)) {
-    cache2026.set(dane, loader().then((m) => Object.entries(m.default.elecciones).map(([id, e]) => ({ ...e, id, fuente: m.default.meta.fuente, nota: m.default.meta.nota }))));
-  }
-  return cache2026.get(dane)!;
-}
-
-export const ELECCIONES_PENDIENTES = [
-  { id: 'presidente-2026-1', nombre: 'Presidencia 2026 · 1.ª vuelta', motivo: 'El sitio de resultados de la presidencial está bloqueado por la configuración de red de la cuenta.' },
-  { id: 'presidente-2026-2', nombre: 'Presidencia 2026 · 2.ª vuelta', motivo: 'El sitio de resultados de la presidencial está bloqueado por la configuración de red de la cuenta.' },
-];
-
-/**
- * Suma una elección en los puestos dados. Con `todos`, suma todos los puestos del archivo (municipio).
- * No reparte ni estima: los puestos sin coordenadas solo cuentan en el total municipal.
- */
-export function sumarEleccion(e: EleccionPuestos, codigos: string[] | 'todos'): ResultadoEleccion | null {
-  // El total municipal trae a todos los candidatos; por puesto solo se guardan los principales
-  const filas = codigos === 'todos' ? [e.municipio] : codigos.map((c) => e.puestos[c]).filter(Boolean);
-  if (!filas.length) return null;
-  const par = new Map<number, number>();
-  const can = new Map<number, number>();
-  let habilitados = 0, votantes = 0, blanco = 0, nulos = 0, noMarcados = 0;
-  for (const f of filas) {
-    habilitados += f.habilitados; votantes += f.votantes; blanco += f.blanco; nulos += f.nulos; noMarcados += f.noMarcados;
-    for (const [i, v] of f.partidos ?? []) par.set(i, (par.get(i) ?? 0) + v);
-    for (const [i, v] of f.candidatos ?? []) can.set(i, (can.get(i) ?? 0) + v);
-  }
-  const validos = [...par.values()].reduce((s, v) => s + v, 0) + blanco;
-  return {
-    id: e.id, nombre: e.nombre, fuente: e.fuente, nota: e.nota, puestos: codigos === 'todos' ? Object.keys(e.puestos).length : filas.length,
-    habilitados, votantes, blanco, nulos, noMarcados,
-    partidos: [...par.entries()].sort((a, b) => b[1] - a[1]).map(([i, v]) => ({ nombre: e.partidos[i], votos: v, pct: validos ? (100 * v) / validos : 0 })),
-    candidatos: [...can.entries()].sort((a, b) => b[1] - a[1]).map(([i, v]) => ({
-      nombre: e.candidatos[i].n, partido: e.partidos[e.candidatos[i].p], votos: v, pct: validos ? (100 * v) / validos : 0,
-    })),
-  };
-}

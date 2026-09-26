@@ -7,9 +7,8 @@ import React, { useEffect, useMemo, useState } from 'react';
 import {
   type TerritorioFicha, type EstadoDato, ETIQUETA_ESTADO, EDADES_DANE,
   demografia, censoElectoral, grupos, politica, fmt, pct,
-  cargarElecciones2026, sumarEleccion, ELECCIONES_PENDIENTES, type EleccionPuestos,
-  puestosConResultados, sumarResultadosPuestos,
 } from '../../services/territoryProfileService';
+import { cargarElecciones, sumarEleccion, ELECCIONES_PENDIENTES, type EleccionPuestos } from '../../services/electionResultsService';
 import type { PuestoVotacion } from '../../services/pollingStationsService';
 
 type Seccion = 'politica' | 'demografia' | 'censo' | 'grupos';
@@ -70,50 +69,45 @@ export const FichaTerritorio: React.FC<FichaTerritorioProps> = ({
   territorio: t, puestosDentro, codigosResultados = [], sinUbicar = [], cargandoPuestos, onVerRed, onEntrar, entrarLabel, onUsarComoActivo,
 }) => {
   const [seccion, setSeccion] = useState<Seccion>('politica');
-  const [eleccion, setEleccion] = useState<string>('local-2023');
-  const [elecciones2026, setElecciones2026] = useState<EleccionPuestos[]>([]);
+  const [eleccion, setEleccion] = useState<string>('alcaldia-2023');
+  const [elecciones, setElecciones] = useState<EleccionPuestos[] | null>(null);
   useEffect(() => {
     let activo = true;
-    cargarElecciones2026(t.dane).then((e) => { if (activo) setElecciones2026(e); });
+    setElecciones(null);
+    cargarElecciones(t.dane).then((e) => { if (activo) setElecciones(e); });
     return () => { activo = false; };
   }, [t.dane]);
-  const res2026 = useMemo(() => {
-    const e = elecciones2026.find((x) => x.id === eleccion);
-    if (!e) return null;
-    return sumarEleccion(e, t.tipo === 'municipio' ? 'todos' : puestosDentro.map((p) => p.codPuesto));
-  }, [elecciones2026, eleccion, t.tipo, puestosDentro]);
+  const eleccionSel = elecciones?.find((x) => x.id === eleccion) ?? null;
   const pendiente = ELECCIONES_PENDIENTES.find((x) => x.id === eleccion);
+  /** Códigos de los puestos del territorio en la elección (2023 y 2026 usan códigos distintos) */
+  const codigosDe = (e: EleccionPuestos): string[] | 'todos' =>
+    t.tipo === 'municipio' ? 'todos' : e.codigos === '2023' ? codigosResultados : puestosDentro.map((p) => p.codPuesto);
+  const resultado = useMemo(() => (eleccionSel ? sumarEleccion(eleccionSel, codigosDe(eleccionSel)) : null),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [eleccionSel, t.tipo, codigosResultados, puestosDentro]);
   const [verTodosPuestos, setVerTodosPuestos] = useState(false);
   const [puestoAbierto, setPuestoAbierto] = useState<string | null>(null);
   // Resultados de cada puesto del territorio en la elección elegida
   const porPuesto = useMemo(() => {
-    type Fila = { codigo: string; nombre: string; votantes: number; habilitados: number; top: { nombre: string; detalle: string; pct: number }[] };
-    const filas: Fila[] = [];
-    if (eleccion === 'local-2023') {
-      const lista = puestosConResultados(t.dane);
-      const dentro = new Set(codigosResultados);
-      for (const p of lista) {
-        if (t.tipo !== 'municipio' && !dentro.has(p.codigo)) continue;
-        const r = sumarResultadosPuestos(t.dane, [p.codigo]);
-        if (r) filas.push({ codigo: p.codigo, nombre: p.nombre, votantes: r.votantes, habilitados: r.habilitados, top: r.alcaldia.slice(0, 5).map((c) => ({ nombre: c.nombre, detalle: c.partido, pct: c.pct })) });
-      }
-    } else {
-      const e = elecciones2026.find((x) => x.id === eleccion);
-      if (e) {
-        const nombres = new Map(puestosDentro.map((p) => [p.codPuesto, p.puesto]));
-        const codigos = t.tipo === 'municipio' ? Object.keys(e.puestos) : puestosDentro.map((p) => p.codPuesto);
-        for (const c of codigos) {
-          const r = sumarEleccion(e, [c]);
-          if (r) filas.push({ codigo: c, nombre: titulo(nombres.get(c) ?? `Puesto ${c}`), votantes: r.votantes, habilitados: r.habilitados, top: r.partidos.slice(0, 5).map((x) => ({ nombre: x.nombre, detalle: 'Partido o lista', pct: x.pct })) });
-        }
-      }
-    }
-    return filas.sort((a, b) => b.votantes - a.votantes);
-  }, [eleccion, t, codigosResultados, elecciones2026, puestosDentro]);
+    if (!eleccionSel) return [];
+    const nombres2026 = new Map(puestosDentro.map((p) => [p.codPuesto, p.puesto]));
+    const cods = codigosDe(eleccionSel);
+    const lista = cods === 'todos' ? Object.keys(eleccionSel.puestos) : cods;
+    const conCandidatos = eleccionSel.id === 'alcaldia-2023';
+    return lista.map((c) => {
+      const r = sumarEleccion(eleccionSel, [c]);
+      if (!r) return null;
+      const top = conCandidatos
+        ? r.candidatos.slice(0, 5).map((x) => ({ nombre: x.nombre, detalle: x.partido, pct: x.pct }))
+        : r.partidos.slice(0, 5).map((x) => ({ nombre: x.nombre, detalle: 'Partido o lista', pct: x.pct }));
+      return { codigo: c, nombre: titulo(eleccionSel.nombres[c] ?? nombres2026.get(c) ?? `Puesto ${c}`), votantes: r.votantes, habilitados: r.habilitados, top };
+    }).filter((x): x is NonNullable<typeof x> => x !== null).sort((a, b) => b.votantes - a.votantes);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [eleccionSel, t.tipo, codigosResultados, puestosDentro]);
   const dem = useMemo(() => demografia(t), [t]);
   const cen = useMemo(() => censoElectoral(t, puestosDentro, sinUbicar), [t, puestosDentro, sinUbicar]);
   const gru = useMemo(() => grupos(dem, cen), [dem, cen]);
-  const pol = useMemo(() => politica(t, codigosResultados), [t, codigosResultados]);
+  const pol = useMemo(() => politica(t), [t]);
 
   const tipoLabel = t.tipo === 'municipio' ? `Municipio · ${t.municipio}` : `${t.clase ?? ''} · ${t.municipio}`;
   const d = dem.datos;
@@ -162,94 +156,75 @@ export const FichaTerritorio: React.FC<FichaTerritorioProps> = ({
       {seccion === 'politica' && (
         <div className="flex flex-col gap-3" role="tabpanel">
           <div role="group" aria-label="Elección" className="flex flex-wrap gap-1">
-            {[{ id: 'local-2023', nombre: 'Alcaldía y Concejo 2023', disponible: true },
-              ...elecciones2026.map((e) => ({ id: e.id, nombre: e.nombre, disponible: true })),
+            {[...(elecciones ?? []).map((e) => ({ id: e.id, nombre: e.nombre, disponible: true })),
               ...ELECCIONES_PENDIENTES.map((e) => ({ id: e.id, nombre: e.nombre, disponible: false }))].map((o) => (
-              <button key={o.id} aria-pressed={eleccion === o.id} onClick={() => setEleccion(o.id)} title={o.disponible ? undefined : 'Pendiente'}
+              <button key={o.id} aria-pressed={eleccion === o.id} onClick={() => { setEleccion(o.id); setPuestoAbierto(null); }} title={o.disponible ? undefined : 'Pendiente'}
                 className={`min-h-8 px-2.5 rounded-md border text-xs font-semibold ${eleccion === o.id ? 'bg-[var(--c-accent-soft)] border-[var(--c-accent)] text-[var(--c-accent-text)]' : 'border-[var(--c-border)] bg-[var(--c-surface)]'} ${o.disponible ? '' : 'text-[var(--c-muted)] border-dashed'}`}>
                 {o.nombre}
               </button>
             ))}
           </div>
-          {eleccion === 'local-2023' && (<>
-          <div className="flex flex-col gap-2 px-3 py-2.5 rounded-xl bg-[var(--c-sunken)]">
-            <Cabecera titulo={pol.resultados.ambito === 'municipio' ? 'Alcaldía 2023' : pol.porPuestos ? 'Alcaldía 2023 en sus puestos' : 'Resultados electorales históricos'} estado={pol.resultados.estado} />
-            <span className="text-sm text-[var(--c-muted)]">{pol.resultados.texto}</span>
-            {pol.resultados.ambito === 'municipio' && pol.resultados.alcaldia && (
-              <div className="flex flex-col gap-1">
-                {pol.resultados.alcaldia.candidatos.slice(0, 5).map((c, i) => (
-                  <div key={c.nombre} className="flex items-center gap-2 text-sm">
-                    <span className="w-44 truncate font-semibold" title={c.partido}>{c.nombre}</span>
-                    <span className="grow h-2 rounded bg-[var(--c-border)] overflow-hidden">
-                      <span className="block h-2" style={{ width: `${c.pctValidos}%`, background: i === 0 ? 'var(--c-accent)' : 'var(--c-muted)' }} />
-                    </span>
-                    <span className="w-14 text-right tabular-nums">{pct(c.pctValidos)}</span>
-                  </div>
-                ))}
-              </div>
-            )}
-            {pol.porPuestos && pol.resultados.ambito === 'territorio' && (
-              <div className="flex flex-col gap-1">
-                <span className="text-xs text-[var(--c-muted)]">Alcaldía 2023 · {fmt(pol.porPuestos.votantes)} votantes de {fmt(pol.porPuestos.habilitados)} habilitados ({pct((100 * pol.porPuestos.votantes) / Math.max(1, pol.porPuestos.habilitados))})</span>
-                {pol.porPuestos.alcaldia.slice(0, 5).map((c, i) => (
-                  <div key={c.nombre} className="flex items-center gap-2 text-sm">
-                    <span className="w-44 truncate font-semibold" title={c.partido}>{c.nombre}</span>
-                    <span className="grow h-2 rounded bg-[var(--c-border)] overflow-hidden">
-                      <span className="block h-2" style={{ width: `${c.pct}%`, background: i === 0 ? 'var(--c-accent)' : 'var(--c-muted)' }} />
-                    </span>
-                    <span className="w-14 text-right tabular-nums">{pct(c.pct)}</span>
-                  </div>
-                ))}
-              </div>
-            )}
-            {pol.resultados.ambito === 'territorio' && pol.resultados.alcaldia && !pol.porPuestos && (
-              <span className="text-xs text-[var(--c-muted)]">
-                Referencia municipal: ganó {pol.resultados.alcaldia.candidatos[0]?.nombre} ({pol.resultados.alcaldia.candidatos[0]?.partido}) con {pct(pol.resultados.alcaldia.candidatos[0]?.pctValidos)}; participación {pct(pol.resultados.alcaldia.participacion)}.
-              </span>
-            )}
-          </div>
-          {pol.porPuestos && (
-            <div className="flex flex-col gap-1.5 px-3 py-2.5 rounded-xl border border-[var(--c-border)]">
-              <Cabecera titulo={pol.resultados.ambito === 'municipio' ? 'Concejo 2023 por partido (preconteo)' : 'Concejo 2023 en sus puestos'} estado="oficial" fuente="Registraduría, preconteo 29-oct-2023 · puede diferir levemente del escrutinio" />
-              {pol.porPuestos.concejo.slice(0, 6).map((c) => (
-                <div key={c.partido} className="flex items-center gap-2 text-sm">
-                  <span className="w-44 truncate font-semibold" title={c.partido}>{c.partido}</span>
-                  <span className="grow h-2 rounded bg-[var(--c-sunken)] overflow-hidden"><span className="block h-2 bg-[#3E5C8A]" style={{ width: `${c.pct}%` }} /></span>
-                  <span className="w-14 text-right tabular-nums">{pct(c.pct)}</span>
-                </div>
-              ))}
+          {elecciones === null && <Aviso>Cargando resultados…</Aviso>}
+          {elecciones !== null && !elecciones.length && !pendiente && (
+            <div className="flex flex-col gap-2 px-3 py-2.5 rounded-xl bg-[var(--c-sunken)]">
+              <Cabecera titulo="Resultados por puesto" estado="sin-informacion" />
+              <span className="text-sm text-[var(--c-muted)]">Proteus aún no tiene resultados por puesto de votación para {t.municipio}.</span>
             </div>
           )}
-          </>)}
           {pendiente && (
             <Aviso><strong className="text-[var(--c-ink)]">{pendiente.nombre}: sin información.</strong> {pendiente.motivo}</Aviso>
           )}
-          {!pendiente && eleccion !== 'local-2023' && (res2026 ? (
+          {eleccionSel && (resultado ? (
             <div className="flex flex-col gap-2 px-3 py-2.5 rounded-xl bg-[var(--c-sunken)]">
-              <Cabecera titulo={t.tipo === 'municipio' ? res2026.nombre : `${res2026.nombre} en sus puestos`} estado="oficial" fuente="Registraduría, preconteo 8-mar-2026 · puede diferir del escrutinio" />
-              <span className="text-xs text-[var(--c-muted)]">{fmt(res2026.votantes)} votantes de {fmt(res2026.habilitados)} habilitados ({pct((100 * res2026.votantes) / Math.max(1, res2026.habilitados))}) · {fmt(res2026.puestos)} puesto(s)</span>
-              <span className="text-xs font-bold text-[var(--c-muted)] mt-1">Partidos y listas</span>
-              {res2026.partidos.slice(0, 8).map((c, i) => (
-                <div key={c.nombre} className="flex items-center gap-2 text-sm">
-                  <span className="w-44 truncate font-semibold" title={c.nombre}>{c.nombre}</span>
-                  <span className="grow h-2 rounded bg-[var(--c-border)] overflow-hidden"><span className="block h-2" style={{ width: `${(100 * c.pct) / Math.max(0.01, res2026.partidos[0].pct)}%`, background: i === 0 ? 'var(--c-accent)' : '#3E5C8A' }} /></span>
-                  <span className="w-14 text-right tabular-nums">{pct(c.pct)}</span>
-                </div>
-              ))}
-              {res2026.candidatos.length > 0 && (<>
-                <span className="text-xs font-bold text-[var(--c-muted)] mt-1">Candidatos con más voto preferente</span>
-                {res2026.candidatos.slice(0, 8).map((c) => (
-                  <div key={c.nombre + c.partido} className="flex items-center gap-2 text-sm">
-                    <span className="flex flex-col grow min-w-0"><span className="font-semibold truncate">{c.nombre}</span><span className="text-xs text-[var(--c-muted)] truncate">{c.partido}</span></span>
-                    <span className="w-16 text-right tabular-nums font-semibold">{fmt(c.votos)}</span>
+              <Cabecera titulo={t.tipo === 'municipio' ? eleccionSel.nombre : `${eleccionSel.nombre} en sus puestos`} estado="oficial" fuente={`Registraduría, preconteo ${eleccionSel.fecha} · puede diferir del escrutinio`} />
+              <span className="text-xs text-[var(--c-muted)]">{fmt(resultado.votantes)} votantes de {fmt(resultado.habilitados)} habilitados ({pct((100 * resultado.votantes) / Math.max(1, resultado.habilitados))}) · {fmt(resultado.puestos)} puesto(s)</span>
+              {eleccionSel.id === 'alcaldia-2023' ? (
+                resultado.candidatos.slice(0, 6).map((c, i) => (
+                  <div key={c.nombre} className="flex items-center gap-2 text-sm">
+                    <span className="w-44 truncate font-semibold" title={c.partido}>{c.nombre}</span>
+                    <span className="grow h-2 rounded bg-[var(--c-border)] overflow-hidden"><span className="block h-2" style={{ width: `${(100 * c.pct) / Math.max(0.01, resultado.candidatos[0].pct)}%`, background: i === 0 ? 'var(--c-accent)' : 'var(--c-muted)' }} /></span>
+                    <span className="w-14 text-right tabular-nums">{pct(c.pct)}</span>
+                  </div>
+                ))
+              ) : (<>
+                <span className="text-xs font-bold text-[var(--c-muted)] mt-1">Partidos y listas</span>
+                {resultado.partidos.slice(0, 8).map((c, i) => (
+                  <div key={c.nombre} className="flex items-center gap-2 text-sm">
+                    <span className="w-44 truncate font-semibold" title={c.nombre}>{c.nombre}</span>
+                    <span className="grow h-2 rounded bg-[var(--c-border)] overflow-hidden"><span className="block h-2" style={{ width: `${(100 * c.pct) / Math.max(0.01, resultado.partidos[0].pct)}%`, background: i === 0 ? 'var(--c-accent)' : '#3E5C8A' }} /></span>
+                    <span className="w-14 text-right tabular-nums">{pct(c.pct)}</span>
                   </div>
                 ))}
+                {resultado.candidatos.length > 0 && (<>
+                  <span className="text-xs font-bold text-[var(--c-muted)] mt-1">Candidatos con más voto preferente</span>
+                  {resultado.candidatos.slice(0, 8).map((c) => (
+                    <div key={c.nombre + c.partido} className="flex items-center gap-2 text-sm">
+                      <span className="flex flex-col grow min-w-0"><span className="font-semibold truncate">{c.nombre}</span><span className="text-xs text-[var(--c-muted)] truncate">{c.partido}</span></span>
+                      <span className="w-16 text-right tabular-nums font-semibold">{fmt(c.votos)}</span>
+                    </div>
+                  ))}
+                </>)}
               </>)}
-              <span className="text-xs text-[var(--c-muted)]">{t.tipo === 'municipio' ? 'Total municipal del preconteo.' : 'Suma de los puestos ubicados dentro; en cada puesto se guardan los candidatos que suman el 97 % del voto preferente, así que las cifras de candidatos son aproximadas por abajo. Los puestos sin coordenadas solo cuentan en el total municipal.'}</span>
+              {t.tipo === 'municipio' && eleccionSel.id === 'alcaldia-2023' && pol.resultados.alcaldia && (
+                <span className="text-xs text-[var(--c-muted)]">Escrutinio oficial: ganó {pol.resultados.alcaldia.candidatos[0]?.nombre} con {pct(pol.resultados.alcaldia.candidatos[0]?.pctValidos)}; participación {pct(pol.resultados.alcaldia.participacion)}.</span>
+              )}
+              <span className="text-xs text-[var(--c-muted)]">{t.tipo === 'municipio' ? 'Total municipal del preconteo.' : pol.resultados.texto}{eleccionSel.codigos === '2026' && t.tipo !== 'municipio' && resultado.candidatos.length ? ' En cada puesto se guardan los candidatos que suman el 97 % del voto preferente, así que sus cifras aquí son aproximadas por abajo.' : ''}</span>
             </div>
           ) : (
-            <Aviso>{elecciones2026.length ? 'No hay puestos de votación de 2026 dentro de este territorio: sus residentes votan en puestos vecinos.' : 'Cargando…'}</Aviso>
+            <Aviso>No hay puestos de votación de esta elección dentro del territorio: sus residentes votan en puestos vecinos. No se reparte ni se estima.</Aviso>
           ))}
+          {!eleccionSel && !pendiente && elecciones !== null && elecciones.length === 0 && pol.resultados.alcaldia && t.tipo === 'municipio' && (
+            <div className="flex flex-col gap-1 px-3 py-2.5 rounded-xl border border-[var(--c-border)]">
+              <Cabecera titulo="Alcaldía 2023 (escrutinio municipal)" estado="oficial" />
+              {pol.resultados.alcaldia.candidatos.slice(0, 5).map((c, i) => (
+                <div key={c.nombre} className="flex items-center gap-2 text-sm">
+                  <span className="w-44 truncate font-semibold" title={c.partido}>{c.nombre}</span>
+                  <span className="grow h-2 rounded bg-[var(--c-border)] overflow-hidden"><span className="block h-2" style={{ width: `${c.pctValidos}%`, background: i === 0 ? 'var(--c-accent)' : 'var(--c-muted)' }} /></span>
+                  <span className="w-14 text-right tabular-nums">{pct(c.pctValidos)}</span>
+                </div>
+              ))}
+            </div>
+          )}
           {porPuesto.length > 0 && (
             <div className="flex flex-col gap-1">
               <div className="flex items-center gap-2">

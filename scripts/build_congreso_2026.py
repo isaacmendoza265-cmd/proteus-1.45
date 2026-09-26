@@ -71,6 +71,9 @@ def construir(corp):
     return {'partidos': partidos, 'candidatos': candidatos, 'municipio': municipio, 'puestos': puestos, 'corte': mdhm, 'boletin': numact}
 
 se, ca = construir('SE'), construir('CA')
+nombres = {app(c): nm.title() for c, nm, _ in json.load(open(f'{base}/puestos_nomenclator.json'))}
+se['nombres'] = nombres
+ca['nombres'] = nombres
 out = {
     'meta': {
         'fuente': 'Registraduría Nacional del Estado Civil, preconteo de las elecciones de Congreso del 8-mar-2026 (resultadospreccongreso2026.registraduria.gov.co)',

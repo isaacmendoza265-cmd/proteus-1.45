@@ -1,0 +1,232 @@
+{
+ "05001": {
+  "nombre": "Medellin",
+  "2023": "medellin",
+  "2026": "medellin"
+ },
+ "05088": {
+  "nombre": "Bello",
+  "2023": "bello",
+  "2026": "bello"
+ },
+ "05360": {
+  "nombre": "Itagui",
+  "2023": "itagui",
+  "2026": "itagui"
+ },
+ "05266": {
+  "nombre": "Envigado",
+  "2023": "envigado",
+  "2026": "envigado"
+ },
+ "05615": {
+  "nombre": "Rionegro",
+  "2023": "rionegro",
+  "2026": "rionegro"
+ },
+ "05045": {
+  "nombre": "Apartado",
+  "2023": "apartado",
+  "2026": "apartado"
+ },
+ "05837": {
+  "nombre": "Turbo",
+  "2023": "turbo",
+  "2026": "turbo"
+ },
+ "05631": {
+  "nombre": "Sabaneta",
+  "2023": "sabaneta",
+  "2026": "sabaneta"
+ },
+ "05212": {
+  "nombre": "Copacabana",
+  "2023": "copacabana",
+  "2026": "copacabana"
+ },
+ "05154": {
+  "nombre": "Caucasia",
+  "2023": "caucasia",
+  "2026": "caucasia"
+ },
+ "05129": {
+  "nombre": "Caldas",
+  "2023": "caldas",
+  "2026": "caldas"
+ },
+ "05380": {
+  "nombre": "La Estrella",
+  "2023": "la_estrella",
+  "2026": "la_estrella"
+ },
+ "05376": {
+  "nombre": "La Ceja",
+  "2023": "la_ceja",
+  "2026": "la_ceja"
+ },
+ "05308": {
+  "nombre": "Girardota",
+  "2023": "girardota",
+  "2026": "girardota"
+ },
+ "05172": {
+  "nombre": "Chigorodo",
+  "2023": "chigorodo",
+  "2026": "chigorodo"
+ },
+ "05440": {
+  "nombre": "Marinilla",
+  "2023": "marinilla",
+  "2026": "marinilla"
+ },
+ "05147": {
+  "nombre": "Carepa",
+  "2023": "carepa",
+  "2026": "carepa"
+ },
+ "05148": {
+  "nombre": "Carmen De Viboral",
+  "2023": "carmen_de_viboral",
+  "2026": "carmen_de_viboral"
+ },
+ "05079": {
+  "nombre": "Barbosa",
+  "2023": "barbosa",
+  "2026": "barbosa"
+ },
+ "05318": {
+  "nombre": "Guarne",
+  "2023": "guarne",
+  "2026": "guarne"
+ },
+ "05250": {
+  "nombre": "El Bagre",
+  "2023": "el_bagre",
+  "2026": "el_bagre"
+ },
+ "05490": {
+  "nombre": "Necocli",
+  "2023": "necocli",
+  "2026": "necocli"
+ },
+ "05034": {
+  "nombre": "Andes",
+  "2023": "andes",
+  "2026": "andes"
+ },
+ "05887": {
+  "nombre": "Yarumal",
+  "2023": "yarumal",
+  "2026": "yarumal"
+ },
+ "05579": {
+  "nombre": "Puerto Berrio",
+  "2023": "puerto_berrio",
+  "2026": "puerto_berrio"
+ },
+ "05736": {
+  "nombre": "Segovia",
+  "2023": "segovia",
+  "2026": "segovia"
+ },
+ "05697": {
+  "nombre": "Santuario",
+  "2023": "santuario",
+  "2026": "santuario"
+ },
+ "05665": {
+  "nombre": "San Pedro De Uraba",
+  "2023": "san_pedro_de_uraba",
+  "2026": "san_pedro_de_uraba"
+ },
+ "05686": {
+  "nombre": "Santa Rosa De Osos",
+  "2023": "santa_rosa_de_osos",
+  "2026": "santa_rosa_de_osos"
+ },
+ "05756": {
+  "nombre": "Sonson",
+  "2023": "sonson",
+  "2026": "sonson"
+ },
+ "05847": {
+  "nombre": "Urrao",
+  "2023": "urrao",
+  "2026": "urrao"
+ },
+ "05790": {
+  "nombre": "Taraza",
+  "2023": "taraza",
+  "2026": "taraza"
+ },
+ "05030": {
+  "nombre": "Amaga",
+  "2023": "amaga",
+  "2026": "amaga"
+ },
+ "05042": {
+  "nombre": "Antioquia",
+  "2023": "antioquia",
+  "2026": "antioquia"
+ },
+ "05664": {
+  "nombre": "San Pedro",
+  "2023": "san_pedro",
+  "2026": "san_pedro"
+ },
+ "05604": {
+  "nombre": "Remedios",
+  "2023": "remedios",
+  "2026": "remedios"
+ },
+ "05101": {
+  "nombre": "Bolivar",
+  "2023": "bolivar",
+  "2026": "bolivar"
+ },
+ "05051": {
+  "nombre": "Arboletes",
+  "2023": "arboletes",
+  "2026": "arboletes"
+ },
+ "05607": {
+  "nombre": "Retiro",
+  "2023": "retiro",
+  "2026": "retiro"
+ },
+ "05679": {
+  "nombre": "Santa Barbara",
+  "2023": "santa_barbara",
+  "2026": "santa_barbara"
+ },
+ "05495": {
+  "nombre": "Nechi",
+  "2023": "nechi",
+  "2026": "nechi"
+ },
+ "05895": {
+  "nombre": "Zaragoza",
+  "2023": "zaragoza",
+  "2026": "zaragoza"
+ },
+ "05659": {
+  "nombre": "San Juan De Uraba",
+  "2023": "san_juan_de_uraba",
+  "2026": "san_juan_de_uraba"
+ },
+ "05120": {
+  "nombre": "Caceres",
+  "2023": "caceres",
+  "2026": "caceres"
+ },
+ "05234": {
+  "nombre": "Dabeiba",
+  "2023": "dabeiba",
+  "2026": "dabeiba"
+ },
+ "05400": {
+  "nombre": "La Union",
+  "2023": "la_union",
+  "2026": "la_union"
+ }
+}

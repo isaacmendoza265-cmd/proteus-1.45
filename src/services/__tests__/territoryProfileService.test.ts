@@ -1,8 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
-  territorioBello, territorioFicha, tieneFicha, demografia, censoElectoral, grupos, politica, actoresDeTerritorio, sumarDemografia, sumarResultadosPuestos,
+  territorioBello, territorioFicha, tieneFicha, demografia, censoElectoral, grupos, politica, actoresDeTerritorio, sumarDemografia,
 } from '../territoryProfileService';
-import RIONEGRO from '../../data/electoral/resultadosPuesto2023/rionegro.json';
 import type { PuestoVotacion } from '../pollingStationsService';
 
 const puesto = (total: number, mujeres: number, mesas = 10, cod = String(total)): PuestoVotacion => ({
@@ -84,14 +83,6 @@ describe('política', () => {
     expect(p.resultados.alcaldia!.candidatos[0].nombre).toMatch(/Gonzalez/);
     expect(p.actores.length).toBeGreaterThan(5);
   });
-  it('una comuna sin puestos con resultado no inventa resultados', () => {
-    expect(politica(territorioBello('bello-div-4')!, []).resultados.estado).toBe('sin-informacion');
-  });
-  it('Bello suma sus 42 puestos de 2023 y reproduce el total del preconteo', () => {
-    const p = politica(territorioBello('bello')!);
-    expect(p.porPuestos!.votantes).toBe(177706);
-    expect(p.porPuestos!.puestos).toBe(42);
-  });
   it('los actores del barrio son los de su comuna y nunca exponen cédulas', () => {
     const barrio = territorioBello('bello-sub-B001')!;
     const comuna = territorioBello('bello-div-6')!;
@@ -106,18 +97,6 @@ describe('Rionegro (piloto de resultados por puesto)', () => {
     expect(territorioFicha('rionegro-div-C2')?.clase).toBe('Comuna');
     expect(territorioFicha('rionegro-sub-042')?.padreId).toBe('rionegro-div-C4');
   });
-  it('la suma de los 20 puestos reproduce el total municipal del preconteo', () => {
-    const r = sumarResultadosPuestos('05615', Object.keys(RIONEGRO.puestos))!;
-    expect(r.votantes).toBe(83354);
-    expect(r.alcaldia[0].nombre).toMatch(/Rivas Urrea/);
-    expect(r.alcaldia[0].votos).toBe(41092);
-  });
-  it('un territorio suma solo sus puestos', () => {
-    const t = territorioFicha('rionegro-div-C2')!;
-    const p = politica(t, ['01214030201']);
-    expect(p.resultados.estado).toBe('oficial');
-    expect(p.porPuestos!.puestos).toBe(1);
-  });
   it('sin DANE por barrio, Rionegro dice que no hay demografía', () => {
     expect(demografia(territorioFicha('rionegro-div-C2')!).estado).toBe('sin-informacion');
   });
@@ -129,28 +108,5 @@ describe('Medellín', () => {
     expect(territorioFicha('med-correg-santa-elena')?.clase).toBe('Corregimiento');
     expect(territorioFicha('barrio-0101')?.padreId).toBe('comuna-1');
     expect(territorioFicha('medellin-base-outline')).toBeNull();
-  });
-  it('suma sus 239 puestos de 2023', () => {
-    const p = politica(territorioFicha('medellin')!);
-    expect(p.porPuestos!.votantes).toBe(971537);
-    expect(p.porPuestos!.alcaldia[0].nombre).toMatch(/Gutierrez/);
-  });
-});
-
-describe('Congreso 2026 en Medellín', () => {
-  it('carga Senado y Cámara y el total municipal cuadra con la suma de puestos', async () => {
-    const { cargarElecciones2026, sumarEleccion } = await import('../territoryProfileService');
-    const es = await cargarElecciones2026('05001');
-    expect(es.map((e) => e.id).sort()).toEqual(['camara-2026', 'senado-2026']);
-    const se = es.find((e) => e.id === 'senado-2026')!;
-    const total = sumarEleccion(se, 'todos')!;
-    const suma = sumarEleccion(se, Object.keys(se.puestos))!;
-    expect(total.votantes).toBe(913680);
-    expect(suma.votantes).toBe(total.votantes);
-    expect(total.partidos[0].nombre).toMatch(/Centro Democr/);
-  });
-  it('un municipio sin archivo 2026 no inventa resultados', async () => {
-    const { cargarElecciones2026 } = await import('../territoryProfileService');
-    expect(await cargarElecciones2026('05088')).toEqual([]);
   });
 });

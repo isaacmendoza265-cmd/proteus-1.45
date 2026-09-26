@@ -72,7 +72,7 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
     return null;
   })();
   const fichaTerritorio = useMemo(() => (fichaId ? territorioFicha(fichaId) : null), [fichaId]);
-  const puestosMuni = usePuestosTerritorio(fichaTerritorio ? municipioFichaPorDane(fichaTerritorio.dane) : null);
+  const puestosMuni = usePuestosTerritorio(fichaTerritorio ? municipioFichaPorDane(fichaTerritorio.dane) : null, fichaTerritorio?.municipio);
   const puestosFicha = useMemo(
     () => (fichaTerritorio ? puestosDe(puestosMuni, fichaTerritorio.tipo, fichaTerritorio.id) : []),
     [fichaTerritorio, puestosMuni],

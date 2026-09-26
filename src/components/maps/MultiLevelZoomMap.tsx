@@ -567,7 +567,7 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
 
         layer.bindTooltip(
           `<div style="font-family: system-ui, sans-serif; font-weight: 700; font-size: 11px;">
-            <div style="color: #38bdf8; font-size: 9px; text-transform: uppercase;">${p.level}</div>
+            ${p.level ? `<div style="color: #38bdf8; font-size: 9px; text-transform: uppercase;">${p.level}</div>` : ''}
             <div style="color: #ffffff; font-size: 12px; font-weight: 900;">${p.name}</div>
             ${daneCodeHtml}
             ${subregHtml}
