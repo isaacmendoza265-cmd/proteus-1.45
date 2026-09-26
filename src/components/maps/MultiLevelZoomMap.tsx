@@ -10,7 +10,7 @@ import {
   ZOOM_LEVELS_CONFIG,
   ANTIOQUIA_125_MUNICIPIOS_GEOJSON
 } from '../../data/geojson';
-import { Maximize2, Layers, Compass, Sparkles, Map, Building, Megaphone, ChevronDown, Check, Vote } from 'lucide-react';
+import { Maximize2, Layers, Compass, Sparkles, Map, Building, Megaphone, ChevronDown, Check, Vote, Sun, Moon, Satellite } from 'lucide-react';
 import { SubregionAggregationEngine } from '../../services/subregionAggregationEngine';
 import { ColombiaMunicipalitiesGeoService } from '../../services/colombiaMunicipalitiesGeoService';
 import { MUNICIPAL_DIVISIONS_REGISTRY, resolveMunicipality } from '../../data/geojson/municipalDivisions';
@@ -36,6 +36,18 @@ const VALLE_ABURRA_DANE = new Set(
 // atribución visible y uso moderado (https://operations.osmfoundation.org/policies/tiles/).
 const OSM_TILE_URL = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
 const OSM_ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>';
+
+// Imagen satelital sin API key: Sentinel-2 cloudless 2016 de EOX (licencia CC BY 4.0, atribución obligatoria).
+// Resolución de 10 m: nítida a escala de municipio, borrosa a escala de barrio (desde el zoom 16 se amplía).
+const SAT_TILE_URL = 'https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless_3857/default/g/{z}/{y}/{x}.jpg';
+const SAT_ATTRIBUTION = '<a href="https://s2maps.eu" target="_blank" rel="noopener">Sentinel-2 cloudless 2016</a> de EOX IT Services GmbH (contiene datos modificados de Copernicus Sentinel 2016), CC BY 4.0';
+
+type MapaBase = 'calles' | 'oscuro' | 'satelite';
+const MAPAS_BASE: { id: MapaBase; label: string }[] = [
+  { id: 'calles', label: 'Calles' },
+  { id: 'oscuro', label: 'Calles (oscuro)' },
+  { id: 'satelite', label: 'Satélite' },
+];
 
 const escapeHtml = (s: string) => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]!));
 
@@ -79,7 +91,8 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
   const mapInstanceRef = useRef<L.Map | null>(null);
   const geoJsonLayerGroupRef = useRef<L.LayerGroup | null>(null);
   const [hoveredFeature, setHoveredFeature] = useState<TerritoryGeoFeature | null>(null);
-  const [mapBaseTheme, setMapBaseTheme] = useState<'dark' | 'voyager'>('dark');
+  // Por defecto, calles claras: el estilo aprobado (polígonos translúcidos con borde del mismo tono)
+  const [mapaBase, setMapaBase] = useState<MapaBase>('calles');
   const [antioquiaViewMode, setAntioquiaViewMode] = useState<'subregiones' | 'municipios'>('subregiones');
   const [customDeptDataset, setCustomDeptDataset] = useState<TerritoryFeatureCollection | null>(null);
   const [isLoadingDept, setIsLoadingDept] = useState<boolean>(false);
@@ -202,12 +215,20 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
       }
     });
 
-    L.tileLayer(OSM_TILE_URL, {
-      maxZoom: 19,
-      attribution: OSM_ATTRIBUTION,
-      className: mapBaseTheme === 'dark' ? 'proteus-basemap-dark' : '',
-    }).addTo(map);
-  }, [mapBaseTheme]);
+    if (mapaBase === 'satelite') {
+      L.tileLayer(SAT_TILE_URL, {
+        maxZoom: 19,
+        maxNativeZoom: 17,
+        attribution: SAT_ATTRIBUTION,
+      }).addTo(map);
+    } else {
+      L.tileLayer(OSM_TILE_URL, {
+        maxZoom: 19,
+        attribution: OSM_ATTRIBUTION,
+        className: mapaBase === 'oscuro' ? 'proteus-basemap-dark' : '',
+      }).addTo(map);
+    }
+  }, [mapaBase]);
 
   // Load department municipalities when selectedDepartmentName is not Antioquia
   useEffect(() => {
@@ -893,13 +914,24 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
           </button>
         )}
 
-        <button
-          onClick={() => setMapBaseTheme(prev => prev === 'dark' ? 'voyager' : 'dark')}
-          className="p-2.5 rounded-xl bg-slate-950/70 hover:bg-slate-900/90 text-slate-300 hover:text-white border border-white/20 backdrop-blur-xl shadow-lg transition text-[10px] font-mono font-bold"
-          title="Alternar estilo de mapa base"
-        >
-          {mapBaseTheme === 'dark' ? '🌙' : '☀️'}
-        </button>
+        <div role="group" aria-label="Mapa de fondo" className="flex flex-col gap-1 p-1 rounded-xl bg-slate-950/70 border border-white/20 backdrop-blur-xl shadow-lg">
+          {MAPAS_BASE.map((b) => {
+            const Icono = b.id === 'satelite' ? Satellite : b.id === 'oscuro' ? Moon : Sun;
+            const activo = mapaBase === b.id;
+            return (
+              <button
+                key={b.id}
+                onClick={() => setMapaBase(b.id)}
+                aria-pressed={activo}
+                aria-label={`Mapa de fondo: ${b.label}`}
+                title={`Mapa de fondo: ${b.label}`}
+                className={`p-2 rounded-lg transition ${activo ? 'bg-sky-500/30 text-white' : 'text-slate-300 hover:text-white hover:bg-white/10'}`}
+              >
+                <Icono className="w-4 h-4" />
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {/* Quick Floating Action: Generate content for selected feature */}
