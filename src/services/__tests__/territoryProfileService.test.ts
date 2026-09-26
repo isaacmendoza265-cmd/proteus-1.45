@@ -136,3 +136,21 @@ describe('Medellín', () => {
     expect(p.porPuestos!.alcaldia[0].nombre).toMatch(/Gutierrez/);
   });
 });
+
+describe('Congreso 2026 en Medellín', () => {
+  it('carga Senado y Cámara y el total municipal cuadra con la suma de puestos', async () => {
+    const { cargarElecciones2026, sumarEleccion } = await import('../territoryProfileService');
+    const es = await cargarElecciones2026('05001');
+    expect(es.map((e) => e.id).sort()).toEqual(['camara-2026', 'senado-2026']);
+    const se = es.find((e) => e.id === 'senado-2026')!;
+    const total = sumarEleccion(se, 'todos')!;
+    const suma = sumarEleccion(se, Object.keys(se.puestos))!;
+    expect(total.votantes).toBe(913680);
+    expect(suma.votantes).toBe(total.votantes);
+    expect(total.partidos[0].nombre).toMatch(/Centro Democr/);
+  });
+  it('un municipio sin archivo 2026 no inventa resultados', async () => {
+    const { cargarElecciones2026 } = await import('../territoryProfileService');
+    expect(await cargarElecciones2026('05088')).toEqual([]);
+  });
+});

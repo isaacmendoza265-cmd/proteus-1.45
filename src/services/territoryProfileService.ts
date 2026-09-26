@@ -470,3 +470,95 @@ export function politica(t: TerritorioFicha, codigosResultados: string[] = []): 
 export const fmt = (n: number | null | undefined) => (n == null ? '—' : Math.round(n).toLocaleString('es-CO'));
 export const pct = (n: number | null | undefined) =>
   n == null ? '—' : `${n.toLocaleString('es-CO', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} %`;
+
+// --- Otras elecciones por puesto (Congreso 2026; presidencial cuando esté disponible) -------------
+
+/** Fila de resultados de un puesto en una elección */
+export interface FilaEleccion {
+  habilitados: number;
+  votantes: number;
+  blanco: number;
+  nulos: number;
+  noMarcados: number;
+  partidos?: [number, number][];
+  candidatos?: [number, number][];
+}
+
+/** Una elección con resultados por puesto. Las claves de `puestos` son códigos del censo 2026. */
+export interface EleccionPuestos {
+  id: string;
+  nombre: string;
+  fuente: string;
+  nota: string;
+  partidos: string[];
+  candidatos: { n: string; p: number }[];
+  municipio: FilaEleccion;
+  puestos: Record<string, FilaEleccion>;
+}
+
+export interface ResultadoEleccion {
+  id: string;
+  nombre: string;
+  fuente: string;
+  nota: string;
+  puestos: number;
+  habilitados: number;
+  votantes: number;
+  blanco: number;
+  nulos: number;
+  noMarcados: number;
+  partidos: { nombre: string; votos: number; pct: number }[];
+  candidatos: { nombre: string; partido: string; votos: number; pct: number }[];
+}
+
+interface ArchivoElecciones2026 {
+  meta: { fuente: string; nota: string };
+  elecciones: Record<string, Omit<EleccionPuestos, 'id' | 'fuente' | 'nota'>>;
+}
+
+const cargadores2026 = import.meta.glob<{ default: ArchivoElecciones2026 }>('../data/electoral/resultadosPuesto2026/*.json');
+const DANE_A_ARCHIVO: Record<string, string> = { '05001': 'medellin' };
+const cache2026 = new Map<string, Promise<EleccionPuestos[]>>();
+
+/** Elecciones de 2026 con resultados por puesto de un municipio (carga bajo demanda) */
+export function cargarElecciones2026(dane: string): Promise<EleccionPuestos[]> {
+  const archivo = DANE_A_ARCHIVO[dane];
+  const loader = archivo ? cargadores2026[`../data/electoral/resultadosPuesto2026/${archivo}.json`] : undefined;
+  if (!loader) return Promise.resolve([]);
+  if (!cache2026.has(dane)) {
+    cache2026.set(dane, loader().then((m) => Object.entries(m.default.elecciones).map(([id, e]) => ({ ...e, id, fuente: m.default.meta.fuente, nota: m.default.meta.nota }))));
+  }
+  return cache2026.get(dane)!;
+}
+
+export const ELECCIONES_PENDIENTES = [
+  { id: 'presidente-2026-1', nombre: 'Presidencia 2026 · 1.ª vuelta', motivo: 'El sitio de resultados de la presidencial está bloqueado por la configuración de red de la cuenta.' },
+  { id: 'presidente-2026-2', nombre: 'Presidencia 2026 · 2.ª vuelta', motivo: 'El sitio de resultados de la presidencial está bloqueado por la configuración de red de la cuenta.' },
+];
+
+/**
+ * Suma una elección en los puestos dados. Con `todos`, suma todos los puestos del archivo (municipio).
+ * No reparte ni estima: los puestos sin coordenadas solo cuentan en el total municipal.
+ */
+export function sumarEleccion(e: EleccionPuestos, codigos: string[] | 'todos'): ResultadoEleccion | null {
+  // El total municipal trae a todos los candidatos; por puesto solo se guardan los principales
+  const filas = codigos === 'todos' ? [e.municipio] : codigos.map((c) => e.puestos[c]).filter(Boolean);
+  if (!filas.length) return null;
+  const par = new Map<number, number>();
+  const can = new Map<number, number>();
+  let habilitados = 0, votantes = 0, blanco = 0, nulos = 0, noMarcados = 0;
+  for (const f of filas) {
+    habilitados += f.habilitados; votantes += f.votantes; blanco += f.blanco; nulos += f.nulos; noMarcados += f.noMarcados;
+    for (const [i, v] of f.partidos ?? []) par.set(i, (par.get(i) ?? 0) + v);
+    for (const [i, v] of f.candidatos ?? []) can.set(i, (can.get(i) ?? 0) + v);
+  }
+  const validos = [...par.values()].reduce((s, v) => s + v, 0) + blanco;
+  return {
+    id: e.id, nombre: e.nombre, fuente: e.fuente, nota: e.nota, puestos: codigos === 'todos' ? Object.keys(e.puestos).length : filas.length,
+    habilitados, votantes, blanco, nulos, noMarcados,
+    partidos: [...par.entries()].sort((a, b) => b[1] - a[1]).map(([i, v]) => ({ nombre: e.partidos[i], votos: v, pct: validos ? (100 * v) / validos : 0 })),
+    candidatos: [...can.entries()].sort((a, b) => b[1] - a[1]).map(([i, v]) => ({
+      nombre: e.candidatos[i].n, partido: e.partidos[e.candidatos[i].p], votos: v, pct: validos ? (100 * v) / validos : 0,
+    })),
+  };
+}

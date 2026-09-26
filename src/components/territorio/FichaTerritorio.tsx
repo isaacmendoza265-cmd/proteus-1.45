@@ -3,10 +3,11 @@
  * Política · Demografía · Censo electoral · Grupos.
  * Cada dato lleva su etiqueta: Oficial, Estimado o Sin información.
  */
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   type TerritorioFicha, type EstadoDato, ETIQUETA_ESTADO, EDADES_DANE,
   demografia, censoElectoral, grupos, politica, fmt, pct,
+  cargarElecciones2026, sumarEleccion, ELECCIONES_PENDIENTES, type EleccionPuestos,
 } from '../../services/territoryProfileService';
 import type { PuestoVotacion } from '../../services/pollingStationsService';
 
@@ -68,6 +69,19 @@ export const FichaTerritorio: React.FC<FichaTerritorioProps> = ({
   territorio: t, puestosDentro, codigosResultados = [], sinUbicar = [], cargandoPuestos, onVerRed, onEntrar, entrarLabel, onUsarComoActivo,
 }) => {
   const [seccion, setSeccion] = useState<Seccion>('politica');
+  const [eleccion, setEleccion] = useState<string>('local-2023');
+  const [elecciones2026, setElecciones2026] = useState<EleccionPuestos[]>([]);
+  useEffect(() => {
+    let activo = true;
+    cargarElecciones2026(t.dane).then((e) => { if (activo) setElecciones2026(e); });
+    return () => { activo = false; };
+  }, [t.dane]);
+  const res2026 = useMemo(() => {
+    const e = elecciones2026.find((x) => x.id === eleccion);
+    if (!e) return null;
+    return sumarEleccion(e, t.tipo === 'municipio' ? 'todos' : puestosDentro.map((p) => p.codPuesto));
+  }, [elecciones2026, eleccion, t.tipo, puestosDentro]);
+  const pendiente = ELECCIONES_PENDIENTES.find((x) => x.id === eleccion);
   const dem = useMemo(() => demografia(t), [t]);
   const cen = useMemo(() => censoElectoral(t, puestosDentro, sinUbicar), [t, puestosDentro, sinUbicar]);
   const gru = useMemo(() => grupos(dem, cen), [dem, cen]);
@@ -119,6 +133,17 @@ export const FichaTerritorio: React.FC<FichaTerritorioProps> = ({
 
       {seccion === 'politica' && (
         <div className="flex flex-col gap-3" role="tabpanel">
+          <div role="group" aria-label="Elección" className="flex flex-wrap gap-1">
+            {[{ id: 'local-2023', nombre: 'Alcaldía y Concejo 2023', disponible: true },
+              ...elecciones2026.map((e) => ({ id: e.id, nombre: e.nombre, disponible: true })),
+              ...ELECCIONES_PENDIENTES.map((e) => ({ id: e.id, nombre: e.nombre, disponible: false }))].map((o) => (
+              <button key={o.id} aria-pressed={eleccion === o.id} onClick={() => setEleccion(o.id)} title={o.disponible ? undefined : 'Pendiente'}
+                className={`min-h-8 px-2.5 rounded-md border text-xs font-semibold ${eleccion === o.id ? 'bg-[var(--c-accent-soft)] border-[var(--c-accent)] text-[var(--c-accent-text)]' : 'border-[var(--c-border)] bg-[var(--c-surface)]'} ${o.disponible ? '' : 'text-[var(--c-muted)] border-dashed'}`}>
+                {o.nombre}
+              </button>
+            ))}
+          </div>
+          {eleccion === 'local-2023' && (<>
           <div className="flex flex-col gap-2 px-3 py-2.5 rounded-xl bg-[var(--c-sunken)]">
             <Cabecera titulo={pol.resultados.ambito === 'municipio' ? 'Alcaldía 2023' : pol.porPuestos ? 'Alcaldía 2023 en sus puestos' : 'Resultados electorales históricos'} estado={pol.resultados.estado} />
             <span className="text-sm text-[var(--c-muted)]">{pol.resultados.texto}</span>
@@ -167,6 +192,36 @@ export const FichaTerritorio: React.FC<FichaTerritorioProps> = ({
               ))}
             </div>
           )}
+          </>)}
+          {pendiente && (
+            <Aviso><strong className="text-[var(--c-ink)]">{pendiente.nombre}: sin información.</strong> {pendiente.motivo}</Aviso>
+          )}
+          {!pendiente && eleccion !== 'local-2023' && (res2026 ? (
+            <div className="flex flex-col gap-2 px-3 py-2.5 rounded-xl bg-[var(--c-sunken)]">
+              <Cabecera titulo={t.tipo === 'municipio' ? res2026.nombre : `${res2026.nombre} en sus puestos`} estado="oficial" fuente="Registraduría, preconteo 8-mar-2026 · puede diferir del escrutinio" />
+              <span className="text-xs text-[var(--c-muted)]">{fmt(res2026.votantes)} votantes de {fmt(res2026.habilitados)} habilitados ({pct((100 * res2026.votantes) / Math.max(1, res2026.habilitados))}) · {fmt(res2026.puestos)} puesto(s)</span>
+              <span className="text-xs font-bold text-[var(--c-muted)] mt-1">Partidos y listas</span>
+              {res2026.partidos.slice(0, 8).map((c, i) => (
+                <div key={c.nombre} className="flex items-center gap-2 text-sm">
+                  <span className="w-44 truncate font-semibold" title={c.nombre}>{c.nombre}</span>
+                  <span className="grow h-2 rounded bg-[var(--c-border)] overflow-hidden"><span className="block h-2" style={{ width: `${(100 * c.pct) / Math.max(0.01, res2026.partidos[0].pct)}%`, background: i === 0 ? 'var(--c-accent)' : '#3E5C8A' }} /></span>
+                  <span className="w-14 text-right tabular-nums">{pct(c.pct)}</span>
+                </div>
+              ))}
+              {res2026.candidatos.length > 0 && (<>
+                <span className="text-xs font-bold text-[var(--c-muted)] mt-1">Candidatos con más voto preferente</span>
+                {res2026.candidatos.slice(0, 8).map((c) => (
+                  <div key={c.nombre + c.partido} className="flex items-center gap-2 text-sm">
+                    <span className="flex flex-col grow min-w-0"><span className="font-semibold truncate">{c.nombre}</span><span className="text-xs text-[var(--c-muted)] truncate">{c.partido}</span></span>
+                    <span className="w-16 text-right tabular-nums font-semibold">{fmt(c.votos)}</span>
+                  </div>
+                ))}
+              </>)}
+              <span className="text-xs text-[var(--c-muted)]">{t.tipo === 'municipio' ? 'Total municipal del preconteo.' : 'Suma de los puestos ubicados dentro; en cada puesto se guardan los candidatos que suman el 97 % del voto preferente, así que las cifras de candidatos son aproximadas por abajo. Los puestos sin coordenadas solo cuentan en el total municipal.'}</span>
+            </div>
+          ) : (
+            <Aviso>{elecciones2026.length ? 'No hay puestos de votación de 2026 dentro de este territorio: sus residentes votan en puestos vecinos.' : 'Cargando…'}</Aviso>
+          ))}
           <Cabecera titulo="Actores con presencia declarada" estado="estimado" etiqueta="Sin verificar" fuente={pol.fuenteActores} />
           {pol.actores.length ? (
             <ul className="m-0 p-0 list-none flex flex-col">
