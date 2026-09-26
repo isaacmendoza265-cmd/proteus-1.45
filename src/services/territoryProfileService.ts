@@ -78,6 +78,22 @@ export const DEMOGRAFIA_BELLO_META = BELLO.meta;
 /** Municipios con demografía por barrio cargada (código DANE) */
 const DEMOGRAFIA_POR_MUNICIPIO: Record<string, DemografiaData> = { '05088': BELLO };
 
+// Fase B: población del CNPV 2018 por barrio/sección/vereda, un archivo por municipio, cargado bajo demanda
+const CARGADORES_DEM = import.meta.glob<{ default: unknown }>('../data/dane/cnpv2018/*.json');
+const cargasDem = new Map<string, Promise<boolean>>();
+/** Carga la demografía por territorio del municipio (si existe). Devuelve true si quedó disponible. */
+export function cargarDemografia(dane: string): Promise<boolean> {
+  if (DEMOGRAFIA_POR_MUNICIPIO[dane]) return Promise.resolve(true);
+  if (!cargasDem.has(dane)) {
+    const muni = Object.entries(INDICE).find(([, m]) => m.dane === dane)?.[0];
+    const cargar = muni ? CARGADORES_DEM[`../data/dane/cnpv2018/${muni}.json`] : undefined;
+    cargasDem.set(dane, cargar
+      ? cargar().then((m) => { DEMOGRAFIA_POR_MUNICIPIO[dane] = m.default as DemografiaData; return true; }).catch(() => false)
+      : Promise.resolve(false));
+  }
+  return cargasDem.get(dane)!;
+}
+
 /** Municipios con ficha territorial (id del registro de divisiones) */
 export const MUNICIPIOS_CON_FICHA = Object.keys(INDICE);
 
@@ -180,7 +196,7 @@ export function demografia(t: TerritorioFicha): SeccionDemografia {
   }
   const subs = indiceDe(t).subdivisiones;
   const urbano2018 = Object.keys(subs)
-    .filter((k) => subs[k].tipo === 'Barrio')
+    .filter((k) => ['Barrio', 'Sección urbana', 'Sector urbano'].includes(subs[k].tipo))
     .reduce((s, k) => s + (data.porTerritorio[k]?.[0] ?? 0), 0);
 
   let proyeccion: SeccionDemografia['proyeccion'];
@@ -366,7 +382,7 @@ export function politica(t: TerritorioFicha): SeccionPolitica {
     resultados: {
       estado: porPuesto ? 'oficial' : 'sin-informacion', ambito: 'territorio', alcaldia: r?.alcaldia ?? null,
       texto: porPuesto
-        ? 'Resultados de los puestos ubicados dentro, según el preconteo de la Registraduría. Los votos se cuentan donde está el puesto, no donde vive el votante.'
+        ? 'Resultados de los puestos ubicados dentro (Registraduría). Los votos se cuentan donde está el puesto, no donde vive el votante.'
         : 'Proteus aún no tiene resultados por puesto de votación para este municipio, así que no puede sumar los de este territorio.',
     },
     actores: actoresDeTerritorio(t), fuenteActores,

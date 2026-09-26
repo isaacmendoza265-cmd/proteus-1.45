@@ -156,7 +156,7 @@ export const CommuneDeepAnalyticsDrawer: React.FC<CommuneDeepAnalyticsDrawerProp
         <div>
           <div className="flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase tracking-wider text-amber-400">
             <MapPin className="w-3.5 h-3.5" />
-            <span>Nivel: {props.level.toUpperCase()}</span>
+            <span>Nivel: {(props.level ?? "").toUpperCase()}</span>
             {props.zone && (
               <span className="px-1.5 py-0.5 rounded-full bg-white/10 text-white text-[9px]">
                 {props.zone}

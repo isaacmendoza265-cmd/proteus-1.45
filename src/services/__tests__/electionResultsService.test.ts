@@ -44,11 +44,22 @@ describe('resultados por puesto', () => {
     expect(MUNICIPIOS_CON_RESULTADOS).toHaveLength(46);
     for (const dane of MUNICIPIOS_CON_RESULTADOS) {
       const es = await cargarElecciones(dane);
-      expect(es.map((e) => e.id)).toEqual(['alcaldia-2023', 'concejo-2023', 'senado-2026', 'camara-2026']);
+      expect(es.map((e) => e.id)).toEqual(['alcaldia-2023', 'concejo-2023', 'senado-2026', 'camara-2026', 'presidente-2026-1', 'presidente-2026-2']);
       for (const e of es) {
         if (e.id === 'concejo-2023') continue;
         expect(sumarEleccion(e, Object.keys(e.puestos))!.votantes).toBe(e.municipio.votantes);
       }
     }
+  });
+  it('Presidencia 2026 en Medellín: escrutinio mesa a mesa, sin cédulas', async () => {
+    const es = await cargarElecciones('05001');
+    const v2 = es.find((e) => e.id === 'presidente-2026-2')!;
+    expect(v2.tipo).toBe('escrutinio');
+    expect(v2.porCandidato).toBe(true);
+    const t = sumarEleccion(v2, 'todos')!;
+    expect(t.votantes).toBe(1283036);
+    expect(t.candidatos[0].nombre).toMatch(/Espriella/);
+    expect(t.candidatos[0].votos).toBe(819802);
+    expect(JSON.stringify(v2)).not.toMatch(/CANCEDULA|cedula/i);
   });
 });

@@ -123,6 +123,7 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
       setSelectedDepartmentName(departmentName);
     }
     setCurrentLevel(targetLevel);
+    setSearchQuery(''); // el filtro de un nivel no aplica al siguiente (ocultaría sus barrios)
     // Find target feature if exists in new dataset
     const nextDataset = GEOJSON_LAYERS_BY_ZOOM[targetLevel];
     if (nextDataset) {

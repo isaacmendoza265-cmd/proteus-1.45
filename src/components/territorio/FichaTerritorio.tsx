@@ -7,6 +7,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import {
   type TerritorioFicha, type EstadoDato, ETIQUETA_ESTADO, EDADES_DANE,
   demografia, censoElectoral, grupos, politica, fmt, pct,
+  cargarDemografia,
 } from '../../services/territoryProfileService';
 import { cargarElecciones, sumarEleccion, ELECCIONES_PENDIENTES, type EleccionPuestos } from '../../services/electionResultsService';
 import type { PuestoVotacion } from '../../services/pollingStationsService';
@@ -78,7 +79,9 @@ export const FichaTerritorio: React.FC<FichaTerritorioProps> = ({
     return () => { activo = false; };
   }, [t.dane]);
   const eleccionSel = elecciones?.find((x) => x.id === eleccion) ?? null;
-  const pendiente = ELECCIONES_PENDIENTES.find((x) => x.id === eleccion);
+  // Las pendientes solo se muestran si el municipio no tiene esa elección cargada
+  const pendientes = ELECCIONES_PENDIENTES.filter((p) => elecciones !== null && !elecciones.some((e) => e.id === p.id));
+  const pendiente = pendientes.find((x) => x.id === eleccion);
   /** Códigos de los puestos del territorio en la elección (2023 y 2026 usan códigos distintos) */
   const codigosDe = (e: EleccionPuestos): string[] | 'todos' =>
     t.tipo === 'municipio' ? 'todos' : e.codigos === '2023' ? codigosResultados : puestosDentro.map((p) => p.codPuesto);
@@ -93,7 +96,7 @@ export const FichaTerritorio: React.FC<FichaTerritorioProps> = ({
     const nombres2026 = new Map(puestosDentro.map((p) => [p.codPuesto, p.puesto]));
     const cods = codigosDe(eleccionSel);
     const lista = cods === 'todos' ? Object.keys(eleccionSel.puestos) : cods;
-    const conCandidatos = eleccionSel.id === 'alcaldia-2023';
+    const conCandidatos = eleccionSel.porCandidato;
     return lista.map((c) => {
       const r = sumarEleccion(eleccionSel, [c]);
       if (!r) return null;
@@ -104,7 +107,14 @@ export const FichaTerritorio: React.FC<FichaTerritorioProps> = ({
     }).filter((x): x is NonNullable<typeof x> => x !== null).sort((a, b) => b.votantes - a.votantes);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [eleccionSel, t.tipo, codigosResultados, puestosDentro]);
-  const dem = useMemo(() => demografia(t), [t]);
+  const [demLista, setDemLista] = useState(0);
+  useEffect(() => {
+    let activo = true;
+    cargarDemografia(t.dane).then((ok) => { if (activo && ok) setDemLista((n) => n + 1); });
+    return () => { activo = false; };
+  }, [t.dane]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const dem = useMemo(() => demografia(t), [t, demLista]);
   const cen = useMemo(() => censoElectoral(t, puestosDentro, sinUbicar), [t, puestosDentro, sinUbicar]);
   const gru = useMemo(() => grupos(dem, cen), [dem, cen]);
   const pol = useMemo(() => politica(t), [t]);
@@ -157,7 +167,7 @@ export const FichaTerritorio: React.FC<FichaTerritorioProps> = ({
         <div className="flex flex-col gap-3" role="tabpanel">
           <div role="group" aria-label="Elección" className="flex flex-wrap gap-1">
             {[...(elecciones ?? []).map((e) => ({ id: e.id, nombre: e.nombre, disponible: true })),
-              ...ELECCIONES_PENDIENTES.map((e) => ({ id: e.id, nombre: e.nombre, disponible: false }))].map((o) => (
+              ...pendientes.map((e) => ({ id: e.id, nombre: e.nombre, disponible: false }))].map((o) => (
               <button key={o.id} aria-pressed={eleccion === o.id} onClick={() => { setEleccion(o.id); setPuestoAbierto(null); }} title={o.disponible ? undefined : 'Pendiente'}
                 className={`min-h-8 px-2.5 rounded-md border text-xs font-semibold ${eleccion === o.id ? 'bg-[var(--c-accent-soft)] border-[var(--c-accent)] text-[var(--c-accent-text)]' : 'border-[var(--c-border)] bg-[var(--c-surface)]'} ${o.disponible ? '' : 'text-[var(--c-muted)] border-dashed'}`}>
                 {o.nombre}
@@ -176,9 +186,9 @@ export const FichaTerritorio: React.FC<FichaTerritorioProps> = ({
           )}
           {eleccionSel && (resultado ? (
             <div className="flex flex-col gap-2 px-3 py-2.5 rounded-xl bg-[var(--c-sunken)]">
-              <Cabecera titulo={t.tipo === 'municipio' ? eleccionSel.nombre : `${eleccionSel.nombre} en sus puestos`} estado="oficial" fuente={`Registraduría, preconteo ${eleccionSel.fecha} · puede diferir del escrutinio`} />
+              <Cabecera titulo={t.tipo === 'municipio' ? eleccionSel.nombre : `${eleccionSel.nombre} en sus puestos`} estado="oficial" fuente={eleccionSel.tipo === 'escrutinio' ? `Registraduría, escrutinio oficial ${eleccionSel.fecha}, mesa a mesa` : `Registraduría, preconteo ${eleccionSel.fecha} · puede diferir del escrutinio`} />
               <span className="text-xs text-[var(--c-muted)]">{fmt(resultado.votantes)} votantes de {fmt(resultado.habilitados)} habilitados ({pct((100 * resultado.votantes) / Math.max(1, resultado.habilitados))}) · {fmt(resultado.puestos)} puesto(s)</span>
-              {eleccionSel.id === 'alcaldia-2023' ? (
+              {eleccionSel.porCandidato ? (
                 resultado.candidatos.slice(0, 6).map((c, i) => (
                   <div key={c.nombre} className="flex items-center gap-2 text-sm">
                     <span className="w-44 truncate font-semibold" title={c.partido}>{c.nombre}</span>
@@ -208,7 +218,7 @@ export const FichaTerritorio: React.FC<FichaTerritorioProps> = ({
               {t.tipo === 'municipio' && eleccionSel.id === 'alcaldia-2023' && pol.resultados.alcaldia && (
                 <span className="text-xs text-[var(--c-muted)]">Escrutinio oficial: ganó {pol.resultados.alcaldia.candidatos[0]?.nombre} con {pct(pol.resultados.alcaldia.candidatos[0]?.pctValidos)}; participación {pct(pol.resultados.alcaldia.participacion)}.</span>
               )}
-              <span className="text-xs text-[var(--c-muted)]">{t.tipo === 'municipio' ? 'Total municipal del preconteo.' : pol.resultados.texto}{eleccionSel.codigos === '2026' && t.tipo !== 'municipio' && resultado.candidatos.length ? ' En cada puesto se guardan los candidatos que suman el 97 % del voto preferente, así que sus cifras aquí son aproximadas por abajo.' : ''}</span>
+              <span className="text-xs text-[var(--c-muted)]">{t.tipo === 'municipio' ? (eleccionSel.tipo === 'escrutinio' ? 'Total municipal del escrutinio (suma de sus mesas). Habilitados: censo electoral 2026 de los puestos.' : 'Total municipal del preconteo.') : pol.resultados.texto}{eleccionSel.codigos === '2026' && !eleccionSel.porCandidato && t.tipo !== 'municipio' && resultado.candidatos.length ? ' En cada puesto se guardan los candidatos que suman el 97 % del voto preferente, así que sus cifras aquí son aproximadas por abajo.' : ''}</span>
             </div>
           ) : (
             <Aviso>No hay puestos de votación de esta elección dentro del territorio: sus residentes votan en puestos vecinos. No se reparte ni se estima.</Aviso>

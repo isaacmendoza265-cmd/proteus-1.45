@@ -6,8 +6,10 @@
  *    códigos de puesto de 2023, que NO son los del censo 2026; cada puesto trae su ubicación
  *    (Divipole 2023) para asignarlo a comuna o barrio por coordenadas.
  *  - 2026 (Senado y Cámara): src/data/electoral/resultadosPuesto2026/<municipio>.json. Claves:
- *    códigos del censo 2026 (misma jornada).
- * Todo es preconteo de la Registraduría: puede diferir levemente del escrutinio.
+ *    códigos del censo 2026 (misma jornada). Preconteo.
+ *  - Presidencia 2026 (1.ª y 2.ª vuelta): src/data/electoral/resultadosPuestoPresidencial2026/<municipio>.json.
+ *    Escrutinio oficial mesa a mesa (comisión municipal); claves: códigos del censo 2026.
+ * 2023 y Congreso son preconteo de la Registraduría: pueden diferir levemente del escrutinio.
  */
 import rawIndice from '../data/electoral/resultadosPuesto/indice.json';
 
@@ -28,6 +30,10 @@ export interface EleccionPuestos {
   fecha: string;
   fuente: string;
   nota: string;
+  /** Preconteo o escrutinio */
+  tipo: 'preconteo' | 'escrutinio';
+  /** true: se muestra por candidato (Alcaldía, Presidencia); false: por partido con voto preferente */
+  porCandidato: boolean;
   /** Qué códigos usan las claves de `puestos` */
   codigos: '2023' | '2026';
   partidos: string[];
@@ -54,18 +60,19 @@ export interface ResultadoEleccion {
   candidatos: { nombre: string; partido: string; votos: number; pct: number }[];
 }
 
-type Indice = Record<string, { nombre: string; '2023'?: string; '2026'?: string }>;
+type Indice = Record<string, { nombre: string; '2023'?: string; '2026'?: string; pres2026?: string }>;
 const INDICE = rawIndice as unknown as Indice;
 
+/** Elecciones que se muestran como "sin información" cuando un municipio no las tiene cargadas */
 export const ELECCIONES_PENDIENTES = [
-  { id: 'presidente-2026-1', nombre: 'Presidencia 2026 · 1.ª vuelta', motivo: 'El sitio de resultados de la presidencial está bloqueado por la configuración de red de la cuenta.' },
-  { id: 'presidente-2026-2', nombre: 'Presidencia 2026 · 2.ª vuelta', motivo: 'El sitio de resultados de la presidencial está bloqueado por la configuración de red de la cuenta.' },
+  { id: 'presidente-2026-1', nombre: 'Presidencia 2026 · 1.ª vuelta', motivo: 'Todavía no se cargó el escrutinio por puesto de este municipio.' },
+  { id: 'presidente-2026-2', nombre: 'Presidencia 2026 · 2.ª vuelta', motivo: 'Todavía no se cargó el escrutinio por puesto de este municipio.' },
 ];
 
 /** ¿Hay resultados por puesto cargados para este municipio (código DANE)? */
 export function tieneResultadosPorPuesto(dane: string): boolean {
   const e = INDICE[dane];
-  return !!(e && (e['2023'] || e['2026']));
+  return !!(e && (e['2023'] || e['2026'] || e.pres2026));
 }
 
 /** Municipios (código DANE) con resultados por puesto */
@@ -85,11 +92,13 @@ interface Fila2023Co { habilitados?: number; votantes: number; blanco: number; n
 
 interface Archivo2026 {
   meta: { fuente: string; nota: string };
-  elecciones: Record<string, { nombre: string; partidos: string[]; candidatos: { n: string; p: number }[]; municipio: FilaEleccion; puestos: Record<string, FilaEleccion>; nombres?: Record<string, string> }>;
+  elecciones: Record<string, { nombre: string; partidos: string[]; candidatos: { n: string; p: number }[]; municipio: FilaEleccion; puestos: Record<string, FilaEleccion>; nombres?: Record<string, string>; fecha?: string; fuente?: string }>;
 }
+interface ArchivoPres { meta: { tipo: 'escrutinio'; nota: string; fuente?: string }; elecciones: Archivo2026['elecciones'] }
 
 const cargadores2023 = import.meta.glob<{ default: Archivo2023 }>('../data/electoral/resultadosPuesto2023/*.json');
 const cargadores2026 = import.meta.glob<{ default: Archivo2026 }>('../data/electoral/resultadosPuesto2026/*.json');
+const cargadoresPres = import.meta.glob<{ default: ArchivoPres }>('../data/electoral/resultadosPuestoPresidencial2026/*.json');
 const cache = new Map<string, Promise<EleccionPuestos[]>>();
 
 function convertir2023(a: Archivo2023): EleccionPuestos[] {
@@ -110,27 +119,32 @@ function convertir2023(a: Archivo2023): EleccionPuestos[] {
     pAl[c] = alFila(p.alcaldia);
     pCo[c] = coFila(p.concejo, p.alcaldia.habilitados);
   }
-  const base = { fecha: '29-oct-2023', fuente: a.meta.fuente, nota: a.meta.nota, codigos: '2023' as const, partidos: a.partidos, candidatos: a.candidatos, nombres, ubicaciones };
+  const base = { fecha: '29-oct-2023', fuente: a.meta.fuente, nota: a.meta.nota, tipo: 'preconteo' as const, codigos: '2023' as const, partidos: a.partidos, candidatos: a.candidatos, nombres, ubicaciones };
   return [
-    { ...base, id: 'alcaldia-2023', nombre: 'Alcaldía 2023', municipio: alFila(a.municipio.alcaldia), puestos: pAl },
-    { ...base, id: 'concejo-2023', nombre: 'Concejo 2023', municipio: coFila(a.municipio.concejo, a.municipio.alcaldia.habilitados), puestos: pCo },
+    { ...base, id: 'alcaldia-2023', nombre: 'Alcaldía 2023', porCandidato: true, municipio: alFila(a.municipio.alcaldia), puestos: pAl },
+    { ...base, id: 'concejo-2023', nombre: 'Concejo 2023', porCandidato: false, municipio: coFila(a.municipio.concejo, a.municipio.alcaldia.habilitados), puestos: pCo },
   ];
 }
 
-function convertir2026(a: Archivo2026): EleccionPuestos[] {
+function convertir2026(a: Archivo2026 | ArchivoPres, tipo: 'preconteo' | 'escrutinio', porCandidato: boolean): EleccionPuestos[] {
   return Object.entries(a.elecciones).map(([id, e]) => ({
-    id, nombre: e.nombre, fecha: '8-mar-2026', fuente: a.meta.fuente, nota: a.meta.nota, codigos: '2026' as const,
+    id, nombre: e.nombre, fecha: e.fecha ?? '8-mar-2026', fuente: e.fuente ?? a.meta.fuente ?? '', nota: a.meta.nota, tipo, porCandidato, codigos: '2026' as const,
     partidos: e.partidos, candidatos: e.candidatos, municipio: e.municipio, puestos: e.puestos, nombres: e.nombres ?? {},
   }));
 }
 
-/** Todas las elecciones con resultados por puesto de un municipio (orden: 2023 y luego 2026) */
+/** Todas las elecciones con resultados por puesto de un municipio (orden: 2023, Congreso 2026, Presidencia 2026) */
 export function cargarElecciones(dane: string): Promise<EleccionPuestos[]> {
   if (!cache.has(dane)) {
     const e = INDICE[dane];
     const l23 = e?.['2023'] ? cargadores2023[`../data/electoral/resultadosPuesto2023/${e['2023']}.json`] : undefined;
     const l26 = e?.['2026'] ? cargadores2026[`../data/electoral/resultadosPuesto2026/${e['2026']}.json`] : undefined;
-    cache.set(dane, Promise.all([l23 ? l23().then((m) => convertir2023(m.default)) : [], l26 ? l26().then((m) => convertir2026(m.default)) : []]).then(([a, b]) => [...a, ...b]));
+    const lPr = e?.pres2026 ? cargadoresPres[`../data/electoral/resultadosPuestoPresidencial2026/${e.pres2026}.json`] : undefined;
+    cache.set(dane, Promise.all([
+      l23 ? l23().then((m) => convertir2023(m.default)) : [],
+      l26 ? l26().then((m) => convertir2026(m.default, 'preconteo', false)) : [],
+      lPr ? lPr().then((m) => convertir2026(m.default, 'escrutinio', true)) : [],
+    ]).then((ls) => ls.flat()));
   }
   return cache.get(dane)!;
 }

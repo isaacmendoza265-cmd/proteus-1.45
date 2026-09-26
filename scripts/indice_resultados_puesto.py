@@ -1,5 +1,5 @@
 """
-Índice de los resultados por puesto cargados: código DANE -> archivo de 2023 y de 2026.
+Índice de los resultados por puesto cargados: código DANE -> archivo de 2023, de Congreso 2026 y de Presidencia 2026.
 Uso: python3 scripts/indice_resultados_puesto.py
 """
 import json, os, re, unicodedata
@@ -18,6 +18,7 @@ for m in res:
     e = {'nombre': m['municipio'].title()}
     if os.path.exists(f'src/data/electoral/resultadosPuesto2023/{s}.json'): e['2023'] = s
     if os.path.exists(f'src/data/electoral/resultadosPuesto2026/{s}.json'): e['2026'] = s
+    if os.path.exists(f'src/data/electoral/resultadosPuestoPresidencial2026/{s}.json'): e['pres2026'] = s
     if len(e) > 1:
         out[m['dane']] = e
 json.dump(out, open('src/data/electoral/resultadosPuesto/indice.json', 'w'), ensure_ascii=False, indent=1)

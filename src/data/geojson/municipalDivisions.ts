@@ -2,6 +2,7 @@ import { TerritoryFeatureCollection } from './types';
 import { MEDELLIN_16_COMUNAS_OFFICIAL_GEOJSON } from './medellin16ComunasOfficialGeoJson';
 import { MEDELLIN_BARRIOS_GEOJSON } from './medellinBarriosGeoJson';
 import { getMunicipalCensus } from '../../services/electoralCensusService';
+import rawRegistroB from './municipios/registroFaseB.json';
 
 /**
  * Registro de municipios con divisiones internas cartografiadas (niveles 4 y 5 del mapa).
@@ -56,7 +57,20 @@ export interface MunicipalDivisionEntry {
 
 const asFC = (m: { default: unknown }) => m.default as TerritoryFeatureCollection;
 
+// Fase B (26-sep-2026): 42 municipios de Antioquia con más de 20.000 votantes, construidos con
+// scripts/build_cartografia_fase_b.py (barrios oficiales de cada municipio o unidades del DANE, veredas
+// DANE 2024 y corregimientos de la Gobernación). Se cargan solo al abrir el municipio.
+const DIV_B = import.meta.glob<{ default: unknown }>('./municipios/*.divisiones.geo.json');
+const SUB_B = import.meta.glob<{ default: unknown }>('./municipios/*.subdivisiones.geo.json');
+const REGISTRO_B = rawRegistroB as Record<string, { id: string; name: string; daneCode: string; divisionLabel: string; subdivisionLabel: string; fuente: string; confianza: ConfianzaFuente; nota: string }>;
+const FASE_B: Record<string, MunicipalDivisionEntry> = Object.fromEntries(Object.values(REGISTRO_B).map((r) => [r.id, {
+  ...r, department: 'Antioquia', disponible: true, nivelComunas: false,
+  loadDivisions: () => DIV_B[`./municipios/${r.id}.divisiones.geo.json`]().then(asFC),
+  loadSubdivisions: () => SUB_B[`./municipios/${r.id}.subdivisiones.geo.json`]().then(asFC),
+}]));
+
 export const MUNICIPAL_DIVISIONS_REGISTRY: Record<string, MunicipalDivisionEntry> = {
+  ...FASE_B,
   medellin: {
     id: 'medellin', name: 'Medellín', department: 'Antioquia', daneCode: '05001',
     divisionLabel: '16 comunas y 5 corregimientos', subdivisionLabel: '332 barrios y veredas',
