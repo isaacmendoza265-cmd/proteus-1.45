@@ -84,8 +84,13 @@ describe('política', () => {
     expect(p.resultados.alcaldia!.candidatos[0].nombre).toMatch(/Gonzalez/);
     expect(p.actores.length).toBeGreaterThan(5);
   });
-  it('una comuna no tiene resultados propios', () => {
-    expect(politica(territorioBello('bello-div-4')!).resultados.estado).toBe('sin-informacion');
+  it('una comuna sin puestos con resultado no inventa resultados', () => {
+    expect(politica(territorioBello('bello-div-4')!, []).resultados.estado).toBe('sin-informacion');
+  });
+  it('Bello suma sus 42 puestos de 2023 y reproduce el total del preconteo', () => {
+    const p = politica(territorioBello('bello')!);
+    expect(p.porPuestos!.votantes).toBe(177706);
+    expect(p.porPuestos!.puestos).toBe(42);
   });
   it('los actores del barrio son los de su comuna y nunca exponen cédulas', () => {
     const barrio = territorioBello('bello-sub-B001')!;
@@ -109,11 +114,25 @@ describe('Rionegro (piloto de resultados por puesto)', () => {
   });
   it('un territorio suma solo sus puestos', () => {
     const t = territorioFicha('rionegro-div-C2')!;
-    const p = politica(t, [puesto(100, 50, 3, '012140301')]);
+    const p = politica(t, ['01214030201']);
     expect(p.resultados.estado).toBe('oficial');
     expect(p.porPuestos!.puestos).toBe(1);
   });
   it('sin DANE por barrio, Rionegro dice que no hay demografía', () => {
     expect(demografia(territorioFicha('rionegro-div-C2')!).estado).toBe('sin-informacion');
+  });
+});
+
+describe('Medellín', () => {
+  it('tiene ficha de comuna, corregimiento y barrio', () => {
+    expect(territorioFicha('comuna-11')?.municipio).toBe('Medellín');
+    expect(territorioFicha('med-correg-santa-elena')?.clase).toBe('Corregimiento');
+    expect(territorioFicha('barrio-0101')?.padreId).toBe('comuna-1');
+    expect(territorioFicha('medellin-base-outline')).toBeNull();
+  });
+  it('suma sus 239 puestos de 2023', () => {
+    const p = politica(territorioFicha('medellin')!);
+    expect(p.porPuestos!.votantes).toBe(971537);
+    expect(p.porPuestos!.alcaldia[0].nombre).toMatch(/Gutierrez/);
   });
 });

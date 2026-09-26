@@ -14,7 +14,7 @@ import { CommuneDeepAnalyticsDrawer } from '../../components/maps/CommuneDeepAna
 import { PollingStationsPanel } from '../../components/maps/PollingStationsPanel';
 import { FichaTerritorio } from '../../components/territorio/FichaTerritorio';
 import { RedDePoder3D } from '../../components/territorio/RedDePoder3D';
-import { usePuestosTerritorio, puestosDe } from '../../components/territorio/usePuestosTerritorio';
+import { usePuestosTerritorio, puestosDe, codigosResultadosDe } from '../../components/territorio/usePuestosTerritorio';
 import { territorioFicha, tieneFicha, municipioFichaPorDane, MUNICIPIOS_CON_FICHA } from '../../services/territoryProfileService';
 import { MUNICIPAL_DIVISIONS_REGISTRY } from '../../data/geojson/municipalDivisions';
 import { 
@@ -75,6 +75,10 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
   const puestosMuni = usePuestosTerritorio(fichaTerritorio ? municipioFichaPorDane(fichaTerritorio.dane) : null);
   const puestosFicha = useMemo(
     () => (fichaTerritorio ? puestosDe(puestosMuni, fichaTerritorio.tipo, fichaTerritorio.id) : []),
+    [fichaTerritorio, puestosMuni],
+  );
+  const codigosResultadosFicha = useMemo(
+    () => (fichaTerritorio ? codigosResultadosDe(puestosMuni, fichaTerritorio.tipo, fichaTerritorio.id) : []),
     [fichaTerritorio, puestosMuni],
   );
 
@@ -169,7 +173,6 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
         ))}
       </div>
       <span className="grow" />
-      <span className="text-sm text-[var(--c-muted)]">{(currentDataset?.features.length ?? 0).toLocaleString('es-CO')} territorios · censo {totalCensus.toLocaleString('es-CO')} · población {totalPopulation.toLocaleString('es-CO')}</span>
       <button onClick={() => setE24ModalOpen(true)} className="min-h-9 px-3 rounded-lg border border-[var(--c-border)] bg-[var(--c-surface)] text-sm font-semibold flex items-center gap-2">
         <FileSpreadsheet className="w-4 h-4" strokeWidth={1.7} />Matriz E-24 histórica
       </button>
@@ -197,6 +200,7 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
         onSelectLevel={handleSelectLevel}
         selectedFeatureName={selectedFeature ? selectedFeature.properties.name : null}
         selectedDepartmentName={selectedDepartmentName}
+        selectedMunicipalityName={MUNICIPAL_DIVISIONS_REGISTRY[selectedMunicipalityId]?.name}
         onResetToNational={handleResetToNational}
       />
 
@@ -236,6 +240,7 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
               key={fichaTerritorio.id}
               territorio={fichaTerritorio}
               puestosDentro={puestosFicha}
+              codigosResultados={codigosResultadosFicha}
               sinUbicar={puestosMuni.sinUbicar}
               cargandoPuestos={puestosMuni.cargando}
               onVerRed={() => setVista('redes')}

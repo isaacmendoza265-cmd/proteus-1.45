@@ -53,6 +53,8 @@ interface FichaTerritorioProps {
   territorio: TerritorioFicha;
   /** Puestos cuyo punto cae dentro del territorio */
   puestosDentro: PuestoVotacion[];
+  /** Códigos 2023 de los puestos con resultados ubicados dentro */
+  codigosResultados?: string[];
   /** Puestos sin coordenadas del municipio */
   sinUbicar?: PuestoVotacion[];
   cargandoPuestos?: boolean;
@@ -63,13 +65,13 @@ interface FichaTerritorioProps {
 }
 
 export const FichaTerritorio: React.FC<FichaTerritorioProps> = ({
-  territorio: t, puestosDentro, sinUbicar = [], cargandoPuestos, onVerRed, onEntrar, entrarLabel, onUsarComoActivo,
+  territorio: t, puestosDentro, codigosResultados = [], sinUbicar = [], cargandoPuestos, onVerRed, onEntrar, entrarLabel, onUsarComoActivo,
 }) => {
   const [seccion, setSeccion] = useState<Seccion>('politica');
   const dem = useMemo(() => demografia(t), [t]);
   const cen = useMemo(() => censoElectoral(t, puestosDentro, sinUbicar), [t, puestosDentro, sinUbicar]);
   const gru = useMemo(() => grupos(dem, cen), [dem, cen]);
-  const pol = useMemo(() => politica(t, puestosDentro), [t, puestosDentro]);
+  const pol = useMemo(() => politica(t, codigosResultados), [t, codigosResultados]);
 
   const tipoLabel = t.tipo === 'municipio' ? `Municipio · ${t.municipio}` : `${t.clase ?? ''} · ${t.municipio}`;
   const d = dem.datos;
@@ -108,7 +110,7 @@ export const FichaTerritorio: React.FC<FichaTerritorioProps> = ({
             role="tab"
             aria-selected={seccion === id}
             onClick={() => setSeccion(id)}
-            className={`min-h-9 px-2 -mb-px whitespace-nowrap text-sm font-semibold border-b-2 ${seccion === id ? 'border-[var(--c-accent)] text-[var(--c-ink)]' : 'border-transparent text-[var(--c-muted)] hover:text-[var(--c-ink)]'}`}
+            className={`min-h-9 px-1.5 -mb-px whitespace-nowrap text-[13px] font-semibold border-b-2 ${seccion === id ? 'border-[var(--c-accent)] text-[var(--c-ink)]' : 'border-transparent text-[var(--c-muted)] hover:text-[var(--c-ink)]'}`}
           >
             {label}
           </button>

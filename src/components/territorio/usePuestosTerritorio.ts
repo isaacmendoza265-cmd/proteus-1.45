@@ -5,8 +5,10 @@
 import { useEffect, useState } from 'react';
 import { MUNICIPAL_DIVISIONS_REGISTRY } from '../../data/geojson/municipalDivisions';
 import {
-  getMunicipio20k, loadPuestosMunicipio, asignarPuestosATerritorios, type PuestoVotacion,
+  getMunicipio20k, loadPuestosMunicipio, asignarPuestosATerritorios, puntoEnTerritorio, type PuestoVotacion,
 } from '../../services/pollingStationsService';
+import { puestosConResultados, tieneFicha } from '../../services/territoryProfileService';
+import type { TerritoryGeoFeature } from '../../data/geojson/types';
 
 export interface PuestosTerritorio {
   cargando: boolean;
@@ -16,9 +18,22 @@ export interface PuestosTerritorio {
   division: Record<string, string>;
   /** codPuesto -> id de barrio/vereda */
   subdivision: Record<string, string>;
+  /** Puestos de 2023 con resultados: código 2023 -> id de comuna/zona y de barrio/vereda */
+  resultadosDivision: Record<string, string>;
+  resultadosSubdivision: Record<string, string>;
 }
 
-const VACIO: PuestosTerritorio = { cargando: false, todos: [], sinUbicar: [], division: {}, subdivision: {} };
+function ubicarResultados(dane: string, features: TerritoryGeoFeature[]): Record<string, string> {
+  const out: Record<string, string> = {};
+  for (const p of puestosConResultados(dane)) {
+    if (p.lon == null || p.lat == null) continue;
+    const f = features.find((x) => puntoEnTerritorio(p.lon!, p.lat!, x));
+    if (f) out[p.codigo] = String(f.id);
+  }
+  return out;
+}
+
+const VACIO: PuestosTerritorio = { cargando: false, todos: [], sinUbicar: [], division: {}, subdivision: {}, resultadosDivision: {}, resultadosSubdivision: {} };
 
 export function usePuestosTerritorio(muniId: string | null): PuestosTerritorio {
   const [estado, setEstado] = useState<PuestosTerritorio>(VACIO);
@@ -32,11 +47,18 @@ export function usePuestosTerritorio(muniId: string | null): PuestosTerritorio {
     let activo = true;
     setEstado({ ...VACIO, cargando: true });
     Promise.all([loadPuestosMunicipio(m), entry.loadDivisions?.(), entry.loadSubdivisions?.()])
-      .then(([puestos, divs, subs]) => {
+      .then(([puestos, divsCapa, subsCapa]) => {
         if (!activo) return;
+        // Solo territorios con ficha (se descarta, p. ej., el contorno completo de Medellín)
+        const divs = divsCapa && { ...divsCapa, features: divsCapa.features.filter((f) => tieneFicha(String(f.id))) };
+        const subs = subsCapa && { ...subsCapa, features: subsCapa.features.filter((f) => tieneFicha(String(f.id))) };
         const a = asignarPuestosATerritorios(puestos, divs?.features ?? []);
         const b = asignarPuestosATerritorios(puestos, subs?.features ?? []);
-        setEstado({ cargando: false, todos: puestos, sinUbicar: a.sinCoordenadas, division: a.territorioDePuesto, subdivision: b.territorioDePuesto });
+        setEstado({
+          cargando: false, todos: puestos, sinUbicar: a.sinCoordenadas, division: a.territorioDePuesto, subdivision: b.territorioDePuesto,
+          resultadosDivision: ubicarResultados(entry.daneCode, divs?.features ?? []),
+          resultadosSubdivision: ubicarResultados(entry.daneCode, subs?.features ?? []),
+        });
       })
       .catch((err) => {
         console.error('No se pudieron cargar los puestos del municipio:', err);
@@ -52,4 +74,11 @@ export function puestosDe(p: PuestosTerritorio, tipo: 'municipio' | 'division' |
   if (tipo === 'municipio') return p.todos.filter((x) => !p.sinUbicar.includes(x));
   const mapa = tipo === 'division' ? p.division : p.subdivision;
   return p.todos.filter((x) => mapa[x.codPuesto] === id);
+}
+
+/** Códigos 2023 de los puestos con resultados dentro de un territorio */
+export function codigosResultadosDe(p: PuestosTerritorio, tipo: 'municipio' | 'division' | 'subdivision', id: string): string[] {
+  if (tipo === 'municipio') return [];
+  const mapa = tipo === 'division' ? p.resultadosDivision : p.resultadosSubdivision;
+  return Object.keys(mapa).filter((c) => mapa[c] === id);
 }

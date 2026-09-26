@@ -3,8 +3,8 @@
  *
  * Reúne en cuatro secciones lo que Proteus sabe de un territorio y marca cada dato como
  * Oficial, Estimado o Sin información:
- *  1. Política: Alcaldía 2023 (escrutinio a nivel municipal; preconteo por puesto donde está cargado,
- *     hoy Rionegro) y actores de la base curada.
+ *  1. Política: Alcaldía 2023 (escrutinio a nivel municipal; preconteo por puesto donde está cargado:
+ *     Rionegro, Bello y Medellín) y actores de la base curada.
  *  2. Demografía: DANE, CNPV 2018 por manzana (hoy Bello) y proyección 2026.
  *  3. Censo electoral: suma de los puestos de votación ubicados dentro del territorio.
  *  4. Grupos: composición estimada por edad y sexo de los votantes.
@@ -14,6 +14,8 @@
 import rawBello from '../data/dane/belloCnpv2018Barrios.json';
 import rawIndice from '../data/territorio/indiceTerritorios.json';
 import rawRionegro2023 from '../data/electoral/resultadosPuesto2023/rionegro.json';
+import rawBello2023 from '../data/electoral/resultadosPuesto2023/bello.json';
+import rawMedellin2023 from '../data/electoral/resultadosPuesto2023/medellin.json';
 import { getDaneMunicipio } from './daneMunicipalService';
 import { getResultado2023, type Resultado2023 } from './electoralResults2023Service';
 import type { PuestoVotacion } from './pollingStationsService';
@@ -85,7 +87,6 @@ export const MUNICIPIOS_CON_FICHA = Object.keys(INDICE);
 export function territorioFicha(id: string): TerritorioFicha | null {
   for (const [muniId, m] of Object.entries(INDICE)) {
     if (id === muniId) return { tipo: 'municipio', id, nombre: m.nombre, dane: m.dane, municipio: m.nombre };
-    if (!id.startsWith(`${muniId}-`)) continue;
     const d = m.divisiones[id];
     if (d) return { tipo: 'division', id, nombre: d.nombre, dane: m.dane, municipio: m.nombre, clase: d.tipo };
     const sd = m.subdivisiones[id];
@@ -353,13 +354,27 @@ interface ResultadosPuestoData {
   meta: { fuente: string; tipo: string; nota: string };
   candidatos: { n: string; p: number }[];
   partidos: string[];
+  /** Por código de puesto de 2023 (no es el código del censo 2026) */
   puestos: Record<string, {
+    n: string;
+    ubicacion: { lat: number; lon: number } | null;
     alcaldia: { habilitados: number; votantes: number; blanco: number; nulos: number; noMarcados: number; candidatos: [number, number][] };
     concejo: { votantes: number; blanco: number; partidos: [number, number][] };
   }>;
 }
 /** Resultados 2023 por puesto (preconteo) cargados, por código DANE */
-const RESULTADOS_PUESTO_2023: Record<string, ResultadosPuestoData> = { '05615': rawRionegro2023 as unknown as ResultadosPuestoData };
+const RESULTADOS_PUESTO_2023: Record<string, ResultadosPuestoData> = {
+  '05615': rawRionegro2023 as unknown as ResultadosPuestoData,
+  '05088': rawBello2023 as unknown as ResultadosPuestoData,
+  '05001': rawMedellin2023 as unknown as ResultadosPuestoData,
+};
+
+/** Puestos de 2023 con resultados y su ubicación (Divipole 2023), para asignarlos a comunas y barrios */
+export function puestosConResultados(dane: string): { codigo: string; nombre: string; lon: number | null; lat: number | null }[] {
+  const data = RESULTADOS_PUESTO_2023[dane];
+  if (!data) return [];
+  return Object.entries(data.puestos).map(([codigo, p]) => ({ codigo, nombre: p.n, lon: p.ubicacion?.lon ?? null, lat: p.ubicacion?.lat ?? null }));
+}
 
 export function tieneResultadosPorPuesto(dane: string): boolean {
   return !!RESULTADOS_PUESTO_2023[dane];
@@ -413,12 +428,14 @@ export function actoresDeTerritorio(t: TerritorioFicha): ActorFicha[] {
 }
 
 /**
- * @param puestosDentro puestos del territorio; si el municipio tiene resultados por puesto, se suman
+ * @param codigosResultados códigos de 2023 de los puestos con resultados ubicados en el territorio
+ *   (ver puestosConResultados). En el municipio se suman todos.
  */
-export function politica(t: TerritorioFicha, puestosDentro: PuestoVotacion[] = []): SeccionPolitica {
+export function politica(t: TerritorioFicha, codigosResultados: string[] = []): SeccionPolitica {
   const r = getResultado2023(t.dane);
   const fuenteActores = 'Base curada del desarrollador (casas políticas). Sin verificar.';
-  const porPuestos = sumarResultadosPuestos(t.dane, puestosDentro.map((p) => p.codPuesto));
+  const todos = RESULTADOS_PUESTO_2023[t.dane] ? Object.keys(RESULTADOS_PUESTO_2023[t.dane].puestos) : [];
+  const porPuestos = sumarResultadosPuestos(t.dane, t.tipo === 'municipio' ? todos : codigosResultados);
   if (t.tipo === 'municipio') {
     return {
       resultados: r

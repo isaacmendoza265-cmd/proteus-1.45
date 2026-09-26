@@ -6,14 +6,41 @@ https://resultadosprec2023.registraduria.gov.co/json/ACT/<AL|CO>/<código>.json,
 nomenclator.json del mismo sitio (nombres de partidos).
 Salida: src/data/electoral/resultadosPuesto2023/<municipio>.json
 
-El código de puesto del preconteo tiene 11 caracteres (municipio 5 + zona 2 + comuna 2 + puesto 2);
-el de la app tiene 9 (municipio + zona + puesto): se quita la comuna.
+Los códigos de puesto CAMBIAN entre elecciones (en Bello, 36 de 42 puestos de 2023 tienen otro
+código en el censo 2026), así que los resultados NO se cruzan con los puestos 2026 por código.
+Cada puesto de 2023 se ubica con las coordenadas de la Divipole 2023 georreferenciada
+(_originales/divipole/), buscando su nombre dentro del mismo municipio; la app lo asigna luego a
+la comuna o barrio que lo contiene.
 No se guardan cédulas de candidatos.
-Uso: python3 scripts/build_resultados_puesto_2023.py rionegro 01214
+Uso: python3 scripts/build_resultados_puesto_2023.py rionegro 01214 RIONEGRO
 """
-import json, sys, os, glob
+import json, sys, os, glob, csv, re, unicodedata, difflib
 
-muni, codmun = sys.argv[1], sys.argv[2]
+muni, codmun, nombre_divipole = sys.argv[1], sys.argv[2], sys.argv[3]
+
+def norm(t):
+    t = unicodedata.normalize('NFD', t.upper())
+    t = ''.join(c for c in t if unicodedata.category(c) != 'Mn')
+    return ' '.join(re.sub(r'[^A-Z0-9 ]', ' ', t).split())
+
+divipole = [r for r in csv.DictReader(open('_originales/divipole/divipole_2023_georreferenciada.csv', encoding='utf-8'))
+            if r['departamento'] == 'ANTIOQUIA' and r['municipio'] == nombre_divipole]
+def ubicar(nombre):
+    n = norm(nombre)
+    exactos = [r for r in divipole if norm(r['puesto']) == n]
+    if len(exactos) == 1:
+        r, sim = exactos[0], 1.0
+    else:
+        cand = sorted(((difflib.SequenceMatcher(None, n, norm(r['puesto'])).ratio(), i) for i, r in enumerate(divipole)), reverse=True)
+        if not cand or cand[0][0] < 0.85:
+            return None
+        sim, r = cand[0][0], divipole[cand[0][1]]
+    try:
+        lat, lon = float(r['latitud']), float(r['longitud'])
+    except ValueError:
+        return None
+    return {'lat': round(lat, 6), 'lon': round(lon, 6), 'similitud': round(sim, 2), 'divipole': r['puesto']}
+nombres = {c: nm for c, nm, _ in json.load(open(f'_originales/registraduria/preconteo2023/{muni}/puestos_nomenclator.json'))}
 base = f'_originales/registraduria/preconteo2023/{muni}'
 nom = json.load(open('_originales/registraduria/preconteo2023/nomenclator_partidos.json'))
 # En los resultados, "codpar" es el índice "i" del nomenclátor (no su campo codpar)
@@ -58,19 +85,20 @@ municipio_co, _, _ = leer('CO', codmun)
 puestos = {}
 for f in sorted(glob.glob(f'{base}/AL_{codmun}?*.json')):
     code = os.path.basename(f)[3:-5]
-    app = code[:7] + code[9:]
-    puestos[app] = {'alcaldia': leer('AL', code)[0], 'concejo': leer('CO', code)[0]}
+    u = ubicar(nombres.get(code, ''))
+    puestos[code] = {'n': nombres.get(code, code).title(), 'ubicacion': u, 'alcaldia': leer('AL', code)[0], 'concejo': leer('CO', code)[0]}
 
 out = {
     'meta': {
         'fuente': 'Registraduría Nacional del Estado Civil, preconteo de las elecciones territoriales del 29-oct-2023 (resultadosprec2023.registraduria.gov.co)',
         'tipo': 'preconteo',
         'boletin': numact, 'corte': mdhm,
-        'nota': 'Preconteo: conteo de la noche electoral. Puede diferir levemente del escrutinio (E-24).',
+        'nota': 'Preconteo: conteo de la noche electoral. Puede diferir levemente del escrutinio (E-24). Cada puesto se ubica con la Divipole 2023 (por nombre); los códigos de 2023 no son los del censo 2026.',
     },
     'municipio': {'alcaldia': municipio_al, 'concejo': municipio_co},
     'candidatos': candidatos, 'partidos': partidos, 'puestos': puestos,
 }
 json.dump(out, open(f'src/data/electoral/resultadosPuesto2023/{muni}.json', 'w'), ensure_ascii=False, separators=(',', ':'))
 suma = sum(p['alcaldia']['votantes'] for p in puestos.values())
-print(muni, len(puestos), 'puestos; votantes suma', suma, 'municipio', municipio_al['votantes'])
+sin = [p['n'] for p in puestos.values() if not p['ubicacion']]
+print(muni, len(puestos), 'puestos; votantes suma', suma, 'municipio', municipio_al['votantes'], '; sin ubicar', len(sin), sin[:10])
