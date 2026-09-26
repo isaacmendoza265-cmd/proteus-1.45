@@ -209,3 +209,36 @@ input:focus, select:focus, textarea:focus {
 .leaflet-container .leaflet-control-attribution a {
   color: #7dd3fc;
 }
+
+/* Estilo "sobrio cívico" de la reforma (Territorio). Se aplica solo dentro de .proteus-civico */
+.proteus-civico {
+  --c-bg: #F6F4EF;
+  --c-surface: #FFFFFF;
+  --c-sunken: #F1EEE8;
+  --c-ink: #17191C;
+  --c-muted: #50565C;
+  --c-border: #E0DBD1;
+  --c-accent: #85172C;
+  --c-accent-soft: #F3E4E7;
+  --c-ok: #1F6B4A;
+  --c-ok-soft: #E2F0E7;
+  --c-warn: #6B4500;
+  --c-warn-soft: #FBEFD9;
+  font-family: 'Public Sans', system-ui, sans-serif;
+  color: var(--c-ink);
+}
+.proteus-civico .font-titulo { font-family: 'Newsreader', Georgia, serif; }
+.proteus-civico select,
+.proteus-civico input {
+  background-color: var(--c-surface) !important;
+  color: var(--c-ink) !important;
+  border: 1px solid var(--c-border) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-radius: 0.5rem !important;
+}
+.proteus-civico select:focus,
+.proteus-civico input:focus {
+  border-color: var(--c-accent) !important;
+  box-shadow: 0 0 0 2px var(--c-accent-soft) !important;
+}

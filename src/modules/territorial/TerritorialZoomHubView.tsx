@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { 
   ZoomLevelId, 
   ThematicMetricLayer, 
@@ -12,6 +12,11 @@ import { MapLayerControls } from '../../components/maps/MapLayerControls';
 import { MultiLevelZoomMap } from '../../components/maps/MultiLevelZoomMap';
 import { CommuneDeepAnalyticsDrawer } from '../../components/maps/CommuneDeepAnalyticsDrawer';
 import { PollingStationsPanel } from '../../components/maps/PollingStationsPanel';
+import { FichaTerritorio } from '../../components/territorio/FichaTerritorio';
+import { RedDePoder3D } from '../../components/territorio/RedDePoder3D';
+import { usePuestosTerritorio, puestosDe } from '../../components/territorio/usePuestosTerritorio';
+import { territorioBello, tieneFicha } from '../../services/territoryProfileService';
+import { MUNICIPAL_DIVISIONS_REGISTRY } from '../../data/geojson/municipalDivisions';
 import { 
   Compass, 
   Shield, 
@@ -53,6 +58,24 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
   const [selectedMunicipalityId, setSelectedMunicipalityId] = useState<string>('medellin');
   const [selectedDepartmentName, setSelectedDepartmentName] = useState<string>('Antioquia');
   const [e24ModalOpen, setE24ModalOpen] = useState(false);
+  // Vista del módulo: mapa con ficha, o red de poder en 3D
+  const [vista, setVista] = useState<'mapa' | 'redes'>('mapa');
+
+  // Ficha de 4 secciones (Política, Demografía, Censo electoral, Grupos): hoy, Bello y sus comunas/barrios
+  const isMunicipalScale = currentLevel === 'municipal' || currentLevel === 'hiperlocal' || currentLevel === 'comunas-barrios';
+  const fichaId: string | null = (() => {
+    const id = selectedFeature ? String(selectedFeature.id) : '';
+    if (id && tieneFicha(id)) return id;
+    if (selectedFeature && /(^|-)05088$/.test(id)) return 'bello';
+    if (!selectedFeature && isMunicipalScale && selectedMunicipalityId === 'bello') return 'bello';
+    return null;
+  })();
+  const territorioFicha = useMemo(() => (fichaId ? territorioBello(fichaId) : null), [fichaId]);
+  const puestosMuni = usePuestosTerritorio(territorioFicha ? 'bello' : null);
+  const puestosFicha = useMemo(
+    () => (territorioFicha ? puestosDe(puestosMuni, territorioFicha.tipo, territorioFicha.id) : []),
+    [territorioFicha, puestosMuni],
+  );
 
   const currentDataset = GEOJSON_LAYERS_BY_ZOOM[currentLevel];
   const currentLevelConfig = ZOOM_LEVELS_CONFIG[currentLevel];
@@ -178,6 +201,37 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
         </div>
       </div>
 
+      {/* Vista: mapa con ficha o red de poder */}
+      <div role="tablist" aria-label="Vista del territorio" className="inline-flex p-1 gap-1 rounded-xl bg-[#F1EEE8] border border-[#E0DBD1]">
+        {([['mapa', 'Mapa'], ['redes', 'Redes de poder']] as const).map(([id, label]) => (
+          <button
+            key={id}
+            role="tab"
+            aria-selected={vista === id}
+            onClick={() => setVista(id)}
+            className={`min-h-9 px-4 rounded-lg text-sm font-semibold ${vista === id ? 'bg-[#FFFFFF] text-[#17191C] shadow-sm' : 'text-[#50565C] hover:text-[#17191C]'}`}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
+      {vista === 'redes' && (
+        <RedDePoder3D
+          municipioInicial={territorioFicha?.municipio ?? (MUNICIPAL_DIVISIONS_REGISTRY[selectedMunicipalityId]?.name)}
+          onVerMunicipio={(nombre) => {
+            const entry = Object.values(MUNICIPAL_DIVISIONS_REGISTRY).find((e) => e.name === nombre);
+            if (entry) {
+              setSelectedMunicipalityId(entry.id);
+              setCurrentLevel('municipal');
+              setSelectedFeature(null);
+            }
+            setVista('mapa');
+          }}
+        />
+      )}
+
+      {vista === 'mapa' && (<>
       {/* 2. Navigation Breadcrumb (5 Steps) */}
       <MapBreadcrumb
         currentLevel={currentLevel}
@@ -198,7 +252,7 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
 
       {/* 4. Interactive GIS Map & Deep Analytics Multi-Tab Drawer */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
-        <div className={`${selectedFeature ? 'lg:col-span-8' : 'lg:col-span-12'} transition-all duration-300`}>
+        <div className={`${selectedFeature || territorioFicha ? 'lg:col-span-8' : 'lg:col-span-12'} transition-all duration-300`}>
           <MultiLevelZoomMap
             currentLevel={currentLevel}
             activeLayer={activeLayer}
@@ -217,7 +271,21 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
           />
         </div>
 
-        {selectedFeature && (
+        {territorioFicha && (
+          <div className="lg:col-span-4 animate-fadeIn">
+            <FichaTerritorio
+              key={territorioFicha.id}
+              territorio={territorioFicha}
+              puestosDentro={puestosFicha}
+              sinUbicar={puestosMuni.sinUbicar}
+              cargandoPuestos={puestosMuni.cargando}
+              onVerRed={() => setVista('redes')}
+              onUsarComoActivo={selectedFeature ? () => activeTerritoryService.setFromGeoFeature(selectedFeature) : undefined}
+            />
+          </div>
+        )}
+
+        {selectedFeature && !territorioFicha && (
           <div className="lg:col-span-4 transition-all duration-300 animate-fadeIn">
             <CommuneDeepAnalyticsDrawer
               feature={selectedFeature}
@@ -435,6 +503,7 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
           </button>
         </div>
       </div>
+      </>)}
 
       {/* Standalone E-24 Historical Matrix Modal */}
       {e24ModalOpen && (
