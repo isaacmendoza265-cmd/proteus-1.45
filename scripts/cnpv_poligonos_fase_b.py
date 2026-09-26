@@ -51,7 +51,8 @@ for m in json.load(open(sys.argv[1])):
     s = m['slug']
     crudo = f'_originales/dane_cnpv_fase_b/{s}.json'
     res = json.load(open(crudo)) if os.path.exists(crudo) else {}
-    feats = json.load(open(f'src/data/geojson/municipios/{s}.subdivisiones.geo.json'))['features']
+    ruta = 'src/data/geojson/medellinBarrios.geo.json' if s == 'medellin' else f'src/data/geojson/municipios/{s}.subdivisiones.geo.json'
+    feats = json.load(open(ruta))['features']
     for f in feats:
         if f['id'] in res: continue
         g = shape(f['geometry'])

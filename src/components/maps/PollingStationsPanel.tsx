@@ -249,7 +249,7 @@ export const PollingStationsPanel: React.FC<PollingStationsPanelProps> = ({ curr
                     <tr key={p.codPuesto} className="text-slate-200 hover:bg-white/5">
                       <td className="px-2.5 py-1.5">
                         <div className="font-bold text-white flex items-center gap-1">
-                          {tieneCoordenadas(p) && <MapPin className={`w-3 h-3 shrink-0 ${d!.cruce === 'aproximado' ? 'text-amber-400' : 'text-emerald-400'}`} />}
+                          {tieneCoordenadas(p) && <MapPin className={`w-3 h-3 shrink-0 ${(d!.cruce === 'aproximado' || d!.precision === 'aproximada') ? 'text-amber-400' : 'text-emerald-400'}`} />}
                           {p.puesto}
                         </div>
                         <div className={`text-[9px] ${d?.cruce === 'aproximado' || !d ? 'text-amber-300/80' : 'text-slate-500'}`}>{describirCruce(p)}</div>

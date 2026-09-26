@@ -166,6 +166,20 @@ def main():
             'puestosConCoordenadas': con_coord,
         })
 
+    # Puestos sin Divipole 2023: ubicación complementaria (dirección de la Divipole 2026 + punto verificado)
+    comp_path = ROOT / '_originales/divipole/ubicaciones_complementarias_2026.csv'
+    if comp_path.exists():
+        comp = {r['codPuesto']: r for r in csv.DictReader(open(comp_path, encoding='utf-8'))}
+        for p in puestos:
+            r = comp.get(p['codPuesto'])
+            if r and not (p['divipole2023'] and p['divipole2023'].get('lat') is not None):
+                p['divipole2023'] = {'puesto': p['puesto'], 'comuna': None, 'direccion': r['direccion'],
+                                     'lat': float(r['lat']), 'lon': float(r['lon']), 'cruce': r['cruce'],
+                                     'similitud': 1.0, 'precision': r['precision'], 'fuente': r['fuente']}
+                stats[r['cruce']] += 1
+        for m in municipios:
+            m['puestosConCoordenadas'] = sum(1 for p in puestos if p['codMunicipio'] == m['codMunicipio'] and (p['divipole2023'] or {}).get('lat') is not None)
+
     municipios.sort(key=lambda x: -x['censo'])
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     for f in OUT_DIR.glob('*.json'):

@@ -332,7 +332,7 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
     for (const p of puestos) {
       if (!tieneCoordenadas(p)) continue;
       const d = p.divipole2023;
-      const aproximado = d.cruce === 'aproximado';
+      const aproximado = d.cruce === 'aproximado' || d.precision === 'aproximada';
       const territorio = asignacion?.territorioDePuesto[p.codPuesto];
       const marker = L.circleMarker([d.lat, d.lon], {
         renderer,

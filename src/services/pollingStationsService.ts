@@ -14,7 +14,9 @@ import resumen from '../data/electoral/puestos/resumen.json';
 import { getMunicipalCensus, normalizeTerritoryName, resolveDepartmentId } from './electoralCensusService';
 import type { TerritoryGeoFeature } from '../data/geojson/types';
 
-export type TipoCruce = 'exacto' | 'normalizado' | 'aproximado';
+/** exacto/normalizado/aproximado: por nombre con la Divipole 2023. direccion: misma dirección que un puesto de la
+ *  Divipole 2023 (se usan sus coordenadas). geocodificado: dirección de la Divipole 2026 ubicada en OpenStreetMap. */
+export type TipoCruce = 'exacto' | 'normalizado' | 'aproximado' | 'direccion' | 'geocodificado';
 
 export interface UbicacionDivipole {
   /** Nombre del puesto en la Divipole 2023 */
@@ -28,6 +30,9 @@ export interface UbicacionDivipole {
   coordenadaInvalida?: string;
   cruce: TipoCruce;
   similitud: number;
+  /** Solo en ubicaciones complementarias: 'puesto' (el edificio) o 'aproximada' (cruce de calles o vereda) */
+  precision?: 'puesto' | 'aproximada';
+  fuente?: string;
 }
 
 export interface PuestoVotacion {
@@ -204,6 +209,8 @@ export function describirCruce(p: PuestoVotacion): string {
   if (d.lat == null) return `Coordenadas inválidas en la fuente (${d.coordenadaInvalida})`;
   if (d.cruce === 'exacto') return 'Ubicado con la Divipole 2023 (mismo nombre)';
   if (d.cruce === 'normalizado') return `Ubicado con la Divipole 2023 (nombre equivalente: ${d.puesto})`;
+  if (d.cruce === 'direccion') return `Ubicado por su dirección 2026 (${d.direccion}), la misma de un puesto de la Divipole 2023`;
+  if (d.cruce === 'geocodificado') return `Ubicado por su dirección 2026 (${d.direccion}) en OpenStreetMap${d.precision === 'aproximada' ? ' · ubicación aproximada' : ''}`;
   return `Ubicado por nombre parecido (${Math.round(d.similitud * 100)} %): ${d.puesto}. Conviene verificar`;
 }
 
