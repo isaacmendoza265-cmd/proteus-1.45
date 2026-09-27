@@ -1,5 +1,5 @@
 import React from 'react';
-import { Vote, Users, AlertOctagon, TrendingUp, Sparkles, Filter } from 'lucide-react';
+import { Vote, Users, TrendingUp, Sparkles, Filter } from 'lucide-react';
 import { ThematicMetricLayer } from '../../data/geojson';
 
 interface MapLayerControlsProps {
@@ -29,28 +29,21 @@ export const MapLayerControls: React.FC<MapLayerControlsProps> = ({
       label: 'Electoral',
       icon: <Vote className="w-3.5 h-3.5" />,
       color: 'from-sky-500/30 to-blue-600/40 border-sky-400/60 text-sky-200',
-      description: 'Resultados 2023-2026, partidos dominantes y abstención'
+      description: 'Ganador por territorio y por puesto; se elige año y tipo de elección (2015-2026)'
     },
     {
       id: 'demografico',
-      label: 'Demografía & Estrato',
+      label: 'Demográfica',
       icon: <Users className="w-3.5 h-3.5" />,
       color: 'from-emerald-500/30 to-teal-600/40 border-emerald-400/60 text-emerald-200',
-      description: 'Población, estratos 1 al 6 y porcentaje de jóvenes (18-28)'
+      description: 'Sexo y edad: DANE, CNPV 2018 por manzana y proyección municipal 2026'
     },
     {
-      id: 'nbi',
-      label: 'Índice NBI',
+      id: 'economico',
+      label: 'Económica',
       icon: <TrendingUp className="w-3.5 h-3.5" />,
       color: 'from-amber-500/30 to-orange-600/40 border-amber-400/60 text-amber-200',
-      description: 'Necesidades Básicas Insatisfechas DANE y vulnerabilidad'
-    },
-    {
-      id: 'riesgo',
-      label: 'Riesgo & Alertas',
-      icon: <AlertOctagon className="w-3.5 h-3.5" />,
-      color: 'from-rose-500/30 to-red-600/40 border-rose-400/60 text-rose-200',
-      description: 'Semáforo de orden público, conflictividad y seguimiento institucional'
+      description: 'Estrato, pobreza multidimensional (IPM) y educación por manzana; NBI por municipio'
     }
   ];
 

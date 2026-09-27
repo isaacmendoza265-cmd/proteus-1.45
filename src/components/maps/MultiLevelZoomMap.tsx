@@ -29,13 +29,31 @@ import {
 } from '../../services/pollingStationsService';
 import { ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA } from '../../data/antioquia125MunicipalitiesMasterData';
 import { colorDePartido, COLOR_SIN_DATO, LEYENDA_PARTIDOS } from '../../data/electoral/partidoColors';
-import { cargarEconomia, economia, territorioFicha } from '../../services/territoryProfileService';
-import { cargarElecciones, sumarEleccion, type EleccionPuestos } from '../../services/electionResultsService';
+import { cargarDemografia, cargarEconomia } from '../../services/territoryProfileService';
+import { cargarElecciones, sumarEleccion, tipoEleccion, type EleccionPuestos } from '../../services/electionResultsService';
 import { cargarGanadores, coloresCandidatos, colorGanador, esPresidencial, ganadoresPorTerritorio, type IndiceGanadores } from '../../services/winnersService';
+import {
+  COLORES_ESTRATO,
+  METRICAS_DEMOGRAFICAS,
+  METRICAS_ECONOMICAS,
+  PALETA_DEMOGRAFICA,
+  PALETA_ECONOMICA,
+  aniosYTipos,
+  colorEstrato,
+  colorPorCortes,
+  cortesQuintiles,
+  eleccionDelAnio,
+  puntosEleccion,
+  rangosLeyenda,
+  valorMunicipio,
+  valorSubdivision,
+  type MetricaDemografica,
+  type MetricaEconomica,
+  type ValorTerritorio,
+} from '../../services/mapColorService';
 
-// Estrato 1 (bajo) -> 6 (alto). Mismos colores que la barra de "viviendas por estrato" de la ficha.
-const COLORES_ESTRATO = ['#9B2C2C', '#C05621', '#B7791F', '#2F855A', '#2B6CB0', '#553C9A'];
-const COLOR_SIN_ESTRATO = '#94a3b8';
+// Puestos en escalas mayores al municipio: sin color por capa (se ve al abrir un municipio)
+const COLOR_PUESTO_NEUTRO = '#e2e8f0';
 
 // Códigos DANE del Valle de Aburrá (nivel metropolitano)
 const VALLE_ABURRA_DANE = new Set(
@@ -182,20 +200,87 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
   const lastCameraKeyRef = useRef<string>('');
   const lastLayerBoundsRef = useRef<L.LatLngBounds | null>(null);
 
-  // Economía por manzana (estrato), para la capa "demografico" a escala de comuna/barrio.
-  // cargarEconomia guarda en una caché de módulo; este contador solo fuerza el redibujado cuando llega.
+  // Demografía y economía por manzana del municipio abierto (CNPV 2018). Las cargas guardan en una
+  // caché de módulo; estos contadores solo fuerzan el redibujado cuando llegan.
   const [economiaLista, setEconomiaLista] = useState(0);
+  const [demografiaLista, setDemografiaLista] = useState(0);
   useEffect(() => {
     if (!isMunicipalScale) return;
     let activo = true;
     cargarEconomia(activeMuni.daneCode).then((ok) => { if (activo && ok) setEconomiaLista((n) => n + 1); });
+    cargarDemografia(activeMuni.daneCode).then((ok) => { if (activo && ok) setDemografiaLista((n) => n + 1); });
     return () => { activo = false; };
   }, [isMunicipalScale, activeMuni.daneCode]);
 
-  // Helper: Color logic by layer
+  // Capa electoral: año y tipo de elección. En la escala municipal, las elecciones con puestos del
+  // municipio; en las demás, las del índice de ganadores por municipio.
+  const eleccionesDisponibles = useMemo(
+    () => (isMunicipalScale && eleccionesMuni.length
+      ? eleccionesMuni.map((e) => ({ id: e.id, nombre: e.nombre }))
+      : indiceGanadores?.elecciones ?? [{ id: 'alcaldia-2023', nombre: 'Alcaldía 2023' }]),
+    [isMunicipalScale, eleccionesMuni, indiceGanadores],
+  );
+  const aniosElectorales = useMemo(() => aniosYTipos(eleccionesDisponibles), [eleccionesDisponibles]);
+  const anioCapa = Number(/-(\d{4})(?:-\d)?$/.exec(eleccionCapa)?.[1] ?? 0);
+  // Si el municipio abierto no tiene la elección elegida, se pasa a la del mismo tipo más parecida
+  useEffect(() => {
+    if (!eleccionesDisponibles.length || eleccionesDisponibles.some((e) => e.id === eleccionCapa)) return;
+    const anio = aniosElectorales.some((a) => a.anio === anioCapa) ? anioCapa : aniosElectorales[0]?.anio;
+    const id = anio ? eleccionDelAnio(eleccionesDisponibles, anio, tipoEleccion(eleccionCapa)) : null;
+    if (id) setEleccionCapa(id);
+  }, [eleccionesDisponibles, aniosElectorales, eleccionCapa, anioCapa]);
+
+  // Capas demográfica y económica: métrica elegida. Las económicas por manzana solo existen a escala
+  // municipal; a escala de municipios, el NBI.
+  const [metricaDem, setMetricaDem] = useState<MetricaDemografica>('mujeres');
+  const [metricaEco, setMetricaEco] = useState<MetricaEconomica>('estrato');
+  const metricasEcoEscala = METRICAS_ECONOMICAS.filter((m) => m.escala === (isMunicipalScale ? 'municipal' : 'departamental'));
+  const metricaEcoEfectiva: MetricaEconomica = metricasEcoEscala.some((m) => m.id === metricaEco) ? metricaEco : metricasEcoEscala[0].id;
+  const metricaActiva = activeLayer === 'demografico' ? metricaDem : metricaEcoEfectiva;
+  const nombreMetrica = activeLayer === 'demografico'
+    ? METRICAS_DEMOGRAFICAS.find((m) => m.id === metricaDem)!.nombre
+    : METRICAS_ECONOMICAS.find((m) => m.id === metricaEcoEfectiva)!.nombre;
+  const esCategorica = activeLayer === 'economico' && metricaEcoEfectiva === 'estrato';
+  const paletaCapa = activeLayer === 'demografico' ? PALETA_DEMOGRAFICA : PALETA_ECONOMICA;
+
+  /** Dato demográfico o económico de un territorio visible (o "Sin información") */
+  const valorDe = (feature: TerritoryGeoFeature): ValorTerritorio => {
+    if (activeLayer === 'electoral') return { valor: null, texto: '', fuente: '' };
+    if (isMunicipalScale) return valorSubdivision(String(feature.id), activeLayer, metricaActiva);
+    const p = feature.properties as { daneCode?: string; nbiPercentage?: number };
+    const dane = p.daneCode ?? /(\d{5})$/.exec(String(feature.id))?.[1];
+    if (!dane) return { valor: null, texto: 'Sin información', fuente: '' };
+    return valorMunicipio(dane, p.nbiPercentage, activeLayer, metricaActiva);
+  };
+
+  /** Capa de polígonos de la escala actual (antes de la búsqueda) */
+  const datasetActual = (): TerritoryFeatureCollection | null => {
+    let dataset: TerritoryFeatureCollection | null = GEOJSON_LAYERS_BY_ZOOM[currentLevel] ?? null;
+    if (currentLevel === 'departamental') {
+      const isAntioquia = !selectedDepartmentName || selectedDepartmentName.toLowerCase() === 'antioquia';
+      if (isAntioquia) dataset = antioquiaViewMode === 'subregiones' ? SubregionAggregationEngine.buildSubregionDataset() : ANTIOQUIA_125_MUNICIPIOS_GEOJSON;
+      else if (customDeptDataset) dataset = customDeptDataset;
+    }
+    if (usesCustomMuni) dataset = customMuniDataset;
+    return dataset;
+  };
+
+  // Clases de la escala continua: quintiles de los valores de los territorios visibles
+  const escalaCapa = useMemo(() => {
+    if (activeLayer === 'electoral' || esCategorica) return null;
+    if (currentLevel === 'departamental' && antioquiaViewMode === 'subregiones') return null;
+    const feats = (datasetActual()?.features ?? []).filter((f) => !(currentLevel === 'comunas-barrios' && comunaFiltroId && comunaDe(f) !== comunaFiltroId));
+    const valores = feats.map((f) => valorDe(f).valor).filter((v): v is number => v !== null);
+    return { valores, cortes: cortesQuintiles(valores) };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeLayer, esCategorica, metricaActiva, currentLevel, antioquiaViewMode, selectedDepartmentName, customDeptDataset, usesCustomMuni, customMuniDataset, comunaFiltroId, economiaLista, demografiaLista]);
+
+  const colorDeValor = (v: number | null) => (esCategorica ? colorEstrato(v) : colorPorCortes(v, escalaCapa?.cortes ?? [], paletaCapa));
+
+  // Color de cada territorio según la capa
   const getFeatureColor = (feature: TerritoryGeoFeature): string => {
     const p = feature.properties;
-    
+
     if (activeLayer === 'electoral') {
       // Elección elegida (2015-2026): municipio por municipio, o comuna/barrio/vereda por sus puestos.
       // Presidencia: color por candidato; las demás, por el partido del ganador o de la lista más votada.
@@ -205,46 +290,7 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
       return colorDePartido(p.predominantParty || p.winnerParty).color;
     }
 
-    if (activeLayer === 'demografico') {
-      // Escala de comuna/barrio/vereda: estrato real del CNPV 2018 por manzana (factura de energía),
-      // sumado por territorio (ver territoryProfileService.economia). No es la estratificación vigente.
-      if (isMunicipalScale) {
-        const ficha = territorioFicha(String(feature.id));
-        const eco = ficha ? economia(ficha) : null;
-        if (eco?.estratoModa) return COLORES_ESTRATO[eco.estratoModa - 1];
-        return COLOR_SIN_ESTRATO;
-      }
-      // Escala municipal/departamental: estrato predominante del maestro (no hay manzanas agregadas ahí)
-      if (p.predominantStratum) {
-        if (p.predominantStratum.includes('Alto') || p.predominantStratum.includes('5-6')) return '#10b981';
-        if (p.predominantStratum.includes('Medio') || p.predominantStratum.includes('3-4')) return '#06b6d4';
-        return '#f59e0b';
-      }
-      const pop = p.population || 0;
-      if (pop > 2000000) return '#6366f1';
-      if (pop > 500000) return '#0ea5e9';
-      if (pop > 150000) return '#10b981';
-      return '#f59e0b';
-    }
-
-    if (activeLayer === 'nbi') {
-      const nbi = p.nbiPercentage || 0;
-      if (nbi > 40) return '#ef4444';
-      if (nbi > 25) return '#f97316';
-      if (nbi > 15) return '#f59e0b';
-      if (nbi > 10) return '#10b981';
-      return '#06b6d4';
-    }
-
-    if (activeLayer === 'riesgo') {
-      const r = p.riskLevel;
-      if (r === 'Crítico') return '#ef4444';
-      if (r === 'Alto') return '#f97316';
-      if (r === 'Medio') return '#f59e0b';
-      return '#10b981';
-    }
-
-    return p.colorCode || '#38bdf8';
+    return colorDeValor(valorDe(feature).valor);
   };
 
   // Initialize Map
@@ -439,22 +485,64 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
     if (!layer || !renderer) return;
     layer.clearLayers();
     if (!showPuestos) return;
-    const nombreTerritorio: Record<string, string> = {};
-    for (const f of municipalFeatures ?? []) nombreTerritorio[String(f.id)] = f.properties.name;
+    const featurePorId: Record<string, TerritoryGeoFeature> = {};
+    for (const f of municipalFeatures ?? []) featurePorId[String(f.id)] = f;
     const municipioDe = nombreMunicipioPuestos;
+    // Borde: blanco si la ubicación es la del puesto; ámbar punteado si es aproximada
+    const borde = (aproximado: boolean) => ({ color: aproximado ? '#f59e0b' : '#f8fafc', dashArray: aproximado ? '2, 2' : undefined, weight: aproximado ? 1.5 : 1 });
+    const radio = (n: number) => Math.max(2.5, Math.min(10, Math.sqrt(n) / 12));
+
+    // Capa electoral a escala municipal: los puestos DE ESA ELECCIÓN (los códigos y ubicaciones
+    // cambian por elección), coloreados por el ganador en cada puesto
+    const eleccion = activeLayer === 'electoral' && isMunicipalScale ? eleccionesMuni.find((e) => e.id === eleccionCapa) : undefined;
+    if (eleccion) {
+      for (const pt of puntosEleccion(eleccion, puestos)) {
+        const color = colorGanador(eleccionCapa, pt.ganador ? { ganador: pt.ganador, partido: pt.partido! } : undefined, candidatosCapa);
+        const marker = L.circleMarker([pt.lat, pt.lon], {
+          renderer, radius: radio(pt.habilitados), fillColor: color, fillOpacity: 0.9, bubblingMouseEvents: false, ...borde(pt.aproximado),
+        });
+        marker.bindTooltip(
+          `<div style="font-family: system-ui, sans-serif; font-size: 11px; max-width: 260px;">
+            <div style="color: #34d399; font-size: 9px; text-transform: uppercase; font-weight: 800;">Puesto · ${escapeHtml(eleccion.nombre)}</div>
+            <div style="color: #ffffff; font-size: 12px; font-weight: 900;">${escapeHtml(titulo(pt.nombre))}</div>
+            <div style="color: #ffffff; margin-top: 3px; font-weight: 800;">${pt.ganador ? `${escapeHtml(pt.ganador)}${pt.partido && pt.partido !== pt.ganador ? ` (${escapeHtml(pt.partido)})` : ''} · ${pt.pct!.toFixed(1).replace('.', ',')} %` : 'Sin votos registrados'}</div>
+            <div style="color: #cbd5e1;">${pt.habilitados.toLocaleString('es-CO')} habilitados · ${eleccion.tipo === 'preconteo' ? 'preconteo' : 'escrutinio'} de la Registraduría</div>
+            ${pt.aproximado ? '<div style="color: #fbbf24; font-size: 9px; margin-top: 2px;">Ubicación aproximada (cabecera o vereda)</div>' : ''}
+          </div>`,
+          { sticky: true, className: 'leaflet-glass-tooltip' },
+        );
+        if (pt.puesto2026) marker.on('click', () => setPuestoSeleccionado(pt.puesto2026));
+        layer.addLayer(marker);
+      }
+      return;
+    }
+
     for (const p of puestos) {
       if (!tieneCoordenadas(p)) continue;
       const d = p.divipole2023;
       const aproximado = d.cruce === 'aproximado' || d.precision === 'aproximada';
       const territorio = asignacion?.territorioDePuesto[p.codPuesto];
+      const fTerritorio = territorio ? featurePorId[territorio] : undefined;
+      // Demográfica y económica a escala municipal: % de mujeres del propio puesto (censo 2026);
+      // los demás indicadores no existen por puesto y se toma el color del barrio o vereda donde está.
+      let fillColor = COLOR_PUESTO_NEUTRO;
+      let dato = '';
+      if (isMunicipalScale && activeLayer !== 'electoral') {
+        if (activeLayer === 'demografico' && metricaDem === 'mujeres' && p.mujeres + p.hombres > 0) {
+          const v = (100 * p.mujeres) / (p.mujeres + p.hombres);
+          fillColor = colorDeValor(v);
+          dato = `Mujeres en el censo 2026 del puesto: ${v.toFixed(1).replace('.', ',')} %`;
+        } else if (fTerritorio) {
+          const v = valorDe(fTerritorio);
+          fillColor = colorDeValor(v.valor);
+          dato = `${nombreMetrica} del territorio donde está: ${v.texto}`;
+        } else {
+          fillColor = COLOR_SIN_DATO;
+          dato = `${nombreMetrica}: sin información (el puesto no cae en ningún territorio de la capa)`;
+        }
+      }
       const marker = L.circleMarker([d.lat, d.lon], {
-        renderer,
-        radius: Math.max(2.5, Math.min(10, Math.sqrt(p.total) / 12)),
-        color: aproximado ? '#fbbf24' : '#f8fafc',
-        weight: 1,
-        fillColor: aproximado ? '#f59e0b' : '#10b981',
-        fillOpacity: 0.85,
-        bubblingMouseEvents: false,
+        renderer, radius: radio(p.total), fillColor, fillOpacity: 0.9, bubblingMouseEvents: false, ...borde(aproximado),
       });
       marker.bindTooltip(
         `<div style="font-family: system-ui, sans-serif; font-size: 11px; max-width: 260px;">
@@ -462,8 +550,9 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
           <div style="color: #ffffff; font-size: 12px; font-weight: 900;">${escapeHtml(p.puesto)}</div>
           ${d.direccion ? `<div style="color: #cbd5e1;">${escapeHtml(d.direccion)}</div>` : ''}
           ${d.comuna ? `<div style="color: #94a3b8;">Registraduría: ${escapeHtml(d.comuna)}</div>` : ''}
-          ${territorio && nombreTerritorio[territorio] ? `<div style="color: #7dd3fc;">En el mapa: ${escapeHtml(nombreTerritorio[territorio])}</div>` : ''}
+          ${fTerritorio ? `<div style="color: #7dd3fc;">En el mapa: ${escapeHtml(fTerritorio.properties.name)}</div>` : ''}
           <div style="color: #ffffff; margin-top: 3px; font-weight: 800;">Censo 2026: ${p.total.toLocaleString('es-CO')} · ${p.mesas} mesas</div>
+          ${dato ? `<div style="color: #e2e8f0; margin-top: 2px;">${escapeHtml(dato)}</div>` : ''}
           <div style="color: ${aproximado ? '#fbbf24' : '#94a3b8'}; font-size: 9px; margin-top: 2px;">${escapeHtml(describirCruce(p))}</div>
         </div>`,
         { sticky: true, className: 'leaflet-glass-tooltip' },
@@ -471,7 +560,8 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
       marker.on('click', () => setPuestoSeleccionado(p));
       layer.addLayer(marker);
     }
-  }, [puestos, showPuestos, asignacion, municipalFeatures]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [puestos, showPuestos, asignacion, municipalFeatures, activeLayer, eleccionCapa, eleccionesMuni, candidatosCapa, isMunicipalScale, escalaCapa, metricaActiva, metricaDem, economiaLista, demografiaLista]);
 
   // Synchronize GeoJSON features and camera transitions when currentLevel, activeLayer, or searchQuery changes
   useEffect(() => {
@@ -587,13 +677,14 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
           };
         }
 
-        // 2. Corregimientos circulares (Option 3)
+        // 2. Corregimientos: color de la capa, con borde punteado para distinguirlos de las comunas
         if ((feature.properties as any).isCorregimiento || feature.id.includes('correg')) {
+          const colorCorreg = getFeatureColor(feature);
           return {
-            fillColor: isSelected ? '#fbbf24' : '#f59e0b',
-            fillOpacity: isSelected ? 0.75 : 0.42,
-            color: isSelected ? '#ffffff' : '#fbbf24',
-            weight: isSelected ? 3.5 : 2,
+            fillColor: colorCorreg,
+            fillOpacity: isSelected ? 0.65 : 0.32,
+            color: isSelected ? '#ffffff' : colorCorreg,
+            weight: isSelected ? 3 : 2,
             dashArray: '3, 3',
             opacity: 0.95
           };
@@ -642,11 +733,12 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
             const isCorreg = Boolean((feature.properties as any).isCorregimiento || feature.id.includes('correg'));
 
             if (isCorreg) {
+              const colorCorreg = getFeatureColor(feature);
               l.setStyle({
-                fillColor: isSelected ? '#fbbf24' : '#f59e0b',
-                fillOpacity: isSelected ? 0.75 : 0.42,
-                color: isSelected ? '#ffffff' : '#fbbf24',
-                weight: isSelected ? 3.5 : 2,
+                fillColor: colorCorreg,
+                fillOpacity: isSelected ? 0.65 : 0.32,
+                color: isSelected ? '#ffffff' : colorCorreg,
+                weight: isSelected ? 3 : 2,
                 dashArray: '3, 3'
               });
             } else {
@@ -715,20 +807,17 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
             if (g) return `${nombreEleccionCapa}: ${g.ganador}${g.partido !== g.ganador ? ` (${g.partido})` : ''} · ${g.pct.toFixed(1)} %`;
             return `${(p as any).tipo || 'Territorio'}${(p as any).parentName ? ' · ' + (p as any).parentName : ''} · sin puestos de ${nombreEleccionCapa} dentro`;
           })() :
-          activeLayer === 'demografico' ? (() => {
-            const ficha = isMunicipalScale ? territorioFicha(String(feature.id)) : null;
-            const eco = ficha ? economia(ficha) : null;
-            return eco?.estratoModa ? `Estrato típico: ${eco.estratoModa} (prom. ${eco.estratoPromedio!.toFixed(1)})` : `Pob: ${(p.population || 0).toLocaleString()} hab`;
-          })() :
-          activeLayer === 'nbi' ? `NBI: ${p.nbiPercentage}%` :
-          `Riesgo: ${p.riskLevel || 'Normal'}`;
+          (() => {
+            const v = valorDe(feature);
+            return `${escapeHtml(nombreMetrica)}: ${escapeHtml(v.texto)}${v.fuente ? ` · ${escapeHtml(v.fuente)}` : ''}`;
+          })();
 
         const daneCodeHtml = (p as any).daneCode ? `<div style="color: #38bdf8; font-size: 9px; font-family: monospace;">DIVIPOLA DANE: ${(p as any).daneCode}</div>` : '';
         const subregHtml = p.subregionCanonical 
           ? `<div style="color: #38bdf8; font-size: 10px; font-weight: bold;">Subregión: ${p.subregionCanonical}</div>`
           : (p.subregion ? `<div style="color: #94a3b8; font-size: 10px;">Subregión: ${p.subregion}</div>` : '');
         const corregimientoHtml = isCorregimiento 
-          ? `<div style="color: #fbbf24; font-size: 10px; font-weight: 800; margin-top: 2px;">🏔️ Corregimiento Rural (Centroide Oficial DANE)</div>`
+          ? `<div style="color: #fbbf24; font-size: 10px; font-weight: 800; margin-top: 2px;">Corregimiento (zona rural)</div>`
           : '';
 
         layer.bindTooltip(
@@ -773,7 +862,7 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
       }
     }
 
-  }, [currentLevel, activeLayer, searchQuery, selectedFeature, antioquiaViewMode, selectedDepartmentName, customDeptDataset, usesCustomMuni, customMuniDataset, asignacion, economiaLista, eleccionCapa, indiceGanadores, ganadorTerritorio, comunaFiltroId, onSelectComuna, divisionesMuni]);
+  }, [currentLevel, activeLayer, searchQuery, selectedFeature, antioquiaViewMode, selectedDepartmentName, customDeptDataset, usesCustomMuni, customMuniDataset, asignacion, economiaLista, eleccionCapa, indiceGanadores, ganadorTerritorio, comunaFiltroId, onSelectComuna, divisionesMuni, escalaCapa, metricaActiva, demografiaLista]);
 
   // Leyenda honesta: cuántos territorios de la escala actual no tienen dato de partido
   // (se pintan con el color de su agrupación territorial, no con un color de partido)
@@ -988,7 +1077,7 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
         <div className="flex items-center justify-between gap-2 mb-2 pb-1 border-b border-white/10">
           <span className="font-bold text-white uppercase text-[10px] tracking-wider flex items-center gap-1.5">
             <Layers className="w-3.5 h-3.5 text-sky-400" />
-            Capa: {activeLayer.toUpperCase()}
+            Capa {activeLayer === 'electoral' ? 'electoral' : activeLayer === 'demografico' ? 'demográfica' : 'económica'}
           </span>
           <span className="text-[10px] font-mono text-sky-300">
             {isMunicipalScale ? activeMuni.name : (ZOOM_LEVELS_CONFIG[currentLevel]?.shortLabel || 'Nivel ' + currentLevel)}
@@ -999,12 +1088,27 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
         <div className="space-y-1 text-[11px] text-slate-300 font-medium">
           {activeLayer === 'electoral' && (
             <>
-              <label className="flex flex-col gap-0.5 mb-1">
-                <span className="text-[10px] text-slate-400">Elección</span>
-                <select value={eleccionCapa} onChange={(e) => setEleccionCapa(e.target.value)} className="text-xs rounded px-1 py-0.5">
-                  {(indiceGanadores?.elecciones ?? [{ id: 'alcaldia-2023', nombre: 'Alcaldía 2023' }]).map((e) => <option key={e.id} value={e.id}>{e.nombre}</option>)}
-                </select>
-              </label>
+              <div className="grid grid-cols-[5rem_1fr] gap-1.5 mb-1">
+                <label className="flex flex-col gap-0.5">
+                  <span className="text-[10px] text-slate-400">Año</span>
+                  <select
+                    value={anioCapa}
+                    onChange={(e) => {
+                      const id = eleccionDelAnio(eleccionesDisponibles, Number(e.target.value), tipoEleccion(eleccionCapa));
+                      if (id) setEleccionCapa(id);
+                    }}
+                    className="text-xs rounded px-1 py-0.5"
+                  >
+                    {aniosElectorales.map((a) => <option key={a.anio} value={a.anio}>{a.anio}</option>)}
+                  </select>
+                </label>
+                <label className="flex flex-col gap-0.5">
+                  <span className="text-[10px] text-slate-400">Tipo de elección</span>
+                  <select value={eleccionCapa} onChange={(e) => setEleccionCapa(e.target.value)} className="text-xs rounded px-1 py-0.5">
+                    {(aniosElectorales.find((a) => a.anio === anioCapa)?.tipos ?? []).map((t) => <option key={t.id} value={t.id}>{t.nombre}</option>)}
+                  </select>
+                </label>
+              </div>
               {esPresidencial(eleccionCapa) ? candidatosCapa.map((c) => (
                 <div key={c.nombre} className="flex items-center gap-2">
                   <span className="w-3 h-3 rounded-full inline-block" style={{ background: c.color }} />
@@ -1030,68 +1134,47 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
             </>
           )}
 
-          {activeLayer === 'demografico' && isMunicipalScale && (
+          {activeLayer !== 'electoral' && (
             <>
-              <div className="text-[9px] text-slate-400 mb-0.5">Estrato típico (DANE, CNPV 2018 por manzana · factura de energía)</div>
-              {COLORES_ESTRATO.map((c, i) => (
-                <div key={i} className="flex items-center gap-2">
-                  <span className="w-3 h-3 rounded-full inline-block" style={{ background: c }} />
-                  <span>Estrato {i + 1}</span>
-                </div>
-              ))}
+              <label className="flex flex-col gap-0.5 mb-1">
+                <span className="text-[10px] text-slate-400">Indicador</span>
+                <select
+                  value={metricaActiva}
+                  onChange={(e) => (activeLayer === 'demografico' ? setMetricaDem(e.target.value as MetricaDemografica) : setMetricaEco(e.target.value as MetricaEconomica))}
+                  className="text-xs rounded px-1 py-0.5"
+                >
+                  {(activeLayer === 'demografico' ? METRICAS_DEMOGRAFICAS : metricasEcoEscala).map((m) => <option key={m.id} value={m.id}>{m.nombre}</option>)}
+                </select>
+              </label>
+              {currentLevel === 'departamental' && antioquiaViewMode === 'subregiones' ? (
+                <div className="text-[10px] text-slate-400 leading-snug">Las subregiones se pintan con su color propio. Cambia a "125 Municipios" para ver este indicador.</div>
+              ) : esCategorica ? (
+                COLORES_ESTRATO.map((c, i) => (
+                  <div key={i} className="flex items-center gap-2">
+                    <span className="w-3 h-3 rounded-full inline-block" style={{ background: c }} />
+                    <span>Estrato {i + 1}</span>
+                  </div>
+                ))
+              ) : escalaCapa && escalaCapa.cortes.length ? (
+                rangosLeyenda(escalaCapa.valores, escalaCapa.cortes, paletaCapa).map((r) => (
+                  <div key={r.texto} className="flex items-center gap-2">
+                    <span className="w-3 h-3 rounded-full inline-block" style={{ background: r.color }} />
+                    <span className="tabular-nums">{r.texto}</span>
+                  </div>
+                ))
+              ) : (
+                <div className="text-[10px] text-slate-400">Cargando datos…</div>
+              )}
               <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full inline-block" style={{ background: COLOR_SIN_ESTRATO }} />
-                <span>Sin manzanas con estrato (zona anonimizada o rural dispersa)</span>
+                <span className="w-3 h-3 rounded-full inline-block" style={{ background: COLOR_SIN_DATO }} />
+                <span>Sin información</span>
               </div>
-            </>
-          )}
-          {activeLayer === 'demografico' && !isMunicipalScale && (
-            <>
-              <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-emerald-400 inline-block" />
-                <span>Estrato Alto (5-6) / Alta Densidad</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-cyan-400 inline-block" />
-                <span>Estrato Medio (3-4)</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-amber-400 inline-block" />
-                <span>Estrato Bajo (1-2)</span>
-              </div>
-            </>
-          )}
-
-          {activeLayer === 'nbi' && (
-            <>
-              <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-cyan-400 inline-block" />
-                <span>NBI &lt; 10% (Bajo)</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-amber-400 inline-block" />
-                <span>NBI 15% - 25% (Medio)</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-red-500 inline-block" />
-                <span>NBI &gt; 40% (Crítico)</span>
-              </div>
-            </>
-          )}
-
-          {activeLayer === 'riesgo' && (
-            <>
-              <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-emerald-400 inline-block" />
-                <span>Bajo (Estabilidad institucional)</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-amber-400 inline-block" />
-                <span>Medio (Monitoreo regular)</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-red-500 inline-block" />
-                <span>Alto / Crítico (Alerta temprana)</span>
+              <div className="pt-1 mt-1 border-t border-white/10 text-[10px] leading-snug text-slate-400">
+                {isMunicipalScale
+                  ? 'Fuente: DANE, Censo 2018 por manzana, sumado por barrio, vereda o comuna.'
+                  : activeLayer === 'demografico' ? 'Fuente: DANE, proyección de población municipal 2026 por sexo y edad.' : 'Fuente: DANE, NBI por municipio. El estrato, el IPM y la educación se ven al abrir un municipio.'}
+                {!esCategorica && ' Clases: quintiles de los territorios visibles.'}
+                {esCategorica && ' Estrato de la factura de energía reportado en el Censo 2018, no la estratificación vigente.'}
               </div>
             </>
           )}
@@ -1105,10 +1188,19 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
             <Vote className="w-3.5 h-3.5 text-emerald-400" />
             {puestosScope}
           </div>
-          <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-emerald-500 inline-block border border-white" /> Ubicado con la Divipole 2023</div>
-          <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-amber-500 inline-block border border-amber-300" /> Ubicado por nombre parecido o ubicación aproximada (cabecera o vereda)</div>
+          <div className="leading-snug">
+            {!isMunicipalScale
+              ? 'Color de cada puesto: se ve al abrir un municipio.'
+              : activeLayer === 'electoral'
+              ? 'Color: ganador en el puesto. Se muestran los puestos de esa elección, con su ubicación de ese año.'
+              : activeLayer === 'demografico' && metricaDem === 'mujeres'
+              ? 'Color: % de mujeres en el censo 2026 del puesto (misma escala).'
+              : 'Color: el del barrio o vereda donde está el puesto (el indicador no existe por puesto).'}
+          </div>
+          <div className="flex items-center gap-2 mt-1"><span className="w-3 h-3 rounded-full inline-block border border-white bg-slate-400" /> Ubicación del puesto</div>
+          <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-full inline-block border-2 border-dashed border-amber-500 bg-slate-400" /> Ubicación aproximada (cabecera o vereda)</div>
           <div className="mt-1 text-[10px] text-slate-400 leading-snug">
-            {puestos.filter(tieneCoordenadas).length.toLocaleString('es-CO')} de {puestos.length.toLocaleString('es-CO')} puestos en el mapa (tamaño = censo 2026).
+            {puestos.filter(tieneCoordenadas).length.toLocaleString('es-CO')} de {puestos.length.toLocaleString('es-CO')} puestos 2026 en el mapa (tamaño = censo).
             {puestos.length - puestos.filter(tieneCoordenadas).length > 0 && ` ${(puestos.length - puestos.filter(tieneCoordenadas).length).toLocaleString('es-CO')} sin ubicar (cuentan solo en el total del municipio).`}
             {asignacion && asignacion.fueraDeLaCapa.length > 0 && ` ${asignacion.fueraDeLaCapa.length} fuera de la capa del municipio.`}
           </div>
