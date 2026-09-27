@@ -56,8 +56,12 @@ describe('resultados por puesto', () => {
       const es = await cargarElecciones(dane);
       expect(es.map((e) => e.id)).toEqual(SERIE);
       for (const e of es) {
-        if (e.id === 'concejo-2023' || e.id === 'asamblea-2023') continue;
-        expect(sumarEleccion(e, Object.keys(e.puestos))!.votantes).toBe(e.municipio.votantes);
+        const suma = sumarEleccion(e, Object.keys(e.puestos))!;
+        const muni = sumarEleccion(e, 'todos')!;
+        expect(suma.votantes).toBe(e.municipio.votantes);
+        // Los votos por partido de los puestos suman lo mismo que el municipio (en 2023 el sitio repetía
+        // cada partido del Concejo por puesto: se corrigió al construir)
+        expect(suma.partidos.reduce((t, p) => t + p.votos, 0)).toBe(muni.partidos.reduce((t, p) => t + p.votos, 0));
       }
     }
   });

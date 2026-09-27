@@ -78,10 +78,20 @@ def leer(corp, codigo):
     ct = cam['totales']['act']
     out = {'habilitados': i(t['centota']), 'mesas': i(t['metota']), 'votantes': i(t['votant']), 'blanco': i(ct['votbla']),
            'nulos': i(t['votnul']), 'noMarcados': i(t['votnma'])}
+    # En los archivos por puesto del Concejo el sitio repite cada partido dos veces en partotabla:
+    # se toma una sola vez cada partido (y cada candidato)
+    vistos, tabla = set(), []
+    for p in cam['partotabla']:
+        if p['act']['codpar'] not in vistos:
+            vistos.add(p['act']['codpar']); tabla.append(p)
     if corp in ('AL', 'GO'):
-        out['candidatos'] = sorted(([cid(c, p['act']['codpar']), i(c['vot'])] for p in cam['partotabla'] for c in p['act']['cantotabla']), key=lambda x: -x[1])
+        cands = {}
+        for p in tabla:
+            for c in p['act']['cantotabla']:
+                cands.setdefault((p['act']['codpar'], c['codcan']), [cid(c, p['act']['codpar']), i(c['vot'])])
+        out['candidatos'] = sorted(cands.values(), key=lambda x: -x[1])
     else:
-        out['partidos'] = sorted(([pid(p['act']['codpar']), i(p['act']['vot'])] for p in cam['partotabla']), key=lambda x: -x[1])
+        out['partidos'] = sorted(([pid(p['act']['codpar']), i(p['act']['vot'])] for p in tabla), key=lambda x: -x[1])
     return out, d['mdhm'], d['numact']
 
 def leer_si_existe(corp, codigo):

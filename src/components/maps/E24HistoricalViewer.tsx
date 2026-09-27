@@ -22,8 +22,6 @@ import {
 } from 'lucide-react';
 import { COMUNAS_INFO } from '../../data/e24/comunasData';
 import { 
-  ALCALDIA_DATA_BY_YEAR, 
-  CONCEJO_DATA_BY_YEAR, 
   TerritorialYear,
   getTerritorialComunaAggregations,
   getTerritorialMunicipalSummary
@@ -58,7 +56,6 @@ import {
   PRESIDENCIA_2022_1V_CANDIDATES,
   PRESIDENCIA_2022_2V_CANDIDATES
 } from '../../data/e24/presidenciaData';
-import { CONCEJO_2019_CANDIDATES } from '../../data/e24/officialConcejo2019';
 
 interface E24HistoricalViewerProps {
   comunaId?: string | number;
@@ -170,6 +167,16 @@ function getIdeologyTag(textToAnalyze: string): { label: string; bg: string; tex
   return { label: 'INDEPENDIENTE', bg: 'bg-slate-500/20 border-slate-400/40', textCol: 'text-slate-300' };
 }
 
+/** Candidatos con más votos de una lista en el territorio, con sus votos reales (si la fuente los trae) */
+function subCandidatosReales(p: { candidateVotes?: Record<string, number> }, candidatos?: { id: string; number: string; name: string }[]) {
+  const votos = Object.entries(p.candidateVotes ?? {}).filter(([, v]) => v > 0).sort((a, b) => b[1] - a[1]).slice(0, 4);
+  if (!votos.length) return undefined;
+  return votos.map(([n, v]) => {
+    const c = candidatos?.find((x) => x.id === n || x.number === n);
+    return { number: c?.number ?? n, name: c?.name ?? `Candidato ${n}`, votes: v };
+  });
+}
+
 export const E24HistoricalViewer: React.FC<E24HistoricalViewerProps> = ({
   comunaId,
   comunaName,
@@ -241,21 +248,21 @@ export const E24HistoricalViewer: React.FC<E24HistoricalViewerProps> = ({
           }));
         }
       } else {
-        const mun = ALCALDIA_DATA_BY_YEAR[yr] || ALCALDIA_DATA_BY_YEAR[2023];
+        const mun = getTerritorialMunicipalSummary('alcaldia', yr);
         votosValidos = mun.votosValidos;
         votosBlanco = mun.votosBlanco;
         votosNulos = mun.votosNulos;
         votosNoMarcados = mun.votosNoMarcados;
         totalVotos = mun.totalVotos;
-        candidatesList = mun.candidates.map(c => ({
-          id: c.id,
-          name: c.name,
-          shortName: c.shortName,
-          partyName: c.partyName,
-          color: c.color,
-          votes: c.baseTotalVotes,
-          percentage: votosValidos > 0 ? (c.baseTotalVotes / votosValidos) * 100 : 0,
-          ideology: getIdeologyTag(`${c.shortName} ${c.partyName}`).label
+        candidatesList = mun.sortedParties.map(p => ({
+          id: p.partyId,
+          name: p.partyName,
+          shortName: p.shortName,
+          partyName: p.partyName,
+          color: p.color,
+          votes: p.totalPartyVotes,
+          percentage: p.percentageValidos,
+          ideology: getIdeologyTag(`${p.shortName} ${p.partyName}`).label
         }));
       }
     }
@@ -273,15 +280,9 @@ export const E24HistoricalViewer: React.FC<E24HistoricalViewerProps> = ({
           totalVotos = agg.totalVotos;
 
           candidatesList = agg.sortedParties.map(p => {
-            // Find individual candidate microdata if 2019
-            let subCands: { number: string; name: string; votes: number }[] | undefined;
-            if (yr === 2019 && CONCEJO_2019_CANDIDATES[p.partyId]) {
-              subCands = CONCEJO_2019_CANDIDATES[p.partyId].slice(0, 5).map(c => ({
-                number: c.number,
-                name: c.name,
-                votes: Math.round(p.totalPartyVotes * 0.15)
-              }));
-            }
+            // Sin desglose por candidato: los datos por puesto del Concejo solo traen votos por partido
+            // (antes se mostraban candidatos 2019 con un 15 % inventado de los votos de su lista)
+            const subCands: { number: string; name: string; votes: number }[] | undefined = undefined;
 
             return {
               id: p.partyId,
@@ -337,11 +338,7 @@ export const E24HistoricalViewer: React.FC<E24HistoricalViewerProps> = ({
                 votes: p.totalPartyVotes,
                 percentage: p.percentageValidos,
                 ideology: getIdeologyTag(`${p.shortName} ${p.partyName}`).label,
-                subCandidates: SENADO_2022_CANDIDATES[p.partyId]?.slice(0, 4).map(c => ({
-                  number: c.number,
-                  name: c.name,
-                  votes: Math.round(p.totalPartyVotes * 0.18)
-                }))
+                subCandidates: subCandidatosReales(p, SENADO_2022_CANDIDATES[p.partyId])
               }));
             }
           } else {
@@ -381,11 +378,7 @@ export const E24HistoricalViewer: React.FC<E24HistoricalViewerProps> = ({
                 votes: p.totalPartyVotes,
                 percentage: p.percentageValidos,
                 ideology: getIdeologyTag(`${p.shortName} ${p.partyName}`).label,
-                subCandidates: PARTY_CANDIDATES[p.partyId]?.slice(0, 4).map(c => ({
-                  number: c.number,
-                  name: c.name,
-                  votes: Math.round(p.totalPartyVotes * 0.2)
-                }))
+                subCandidates: subCandidatosReales(p, PARTY_CANDIDATES[p.partyId])
               }));
             }
           } else {
@@ -427,11 +420,7 @@ export const E24HistoricalViewer: React.FC<E24HistoricalViewerProps> = ({
                 votes: p.totalPartyVotes,
                 percentage: p.percentageValidos,
                 ideology: getIdeologyTag(`${p.shortName} ${p.partyName}`).label,
-                subCandidates: CAMARA_2022_CANDIDATES[p.partyId]?.slice(0, 4).map(c => ({
-                  number: c.number,
-                  name: c.name,
-                  votes: Math.round(p.totalPartyVotes * 0.22)
-                }))
+                subCandidates: subCandidatosReales(p, CAMARA_2022_CANDIDATES[p.partyId])
               }));
             }
           } else {

@@ -9,7 +9,7 @@ import {
   PRESIDENCIA_PARTIES_LIST,
   PRESIDENCIA_COALICIONES
 } from './presidenciaRawData';
-import { ZONE_POPULATION_WEIGHTS, ZONE_AFFINITY_PROFILE } from './territorialData';
+import { buildRealZoneDataset } from './realZoneDatasets';
 
 export const PRESIDENTIAL_STAGES: Record<PresidentialStage, PresidentialStageInfo> = {
   consulta: {
@@ -295,185 +295,14 @@ export const PRESIDENCIA_2022_2V_CANDIDATES: Presidencia2022Candidate[] = [
   { id: 'PETRO_2022_2V', name: 'GUSTAVO PETRO', shortName: 'Gustavo Petro', formula: 'Francia Márquez', party: 'PACTO HISTÓRICO', color: '#db2777', baseVotes: 369140, ideology: 'alternativo' }
 ];
 
-function buildPresidencia2022Dataset(
-  candidatesList: Presidencia2022Candidate[],
-  metaBlanco: number,
-  metaNulos: number,
-  metaNoMarcados: number
-) {
-  const zoneVotes: Record<ZoneId, ZoneVotes> = {} as any;
-  const rawSumCandidateVotes = candidatesList.reduce((acc, c) => acc + c.baseVotes, 0);
-
-  ALL_ZONES.forEach(z => {
-    const popWeight = ZONE_POPULATION_WEIGHTS[z] || 0.03;
-    const affinity = ZONE_AFFINITY_PROFILE[z] || { centerRight: 1, alternativo: 1, tradicional: 1 };
-
-    const partiesMap: ZoneVotes['parties'] = {};
-    let zValidos = 0;
-
-    candidatesList.forEach(c => {
-      const skew = affinity[c.ideology] || 1.0;
-      const cVotes = Math.round(c.baseVotes * popWeight * skew);
-      partiesMap[c.id] = {
-        partyOnly: cVotes,
-        candidateVotes: { '1': cVotes },
-        totalPartyVotes: cVotes
-      };
-      zValidos += cVotes;
-    });
-
-    const zBlanco = Math.round(metaBlanco * popWeight);
-    const zNulos = Math.round(metaNulos * popWeight);
-    const zNoMarc = Math.round(metaNoMarcados * popWeight);
-
-    zoneVotes[z] = {
-      zone: z,
-      parties: partiesMap,
-      votosBlanco: zBlanco,
-      votosNulos: zNulos,
-      votosNoMarcados: zNoMarc,
-      votosValidos: zValidos + zBlanco,
-      totalVotos: zValidos + zBlanco + zNulos + zNoMarc
-    };
-  });
-
-  const comunaAggregations: Record<number, ComunaVotesAggregation> = {};
-
-  COMUNAS_INFO.forEach(comuna => {
-    let cValidos = 0;
-    let cBlanco = 0;
-    let cNulos = 0;
-    let cNoMarc = 0;
-    let cTotal = 0;
-
-    const candTotals: Record<string, number> = {};
-    candidatesList.forEach(c => { candTotals[c.id] = 0; });
-
-    comuna.zones.forEach(z => {
-      const zv = zoneVotes[z];
-      if (zv) {
-        cBlanco += zv.votosBlanco;
-        cNulos += zv.votosNulos;
-        cNoMarc += zv.votosNoMarcados;
-        cTotal += zv.totalVotos;
-
-        candidatesList.forEach(c => {
-          const v = zv.parties[c.id]?.totalPartyVotes || 0;
-          candTotals[c.id] += v;
-          cValidos += v;
-        });
-      }
-    });
-
-    const totalValidosConBlanco = cValidos + cBlanco;
-    const partiesSummaries: Record<string, ComunaPartySummary> = {};
-    const sortedParties: ComunaPartySummary[] = [];
-
-    candidatesList.forEach(c => {
-      const v = candTotals[c.id] || 0;
-      const pct = totalValidosConBlanco > 0 ? (v / totalValidosConBlanco) * 100 : 0;
-      const munPct = rawSumCandidateVotes > 0 ? (c.baseVotes / rawSumCandidateVotes) * 100 : 0;
-
-      const summary: ComunaPartySummary = {
-        partyId: c.id,
-        partyName: c.name,
-        shortName: c.shortName,
-        color: c.color,
-        partyOnly: v,
-        candidateVotes: {},
-        totalPartyVotes: v,
-        percentageValidos: pct,
-        municipalPercentage: munPct
-      };
-
-      partiesSummaries[c.id] = summary;
-      sortedParties.push(summary);
-    });
-
-    sortedParties.sort((a, b) => b.totalPartyVotes - a.totalPartyVotes);
-    const winner = sortedParties[0] || { partyId: '', partyName: 'N/A', shortName: 'N/A', totalPartyVotes: 0, percentageValidos: 0 };
-    const runnerUp = sortedParties[1] || winner;
-
-    comunaAggregations[comuna.id] = {
-      comunaId: comuna.id,
-      comunaName: comuna.comunaName,
-      officialName: comuna.officialName,
-      zones: comuna.zones,
-      parties: partiesSummaries,
-      sortedParties,
-      votosBlanco: cBlanco,
-      votosNulos: cNulos,
-      votosNoMarcados: cNoMarc,
-      votosValidos: totalValidosConBlanco,
-      totalVotos: cTotal,
-      winnerPartyId: winner.partyId,
-      winnerPartyName: winner.shortName,
-      winnerPartyVotes: winner.totalPartyVotes,
-      winnerPartyPercentage: winner.percentageValidos,
-      runnerUpPartyId: runnerUp.partyId,
-      runnerUpPartyName: runnerUp.shortName,
-      runnerUpPartyVotes: runnerUp.totalPartyVotes,
-      runnerUpPartyPercentage: runnerUp.percentageValidos
-    };
-  });
-
-  const cityValidos = Object.values(comunaAggregations).reduce((sum, c) => sum + c.votosValidos, 0);
-  const cityBlanco = Object.values(comunaAggregations).reduce((sum, c) => sum + c.votosBlanco, 0);
-  const cityNulos = Object.values(comunaAggregations).reduce((sum, c) => sum + c.votosNulos, 0);
-  const cityNoMarc = Object.values(comunaAggregations).reduce((sum, c) => sum + c.votosNoMarcados, 0);
-  const cityTotal = cityValidos + cityNulos + cityNoMarc;
-
-  const municipalSorted: any[] = candidatesList.map(c => {
-    const totalVotesInCity = Object.values(comunaAggregations).reduce((sum, cm) => sum + (cm.parties[c.id]?.totalPartyVotes || 0), 0);
-    return {
-      partyId: c.id,
-      partyName: c.name,
-      shortName: c.shortName,
-      color: c.color,
-      partyOnly: totalVotesInCity,
-      candidateVotes: {},
-      totalPartyVotes: totalVotesInCity,
-      percentageValidos: cityValidos > 0 ? (totalVotesInCity / cityValidos) * 100 : 0
-    };
-  }).sort((a, b) => b.totalPartyVotes - a.totalPartyVotes);
-
-  const municipalParties: Record<string, any> = {};
-  municipalSorted.forEach(p => { municipalParties[p.partyId] = p; });
-
-  const municipalSummary: MunicipalSummary = {
-    totalMesas: 5499,
-    mesasEscrutadas: 5499,
-    porcentajeEscrutado: 100.0,
-    parties: municipalParties,
-    sortedParties: municipalSorted,
-    totalPorPartidos: cityValidos - cityBlanco,
-    votosBlanco: cityBlanco,
-    votosNulos: cityNulos,
-    votosNoMarcados: cityNoMarc,
-    votosValidos: cityValidos,
-    totalVotos: cityTotal
-  };
-
-  return { comunaAggregations, municipalSummary, zoneVotes };
-}
-
-export const PRESIDENCIA_2022_1V_DATASET = buildPresidencia2022Dataset(
-  PRESIDENCIA_2022_1V_CANDIDATES,
-  18340,
-  8450,
-  3210
-);
-
+// Presidencia 2022 en Medellín por zona: escrutinio mesa a mesa REAL (Observatorio de la
+// Registraduría), sumado desde los puestos. Antes se repartían totales con pesos de censo y
+// "afinidades" inventadas por zona.
+export const PRESIDENCIA_2022_1V_DATASET = buildRealZoneDataset('presidente-2022-1');
 export const COMUNA_AGGREGATIONS_PRESIDENCIA_2022_1V = PRESIDENCIA_2022_1V_DATASET.comunaAggregations;
 export const MUNICIPAL_SUMMARY_PRESIDENCIA_2022_1V = PRESIDENCIA_2022_1V_DATASET.municipalSummary;
 
-export const PRESIDENCIA_2022_2V_DATASET = buildPresidencia2022Dataset(
-  PRESIDENCIA_2022_2V_CANDIDATES,
-  37420,
-  11890,
-  3410
-);
-
+export const PRESIDENCIA_2022_2V_DATASET = buildRealZoneDataset('presidente-2022-2');
 export const COMUNA_AGGREGATIONS_PRESIDENCIA_2022_2V = PRESIDENCIA_2022_2V_DATASET.comunaAggregations;
 export const MUNICIPAL_SUMMARY_PRESIDENCIA_2022_2V = PRESIDENCIA_2022_2V_DATASET.municipalSummary;
 
