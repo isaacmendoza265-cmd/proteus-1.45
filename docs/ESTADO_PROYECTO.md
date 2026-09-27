@@ -2,7 +2,7 @@
 
 Última actualización: 27-sep-2026 (Claude Opus, rama `codex/navegacion-mapa`). **Todo agente debe actualizar este archivo al terminar.**
 Repositorio local: `C:\Users\isaac\OneDrive\Documentos\Proyecto Proteus`. Remoto: github.com/isaacmendoza265-cmd/proteus-1.45.
-`main` local: `14db9bf` (GitHub tiene `1968fd5`). Rama `codex/navegacion-mapa` con `33020c4`, `f0b3769`, `26f6b57`, `95acefc` y `c55ef86`, sin subir ni fusionar.
+`main` local: `14db9bf` (GitHub tiene `1968fd5`). Rama `codex/navegacion-mapa` con `33020c4`, `f0b3769`, `26f6b57`, `95acefc`, `c55ef86` y `d0df840`, sin subir ni fusionar.
 Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en el PATH de los agentes
 (`$env:Path = "C:\Program Files\nodejs;" + $env:Path`). `npx tsc` también revisa las carpetas locales ignoradas
 (`_archivo/`, `_originales/`, `SUBIR_A_GITHUB/`) y da 24 errores ahí: no cuentan, `src/` está limpio.
@@ -42,7 +42,12 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
 - 27-sep: el mapa colorea territorios y puestos según la capa: electoral (año; tipo de elección),
   demográfica y económica. Capas NBI y Riesgo quitadas como botones (NBI dentro de la económica; Riesgo sin fuente).
 
+- 27-sep: el mapa y el panel derecho muestran la misma selección (elección y capa); el mapa lleva un
+  generador de contenido con Gemini 3.8 (territorio del mapa, red o medio, tipo de pieza).
+
 ## 3. Pendientes (en orden sugerido)
+00. **Clave de Gemini**: la de `.env` recibe 403 "Your project has been denied access". Isaac debe revisarla en
+   Google AI Studio; sin eso el generador no produce texto (la interfaz muestra el motivo).
 0. **Datos simulados en pantalla (hallados el 27-sep, sin corregir)**: "Día E" muestra actas E-14/E-24 mesa a
    mesa escritas a mano (`src/data/electoralAudit/electoralAuditMasterData.ts`); "Contenido" usa 2.650.000
    habitantes fijos para Medellín (`activeTerritoryContextService.ts`, `antioquiaSubregionesData.ts`,
@@ -75,6 +80,9 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
   `territoryProfileService.ts`; ficha: `src/components/territorio/`.
 
 ## 5. Bitácora (agregar arriba lo más reciente)
+- 27-sep (Opus, `codex/navegacion-mapa`) `d0df840`: mapa y ficha comparten elección y capa→sección; generador
+  de contenido (subregión › municipio › comuna › barrio, medio y tipo de pieza) con gemini-3.8-flash vía
+  `POST /api/contenido/generar` (clave en el servidor). La clave de `.env` da 403 PERMISSION_DENIED.
 - 27-sep (Opus, `codex/navegacion-mapa`) `c55ef86`: el mapa se ajusta cuando cambia su contenedor (ResizeObserver →
   invalidateSize); antes quedaban franjas grises y la capa cortada al abrir/cerrar la ficha.
 - 27-sep (Opus, `codex/navegacion-mapa`) `95acefc`: Gobernación coloreada por candidato (sus coaliciones no tienen
