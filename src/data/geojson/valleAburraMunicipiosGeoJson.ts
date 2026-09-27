@@ -1,6 +1,14 @@
 import { TerritoryFeatureCollection } from './types';
 import { METROPOLITAN_MUNICIPALITIES_DATA } from '../metropolitanAndMedellinData';
 import REAL_GEOMETRIES from './valleAburraMunicipios.geometry.geo.json';
+import { ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA } from '../antioquia125MunicipalitiesMasterData';
+
+// Nombre exacto en el maestro de 125 municipios (fuente de los resultados 2023 y del censo/NBI oficiales)
+const NOMBRE_MAESTRO: Record<string, string> = {
+  barbosa: 'Barbosa', girardota: 'Girardota', copacabana: 'Copacabana', bello: 'Bello', medellin: 'Medellín',
+  itagui: 'Itagüí', envigado: 'Envigado', sabaneta: 'Sabaneta', la_estrella: 'La Estrella', caldas: 'Caldas',
+};
+const porNombre = new Map(ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA.map((m) => [m.name, m]));
 
 // Atributos de cada municipio. Las geometrías de este objeto eran rectángulos aproximados;
 // se reemplazan abajo por los límites municipales reales.
@@ -290,7 +298,30 @@ const VALLE_ABURRA_BASE: TerritoryFeatureCollection = {
 // (antioquia125Municipios.geo.json). Si falta alguno, se conserva la geometría anterior.
 const geometries = REAL_GEOMETRIES as Record<string, TerritoryFeatureCollection['features'][number]['geometry']>;
 
+// Igual que en la capa de 125 municipios: el nombre, la subregión, el censo electoral, la población,
+// el NBI y el resultado de la Alcaldía 2023 (partido y alcalde electo) salen del maestro por nombre,
+// no de los valores de ejemplo (predominantParty, colorCode) con que se armó esta vista originalmente.
 export const VALLE_ABURRA_MUNICIPIOS_GEOJSON: TerritoryFeatureCollection = {
   ...VALLE_ABURRA_BASE,
-  features: VALLE_ABURRA_BASE.features.map((f) => ({ ...f, geometry: geometries[f.id] ?? f.geometry })),
+  features: VALLE_ABURRA_BASE.features.map((f) => {
+    const m = porNombre.get(NOMBRE_MAESTRO[f.id] ?? f.properties.name);
+    return {
+      ...f,
+      geometry: geometries[f.id] ?? f.geometry,
+      properties: m ? {
+        ...f.properties,
+        name: m.name,
+        daneCode: m.daneCode,
+        subregion: m.subregion,
+        electoralCensus: m.electoralCensus,
+        population: m.population,
+        nbiPercentage: m.nbiPercentage,
+        electedMayor: m.electedMayor,
+        winnerParty: m.winnerParty,
+        predominantParty: m.predominantParty,
+        riskLevel: m.riskLevel,
+        colorCode: undefined,
+      } : f.properties,
+    };
+  }),
 };
