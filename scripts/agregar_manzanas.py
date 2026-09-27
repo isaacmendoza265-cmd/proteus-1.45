@@ -9,6 +9,8 @@ Campos por territorio (conteos, no porcentajes):
   ipm: [suma de ipm×personas, personas con ipm, manzanas]  → IPM ponderado por población
   ue: unidades económicas [total, comercio, industria, servicios, transporte, construcción, no aplica] (conteo DANE, MGN 2020)
   tv: viviendas por tipo [casa, apartamento, cuarto, otro]
+  vul: personas por nivel de vulnerabilidad [baja, media-baja, media, media-alta, alta, sin dato] (índice de vulnerabilidad
+       del DANE por manzana, mismo geoportal del IPM; "sin dato" son manzanas con reserva estadística, sin LABEL)
 Uso: python3 scripts/agregar_manzanas.py <slug> <archivo de subdivisiones .geo.json>
 """
 import json, os, sys
@@ -29,10 +31,11 @@ def territorio(lon, lat):
     return feats[i]["id"] if geoms[i].distance(pt) < 0.0015 else None
 
 n = lambda x: int(x or 0)
+NIVELES_VULN = ['Vulnerabilidad baja', 'Vulnerabilidad media-baja', 'Vulnerabilidad media', 'Vulnerabilidad media-alta', 'Vulnerabilidad alta']
 out, sin, dem = {}, 0, {}
 def reg(t):
     dem.setdefault(t, [0] * 15)
-    return out.setdefault(t, {'p': 0, 'v': 0, 'h': 0, 'e': [0] * 7, 's': [0] * 7, 'ed': [0] * 6, 'ipm': [0, 0, 0], 'ue': [0] * 7, 'tv': [0] * 4})
+    return out.setdefault(t, {'p': 0, 'v': 0, 'h': 0, 'e': [0] * 7, 's': [0] * 7, 'ed': [0] * 6, 'ipm': [0, 0, 0], 'ue': [0] * 7, 'tv': [0] * 4, 'vul': [0] * 6})
 ipm = {r['COD_DANE']: r for r in json.load(open(f'{base}/ipm.json'))}
 for r in json.load(open(f'{base}/cnpv.json')):
     if r.get('LATITUD') is None: continue
@@ -52,6 +55,10 @@ for r in json.load(open(f'{base}/cnpv.json')):
     m = ipm.get(r['COD_DANE_A'])
     if m and m.get('ipm') is not None and n(r['TP27_PERSO']):
         o['ipm'][0] += float(m['ipm']) * n(r['TP27_PERSO']); o['ipm'][1] += n(r['TP27_PERSO']); o['ipm'][2] += 1
+    if m and n(r['TP27_PERSO']):
+        etq = (m.get('LABEL') or '').strip()
+        idx = NIVELES_VULN.index(etq) if etq in NIVELES_VULN else 5
+        o['vul'][idx] += n(r['TP27_PERSO'])
 sin_ue = 0
 for r in json.load(open(f'{base}/ue.json')):
     if r.get('_lat') is None: continue

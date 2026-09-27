@@ -349,6 +349,16 @@ export const FichaTerritorio: React.FC<FichaTerritorioProps> = ({
                   return w > 0 ? <div key={i} title={`Estrato ${i + 1}: ${fmt(v)} viviendas`} className="flex items-center justify-center" style={{ width: `${w}%`, background: ['#9B2C2C', '#C05621', '#B7791F', '#2F855A', '#2B6CB0', '#553C9A'][i] }}>{w >= 7 ? `E${i + 1} ${Math.round(w)} %` : ''}</div> : null;
                 })}
               </div>
+              {eco.vulnerabilidad && (
+                <>
+                  <span className="text-xs font-bold text-[var(--c-muted)] mt-1">Vulnerabilidad (personas)</span>
+                  <div className="flex h-5 rounded overflow-hidden text-[11px] font-bold text-white">
+                    {eco.vulnerabilidad.map((x, i) => (
+                      x.pct > 0 ? <div key={x.nombre} title={`${x.nombre}: ${pct(x.pct)}`} className="flex items-center justify-center" style={{ width: `${x.pct}%`, background: ['#2F855A', '#68A063', '#B7791F', '#C05621', '#9B2C2C'][i] }}>{x.pct >= 10 ? `${Math.round(x.pct)} %` : ''}</div> : null
+                    ))}
+                  </div>
+                </>
+              )}
               <span className="text-xs font-bold text-[var(--c-muted)] mt-1">Servicios en la vivienda</span>
               <div className="grid grid-cols-2 gap-x-3 gap-y-0.5 text-xs">
                 {eco.servicios.map((x) => <div key={x.nombre} className="flex justify-between"><span className="text-[var(--c-muted)]">{x.nombre}</span><span className="tabular-nums font-semibold">{pct(x.pct)}</span></div>)}

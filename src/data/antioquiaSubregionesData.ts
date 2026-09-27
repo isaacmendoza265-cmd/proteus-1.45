@@ -3,6 +3,7 @@
  * Extraída de los registros territoriales del aplicativo, DANE (Censo Nacional),
  * Gobernación de Antioquia y consolidados del Sistema General de Participaciones.
  */
+import { ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA } from './antioquia125MunicipalitiesMasterData';
 
 export interface SubregionDemographics {
   totalPopulation: number;
@@ -558,6 +559,22 @@ export const ANTIOQUIA_SUBREGIONS_DATA: Record<string, SubregionInfo> = {
     synthesisStrategicProfile: 'Tierras de oro, caña panelera y valentía montañera. Región golpeada históricamente por el conflicto armado pero con inmensa riqueza mineral y agrícola. Sus votantes exigen formalización minera concertada, vías pavimentadas que los integren al Valle de Aburrá y seguridad que devuelva la tranquilidad al campo.'
   }
 };
+
+// Población de cada municipio y el total por subregión = proyección DANE 2026 real del maestro de
+// 125 municipios, unida por nombre (reemplaza los "populationApprox" de ejemplo con que se armó
+// esta base originalmente). Si un nombre no cruza, se deja el valor de ejemplo tal cual.
+const poblacionPorNombre = new Map(ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA.map((m) => [m.name, m.population]));
+for (const subregion of Object.values(ANTIOQUIA_SUBREGIONS_DATA)) {
+  let total = 0;
+  let faltantes = 0;
+  for (const muni of subregion.municipalities) {
+    const real = poblacionPorNombre.get(muni.name);
+    if (real !== undefined) muni.populationApprox = real;
+    else faltantes += 1;
+    total += muni.populationApprox;
+  }
+  if (!faltantes) subregion.demographics.totalPopulation = total;
+}
 
 export const OFFICES_OF_INTEREST = [
   { id: 'gobernacion', label: 'Gobernación de Antioquia', scope: 'Departamental Ejecutivo', nature: 'Plan departamental de desarrollo, presupuesto de inversiones, seguridad regional y obras públicas mayores.' },

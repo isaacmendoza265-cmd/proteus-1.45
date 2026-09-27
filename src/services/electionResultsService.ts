@@ -2,9 +2,10 @@
  * RESULTADOS ELECTORALES POR PUESTO DE VOTACIÓN
  *
  * Cada elección se guarda por municipio y se carga bajo demanda:
- *  - 2023 (Alcaldía y Concejo): src/data/electoral/resultadosPuesto2023/<municipio>.json. Claves:
- *    códigos de puesto de 2023, que NO son los del censo 2026; cada puesto trae su ubicación
- *    (Divipole 2023) para asignarlo a comuna o barrio por coordenadas.
+ *  - 2023 (Alcaldía, Concejo y, donde ya se descargaron, Gobernación y Asamblea):
+ *    src/data/electoral/resultadosPuesto2023/<municipio>.json. Claves: códigos de puesto de 2023,
+ *    que NO son los del censo 2026; cada puesto trae su ubicación (Divipole 2023) para asignarlo a
+ *    comuna o barrio por coordenadas.
  *  - 2026 (Senado y Cámara): src/data/electoral/resultadosPuesto2026/<municipio>.json. Claves:
  *    códigos del censo 2026 (misma jornada). Preconteo.
  *  - Presidencia 2026 (1.ª y 2.ª vuelta): src/data/electoral/resultadosPuestoPresidencial2026/<municipio>.json.
@@ -84,8 +85,11 @@ interface Archivo2023 {
   meta: { fuente: string; nota: string };
   candidatos: { n: string; p: number }[];
   partidos: string[];
-  municipio: { alcaldia: Fila2023Al; concejo: Fila2023Co };
-  puestos: Record<string, { n: string; ubicacion: { lat: number; lon: number } | null; alcaldia: Fila2023Al; concejo: Fila2023Co }>;
+  municipio: { alcaldia: Fila2023Al; concejo: Fila2023Co; gobernacion?: Fila2023Al; asamblea?: Fila2023Co };
+  puestos: Record<string, {
+    n: string; ubicacion: { lat: number; lon: number } | null;
+    alcaldia: Fila2023Al; concejo: Fila2023Co; gobernacion?: Fila2023Al; asamblea?: Fila2023Co;
+  }>;
 }
 interface Fila2023Al { habilitados: number; votantes: number; blanco: number; nulos: number; noMarcados: number; candidatos: [number, number][] }
 interface Fila2023Co { habilitados?: number; votantes: number; blanco: number; nulos: number; noMarcados: number; partidos: [number, number][] }
@@ -113,17 +117,30 @@ function convertir2023(a: Archivo2023): EleccionPuestos[] {
   const ubicaciones: Record<string, { lat: number; lon: number }> = {};
   const pAl: Record<string, FilaEleccion> = {};
   const pCo: Record<string, FilaEleccion> = {};
+  const pGo: Record<string, FilaEleccion> = {};
+  const pAs: Record<string, FilaEleccion> = {};
   for (const [c, p] of Object.entries(a.puestos)) {
     nombres[c] = p.n;
     if (p.ubicacion) ubicaciones[c] = p.ubicacion;
     pAl[c] = alFila(p.alcaldia);
     pCo[c] = coFila(p.concejo, p.alcaldia.habilitados);
+    if (p.gobernacion) pGo[c] = alFila(p.gobernacion);
+    if (p.asamblea) pAs[c] = coFila(p.asamblea, p.alcaldia.habilitados);
   }
   const base = { fecha: '29-oct-2023', fuente: a.meta.fuente, nota: a.meta.nota, tipo: 'preconteo' as const, codigos: '2023' as const, partidos: a.partidos, candidatos: a.candidatos, nombres, ubicaciones };
-  return [
+  const resultado: EleccionPuestos[] = [
     { ...base, id: 'alcaldia-2023', nombre: 'Alcaldía 2023', porCandidato: true, municipio: alFila(a.municipio.alcaldia), puestos: pAl },
     { ...base, id: 'concejo-2023', nombre: 'Concejo 2023', porCandidato: false, municipio: coFila(a.municipio.concejo, a.municipio.alcaldia.habilitados), puestos: pCo },
   ];
+  // Gobernación y Asamblea: mismo preconteo y jornada del 29-oct-2023; algunos municipios todavía
+  // no las tienen descargadas (compatibilidad hacia atrás), así que solo se agregan si vienen.
+  if (a.municipio.gobernacion) {
+    resultado.push({ ...base, id: 'gobernacion-2023', nombre: 'Gobernación 2023', porCandidato: true, municipio: alFila(a.municipio.gobernacion), puestos: pGo });
+  }
+  if (a.municipio.asamblea) {
+    resultado.push({ ...base, id: 'asamblea-2023', nombre: 'Asamblea 2023', porCandidato: false, municipio: coFila(a.municipio.asamblea, a.municipio.alcaldia.habilitados), puestos: pAs });
+  }
+  return resultado;
 }
 
 function convertir2026(a: Archivo2026 | ArchivoPres, tipo: 'preconteo' | 'escrutinio', porCandidato: boolean): EleccionPuestos[] {

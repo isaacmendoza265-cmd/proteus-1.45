@@ -40,22 +40,28 @@ describe('resultados por puesto', () => {
     expect(tieneResultadosPorPuesto('11001')).toBe(false);
     expect(await cargarElecciones('11001')).toEqual([]);
   });
-  it('los 125 municipios de Antioquia tienen Alcaldía, Concejo, Senado y Cámara, y cuadran', async () => {
+  it('los 125 municipios de Antioquia tienen Alcaldía, Concejo, Gobernación, Asamblea, Senado y Cámara, y cuadran', async () => {
     expect(MUNICIPIOS_CON_RESULTADOS).toHaveLength(125);
     for (const dane of MUNICIPIOS_CON_RESULTADOS) {
       const es = await cargarElecciones(dane);
-      const base = ['alcaldia-2023', 'concejo-2023', 'senado-2026', 'camara-2026'];
+      const base = ['alcaldia-2023', 'concejo-2023', 'gobernacion-2023', 'asamblea-2023', 'senado-2026', 'camara-2026'];
       const conPresidencial = es.some((e) => e.id === 'presidente-2026-1');
       expect(es.map((e) => e.id)).toEqual(conPresidencial ? [...base, 'presidente-2026-1', 'presidente-2026-2'] : base);
       for (const e of es) {
-        if (e.id === 'concejo-2023') continue;
+        if (e.id === 'concejo-2023' || e.id === 'asamblea-2023') continue;
         expect(sumarEleccion(e, Object.keys(e.puestos))!.votantes).toBe(e.municipio.votantes);
       }
     }
   });
+  it('Gobernación 2023 en Rionegro: mismo censo que Alcaldía, gobernador electo con más votos', async () => {
+    const { e: go, total: t } = await total('05615', 'gobernacion-2023');
+    expect(t.votantes).toBe(82751);
+    expect(go.porCandidato).toBe(true);
+    expect(t.candidatos[0].votos).toBe(39828);
+  });
   it('fase C (79 municipios con 20.000 votantes o menos): sin presidencial todavía', async () => {
     const es = await cargarElecciones('05002'); // Abejorral
-    expect(es.map((e) => e.id)).toEqual(['alcaldia-2023', 'concejo-2023', 'senado-2026', 'camara-2026']);
+    expect(es.map((e) => e.id)).toEqual(['alcaldia-2023', 'concejo-2023', 'gobernacion-2023', 'asamblea-2023', 'senado-2026', 'camara-2026']);
   });
   it('Presidencia 2026 en Medellín: escrutinio mesa a mesa, sin cédulas', async () => {
     const es = await cargarElecciones('05001');

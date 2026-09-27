@@ -234,7 +234,7 @@ export function demografia(t: TerritorioFicha): SeccionDemografia {
 
 // --- 2b. Condiciones económicas (datos por manzana del DANE, sumados por barrio/vereda) ----------------
 
-interface FilaEconomia { p: number; v: number; h: number; e: number[]; s: number[]; ed: number[]; ipm: number[]; ue: number[]; tv: number[] }
+interface FilaEconomia { p: number; v: number; h: number; e: number[]; s: number[]; ed: number[]; ipm: number[]; ue: number[]; tv: number[]; vul?: number[] }
 interface EconomiaData { meta: { fuente: string; nota: string }; porTerritorio: Record<string, FilaEconomia> }
 const ECONOMIA_POR_MUNICIPIO: Record<string, EconomiaData> = {};
 const CARGADORES_ECO = import.meta.glob<{ default: unknown }>('../data/dane/manzanas/*.json');
@@ -264,8 +264,12 @@ export interface SeccionEconomia {
   /** % de personas por nivel educativo alcanzado */
   educacion: { nombre: string; pct: number }[];
   ipm: number | null;
+  /** % de personas (con dato) por nivel de vulnerabilidad DANE; null si el municipio no la tiene cargada todavía */
+  vulnerabilidad: { nombre: string; pct: number }[] | null;
   unidadesEconomicas: { total: number; comercio: number; industria: number; servicios: number; otras: number };
 }
+
+const NIVELES_VULNERABILIDAD = ['Baja', 'Media-baja', 'Media', 'Media-alta', 'Alta'];
 
 export function economia(t: TerritorioFicha): SeccionEconomia | null {
   const data = ECONOMIA_POR_MUNICIPIO[t.dane];
@@ -276,9 +280,12 @@ export function economia(t: TerritorioFicha): SeccionEconomia | null {
   const conEstrato = e.slice(0, 6).reduce((a, b) => a + b, 0);
   const pctDe = (v: number, base: number) => (base ? (100 * v) / base : 0);
   const baseEd = ed.reduce((a, b) => a + b, 0) - ed[5];
+  // Vulnerabilidad: solo si el municipio ya tiene el campo 'vul' cargado (agregar_manzanas.py, 27-sep-2026).
+  const vul = filas.every((f) => f.vul) ? filas.reduce((acc, f) => acc.map((v, i) => v + (f.vul![i] ?? 0)), new Array(6).fill(0) as number[]) : null;
+  const baseVul = vul ? vul.slice(0, 5).reduce((a, b) => a + b, 0) : 0;
   return {
     estado: conEstrato ? 'oficial' : 'sin-informacion',
-    fuente: 'DANE, CNPV 2018 por manzana · IPM por manzana · conteo de unidades económicas',
+    fuente: 'DANE, CNPV 2018 por manzana · IPM y vulnerabilidad por manzana · conteo de unidades económicas',
     nota: data.meta.nota,
     estratos: e,
     estratoPromedio: conEstrato ? e.slice(0, 6).reduce((a, v, i) => a + v * (i + 1), 0) / conEstrato : null,
@@ -286,6 +293,7 @@ export function economia(t: TerritorioFicha): SeccionEconomia | null {
     servicios: ['Energía', 'Acueducto', 'Alcantarillado', 'Gas natural', 'Recolección de basuras', 'Internet'].map((nombre, i) => ({ nombre, pct: pctDe(sv[i], sv[6]) })),
     educacion: ['Ninguno', 'Primaria', 'Secundaria', 'Técnica o universitaria', 'Posgrado'].map((nombre, i) => ({ nombre, pct: pctDe(ed[i], baseEd) })),
     ipm: ipm[1] ? ipm[0] / ipm[1] : null,
+    vulnerabilidad: vul && baseVul ? NIVELES_VULNERABILIDAD.map((nombre, i) => ({ nombre, pct: pctDe(vul[i], baseVul) })) : null,
     unidadesEconomicas: { total: ue[0], comercio: ue[1], industria: ue[2], servicios: ue[3], otras: ue[4] + ue[5] + ue[6] },
   };
 }

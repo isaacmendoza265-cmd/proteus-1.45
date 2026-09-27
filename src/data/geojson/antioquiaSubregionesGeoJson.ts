@@ -265,8 +265,22 @@ export const ANTIOQUIA_SUBREGIONES_GEOJSON: TerritoryFeatureCollection = {
   ]
 };
 
-// Censo electoral oficial por subregión = suma de sus municipios (Registraduría, corte 30-abr-2026)
+// Censo electoral, población, NBI y partido predominante = agregados reales de sus municipios
+// (Registraduría, corte 30-abr-2026; DANE, proyección de población 2026 y NBI 2018; Alcaldía 2023
+// oficial). Reemplaza los valores de ejemplo con que se armó esta capa originalmente.
+// totalMunicipalities ya coincidía con el maestro (verificado); se recalcula igual, por si cambia.
 for (const f of ANTIOQUIA_SUBREGIONES_GEOJSON.features) {
   const munis = ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA.filter((m) => m.subregionId === f.id);
-  if (munis.length) f.properties.electoralCensus = munis.reduce((sum, m) => sum + m.electoralCensus, 0);
+  if (!munis.length) continue;
+  const poblacionTotal = munis.reduce((sum, m) => sum + m.population, 0);
+  f.properties.electoralCensus = munis.reduce((sum, m) => sum + m.electoralCensus, 0);
+  f.properties.population = poblacionTotal;
+  f.properties.totalMunicipalities = munis.length;
+  f.properties.nbiPercentage = poblacionTotal
+    ? Math.round((munis.reduce((sum, m) => sum + m.nbiPercentage * m.population, 0) / poblacionTotal) * 10) / 10
+    : f.properties.nbiPercentage;
+  const alcaldiasPorPartido = new Map<string, number>();
+  for (const m of munis) alcaldiasPorPartido.set(m.winnerParty, (alcaldiasPorPartido.get(m.winnerParty) ?? 0) + 1);
+  const top = [...alcaldiasPorPartido.entries()].sort((a, b) => b[1] - a[1])[0];
+  if (top) f.properties.predominantParty = `${top[0]} (${top[1]}/${munis.length} alcaldías)`;
 }

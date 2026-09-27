@@ -3,7 +3,11 @@ Resultados 2023 por puesto de votación (preconteo de la Registraduría).
 
 Entrada: _originales/registraduria/preconteo2023/<municipio>/{AL,CO}_<código>.json, descargados de
 https://resultadosprec2023.registraduria.gov.co/json/ACT/<AL|CO>/<código>.json, más el índice
-nomenclator.json del mismo sitio (nombres de partidos).
+nomenclator.json del mismo sitio (nombres de partidos). También, si existen (descargados con
+scripts/descargar_gobernacion_asamblea_2023.py), {GO,AS}_<código>.json (Gobernación y Asamblea,
+misma jornada): GO se trata como AL (candidato único, gobernador) y AS como CO (partido con voto
+preferente); si un municipio no los tiene descargados todavía, el archivo sale igual, sin esas dos
+claves (compatibilidad hacia atrás).
 Salida: src/data/electoral/resultadosPuesto2023/<municipio>.json
 
 Los códigos de puesto CAMBIAN entre elecciones (en Bello, 36 de 42 puestos de 2023 tienen otro
@@ -74,19 +78,34 @@ def leer(corp, codigo):
     ct = cam['totales']['act']
     out = {'habilitados': i(t['centota']), 'mesas': i(t['metota']), 'votantes': i(t['votant']), 'blanco': i(ct['votbla']),
            'nulos': i(t['votnul']), 'noMarcados': i(t['votnma'])}
-    if corp == 'AL':
+    if corp in ('AL', 'GO'):
         out['candidatos'] = sorted(([cid(c, p['act']['codpar']), i(c['vot'])] for p in cam['partotabla'] for c in p['act']['cantotabla']), key=lambda x: -x[1])
     else:
         out['partidos'] = sorted(([pid(p['act']['codpar']), i(p['act']['vot'])] for p in cam['partotabla']), key=lambda x: -x[1])
     return out, d['mdhm'], d['numact']
 
+def leer_si_existe(corp, codigo):
+    if not os.path.exists(f'{base}/{corp}_{codigo}.json'):
+        return None
+    return leer(corp, codigo)[0]
+
 municipio_al, mdhm, numact = leer('AL', codmun)
 municipio_co, _, _ = leer('CO', codmun)
+municipio_go = leer_si_existe('GO', codmun)
+municipio_as = leer_si_existe('AS', codmun)
 puestos = {}
 for f in sorted(glob.glob(f'{base}/AL_{codmun}?*.json')):
     code = os.path.basename(f)[3:-5]
     u = ubicar(nombres.get(code, ''))
-    puestos[code] = {'n': nombres.get(code, code).title(), 'ubicacion': u, 'alcaldia': leer('AL', code)[0], 'concejo': leer('CO', code)[0]}
+    p = {'n': nombres.get(code, code).title(), 'ubicacion': u, 'alcaldia': leer('AL', code)[0], 'concejo': leer('CO', code)[0]}
+    go, asa = leer_si_existe('GO', code), leer_si_existe('AS', code)
+    if go is not None: p['gobernacion'] = go
+    if asa is not None: p['asamblea'] = asa
+    puestos[code] = p
+
+municipio = {'alcaldia': municipio_al, 'concejo': municipio_co}
+if municipio_go is not None: municipio['gobernacion'] = municipio_go
+if municipio_as is not None: municipio['asamblea'] = municipio_as
 
 out = {
     'meta': {
@@ -95,7 +114,7 @@ out = {
         'boletin': numact, 'corte': mdhm,
         'nota': 'Preconteo: conteo de la noche electoral. Puede diferir levemente del escrutinio (E-24). Cada puesto se ubica con la Divipole 2023 (por nombre); los códigos de 2023 no son los del censo 2026.',
     },
-    'municipio': {'alcaldia': municipio_al, 'concejo': municipio_co},
+    'municipio': municipio,
     'candidatos': candidatos, 'partidos': partidos, 'puestos': puestos,
 }
 json.dump(out, open(f'src/data/electoral/resultadosPuesto2023/{muni}.json', 'w'), ensure_ascii=False, separators=(',', ':'))
