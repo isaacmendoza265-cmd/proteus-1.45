@@ -2,7 +2,7 @@
 
 Última actualización: 27-sep-2026 (Claude Opus, rama `codex/navegacion-mapa`). **Todo agente debe actualizar este archivo al terminar.**
 Repositorio local: `C:\Users\isaac\OneDrive\Documentos\Proyecto Proteus`. Remoto: github.com/isaacmendoza265-cmd/proteus-1.45.
-`main` local: `14db9bf` (GitHub tiene `1968fd5`). Rama `codex/navegacion-mapa` con `33020c4` y `f0b3769`, sin subir ni fusionar.
+`main` local: `14db9bf` (GitHub tiene `1968fd5`). Rama `codex/navegacion-mapa` con `33020c4`, `f0b3769` y `26f6b57`, sin subir ni fusionar.
 Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en el PATH de los agentes
 (`$env:Path = "C:\Program Files\nodejs;" + $env:Path`). `npx tsc` también revisa las carpetas locales ignoradas
 (`_archivo/`, `_originales/`, `SUBIR_A_GITHUB/`) y da 24 errores ahí: no cuentan, `src/` está limpio.
@@ -75,6 +75,9 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
   `territoryProfileService.ts`; ficha: `src/components/territorio/`.
 
 ## 5. Bitácora (agregar arriba lo más reciente)
+- 27-sep (Opus, `codex/navegacion-mapa`) `26f6b57`: puestos coloreados también en Valle de Aburrá y Antioquia
+  (resultados por puesto de cada municipio visible; valor del municipio en demografía/economía) y radio según
+  el zoom. Municipios del Valle sin código DANE: se buscan por nombre.
 - 27-sep (Opus, `codex/navegacion-mapa`) `f0b3769`: color por capa (electoral año+tipo con los puestos de cada
   elección; demográfica y económica con CNPV 2018 por manzana, proyección 2026 y NBI); corregimientos de
   Medellín con el color de la capa.
