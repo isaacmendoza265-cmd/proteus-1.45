@@ -1,19 +1,19 @@
 import React, { useState, useMemo } from 'react';
-import { 
-  FileText, 
-  Sparkles, 
-  Send, 
-  Download, 
-  Copy, 
-  Check, 
-  Share2, 
-  Video, 
-  Radio, 
-  Megaphone, 
-  MapPin, 
-  Users, 
-  Palette, 
-  Save, 
+import {
+  FileText,
+  Sparkles,
+  Send,
+  Download,
+  Copy,
+  Check,
+  Share2,
+  Video,
+  Radio,
+  Megaphone,
+  MapPin,
+  Users,
+  Palette,
+  Save,
   HelpCircle,
   Clock,
   Layers,
@@ -32,15 +32,15 @@ import {
 import { jsPDF } from 'jspdf';
 import { CandidateProfile } from '../../components/CandidateProfileManager';
 import { callGeminiApi } from '../../services/geminiService';
-import { 
-  TerritoryHierarchyService, 
-  TerritorialScale, 
-  HierarchyTerritoryNode 
+import {
+  TerritoryHierarchyService,
+  TerritorialScale,
+  HierarchyTerritoryNode
 } from '../../services/territoryHierarchyService';
-import { 
-  VOTER_AUDIENCE_CATALOG, 
-  VOTER_AUDIENCE_CATEGORIES, 
-  VoterAudienceService, 
+import {
+  VOTER_AUDIENCE_CATALOG,
+  VOTER_AUDIENCE_CATEGORIES,
+  VoterAudienceService,
   VoterAudienceGroup,
   VoterAudienceCategory
 } from '../../data/voterAudienceCatalog';
@@ -53,7 +53,7 @@ interface CampaignContentDirectorViewProps {
   onNavigateToZoom?: () => void;
 }
 
-type ContentFormat = 
+type ContentFormat =
   | 'video-short'
   | 'speech-plaza'
   | 'whatsapp-community'
@@ -216,7 +216,7 @@ export const CampaignContentDirectorView: React.FC<CampaignContentDirectorViewPr
     }
     if (audienceSearchQuery.trim()) {
       const q = audienceSearchQuery.toLowerCase();
-      list = list.filter(a => 
+      list = list.filter(a =>
         a.name.toLowerCase().includes(q) ||
         a.description.toLowerCase().includes(q) ||
         a.dominantPains.some(p => p.toLowerCase().includes(q))
@@ -236,7 +236,7 @@ export const CampaignContentDirectorView: React.FC<CampaignContentDirectorViewPr
   const [toneOfVoice, setToneOfVoice] = useState<string>('Firmeza, Autoridad y Esperanza');
   const [cognitiveFraming, setCognitiveFraming] = useState<CognitiveFraming>('gain-hope');
   const [keyTopic, setKeyTopic] = useState<string>('Seguridad territorial, empleo y freno a la extorsión');
-  
+
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   const [generatedBrief, setGeneratedBrief] = useState<string | null>(null);
   const [copied, setCopied] = useState<boolean>(false);
@@ -251,7 +251,7 @@ export const CampaignContentDirectorView: React.FC<CampaignContentDirectorViewPr
     setSavedSuccess(false);
 
     try {
-      const framingDescription = 
+      const framingDescription =
         cognitiveFraming === 'gain-hope'
           ? 'ENFOQUE DE GANANCIA Y ESPERANZA (Prospect Theory - Gain Framing): Centrado en oportunidades de futuro, crecimiento económico, bienestar familiar, optimismo movilizador y conquistas colectivas.'
           : cognitiveFraming === 'loss-protection'
@@ -384,33 +384,33 @@ Diseña un BRIEF ESTRATÉGICO DE ALTO IMPACTO estructurado exactamente en los si
   };
 
   return (
-    <div className="space-y-6 animate-fadeIn pb-12">
+    <div className="proteus-civico space-y-6 pb-12">
       {/* 1. Header Banner */}
-      <div className="p-6 rounded-3xl bg-slate-950/40 backdrop-blur-3xl border border-white/20 shadow-[0_20px_50px_rgba(0,0,0,0.5),inset_0_1.5px_2px_rgba(255,255,255,0.4)] relative overflow-hidden">
+      <div className="p-5 rounded-2xl border border-[var(--c-border)] bg-[var(--c-surface)]">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-              <span className="px-3 py-1 rounded-full text-[10px] font-mono font-black uppercase tracking-wider bg-gradient-to-r from-amber-400/20 via-sky-400/20 to-purple-500/30 text-amber-300 border border-amber-400/50 shadow-[0_0_12px_rgba(251,191,36,0.3)] flex items-center gap-1.5">
-                <Megaphone className="w-3.5 h-3.5 text-amber-400" />
+          <div className="flex flex-col gap-2">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="px-2.5 py-0.5 rounded-md bg-[var(--c-accent-soft)] text-[var(--c-accent-text)] text-xs font-bold uppercase tracking-wide flex items-center gap-1.5">
+                <Megaphone className="w-3.5 h-3.5" />
                 Contenido
               </span>
-              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
+              <span className="px-2.5 py-0.5 rounded-md bg-[var(--c-ok-soft)] text-[var(--c-ok)] text-xs font-bold">
                 5 Escalas Territoriales + 40 Segmentos
               </span>
             </div>
-            <h1 className="text-2xl lg:text-3xl font-black tracking-tight text-white flex items-center gap-3">
-              <span>Redactar discursos y piezas</span>
+            <h1 className="font-titulo m-0 text-2xl lg:text-[28px] leading-tight font-medium">
+              Redactar discursos y piezas
             </h1>
-            <p className="text-slate-300 text-xs sm:text-sm mt-1 max-w-3xl">
-              Navega desde la escala <strong className="text-sky-300">Nacional</strong> hasta <strong className="text-amber-300">Comuna o Barrio</strong>. Selecciona con precisión quirúrgica el grupo de votantes y genera briefs respaldados por microdatos oficiales y persuasión cognitiva.
+            <p className="m-0 text-[var(--c-muted)] text-xs sm:text-sm max-w-3xl">
+              Navega desde la escala <strong className="text-[var(--c-ink)]">Nacional</strong> hasta <strong className="text-[var(--c-ink)]">Comuna o Barrio</strong>. Selecciona con precisión quirúrgica el grupo de votantes y genera briefs respaldados por microdatos oficiales y persuasión cognitiva.
             </p>
           </div>
 
           {/* Active Candidate Badge */}
-          <div className="shrink-0 p-3 rounded-2xl bg-white/05 border border-white/15 backdrop-blur-xl">
-            <div className="text-[10px] font-mono uppercase text-slate-400 font-bold">Candidato Activo</div>
-            <div className="text-sm font-black text-amber-300 mt-0.5">{candidateProfile.nombre}</div>
-            <div className="text-[10px] text-slate-400">{candidateProfile.afiliacionPartidista || 'Proyecto Político'}</div>
+          <div className="shrink-0 px-3 py-2.5 rounded-lg border border-[var(--c-border)] bg-[var(--c-sunken)]">
+            <div className="text-xs uppercase text-[var(--c-muted)] font-bold">Candidato Activo</div>
+            <div className="text-sm font-bold text-[var(--c-accent)] mt-0.5">{candidateProfile.nombre}</div>
+            <div className="text-xs text-[var(--c-muted)]">{candidateProfile.afiliacionPartidista || 'Proyecto Político'}</div>
           </div>
         </div>
       </div>
@@ -419,36 +419,36 @@ Diseña un BRIEF ESTRATÉGICO DE ALTO IMPACTO estructurado exactamente en los si
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
         {/* Controls Column */}
         <div className="lg:col-span-6 space-y-4">
-          {/* Bioluminescent GIS Connection Banner */}
-          <div className="p-4 rounded-3xl bg-gradient-to-r from-sky-500/20 via-indigo-500/20 to-purple-500/20 border border-sky-400/50 backdrop-blur-2xl shadow-[0_0_30px_rgba(56,189,248,0.25)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 animate-fadeIn">
+          {/* GIS Territorial Connection Banner */}
+          <div className="p-4 rounded-2xl border border-[var(--c-border)] bg-[var(--c-info-soft)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <div className="flex items-center gap-3">
-              <div className="p-2.5 rounded-2xl bg-sky-500/30 border border-sky-400/60 text-sky-300 shadow-[0_0_15px_rgba(56,189,248,0.4)] shrink-0">
-                <Compass className="w-5 h-5 animate-pulse" />
+              <div className="p-2.5 rounded-lg bg-[var(--c-surface)] border border-[var(--c-border)] text-[var(--c-info)] shrink-0">
+                <Compass className="w-5 h-5" />
               </div>
               <div>
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-[10px] font-mono uppercase tracking-widest text-sky-300 font-black px-2 py-0.5 rounded-full bg-sky-500/25 border border-sky-400/40">
-                    📍 VINCULADO AL ZOOM TERRITORIAL GIS
+                  <span className="text-xs uppercase tracking-wide text-[var(--c-info)] font-bold px-2 py-0.5 rounded-md bg-[var(--c-surface)] border border-[var(--c-border)]">
+                    Vinculado al zoom territorial GIS
                   </span>
-                  <span className="text-xs font-black text-white">
+                  <span className="text-xs font-bold text-[var(--c-ink)]">
                     {activeTerritory.fullName}
                   </span>
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-400/30 uppercase font-bold">
+                  <span className="text-xs px-2 py-0.5 rounded-md bg-[var(--c-accent-soft)] text-[var(--c-accent-text)] uppercase font-bold">
                     Escala {activeTerritory.scale}
                   </span>
                 </div>
-                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-slate-300 mt-1 font-mono">
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[var(--c-muted)] mt-1">
                   {activeTerritory.electoralCensus && (
-                    <span>Censo: <strong className="text-emerald-300">{activeTerritory.electoralCensus.toLocaleString('es-CO')}</strong> votantes</span>
+                    <span>Censo: <strong className="text-[var(--c-ink)]">{activeTerritory.electoralCensus.toLocaleString('es-CO')}</strong> votantes</span>
                   )}
                   {activeTerritory.population && (
-                    <span>Población: <strong className="text-sky-300">{activeTerritory.population.toLocaleString('es-CO')}</strong> hab.</span>
+                    <span>Población: <strong className="text-[var(--c-ink)]">{activeTerritory.population.toLocaleString('es-CO')}</strong> hab.</span>
                   )}
                   {activeTerritory.nbiPercentage && (
-                    <span>NBI: <strong className="text-amber-300">{activeTerritory.nbiPercentage}%</strong></span>
+                    <span>NBI: <strong className="text-[var(--c-ink)]">{activeTerritory.nbiPercentage}%</strong></span>
                   )}
                   {activeTerritory.electedMayor && (
-                    <span>Alcalde: <strong className="text-purple-300">{activeTerritory.electedMayor}</strong></span>
+                    <span>Alcalde: <strong className="text-[var(--c-ink)]">{activeTerritory.electedMayor}</strong></span>
                   )}
                 </div>
               </div>
@@ -458,10 +458,10 @@ Diseña un BRIEF ESTRATÉGICO DE ALTO IMPACTO estructurado exactamente en los si
               <button
                 type="button"
                 onClick={onNavigateToZoom}
-                className="shrink-0 px-3.5 py-2 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/25 hover:border-sky-400 text-sky-200 hover:text-white text-xs font-bold transition-all flex items-center gap-1.5 shadow-lg transform hover:scale-[1.02] active:scale-95 cursor-pointer"
+                className="shrink-0 min-h-9 px-3 rounded-lg border border-[var(--c-border)] bg-[var(--c-surface)] text-[var(--c-ink)] text-xs font-semibold flex items-center gap-1.5"
                 title="Volver al mapa GIS interactivo"
               >
-                <span>🗺️ Ver en Mapa GIS</span>
+                <span>Ver en Mapa GIS</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
             )}
@@ -470,82 +470,82 @@ Diseña un BRIEF ESTRATÉGICO DE ALTO IMPACTO estructurado exactamente en los si
           {/* =========================================================================
               PANEL 1: NAVEGACIÓN TERRITORIAL EN 5 ESCALAS
               ========================================================================= */}
-          <div className="p-5 rounded-3xl bg-slate-950/40 backdrop-blur-2xl border border-white/15 shadow-[0_10px_30px_rgba(0,0,0,0.4)] space-y-3.5">
-            <div className="flex items-center justify-between border-b border-white/10 pb-2.5">
-              <h2 className="text-xs font-mono uppercase tracking-wider text-sky-400 font-bold flex items-center gap-1.5">
-                <MapPin className="w-4 h-4 text-sky-400" />
+          <div className="p-4 rounded-2xl border border-[var(--c-border)] bg-[var(--c-surface)] space-y-3.5">
+            <div className="flex items-center justify-between border-b border-[var(--c-border)] pb-2.5">
+              <h2 className="text-xs uppercase tracking-wide text-[var(--c-muted)] font-bold flex items-center gap-1.5">
+                <MapPin className="w-4 h-4 text-[var(--c-accent)]" />
                 Escala & Territorio Objetivo (5 Niveles Jerárquicos)
               </h2>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-400/30 uppercase font-black">
+              <span className="text-xs px-2 py-0.5 rounded-md bg-[var(--c-accent-soft)] text-[var(--c-accent-text)] uppercase font-bold">
                 {selectedScale}
               </span>
             </div>
 
             {/* 5-Scale Horizontal Selector Buttons */}
-            <div className="grid grid-cols-5 gap-1 p-1 rounded-2xl bg-black/40 border border-white/10 text-[11px] font-bold">
+            <div className="grid grid-cols-5 gap-1 p-1 rounded-lg bg-[var(--c-sunken)] border border-[var(--c-border)] text-xs font-semibold">
               <button
                 type="button"
                 onClick={() => handleSelectScale('nacional')}
-                className={`py-1.5 px-1 rounded-xl transition text-center flex flex-col items-center gap-0.5 ${
+                className={`py-1.5 px-1 rounded-md transition text-center flex flex-col items-center gap-0.5 ${
                   selectedScale === 'nacional'
-                    ? 'bg-amber-500/30 text-amber-200 border border-amber-400/60 shadow-[0_0_10px_rgba(251,191,36,0.3)] font-black'
-                    : 'text-slate-400 hover:text-white'
+                    ? 'bg-[var(--c-accent-soft)] text-[var(--c-accent-text)] font-bold'
+                    : 'text-[var(--c-muted)] hover:text-[var(--c-ink)]'
                 }`}
               >
-                <span>🇨🇴</span>
-                <span className="text-[10px] truncate">1. Nacional</span>
+                <Globe className="w-3.5 h-3.5" />
+                <span className="text-xs truncate">1. Nacional</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => handleSelectScale('departamental')}
-                className={`py-1.5 px-1 rounded-xl transition text-center flex flex-col items-center gap-0.5 ${
+                className={`py-1.5 px-1 rounded-md transition text-center flex flex-col items-center gap-0.5 ${
                   selectedScale === 'departamental'
-                    ? 'bg-sky-500/30 text-sky-200 border border-sky-400/60 shadow-[0_0_10px_rgba(56,189,248,0.3)] font-black'
-                    : 'text-slate-400 hover:text-white'
+                    ? 'bg-[var(--c-accent-soft)] text-[var(--c-accent-text)] font-bold'
+                    : 'text-[var(--c-muted)] hover:text-[var(--c-ink)]'
                 }`}
               >
-                <span>🏛️</span>
-                <span className="text-[10px] truncate">2. Dptal.</span>
+                <Building2 className="w-3.5 h-3.5" />
+                <span className="text-xs truncate">2. Dptal.</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => handleSelectScale('subregional')}
-                className={`py-1.5 px-1 rounded-xl transition text-center flex flex-col items-center gap-0.5 ${
+                className={`py-1.5 px-1 rounded-md transition text-center flex flex-col items-center gap-0.5 ${
                   selectedScale === 'subregional'
-                    ? 'bg-emerald-500/30 text-emerald-200 border border-emerald-400/60 shadow-[0_0_10px_rgba(52,211,153,0.3)] font-black'
-                    : 'text-slate-400 hover:text-white'
+                    ? 'bg-[var(--c-accent-soft)] text-[var(--c-accent-text)] font-bold'
+                    : 'text-[var(--c-muted)] hover:text-[var(--c-ink)]'
                 }`}
               >
-                <span>🌲</span>
-                <span className="text-[10px] truncate">3. Subregión</span>
+                <Layers className="w-3.5 h-3.5" />
+                <span className="text-xs truncate">3. Subregión</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => handleSelectScale('municipal')}
-                className={`py-1.5 px-1 rounded-xl transition text-center flex flex-col items-center gap-0.5 ${
+                className={`py-1.5 px-1 rounded-md transition text-center flex flex-col items-center gap-0.5 ${
                   selectedScale === 'municipal'
-                    ? 'bg-indigo-500/30 text-indigo-200 border border-indigo-400/60 shadow-[0_0_10px_rgba(129,140,248,0.3)] font-black'
-                    : 'text-slate-400 hover:text-white'
+                    ? 'bg-[var(--c-accent-soft)] text-[var(--c-accent-text)] font-bold'
+                    : 'text-[var(--c-muted)] hover:text-[var(--c-ink)]'
                 }`}
               >
-                <span>🏙️</span>
-                <span className="text-[10px] truncate">4. Municipio</span>
+                <Compass className="w-3.5 h-3.5" />
+                <span className="text-xs truncate">4. Municipio</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => handleSelectScale('comuna-barrio')}
-                className={`py-1.5 px-1 rounded-xl transition text-center flex flex-col items-center gap-0.5 ${
+                className={`py-1.5 px-1 rounded-md transition text-center flex flex-col items-center gap-0.5 ${
                   selectedScale === 'comuna-barrio'
-                    ? 'bg-purple-500/30 text-purple-200 border border-purple-400/60 shadow-[0_0_10px_rgba(168,85,247,0.3)] font-black'
-                    : 'text-slate-400 hover:text-white'
+                    ? 'bg-[var(--c-accent-soft)] text-[var(--c-accent-text)] font-bold'
+                    : 'text-[var(--c-muted)] hover:text-[var(--c-ink)]'
                 }`}
               >
-                <span>📍</span>
-                <span className="text-[10px] truncate">5. Comuna/B.</span>
+                <MapPin className="w-3.5 h-3.5" />
+                <span className="text-xs truncate">5. Comuna/B.</span>
               </button>
             </div>
 
@@ -553,15 +553,15 @@ Diseña un BRIEF ESTRATÉGICO DE ALTO IMPACTO estructurado exactamente en los si
             <div className="space-y-2 pt-1">
               {/* Scale 1: Nacional */}
               {selectedScale === 'nacional' && (
-                <div className="p-3 rounded-2xl bg-white/05 border border-white/10 flex items-center justify-between text-xs">
+                <div className="p-3 rounded-lg bg-[var(--c-sunken)] border border-[var(--c-border)] flex items-center justify-between text-xs">
                   <div className="flex items-center gap-2">
-                    <Globe className="w-4 h-4 text-amber-400" />
+                    <Globe className="w-4 h-4 text-[var(--c-accent)]" />
                     <div>
-                      <div className="font-bold text-white">República de Colombia</div>
-                      <div className="text-[10px] text-slate-400">32 Departamentos + Bogotá D.C.</div>
+                      <div className="font-bold text-[var(--c-ink)]">República de Colombia</div>
+                      <div className="text-xs text-[var(--c-muted)]">32 Departamentos + Bogotá D.C.</div>
                     </div>
                   </div>
-                  <div className="text-right font-mono text-[11px] text-sky-300 font-bold">
+                  <div className="text-right text-xs text-[var(--c-ink)] font-bold">
                     Censo: {formatCensus(NATIONAL_CENSUS.total)}
                   </div>
                 </div>
@@ -570,14 +570,14 @@ Diseña un BRIEF ESTRATÉGICO DE ALTO IMPACTO estructurado exactamente en los si
               {/* Scale 2: Departamental */}
               {selectedScale === 'departamental' && (
                 <div className="space-y-1">
-                  <label className="text-[11px] text-slate-300 font-semibold">Selecciona el Departamento:</label>
+                  <label className="text-xs text-[var(--c-muted)] font-semibold">Selecciona el Departamento:</label>
                   <select
                     value={selectedDeptId}
                     onChange={(e) => handleSelectDept(e.target.value)}
-                    className="w-full px-3 py-2 rounded-2xl bg-white/10 border border-white/20 text-white text-xs font-bold focus:outline-none focus:border-sky-400"
+                    className="w-full px-3 py-2 rounded-lg text-xs font-semibold"
                   >
                     {departmentsList.map(d => (
-                      <option key={d.id} value={d.id} className="bg-slate-900 text-white">
+                      <option key={d.id} value={d.id}>
                         {d.name} - Censo: {d.electoralCensus?.toLocaleString('es-CO')}
                       </option>
                     ))}
@@ -588,14 +588,14 @@ Diseña un BRIEF ESTRATÉGICO DE ALTO IMPACTO estructurado exactamente en los si
               {/* Scale 3: Subregional */}
               {selectedScale === 'subregional' && (
                 <div className="space-y-1">
-                  <label className="text-[11px] text-slate-300 font-semibold">Selecciona la Subregión (Antioquia):</label>
+                  <label className="text-xs text-[var(--c-muted)] font-semibold">Selecciona la Subregión (Antioquia):</label>
                   <select
                     value={selectedSubregId}
                     onChange={(e) => handleSelectSubreg(e.target.value)}
-                    className="w-full px-3 py-2 rounded-2xl bg-white/10 border border-white/20 text-white text-xs font-bold focus:outline-none focus:border-emerald-400"
+                    className="w-full px-3 py-2 rounded-lg text-xs font-semibold"
                   >
                     {subregionsList.map(s => (
-                      <option key={s.id} value={s.id} className="bg-slate-900 text-white">
+                      <option key={s.id} value={s.id}>
                         {s.name} - Pob: {s.population?.toLocaleString('es-CO')}
                       </option>
                     ))}
@@ -606,14 +606,14 @@ Diseña un BRIEF ESTRATÉGICO DE ALTO IMPACTO estructurado exactamente en los si
               {/* Scale 4: Municipal */}
               {selectedScale === 'municipal' && (
                 <div className="space-y-1">
-                  <label className="text-[11px] text-slate-300 font-semibold">Selecciona el Municipio (125 de Antioquia):</label>
+                  <label className="text-xs text-[var(--c-muted)] font-semibold">Selecciona el Municipio (125 de Antioquia):</label>
                   <select
                     value={selectedMuniId}
                     onChange={(e) => handleSelectMuni(e.target.value)}
-                    className="w-full px-3 py-2 rounded-2xl bg-white/10 border border-white/20 text-white text-xs font-bold focus:outline-none focus:border-indigo-400"
+                    className="w-full px-3 py-2 rounded-lg text-xs font-semibold"
                   >
                     {allMunicipalities.map(m => (
-                      <option key={m.id} value={m.id} className="bg-slate-900 text-white">
+                      <option key={m.id} value={m.id}>
                         {m.name} ({m.subregionName}) - Censo: {m.electoralCensus?.toLocaleString('es-CO')}
                       </option>
                     ))}
@@ -625,14 +625,14 @@ Diseña un BRIEF ESTRATÉGICO DE ALTO IMPACTO estructurado exactamente en los si
               {selectedScale === 'comuna-barrio' && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   <div className="space-y-1">
-                    <label className="text-[10px] text-slate-300 font-semibold">Comuna / Corregimiento:</label>
+                    <label className="text-xs text-[var(--c-muted)] font-semibold">Comuna / Corregimiento:</label>
                     <select
                       value={selectedComunaId}
                       onChange={(e) => handleSelectComuna(e.target.value)}
-                      className="w-full px-3 py-1.5 rounded-xl bg-white/10 border border-white/20 text-white text-xs font-bold focus:outline-none focus:border-purple-400"
+                      className="w-full px-3 py-1.5 rounded-lg text-xs font-semibold"
                     >
                       {comunasList.map(c => (
-                        <option key={c.id} value={c.id} className="bg-slate-900 text-white">
+                        <option key={c.id} value={c.id}>
                           {c.name}
                         </option>
                       ))}
@@ -640,17 +640,17 @@ Diseña un BRIEF ESTRATÉGICO DE ALTO IMPACTO estructurado exactamente en los si
                   </div>
 
                   <div className="space-y-1">
-                    <label className="text-[10px] text-slate-300 font-semibold">Barrio Específico:</label>
+                    <label className="text-xs text-[var(--c-muted)] font-semibold">Barrio Específico:</label>
                     <select
                       value={selectedBarrioId}
                       onChange={(e) => handleSelectBarrio(e.target.value)}
-                      className="w-full px-3 py-1.5 rounded-xl bg-white/10 border border-white/20 text-white text-xs font-bold focus:outline-none focus:border-purple-400"
+                      className="w-full px-3 py-1.5 rounded-lg text-xs font-semibold"
                     >
-                      <option value="all-comuna" className="bg-slate-900 text-white">
+                      <option value="all-comuna">
                         Toda la Comuna (General)
                       </option>
                       {barriosList.map(b => (
-                        <option key={b.id} value={b.id} className="bg-slate-900 text-white">
+                        <option key={b.id} value={b.id}>
                           {b.name}
                         </option>
                       ))}
@@ -661,26 +661,26 @@ Diseña un BRIEF ESTRATÉGICO DE ALTO IMPACTO estructurado exactamente en los si
             </div>
 
             {/* Micro-Data Badge of Selected Node */}
-            <div className="p-3.5 rounded-2xl bg-white/05 border border-white/10 space-y-2 text-xs">
+            <div className="p-3.5 rounded-lg bg-[var(--c-sunken)] space-y-2 text-xs">
               <div className="flex items-center justify-between">
-                <span className="font-black text-amber-300">{currentTerritory.fullName}</span>
-                <span className="font-mono text-[10px] text-slate-400">
+                <span className="font-bold text-[var(--c-accent-text)]">{currentTerritory.fullName}</span>
+                <span className="text-xs text-[var(--c-muted)]">
                   {currentTerritory.electoralCensus ? `Censo: ${currentTerritory.electoralCensus.toLocaleString('es-CO')} votantes` : ''}
                 </span>
               </div>
-              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] text-slate-300 font-mono">
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[var(--c-muted)]">
                 {currentTerritory.predominantStratum && <span>{currentTerritory.predominantStratum}</span>}
                 {currentTerritory.nbiPercentage && <span>NBI: {currentTerritory.nbiPercentage}%</span>}
                 {currentTerritory.subregionName && <span>Subregión: {currentTerritory.subregionName}</span>}
-                {activeTerritory.electedMayor && <span className="text-purple-300 font-bold">Alcaldía: {activeTerritory.electedMayor}</span>}
+                {activeTerritory.electedMayor && <span className="text-[var(--c-ink)] font-bold">Alcaldía: {activeTerritory.electedMayor}</span>}
               </div>
               {activeTerritory.securityDynamics.extortionRisk && (
-                <div className="text-[10px] text-rose-300/90 font-mono truncate">
+                <div className="text-xs text-[var(--c-warn)] truncate">
                   Seguridad: {activeTerritory.securityDynamics.extortionRisk}
                 </div>
               )}
               {currentTerritory.keyIssues && currentTerritory.keyIssues[0] && (
-                <div className="text-[10px] text-slate-400 italic pt-1 border-t border-white/05 truncate">
+                <div className="text-xs text-[var(--c-muted)] italic pt-1 border-t border-[var(--c-border)] truncate">
                   Problemática clave: {currentTerritory.keyIssues[0]}
                 </div>
               )}
@@ -690,26 +690,26 @@ Diseña un BRIEF ESTRATÉGICO DE ALTO IMPACTO estructurado exactamente en los si
           {/* =========================================================================
               PANEL 2: SEGMENTACIÓN DE VOTANTES (CATÁLOGO COMPLETO)
               ========================================================================= */}
-          <div className="p-5 rounded-3xl bg-slate-950/40 backdrop-blur-2xl border border-white/15 shadow-[0_10px_30px_rgba(0,0,0,0.4)] space-y-3.5">
-            <div className="flex items-center justify-between border-b border-white/10 pb-2.5">
-              <h2 className="text-xs font-mono uppercase tracking-wider text-amber-400 font-bold flex items-center gap-1.5">
-                <Users className="w-4 h-4 text-amber-400" />
+          <div className="p-4 rounded-2xl border border-[var(--c-border)] bg-[var(--c-surface)] space-y-3.5">
+            <div className="flex items-center justify-between border-b border-[var(--c-border)] pb-2.5">
+              <h2 className="text-xs uppercase tracking-wide text-[var(--c-muted)] font-bold flex items-center gap-1.5">
+                <Users className="w-4 h-4 text-[var(--c-accent)]" />
                 Segmento / Audiencia Específica ({VOTER_AUDIENCE_CATALOG.length} Grupos)
               </h2>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-400/30 uppercase font-black">
+              <span className="text-xs px-2 py-0.5 rounded-md bg-[var(--c-accent-soft)] text-[var(--c-accent-text)] uppercase font-bold">
                 {activeAudience.priority}
               </span>
             </div>
 
             {/* Category Filter Pills */}
-            <div className="flex items-center gap-1 overflow-x-auto pb-1 text-[10px] font-mono">
+            <div className="flex items-center gap-1 overflow-x-auto pb-1 text-xs">
               <button
                 type="button"
                 onClick={() => setSelectedAudienceCategory('all')}
-                className={`px-2.5 py-1 rounded-lg shrink-0 transition ${
+                className={`px-2.5 py-1 rounded-md shrink-0 transition ${
                   selectedAudienceCategory === 'all'
-                    ? 'bg-amber-400/30 text-amber-200 border border-amber-400/60 font-bold'
-                    : 'text-slate-400 hover:text-white bg-white/05'
+                    ? 'bg-[var(--c-accent-soft)] text-[var(--c-accent-text)] font-bold'
+                    : 'text-[var(--c-muted)] hover:text-[var(--c-ink)] bg-[var(--c-sunken)]'
                 }`}
               >
                 Todos ({VOTER_AUDIENCE_CATALOG.length})
@@ -719,10 +719,10 @@ Diseña un BRIEF ESTRATÉGICO DE ALTO IMPACTO estructurado exactamente en los si
                   key={cat.id}
                   type="button"
                   onClick={() => setSelectedAudienceCategory(cat.id)}
-                  className={`px-2.5 py-1 rounded-lg shrink-0 transition ${
+                  className={`px-2.5 py-1 rounded-md shrink-0 transition ${
                     selectedAudienceCategory === cat.id
-                      ? 'bg-amber-400/30 text-amber-200 border border-amber-400/60 font-bold'
-                      : 'text-slate-400 hover:text-white bg-white/05'
+                      ? 'bg-[var(--c-accent-soft)] text-[var(--c-accent-text)] font-bold'
+                      : 'text-[var(--c-muted)] hover:text-[var(--c-ink)] bg-[var(--c-sunken)]'
                   }`}
                 >
                   {cat.label}
@@ -737,26 +737,26 @@ Diseña un BRIEF ESTRATÉGICO DE ALTO IMPACTO estructurado exactamente en los si
                 placeholder="Buscar grupo por nombre, profesión, dolor o estrato..."
                 value={audienceSearchQuery}
                 onChange={(e) => setAudienceSearchQuery(e.target.value)}
-                className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-white/05 border border-white/15 text-white text-xs placeholder:text-slate-500 focus:outline-none focus:border-amber-400"
+                className="w-full pl-8 pr-3 py-1.5 rounded-lg text-xs"
               />
-              <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
+              <Search className="w-3.5 h-3.5 text-[var(--c-muted)] absolute left-2.5 top-1/2 -translate-y-1/2" />
             </div>
 
             {/* Audience Dropdown with Grouped Options */}
             <div className="space-y-1">
-              <label className="text-[11px] text-slate-300 font-semibold">Grupo de Votantes Seleccionado:</label>
+              <label className="text-xs text-[var(--c-muted)] font-semibold">Grupo de Votantes Seleccionado:</label>
               <select
                 value={selectedAudienceId}
                 onChange={(e) => setSelectedAudienceId(e.target.value)}
-                className="w-full px-3 py-2 rounded-2xl bg-white/10 border border-white/20 text-white text-xs font-bold focus:outline-none focus:border-amber-400"
+                className="w-full px-3 py-2 rounded-lg text-xs font-semibold"
               >
                 {VOTER_AUDIENCE_CATEGORIES.map(cat => {
                   const catAudiences = filteredAudiences.filter(a => a.category === cat.id);
                   if (catAudiences.length === 0) return null;
                   return (
-                    <optgroup key={cat.id} label={cat.label} className="bg-slate-900 text-amber-300 font-bold">
+                    <optgroup key={cat.id} label={cat.label}>
                       {catAudiences.map(a => (
-                        <option key={a.id} value={a.id} className="bg-slate-900 text-white font-normal">
+                        <option key={a.id} value={a.id}>
                           {a.name} ({a.priority})
                         </option>
                       ))}
@@ -767,23 +767,23 @@ Diseña un BRIEF ESTRATÉGICO DE ALTO IMPACTO estructurado exactamente en los si
             </div>
 
             {/* Active Audience Insights Card */}
-            <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-400/25 space-y-2">
+            <div className="p-3.5 rounded-lg bg-[var(--c-accent-soft)] space-y-2">
               <div className="flex items-start justify-between gap-2">
                 <div>
-                  <div className="text-xs font-black text-amber-200">{activeAudience.name}</div>
-                  <div className="text-[10px] text-slate-300 italic">{activeAudience.tagline}</div>
+                  <div className="text-xs font-bold text-[var(--c-accent-text)]">{activeAudience.name}</div>
+                  <div className="text-xs text-[var(--c-muted)] italic">{activeAudience.tagline}</div>
                 </div>
-                <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-black/40 text-amber-300 border border-amber-400/30 shrink-0">
+                <span className="text-xs px-2 py-0.5 rounded-md bg-[var(--c-surface)] border border-[var(--c-border)] text-[var(--c-accent-text)] shrink-0">
                   ~{activeAudience.shareEstimatedNational}% Censo
                 </span>
               </div>
 
-              <div className="text-[10px] text-slate-300">
-                <strong className="text-amber-300">Gatillo Psicológico:</strong> {activeAudience.psychologicalTrigger}
+              <div className="text-xs text-[var(--c-ink)]">
+                <strong className="text-[var(--c-accent-text)]">Gatillo Psicológico:</strong> {activeAudience.psychologicalTrigger}
               </div>
 
-              <div className="text-[10px] text-slate-400">
-                <strong className="text-slate-300">Canales Top:</strong> {activeAudience.effectiveChannels.join(', ')}
+              <div className="text-xs text-[var(--c-muted)]">
+                <strong className="text-[var(--c-ink)]">Canales Top:</strong> {activeAudience.effectiveChannels.join(', ')}
               </div>
             </div>
           </div>
@@ -791,44 +791,44 @@ Diseña un BRIEF ESTRATÉGICO DE ALTO IMPACTO estructurado exactamente en los si
           {/* =========================================================================
               PANEL 3: FORMATO, TONO Y ENCUADRE COGNITIVO
               ========================================================================= */}
-          <div className="p-5 rounded-3xl bg-slate-950/40 backdrop-blur-2xl border border-white/15 shadow-[0_10px_30px_rgba(0,0,0,0.4)] space-y-3.5">
+          <div className="p-4 rounded-2xl border border-[var(--c-border)] bg-[var(--c-surface)] space-y-3.5">
             {/* Content Format Selector */}
             <div className="space-y-1.5">
-              <label className="text-xs text-slate-300 font-semibold flex items-center gap-1">
-                <FileText className="w-3.5 h-3.5 text-amber-400" />
+              <label className="text-xs text-[var(--c-muted)] font-semibold flex items-center gap-1">
+                <FileText className="w-3.5 h-3.5 text-[var(--c-accent)]" />
                 Formato del Contenido:
               </label>
               <div className="grid grid-cols-2 gap-2 text-xs">
                 <button
                   type="button"
                   onClick={() => setContentFormat('video-short')}
-                  className={`p-2 rounded-xl text-left border transition ${contentFormat === 'video-short' ? 'bg-amber-500/25 border-amber-400 text-white font-bold' : 'bg-black/20 border-white/10 text-slate-400 hover:text-white'}`}
+                  className={`p-2 rounded-lg text-left border transition ${contentFormat === 'video-short' ? 'bg-[var(--c-accent-soft)] border-[var(--c-accent)] text-[var(--c-ink)] font-bold' : 'border-[var(--c-border)] bg-[var(--c-sunken)] text-[var(--c-muted)] hover:text-[var(--c-ink)]'}`}
                 >
-                  <Video className="w-3.5 h-3.5 text-amber-300 mb-1" />
+                  <Video className="w-3.5 h-3.5 text-[var(--c-accent)] mb-1" />
                   Video Corto (Reels / TikTok)
                 </button>
                 <button
                   type="button"
                   onClick={() => setContentFormat('speech-plaza')}
-                  className={`p-2 rounded-xl text-left border transition ${contentFormat === 'speech-plaza' ? 'bg-amber-500/25 border-amber-400 text-white font-bold' : 'bg-black/20 border-white/10 text-slate-400 hover:text-white'}`}
+                  className={`p-2 rounded-lg text-left border transition ${contentFormat === 'speech-plaza' ? 'bg-[var(--c-accent-soft)] border-[var(--c-accent)] text-[var(--c-ink)] font-bold' : 'border-[var(--c-border)] bg-[var(--c-sunken)] text-[var(--c-muted)] hover:text-[var(--c-ink)]'}`}
                 >
-                  <Megaphone className="w-3.5 h-3.5 text-sky-300 mb-1" />
+                  <Megaphone className="w-3.5 h-3.5 text-[var(--c-accent)] mb-1" />
                   Discurso de Plaza Pública
                 </button>
                 <button
                   type="button"
                   onClick={() => setContentFormat('whatsapp-community')}
-                  className={`p-2 rounded-xl text-left border transition ${contentFormat === 'whatsapp-community' ? 'bg-amber-500/25 border-amber-400 text-white font-bold' : 'bg-black/20 border-white/10 text-slate-400 hover:text-white'}`}
+                  className={`p-2 rounded-lg text-left border transition ${contentFormat === 'whatsapp-community' ? 'bg-[var(--c-accent-soft)] border-[var(--c-accent)] text-[var(--c-ink)] font-bold' : 'border-[var(--c-border)] bg-[var(--c-sunken)] text-[var(--c-muted)] hover:text-[var(--c-ink)]'}`}
                 >
-                  <Radio className="w-3.5 h-3.5 text-emerald-300 mb-1" />
+                  <Radio className="w-3.5 h-3.5 text-[var(--c-accent)] mb-1" />
                   WhatsApp / Redes Barriales
                 </button>
                 <button
                   type="button"
                   onClick={() => setContentFormat('debate-rebuttal')}
-                  className={`p-2 rounded-xl text-left border transition ${contentFormat === 'debate-rebuttal' ? 'bg-amber-500/25 border-amber-400 text-white font-bold' : 'bg-black/20 border-white/10 text-slate-400 hover:text-white'}`}
+                  className={`p-2 rounded-lg text-left border transition ${contentFormat === 'debate-rebuttal' ? 'bg-[var(--c-accent-soft)] border-[var(--c-accent)] text-[var(--c-ink)] font-bold' : 'border-[var(--c-border)] bg-[var(--c-sunken)] text-[var(--c-muted)] hover:text-[var(--c-ink)]'}`}
                 >
-                  <AlertCircle className="w-3.5 h-3.5 text-rose-300 mb-1" />
+                  <AlertCircle className="w-3.5 h-3.5 text-[var(--c-accent)] mb-1" />
                   Debate & Respuesta a Ataques
                 </button>
               </div>
@@ -836,76 +836,76 @@ Diseña un BRIEF ESTRATÉGICO DE ALTO IMPACTO estructurado exactamente en los si
 
             {/* Key Topic */}
             <div className="space-y-1">
-              <label className="text-xs text-slate-300 font-semibold">Eje Temático Principal:</label>
+              <label className="text-xs text-[var(--c-muted)] font-semibold">Eje Temático Principal:</label>
               <input
                 type="text"
                 value={keyTopic}
                 onChange={(e) => setKeyTopic(e.target.value)}
                 placeholder="Ej. Seguridad, empleo juvenil, freno a la extorsión..."
-                className="w-full px-3 py-2 rounded-2xl bg-white/10 border border-white/20 text-white text-xs font-semibold focus:outline-none focus:border-sky-400"
+                className="w-full px-3 py-2 rounded-lg text-xs font-semibold"
               />
             </div>
 
             {/* Tone of Voice */}
             <div className="space-y-1">
-              <label className="text-xs text-slate-300 font-semibold">Tono de Comunicación:</label>
+              <label className="text-xs text-[var(--c-muted)] font-semibold">Tono de Comunicación:</label>
               <select
                 value={toneOfVoice}
                 onChange={(e) => setToneOfVoice(e.target.value)}
-                className="w-full px-3 py-2 rounded-2xl bg-white/10 border border-white/20 text-white text-xs font-semibold focus:outline-none focus:border-sky-400"
+                className="w-full px-3 py-2 rounded-lg text-xs font-semibold"
               >
-                <option value="Firmeza, Autoridad y Esperanza" className="bg-slate-900">Firmeza, Autoridad y Esperanza</option>
-                <option value="Cercano, Empático y Protector" className="bg-slate-900">Cercano, Empático y Protector</option>
-                <option value="Técnico, Resolutivo y Sin Carreta" className="bg-slate-900">Técnico, Resolutivo y Sin Carreta</option>
-                <option value="Disruptivo, Frontal y Denunciante" className="bg-slate-900">Disruptivo, Frontal y Denunciante</option>
+                <option value="Firmeza, Autoridad y Esperanza">Firmeza, Autoridad y Esperanza</option>
+                <option value="Cercano, Empático y Protector">Cercano, Empático y Protector</option>
+                <option value="Técnico, Resolutivo y Sin Carreta">Técnico, Resolutivo y Sin Carreta</option>
+                <option value="Disruptivo, Frontal y Denunciante">Disruptivo, Frontal y Denunciante</option>
               </select>
             </div>
 
             {/* Cognitive Framing Selector (Protocolo PA-003) */}
-            <div className="space-y-1.5 pt-2 border-t border-white/10">
-              <label className="text-xs text-slate-300 font-semibold flex items-center justify-between">
+            <div className="space-y-1.5 pt-2 border-t border-[var(--c-border)]">
+              <label className="text-xs text-[var(--c-muted)] font-semibold flex items-center justify-between">
                 <span className="flex items-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                  <Sparkles className="w-3.5 h-3.5 text-[var(--c-accent)]" />
                   Persuasión cognitiva:
                 </span>
-                <span className="text-[10px] font-mono text-sky-400">Prospect Theory</span>
+                <span className="text-xs text-[var(--c-muted)]">Prospect Theory</span>
               </label>
               <div className="grid grid-cols-3 gap-2">
                 <button
                   type="button"
                   onClick={() => setCognitiveFraming('gain-hope')}
-                  className={`p-2 rounded-xl text-center border transition text-xs ${
+                  className={`p-2 rounded-lg text-center border transition text-xs ${
                     cognitiveFraming === 'gain-hope'
-                      ? 'bg-emerald-500/25 border-emerald-400 text-emerald-200 font-bold shadow-[0_0_10px_rgba(52,211,153,0.3)]'
-                      : 'bg-black/20 border-white/10 text-slate-400 hover:text-white'
+                      ? 'bg-[var(--c-ok-soft)] border-[var(--c-ok)] text-[var(--c-ok)] font-bold'
+                      : 'border-[var(--c-border)] bg-[var(--c-sunken)] text-[var(--c-muted)] hover:text-[var(--c-ink)]'
                   }`}
                 >
-                  <div className="font-black">Ganancia</div>
-                  <div className="text-[9px] text-slate-400">Esperanza</div>
+                  <div className="font-bold">Ganancia</div>
+                  <div className="text-xs text-[var(--c-muted)]">Esperanza</div>
                 </button>
                 <button
                   type="button"
                   onClick={() => setCognitiveFraming('loss-protection')}
-                  className={`p-2 rounded-xl text-center border transition text-xs ${
+                  className={`p-2 rounded-lg text-center border transition text-xs ${
                     cognitiveFraming === 'loss-protection'
-                      ? 'bg-rose-500/25 border-rose-400 text-rose-200 font-bold shadow-[0_0_10px_rgba(244,63,94,0.3)]'
-                      : 'bg-black/20 border-white/10 text-slate-400 hover:text-white'
+                      ? 'bg-[var(--c-warn-soft)] border-[var(--c-warn)] text-[var(--c-warn)] font-bold'
+                      : 'border-[var(--c-border)] bg-[var(--c-sunken)] text-[var(--c-muted)] hover:text-[var(--c-ink)]'
                   }`}
                 >
-                  <div className="font-black">Pérdida</div>
-                  <div className="text-[9px] text-slate-400">Blindaje</div>
+                  <div className="font-bold">Pérdida</div>
+                  <div className="text-xs text-[var(--c-muted)]">Blindaje</div>
                 </button>
                 <button
                   type="button"
                   onClick={() => setCognitiveFraming('balanced')}
-                  className={`p-2 rounded-xl text-center border transition text-xs ${
+                  className={`p-2 rounded-lg text-center border transition text-xs ${
                     cognitiveFraming === 'balanced'
-                      ? 'bg-sky-500/25 border-sky-400 text-sky-200 font-bold shadow-[0_0_10px_rgba(56,189,248,0.3)]'
-                      : 'bg-black/20 border-white/10 text-slate-400 hover:text-white'
+                      ? 'bg-[var(--c-info-soft)] border-[var(--c-info)] text-[var(--c-info)] font-bold'
+                      : 'border-[var(--c-border)] bg-[var(--c-sunken)] text-[var(--c-muted)] hover:text-[var(--c-ink)]'
                   }`}
                 >
-                  <div className="font-black">Equilibrio</div>
-                  <div className="text-[9px] text-slate-400">Riesgo + Victoria</div>
+                  <div className="font-bold">Equilibrio</div>
+                  <div className="text-xs text-[var(--c-muted)]">Riesgo + Victoria</div>
                 </button>
               </div>
             </div>
@@ -914,7 +914,7 @@ Diseña un BRIEF ESTRATÉGICO DE ALTO IMPACTO estructurado exactamente en los si
             <button
               onClick={handleGenerateBrief}
               disabled={isGenerating}
-              className="w-full py-3 rounded-2xl bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-xs sm:text-sm shadow-[0_0_25px_rgba(251,191,36,0.4)] flex items-center justify-center gap-2 transition-all transform hover:scale-[1.01] active:scale-95 disabled:opacity-50 cursor-pointer"
+              className="w-full min-h-9 py-3 rounded-lg bg-[var(--c-accent)] text-white font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 transition disabled:opacity-50"
             >
               {isGenerating ? (
                 <>
@@ -933,11 +933,11 @@ Diseña un BRIEF ESTRATÉGICO DE ALTO IMPACTO estructurado exactamente en los si
 
         {/* Output Column (Brief Generated) */}
         <div className="lg:col-span-6 space-y-4">
-          <div className="p-5 rounded-3xl bg-slate-950/40 backdrop-blur-2xl border border-white/15 shadow-[0_10px_30px_rgba(0,0,0,0.4)] flex flex-col min-h-[640px]">
-            <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-4">
+          <div className="p-5 rounded-2xl border border-[var(--c-border)] bg-[var(--c-surface)] flex flex-col min-h-[640px]">
+            <div className="flex items-center justify-between border-b border-[var(--c-border)] pb-3 mb-4">
               <div className="flex items-center gap-2">
-                <FileText className="w-4 h-4 text-amber-400" />
-                <span className="text-xs font-mono uppercase text-white font-bold tracking-wider">
+                <FileText className="w-4 h-4 text-[var(--c-accent)]" />
+                <span className="text-xs uppercase text-[var(--c-ink)] font-bold tracking-wide">
                   Brief Estratégico Generado
                 </span>
               </div>
@@ -946,29 +946,29 @@ Diseña un BRIEF ESTRATÉGICO DE ALTO IMPACTO estructurado exactamente en los si
                 <div className="flex items-center gap-1.5">
                   <button
                     onClick={handleCopy}
-                    className="p-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white transition flex items-center gap-1 text-xs"
+                    className="min-h-8 px-2 rounded-lg border border-[var(--c-border)] bg-[var(--c-surface)] text-[var(--c-muted)] hover:text-[var(--c-ink)] transition flex items-center gap-1 text-xs"
                     title="Copiar al portapapeles"
                   >
-                    {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                    {copied ? <Check className="w-3.5 h-3.5 text-[var(--c-ok)]" /> : <Copy className="w-3.5 h-3.5" />}
                     <span className="hidden sm:inline">{copied ? 'Copiado' : 'Copiar'}</span>
                   </button>
 
                   <button
                     onClick={handleDownloadPdf}
-                    className="p-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white transition flex items-center gap-1 text-xs"
+                    className="min-h-8 px-2 rounded-lg border border-[var(--c-border)] bg-[var(--c-surface)] text-[var(--c-muted)] hover:text-[var(--c-ink)] transition flex items-center gap-1 text-xs"
                     title="Descargar en PDF Institucional"
                   >
-                    <Download className="w-3.5 h-3.5 text-sky-400" />
+                    <Download className="w-3.5 h-3.5" />
                     <span className="hidden sm:inline">PDF</span>
                   </button>
 
                   {onSaveToDrive && (
                     <button
                       onClick={handleSaveDrive}
-                      className="p-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white transition flex items-center gap-1 text-xs"
+                      className="min-h-8 px-2 rounded-lg border border-[var(--c-border)] bg-[var(--c-surface)] text-[var(--c-muted)] hover:text-[var(--c-ink)] transition flex items-center gap-1 text-xs"
                       title="Guardar en Google Drive"
                     >
-                      <Save className="w-3.5 h-3.5 text-amber-400" />
+                      <Save className="w-3.5 h-3.5" />
                       <span className="hidden sm:inline">{savedSuccess ? 'Guardado' : 'Drive'}</span>
                     </button>
                   )}
@@ -977,17 +977,17 @@ Diseña un BRIEF ESTRATÉGICO DE ALTO IMPACTO estructurado exactamente en los si
             </div>
 
             {/* Content Area */}
-            <div className="flex-1 bg-black/30 rounded-2xl border border-white/10 p-4 overflow-y-auto max-h-[600px] font-sans text-xs sm:text-sm text-slate-200 leading-relaxed whitespace-pre-wrap">
+            <div className="flex-1 bg-[var(--c-sunken)] rounded-lg border border-[var(--c-border)] p-4 overflow-y-auto max-h-[600px] text-xs sm:text-sm text-[var(--c-ink)] leading-relaxed whitespace-pre-wrap">
               {generatedBrief ? (
                 generatedBrief
               ) : (
-                <div className="h-full flex flex-col items-center justify-center text-center p-8 text-slate-500 space-y-3">
-                  <div className="w-12 h-12 rounded-full bg-white/05 border border-white/10 flex items-center justify-center">
-                    <Sparkles className="w-6 h-6 text-amber-400/50" />
+                <div className="h-full flex flex-col items-center justify-center text-center p-8 text-[var(--c-muted)] space-y-3">
+                  <div className="w-12 h-12 rounded-full bg-[var(--c-surface)] border border-[var(--c-border)] flex items-center justify-center">
+                    <Sparkles className="w-6 h-6 text-[var(--c-accent)]" />
                   </div>
                   <div>
-                    <h4 className="text-sm font-bold text-slate-300">Esperando Parámetros</h4>
-                    <p className="text-xs text-slate-400 max-w-sm mt-1">
+                    <h4 className="text-sm font-bold text-[var(--c-ink)]">Esperando Parámetros</h4>
+                    <p className="text-xs text-[var(--c-muted)] max-w-sm mt-1">
                       Selecciona la escala territorial (Nacional a Comuna/Barrio) y el grupo de votantes. Haz clic en "Generar Brief" para construir la estrategia.
                     </p>
                   </div>
@@ -997,7 +997,7 @@ Diseña un BRIEF ESTRATÉGICO DE ALTO IMPACTO estructurado exactamente en los si
 
             {/* Footer Status */}
             {generatedBrief && (
-              <div className="pt-3 border-t border-white/10 mt-3 flex items-center justify-between text-[11px] text-slate-400 font-mono">
+              <div className="pt-3 border-t border-[var(--c-border)] mt-3 flex items-center justify-between text-xs text-[var(--c-muted)]">
                 <span>Territorio: {currentTerritory.name}</span>
                 <span>Audiencia: {activeAudience.name}</span>
               </div>

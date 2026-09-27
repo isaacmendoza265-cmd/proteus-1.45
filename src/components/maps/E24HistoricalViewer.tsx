@@ -631,15 +631,15 @@ export const E24HistoricalViewer: React.FC<E24HistoricalViewerProps> = ({
   }, [selectedCorp, selectedYear, congresoSubCorp, presidenciaStage, viewScope, activeComunaId]);
 
   return (
-    <div className="space-y-4 p-4 rounded-3xl bg-slate-950/75 backdrop-blur-3xl border border-white/20 shadow-[inset_0_1.5px_2px_rgba(255,255,255,0.4),0_15px_35px_rgba(0,0,0,0.6)] text-white animate-fadeIn">
+    <div className="proteus-civico flex flex-col gap-4 p-4 rounded-2xl border border-[var(--c-border)] bg-[var(--c-surface)]">
       {/* 1. Header & Comuna Selector */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 border-b border-white/15 pb-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 border-b border-[var(--c-border)] pb-3">
         <div>
-          <div className="flex items-center gap-1.5 text-[10px] font-mono font-black uppercase text-amber-400 tracking-wider">
-            <FileSpreadsheet className="w-3.5 h-3.5 text-amber-300" />
-            <span>Matriz E-24 Histórica Oficial</span>
+          <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide text-[var(--c-muted)]">
+            <FileSpreadsheet className="w-3.5 h-3.5 text-[var(--c-accent)]" />
+            <span>Matriz E-24 histórica oficial</span>
           </div>
-          
+
           <div className="flex items-center gap-2 mt-1">
             {/* Comuna Selector Dropdown */}
             <div className="relative inline-block">
@@ -651,19 +651,19 @@ export const E24HistoricalViewer: React.FC<E24HistoricalViewerProps> = ({
                   if (onSelectComuna) onSelectComuna(newId);
                 }}
                 aria-label="Seleccionar comuna o territorio"
-                className="appearance-none bg-white/10 hover:bg-white/15 border border-white/20 rounded-xl px-3 py-1 pr-7 text-xs sm:text-sm font-black text-white cursor-pointer focus:outline-none focus:ring-1 focus:ring-amber-400 transition"
+                className="appearance-none min-h-9 rounded-lg pl-3 pr-7 text-xs sm:text-sm font-bold cursor-pointer"
               >
                 {COMUNAS_INFO.map((c) => (
-                  <option key={c.id} value={c.id} className="bg-slate-900 text-white">
+                  <option key={c.id} value={c.id}>
                     {c.comunaName} - {c.officialName}
                   </option>
                 ))}
               </select>
-              <ChevronDown className="w-3.5 h-3.5 text-slate-300 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <ChevronDown className="w-3.5 h-3.5 text-[var(--c-muted)] absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" />
             </div>
 
             {barrioName && (
-              <span className="px-2 py-0.5 rounded-lg bg-sky-500/20 text-sky-300 border border-sky-400/30 text-[10px] font-mono font-semibold">
+              <span className="px-2 py-0.5 rounded-md bg-[var(--c-info-soft)] text-[var(--c-info)] text-xs font-bold">
                 {barrioName}
               </span>
             )}
@@ -671,23 +671,23 @@ export const E24HistoricalViewer: React.FC<E24HistoricalViewerProps> = ({
         </div>
 
         {/* Scope Switcher: Esta Comuna vs Total Ciudad */}
-        <div className="flex items-center self-start sm:self-auto p-0.5 rounded-xl bg-black/50 border border-white/15 text-[10px] font-mono">
+        <div className="flex items-center self-start sm:self-auto p-0.5 rounded-lg border border-[var(--c-border)] bg-[var(--c-sunken)] text-xs">
           <button
             onClick={() => setViewScope('comuna')}
-            className={`px-2 py-1 rounded-lg transition ${
+            className={`px-2.5 py-1 rounded-md font-semibold transition ${
               viewScope === 'comuna'
-                ? 'bg-amber-400/25 text-amber-200 border border-amber-400/50 font-black shadow-[0_0_8px_rgba(251,191,36,0.3)]'
-                : 'text-slate-400 hover:text-white'
+                ? 'bg-[var(--c-accent-soft)] text-[var(--c-accent-text)]'
+                : 'text-[var(--c-muted)] hover:text-[var(--c-ink)]'
             }`}
           >
             {activeComunaInfo.comunaName}
           </button>
           <button
             onClick={() => setViewScope('ciudad')}
-            className={`px-2 py-1 rounded-lg transition ${
+            className={`px-2.5 py-1 rounded-md font-semibold transition ${
               viewScope === 'ciudad'
-                ? 'bg-sky-400/25 text-sky-200 border border-sky-400/50 font-black shadow-[0_0_8px_rgba(56,189,248,0.3)]'
-                : 'text-slate-400 hover:text-white'
+                ? 'bg-[var(--c-accent-soft)] text-[var(--c-accent-text)]'
+                : 'text-[var(--c-muted)] hover:text-[var(--c-ink)]'
             }`}
           >
             Total Medellín
@@ -696,65 +696,73 @@ export const E24HistoricalViewer: React.FC<E24HistoricalViewerProps> = ({
       </div>
 
       {/* 2. Top 4 Corporation Tabs */}
-      <div className="grid grid-cols-4 gap-1.5 p-1 rounded-2xl bg-black/40 border border-white/15 text-[11px] font-bold">
+      <div role="tablist" aria-label="Corporación" className="flex gap-0.5 border-b border-[var(--c-border)] overflow-x-auto text-xs">
         {/* Alcaldía */}
         <button
+          role="tab"
+          aria-selected={selectedCorp === 'alcaldia'}
           onClick={() => handleSelectCorp('alcaldia')}
-          className={`py-1.5 px-2 rounded-xl transition flex items-center justify-center gap-1.5 text-center ${
+          className={`min-h-9 px-2.5 -mb-px whitespace-nowrap font-semibold border-b-2 flex items-center gap-1.5 ${
             selectedCorp === 'alcaldia'
-              ? 'bg-gradient-to-r from-amber-500/30 to-orange-500/30 text-amber-200 border border-amber-400/60 shadow-[0_0_12px_rgba(251,191,36,0.3)] font-black'
-              : 'text-slate-400 hover:text-white hover:bg-white/05'
+              ? 'border-[var(--c-accent)] text-[var(--c-ink)]'
+              : 'border-transparent text-[var(--c-muted)] hover:text-[var(--c-ink)]'
           }`}
         >
-          <Building2 className="w-3.5 h-3.5 shrink-0 text-amber-400" />
+          <Building2 className="w-3.5 h-3.5 shrink-0 text-[var(--c-accent)]" />
           <span className="truncate">Alcaldía</span>
         </button>
 
         {/* Concejo */}
         <button
+          role="tab"
+          aria-selected={selectedCorp === 'concejo'}
           onClick={() => handleSelectCorp('concejo')}
-          className={`py-1.5 px-2 rounded-xl transition flex items-center justify-center gap-1.5 text-center ${
+          className={`min-h-9 px-2.5 -mb-px whitespace-nowrap font-semibold border-b-2 flex items-center gap-1.5 ${
             selectedCorp === 'concejo'
-              ? 'bg-gradient-to-r from-sky-500/30 to-blue-500/30 text-sky-200 border border-sky-400/60 shadow-[0_0_12px_rgba(56,189,248,0.3)] font-black'
-              : 'text-slate-400 hover:text-white hover:bg-white/05'
+              ? 'border-[var(--c-accent)] text-[var(--c-ink)]'
+              : 'border-transparent text-[var(--c-muted)] hover:text-[var(--c-ink)]'
           }`}
         >
-          <Award className="w-3.5 h-3.5 shrink-0 text-sky-400" />
+          <Award className="w-3.5 h-3.5 shrink-0 text-[var(--c-accent)]" />
           <span className="truncate">Concejo</span>
         </button>
 
         {/* Congreso E-24 */}
         <button
+          role="tab"
+          aria-selected={selectedCorp === 'congreso'}
           onClick={() => handleSelectCorp('congreso')}
-          className={`py-1.5 px-2 rounded-xl transition flex items-center justify-center gap-1.5 text-center ${
+          className={`min-h-9 px-2.5 -mb-px whitespace-nowrap font-semibold border-b-2 flex items-center gap-1.5 ${
             selectedCorp === 'congreso'
-              ? 'bg-gradient-to-r from-indigo-500/30 to-purple-500/30 text-indigo-200 border border-indigo-400/60 shadow-[0_0_12px_rgba(129,140,248,0.3)] font-black'
-              : 'text-slate-400 hover:text-white hover:bg-white/05'
+              ? 'border-[var(--c-accent)] text-[var(--c-ink)]'
+              : 'border-transparent text-[var(--c-muted)] hover:text-[var(--c-ink)]'
           }`}
         >
-          <Landmark className="w-3.5 h-3.5 shrink-0 text-indigo-400" />
+          <Landmark className="w-3.5 h-3.5 shrink-0 text-[var(--c-accent)]" />
           <span className="truncate">Congreso E-24</span>
         </button>
 
         {/* Presidencia */}
         <button
+          role="tab"
+          aria-selected={selectedCorp === 'presidencia'}
           onClick={() => handleSelectCorp('presidencia')}
-          className={`py-1.5 px-2 rounded-xl transition flex items-center justify-center gap-1.5 text-center ${
+          className={`min-h-9 px-2.5 -mb-px whitespace-nowrap font-semibold border-b-2 flex items-center gap-1.5 ${
             selectedCorp === 'presidencia'
-              ? 'bg-gradient-to-r from-emerald-500/30 to-teal-500/30 text-emerald-200 border border-emerald-400/60 shadow-[0_0_12px_rgba(52,211,153,0.3)] font-black'
-              : 'text-slate-400 hover:text-white hover:bg-white/05'
+              ? 'border-[var(--c-accent)] text-[var(--c-ink)]'
+              : 'border-transparent text-[var(--c-muted)] hover:text-[var(--c-ink)]'
           }`}
         >
-          <Flag className="w-3.5 h-3.5 shrink-0 text-emerald-400" />
+          <Flag className="w-3.5 h-3.5 shrink-0 text-[var(--c-accent)]" />
           <span className="truncate">Presidencia</span>
         </button>
       </div>
 
       {/* 3. Sub-Filters (Period / Branch / Stage) */}
-      <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-bold bg-white/05 p-2 rounded-2xl border border-white/10">
-        <div className="flex items-center gap-1.5">
-          <span className="text-[10px] font-mono uppercase text-slate-400 mr-1 flex items-center gap-1">
-            <Calendar className="w-3 h-3 text-sky-400" />
+      <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-semibold p-2 rounded-xl bg-[var(--c-sunken)]">
+        <div className="flex items-center gap-1.5 flex-wrap">
+          <span className="uppercase text-[var(--c-muted)] mr-1 flex items-center gap-1">
+            <Calendar className="w-3 h-3" />
             Periodo E-24:
           </span>
 
@@ -765,10 +773,10 @@ export const E24HistoricalViewer: React.FC<E24HistoricalViewerProps> = ({
                 <button
                   key={yr}
                   onClick={() => setSelectedYear(yr)}
-                  className={`px-2.5 py-1 rounded-xl font-mono text-xs transition ${
+                  className={`min-h-8 px-2.5 rounded-md border text-xs tabular-nums transition ${
                     selectedYear === yr
-                      ? 'bg-gradient-to-r from-amber-400/30 to-orange-500/40 border border-amber-300/70 text-white shadow-[0_0_10px_rgba(251,191,36,0.3)] font-black'
-                      : 'bg-white/05 hover:bg-white/10 text-slate-300 border border-white/10'
+                      ? 'bg-[var(--c-accent-soft)] border-[var(--c-accent)] text-[var(--c-accent-text)]'
+                      : 'border-[var(--c-border)] bg-[var(--c-surface)] text-[var(--c-muted)]'
                   }`}
                 >
                   {yr}
@@ -781,13 +789,13 @@ export const E24HistoricalViewer: React.FC<E24HistoricalViewerProps> = ({
           {selectedCorp === 'congreso' && (
             <div className="flex items-center gap-2 flex-wrap">
               {/* Branch Toggle */}
-              <div className="flex items-center gap-1 p-0.5 rounded-lg bg-black/40 border border-white/10 text-[10px]">
+              <div className="flex items-center gap-1 p-0.5 rounded-lg border border-[var(--c-border)] bg-[var(--c-surface)] text-xs">
                 <button
                   onClick={() => setCongresoSubCorp('senado')}
                   className={`px-2 py-0.5 rounded-md transition ${
                     congresoSubCorp === 'senado'
-                      ? 'bg-indigo-500/40 text-indigo-200 font-black border border-indigo-400/50'
-                      : 'text-slate-400 hover:text-white'
+                      ? 'bg-[var(--c-accent-soft)] text-[var(--c-accent-text)]'
+                      : 'text-[var(--c-muted)] hover:text-[var(--c-ink)]'
                   }`}
                 >
                   Senado
@@ -796,8 +804,8 @@ export const E24HistoricalViewer: React.FC<E24HistoricalViewerProps> = ({
                   onClick={() => setCongresoSubCorp('camara')}
                   className={`px-2 py-0.5 rounded-md transition ${
                     congresoSubCorp === 'camara'
-                      ? 'bg-indigo-500/40 text-indigo-200 font-black border border-indigo-400/50'
-                      : 'text-slate-400 hover:text-white'
+                      ? 'bg-[var(--c-accent-soft)] text-[var(--c-accent-text)]'
+                      : 'text-[var(--c-muted)] hover:text-[var(--c-ink)]'
                   }`}
                 >
                   Cámara
@@ -808,20 +816,20 @@ export const E24HistoricalViewer: React.FC<E24HistoricalViewerProps> = ({
               <div className="flex items-center gap-1">
                 <button
                   onClick={() => setSelectedYear(2022)}
-                  className={`px-2.5 py-1 rounded-xl font-mono text-xs transition ${
+                  className={`min-h-8 px-2.5 rounded-md border text-xs tabular-nums transition ${
                     selectedYear === 2022
-                      ? 'bg-gradient-to-r from-indigo-500/40 to-purple-600/40 border border-indigo-400 text-white font-black shadow-[0_0_10px_rgba(129,140,248,0.3)]'
-                      : 'bg-white/05 text-slate-300 border border-white/10'
+                      ? 'bg-[var(--c-accent-soft)] border-[var(--c-accent)] text-[var(--c-accent-text)]'
+                      : 'border-[var(--c-border)] bg-[var(--c-surface)] text-[var(--c-muted)]'
                   }`}
                 >
                   2022 Oficial
                 </button>
                 <button
                   onClick={() => setSelectedYear(2026)}
-                  className={`px-2.5 py-1 rounded-xl font-mono text-xs transition ${
+                  className={`min-h-8 px-2.5 rounded-md border text-xs tabular-nums transition ${
                     selectedYear === 2026
-                      ? 'bg-gradient-to-r from-indigo-500/40 to-purple-600/40 border border-indigo-400 text-white font-black shadow-[0_0_10px_rgba(129,140,248,0.3)]'
-                      : 'bg-white/05 text-slate-300 border border-white/10'
+                      ? 'bg-[var(--c-accent-soft)] border-[var(--c-accent)] text-[var(--c-accent-text)]'
+                      : 'border-[var(--c-border)] bg-[var(--c-surface)] text-[var(--c-muted)]'
                   }`}
                 >
                   2026 Proyección
@@ -838,10 +846,10 @@ export const E24HistoricalViewer: React.FC<E24HistoricalViewerProps> = ({
                   setSelectedYear(2026);
                   setPresidenciaStage('consulta');
                 }}
-                className={`px-2.5 py-1 rounded-xl font-mono text-xs transition ${
+                className={`min-h-8 px-2.5 rounded-md border text-xs tabular-nums transition ${
                   selectedYear === 2026 && presidenciaStage === 'consulta'
-                    ? 'bg-gradient-to-r from-emerald-500/40 to-teal-500/40 border border-emerald-400 text-white font-black shadow-[0_0_10px_rgba(52,211,153,0.3)]'
-                    : 'bg-white/05 text-slate-300 border border-white/10'
+                    ? 'bg-[var(--c-accent-soft)] border-[var(--c-accent)] text-[var(--c-accent-text)]'
+                    : 'border-[var(--c-border)] bg-[var(--c-surface)] text-[var(--c-muted)]'
                 }`}
               >
                 2026 Consultas
@@ -851,10 +859,10 @@ export const E24HistoricalViewer: React.FC<E24HistoricalViewerProps> = ({
                   setSelectedYear(2022);
                   setPresidenciaStage('primera_vuelta');
                 }}
-                className={`px-2.5 py-1 rounded-xl font-mono text-xs transition ${
+                className={`min-h-8 px-2.5 rounded-md border text-xs tabular-nums transition ${
                   selectedYear === 2022 && presidenciaStage === 'primera_vuelta'
-                    ? 'bg-gradient-to-r from-emerald-500/40 to-teal-500/40 border border-emerald-400 text-white font-black shadow-[0_0_10px_rgba(52,211,153,0.3)]'
-                    : 'bg-white/05 text-slate-300 border border-white/10'
+                    ? 'bg-[var(--c-accent-soft)] border-[var(--c-accent)] text-[var(--c-accent-text)]'
+                    : 'border-[var(--c-border)] bg-[var(--c-surface)] text-[var(--c-muted)]'
                 }`}
               >
                 2022 1ª Vuelta
@@ -864,10 +872,10 @@ export const E24HistoricalViewer: React.FC<E24HistoricalViewerProps> = ({
                   setSelectedYear(2022);
                   setPresidenciaStage('segunda_vuelta');
                 }}
-                className={`px-2.5 py-1 rounded-xl font-mono text-xs transition ${
+                className={`min-h-8 px-2.5 rounded-md border text-xs tabular-nums transition ${
                   selectedYear === 2022 && presidenciaStage === 'segunda_vuelta'
-                    ? 'bg-gradient-to-r from-emerald-500/40 to-teal-500/40 border border-emerald-400 text-white font-black shadow-[0_0_10px_rgba(52,211,153,0.3)]'
-                    : 'bg-white/05 text-slate-300 border border-white/10'
+                    ? 'bg-[var(--c-accent-soft)] border-[var(--c-accent)] text-[var(--c-accent-text)]'
+                    : 'border-[var(--c-border)] bg-[var(--c-surface)] text-[var(--c-muted)]'
                 }`}
               >
                 2022 2ª Vuelta
@@ -877,38 +885,38 @@ export const E24HistoricalViewer: React.FC<E24HistoricalViewerProps> = ({
         </div>
 
         {/* Zones indicator */}
-        <div className="text-[10px] font-mono text-slate-400 hidden sm:flex items-center gap-1">
-          <span>Zonas Escrutadas:</span>
-          <span className="text-amber-300 font-bold">{activeComunaInfo.zones.join(', ')}</span>
+        <div className="text-xs text-[var(--c-muted)] hidden sm:flex items-center gap-1">
+          <span>Zonas escrutadas:</span>
+          <span className="font-bold text-[var(--c-ink)]">{activeComunaInfo.zones.join(', ')}</span>
         </div>
       </div>
 
       {/* 4. KPI Cards Summary */}
       <div className="grid grid-cols-3 gap-2 text-center text-xs">
-        <div className="p-2.5 rounded-2xl bg-white/05 border border-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.15)]">
-          <div className="text-[10px] font-mono text-slate-400 uppercase">Votos Válidos</div>
-          <div className="text-sm sm:text-base font-black text-white font-mono mt-0.5">
+        <div className="p-2.5 rounded-lg bg-[var(--c-sunken)]">
+          <div className="uppercase text-[var(--c-muted)] font-semibold">Votos válidos</div>
+          <div className="text-sm sm:text-base font-bold tabular-nums mt-0.5">
             {electionViewData.votosValidos.toLocaleString('es-CO')}
           </div>
         </div>
-        <div className="p-2.5 rounded-2xl bg-white/05 border border-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.15)]">
-          <div className="text-[10px] font-mono text-slate-400 uppercase">Voto en Blanco</div>
-          <div className="text-sm sm:text-base font-black text-sky-300 font-mono mt-0.5">
+        <div className="p-2.5 rounded-lg bg-[var(--c-sunken)]">
+          <div className="uppercase text-[var(--c-muted)] font-semibold">Voto en blanco</div>
+          <div className="text-sm sm:text-base font-bold tabular-nums mt-0.5">
             {electionViewData.votosBlanco.toLocaleString('es-CO')}
           </div>
         </div>
-        <div className="p-2.5 rounded-2xl bg-white/05 border border-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.15)]">
-          <div className="text-[10px] font-mono text-slate-400 uppercase">Nulos / No Marc.</div>
-          <div className="text-sm sm:text-base font-black text-rose-300 font-mono mt-0.5">
+        <div className="p-2.5 rounded-lg bg-[var(--c-sunken)]">
+          <div className="uppercase text-[var(--c-muted)] font-semibold">Nulos / no marc.</div>
+          <div className="text-sm sm:text-base font-bold tabular-nums mt-0.5">
             {(electionViewData.votosNulos + electionViewData.votosNoMarcados).toLocaleString('es-CO')}
           </div>
         </div>
       </div>
 
       {/* 5. Candidates and Parties List */}
-      <div className="space-y-2.5 max-h-80 overflow-y-auto pr-1">
+      <div className="flex flex-col gap-2 max-h-80 overflow-y-auto pr-1">
         {electionViewData.candidatesList.length === 0 ? (
-          <div className="p-4 text-center text-xs text-slate-400 italic">
+          <div className="p-4 text-center text-xs text-[var(--c-muted)] italic">
             No se registran datos electorales para este periodo y corporación.
           </div>
         ) : (
@@ -918,29 +926,29 @@ export const E24HistoricalViewer: React.FC<E24HistoricalViewerProps> = ({
             const pctVal = Number(cand.percentage.toFixed(1));
 
             return (
-              <div 
-                key={cand.id || idx} 
-                className="p-3 rounded-2xl bg-white/05 hover:bg-white/10 border border-white/10 space-y-2 transition-all"
+              <div
+                key={cand.id || idx}
+                className="p-3 rounded-xl border border-[var(--c-border)] bg-[var(--c-surface)] flex flex-col gap-2"
               >
                 <div className="flex items-center justify-between text-xs">
                   <div className="flex items-center gap-2 truncate">
-                    <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-black font-mono shrink-0 ${
-                      idx === 0 
-                        ? 'bg-amber-400/25 text-amber-300 border border-amber-400/40 shadow-[0_0_8px_rgba(251,191,36,0.3)]' 
-                        : 'bg-white/15 text-white'
+                    <span className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold tabular-nums shrink-0 ${
+                      idx === 0
+                        ? 'bg-[var(--c-accent-soft)] text-[var(--c-accent-text)]'
+                        : 'bg-[var(--c-border)] text-[var(--c-muted)]'
                     }`}>
                       {idx + 1}
                     </span>
-                    <span className="font-bold text-white truncate text-xs sm:text-sm" title={cand.name}>
+                    <span className="font-bold truncate text-xs sm:text-sm" title={cand.name}>
                       {cand.shortName || cand.name}
                     </span>
                   </div>
 
                   <div className="flex items-center gap-2 shrink-0 text-right">
-                    <span className="font-mono text-emerald-400 font-black text-xs sm:text-sm">
+                    <span className="font-bold text-xs sm:text-sm tabular-nums">
                       {pctVal}%
                     </span>
-                    <span className="text-[10px] font-mono text-slate-400">
+                    <span className="text-xs text-[var(--c-muted)] tabular-nums">
                       ({cand.votes.toLocaleString('es-CO')})
                     </span>
 
@@ -948,7 +956,7 @@ export const E24HistoricalViewer: React.FC<E24HistoricalViewerProps> = ({
                     {hasSub && (
                       <button
                         onClick={() => setExpandedPartyId(isExpanded ? null : cand.id)}
-                        className="p-1 rounded-lg bg-white/10 hover:bg-white/20 text-slate-300 transition ml-1"
+                        className="p-1 rounded-md border border-[var(--c-border)] bg-[var(--c-surface)] text-[var(--c-muted)] hover:text-[var(--c-ink)] transition ml-1"
                         title={isExpanded ? 'Ocultar candidatos' : 'Ver candidatos destacados'}
                       >
                         {isExpanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
@@ -957,42 +965,42 @@ export const E24HistoricalViewer: React.FC<E24HistoricalViewerProps> = ({
                   </div>
                 </div>
 
-                {/* Animated Progress Bar */}
-                <div className="w-full bg-slate-900/80 h-2 rounded-full overflow-hidden border border-white/05">
+                {/* Progress Bar */}
+                <div className="w-full h-2 rounded-full overflow-hidden bg-[var(--c-border)]">
                   <div
-                    style={{ 
+                    style={{
                       width: `${Math.min(pctVal, 100)}%`,
-                      backgroundColor: cand.color || '#38bdf8'
+                      backgroundColor: cand.color || 'var(--c-accent)'
                     }}
-                    className="h-full rounded-full transition-all duration-500 shadow-[0_0_8px_currentColor]"
+                    className="h-full rounded-full transition-all duration-500"
                   />
                 </div>
 
                 {/* Metadata Row: Party on Left, Ideology Badge on Right */}
-                <div className="flex items-center justify-between text-[9px] text-slate-400 pt-0.5">
+                <div className="flex items-center justify-between text-xs text-[var(--c-muted)] pt-0.5">
                   <span className="truncate max-w-[200px]" title={cand.partyName}>
                     {cand.partyName}
                   </span>
-                  <span className="font-mono font-bold uppercase tracking-wider text-slate-300 px-1.5 py-0.5 rounded bg-white/05 border border-white/10">
+                  <span className="font-bold uppercase tracking-wide px-2 py-0.5 rounded-md bg-[var(--c-border)] text-[var(--c-muted)]">
                     {cand.ideology}
                   </span>
                 </div>
 
                 {/* Expandable Candidate Breakdown (preferential lists) */}
                 {isExpanded && hasSub && (
-                  <div className="pt-2 mt-2 border-t border-white/10 space-y-1.5 animate-fadeIn">
-                    <div className="text-[10px] font-mono uppercase text-sky-400 font-bold flex items-center gap-1">
+                  <div className="pt-2 mt-1 border-t border-[var(--c-border)] flex flex-col gap-1.5">
+                    <div className="text-xs uppercase font-bold text-[var(--c-muted)] flex items-center gap-1">
                       <Users className="w-3 h-3" />
                       <span>Candidatos más votados de la lista:</span>
                     </div>
                     <div className="grid grid-cols-1 gap-1 pl-2">
                       {cand.subCandidates!.map((sc, sIdx) => (
-                        <div key={sIdx} className="flex items-center justify-between text-[10px] py-1 border-b border-white/05 last:border-0">
-                          <span className="text-slate-200 truncate flex items-center gap-1.5">
-                            <span className="px-1 rounded bg-white/10 font-mono text-[9px] text-slate-300">#{sc.number}</span>
+                        <div key={sIdx} className="flex items-center justify-between text-xs py-1 border-t border-[var(--c-border)] first:border-0">
+                          <span className="truncate flex items-center gap-1.5">
+                            <span className="px-1 rounded bg-[var(--c-sunken)] text-xs text-[var(--c-muted)]">#{sc.number}</span>
                             <span>{sc.name}</span>
                           </span>
-                          <span className="font-mono text-emerald-300 font-bold ml-2 shrink-0">
+                          <span className="font-bold ml-2 shrink-0 tabular-nums">
                             ~{sc.votes.toLocaleString('es-CO')} votos
                           </span>
                         </div>

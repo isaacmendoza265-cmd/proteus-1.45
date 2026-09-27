@@ -67,96 +67,97 @@ Enfoque Narrativo: ${candidateProfile.tonoNarrativo || 'Firmeza y honestidad'}.`
   };
 
   return (
-    <div className="space-y-6 animate-fadeIn pb-12">
-      {/* 1. Header Banner */}
-      <div className="p-6 rounded-3xl bg-slate-950/40 backdrop-blur-3xl border border-white/20 shadow-[0_20px_50px_rgba(0,0,0,0.5),inset_0_1.5px_2px_rgba(255,255,255,0.4)] relative overflow-hidden">
+    <div className="proteus-civico space-y-4 pb-12">
+      {/* Cabecera */}
+      <div className="p-5 rounded-2xl border border-[var(--c-border)] bg-[var(--c-surface)]">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div>
-            <div className="flex items-center gap-2 mb-2">
-              <span className="px-3 py-1 rounded-full text-[10px] font-mono font-black uppercase tracking-wider bg-gradient-to-r from-emerald-400/20 via-sky-400/20 to-purple-500/30 text-emerald-300 border border-emerald-400/50 shadow-[0_0_12px_rgba(52,211,153,0.3)] flex items-center gap-1.5">
-                <Bot className="w-3.5 h-3.5 text-emerald-400" />
+            <div className="flex flex-wrap items-center gap-2 mb-2">
+              <span className="px-2.5 py-0.5 rounded-md text-xs font-bold uppercase tracking-wide bg-[var(--c-accent-soft)] text-[var(--c-accent-text)] flex items-center gap-1.5">
+                <Bot className="w-3.5 h-3.5" />
                 Cuadrilla de Agentes IA Especializados
               </span>
-              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-sky-500/20 text-sky-300 border border-sky-400/30">
+              <span className="px-2.5 py-0.5 rounded-md text-xs font-bold bg-[var(--c-border)] text-[var(--c-muted)]">
                 5 Agentes Autónomos
               </span>
             </div>
-            <h1 className="text-2xl lg:text-3xl font-black tracking-tight text-white flex items-center gap-3">
+            <h1 className="font-titulo text-2xl lg:text-[28px] leading-tight font-medium flex items-center gap-3">
               <span>Revisores: equipo de agentes</span>
             </h1>
-            <p className="text-slate-300 text-xs sm:text-sm mt-1 max-w-3xl">
+            <p className="text-[var(--c-muted)] text-xs sm:text-sm mt-1 max-w-3xl">
               Equipo de agentes autónomos para investigar, filtrar e interpretar información territorial, segmentar votantes, redactar discursos y auditar la semiótica del candidato.
             </p>
           </div>
 
-          {/* Quick Metrics */}
+          {/* Métricas rápidas */}
           <div className="flex items-center gap-3 shrink-0">
-            <div className="p-3 rounded-2xl bg-white/05 border border-white/15 backdrop-blur-xl text-right">
-              <div className="text-[10px] font-mono uppercase text-slate-400 font-bold">Estado de Cuadrilla</div>
-              <div className="text-sm font-black text-emerald-400 mt-0.5 flex items-center gap-1.5 justify-end">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <div className="p-3 rounded-xl bg-[var(--c-sunken)] text-right">
+              <div className="text-xs uppercase text-[var(--c-muted)] font-bold">Estado de Cuadrilla</div>
+              <div className="text-sm font-bold text-[var(--c-ok)] mt-0.5 flex items-center gap-1.5 justify-end">
+                <span className="w-2 h-2 rounded-full bg-[var(--c-ok)]" />
                 5 Agentes Operativos
               </div>
-              <div className="text-[10px] text-slate-400 font-mono">Consola Proteus 1.2</div>
+              <div className="text-xs text-[var(--c-muted)]">Consola Proteus 1.2</div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* 2. 5 Agents Grid */}
+      {/* Cuadrícula de los 5 agentes */}
       <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
         {PROTEUS_AGENT_TEAM.map((agent) => (
           <button
             key={agent.id}
             onClick={() => setSelectedAgentId(agent.id)}
-            className={`p-4 rounded-3xl text-left transition-all duration-300 relative overflow-hidden flex flex-col justify-between space-y-3 ${
+            aria-pressed={selectedAgentId === agent.id}
+            className={`p-3 rounded-xl text-left flex flex-col justify-between space-y-3 border ${
               selectedAgentId === agent.id
-                ? 'bg-gradient-to-br from-white/15 to-white/05 border-2 border-sky-400 shadow-[0_0_25px_rgba(56,189,248,0.4),inset_0_1px_1px_rgba(255,255,255,0.4)] scale-[1.02]'
-                : 'bg-slate-950/30 hover:bg-white/10 border border-white/15'
+                ? 'bg-[var(--c-accent-soft)] border-[var(--c-accent)]'
+                : 'bg-[var(--c-surface)] border-[var(--c-border)]'
             }`}
           >
             <div>
               <div className="flex items-center justify-between">
-                <div className={`w-8 h-8 rounded-xl bg-gradient-to-br ${agent.avatarColor} flex items-center justify-center text-white shadow-md`}>
+                <div className="w-8 h-8 rounded-lg bg-[var(--c-accent)] flex items-center justify-center text-white">
                   {agent.id === 'agent-sentinel-territory' && <Search className="w-4 h-4" />}
                   {agent.id === 'agent-strat-segment' && <Brain className="w-4 h-4" />}
                   {agent.id === 'agent-creative-director' && <Megaphone className="w-4 h-4" />}
                   {agent.id === 'agent-media-vision' && <Video className="w-4 h-4" />}
                   {agent.id === 'agent-sync-nexus' && <HardDrive className="w-4 h-4" />}
                 </div>
-                <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-white/10 text-slate-300 font-bold">
+                <span className="text-xs px-2 py-0.5 rounded-md bg-[var(--c-border)] text-[var(--c-muted)] font-bold">
                   v{agent.version}
                 </span>
               </div>
               <div className="mt-3">
-                <div className="text-[10px] font-mono text-sky-400 font-bold uppercase truncate">
+                <div className="text-xs text-[var(--c-accent)] font-bold uppercase truncate">
                   {agent.codeName}
                 </div>
-                <div className="text-xs font-black text-white mt-0.5 leading-tight line-clamp-2">
+                <div className="text-xs font-bold text-[var(--c-ink)] mt-0.5 leading-tight line-clamp-2">
                   {agent.name}
                 </div>
               </div>
             </div>
-            <div className="text-[10px] text-slate-400 font-medium line-clamp-2 pt-2 border-t border-white/10">
+            <div className="text-xs text-[var(--c-muted)] font-medium line-clamp-2 pt-2 border-t border-[var(--c-border)]">
               {agent.category}
             </div>
           </button>
         ))}
       </div>
 
-      {/* 3. Selected Agent Detailed Workspace */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-        {/* Agent Profile & Config */}
-        <div className="lg:col-span-4 p-5 rounded-3xl bg-slate-950/40 backdrop-blur-2xl border border-white/15 shadow-[0_10px_30px_rgba(0,0,0,0.4)] space-y-4">
-          <div className="flex items-center gap-3 border-b border-white/10 pb-3">
-            <div className={`w-10 h-10 rounded-2xl bg-gradient-to-br ${activeAgent.avatarColor} flex items-center justify-center text-white shadow-lg`}>
+      {/* Espacio de trabajo del agente seleccionado */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+        {/* Perfil y configuración del agente */}
+        <div className="lg:col-span-4 p-4 rounded-2xl border border-[var(--c-border)] bg-[var(--c-surface)] space-y-4">
+          <div className="flex items-center gap-3 border-b border-[var(--c-border)] pb-3">
+            <div className="w-10 h-10 rounded-xl bg-[var(--c-accent)] flex items-center justify-center text-white">
               <Bot className="w-5 h-5" />
             </div>
             <div>
-              <div className="text-[10px] font-mono uppercase text-sky-400 font-bold">
+              <div className="text-xs uppercase text-[var(--c-accent)] font-bold">
                 {activeAgent.codeName}
               </div>
-              <h3 className="text-sm font-black text-white">
+              <h3 className="text-sm font-bold text-[var(--c-ink)]">
                 {activeAgent.name}
               </h3>
             </div>
@@ -164,15 +165,15 @@ Enfoque Narrativo: ${candidateProfile.tonoNarrativo || 'Firmeza y honestidad'}.`
 
           <div className="space-y-3 text-xs">
             <div>
-              <div className="text-[10px] font-mono uppercase text-slate-400 font-bold">Misión Principal:</div>
-              <p className="text-slate-200 mt-1 leading-relaxed">
+              <div className="text-xs uppercase text-[var(--c-muted)] font-bold">Misión Principal:</div>
+              <p className="text-[var(--c-ink)] mt-1 leading-relaxed">
                 {activeAgent.mission}
               </p>
             </div>
 
             <div>
-              <div className="text-[10px] font-mono uppercase text-slate-400 font-bold">Responsabilidades:</div>
-              <ul className="list-disc pl-4 space-y-1 text-slate-300 mt-1 text-[11px]">
+              <div className="text-xs uppercase text-[var(--c-muted)] font-bold">Responsabilidades:</div>
+              <ul className="list-disc pl-4 space-y-1 text-[var(--c-muted)] mt-1 text-xs">
                 {activeAgent.responsibilities.map((r, i) => (
                   <li key={i}>{r}</li>
                 ))}
@@ -180,10 +181,10 @@ Enfoque Narrativo: ${candidateProfile.tonoNarrativo || 'Firmeza y honestidad'}.`
             </div>
 
             <div>
-              <div className="text-[10px] font-mono uppercase text-slate-400 font-bold">Dominios Asignados:</div>
+              <div className="text-xs uppercase text-[var(--c-muted)] font-bold">Dominios Asignados:</div>
               <div className="flex flex-wrap gap-1 mt-1">
                 {activeAgent.assignedDataDomains.map((d, i) => (
-                  <span key={i} className="px-2 py-0.5 rounded-md bg-white/05 border border-white/10 text-[10px] text-slate-300">
+                  <span key={i} className="px-2 py-0.5 rounded-md bg-[var(--c-sunken)] text-xs text-[var(--c-muted)]">
                     {d}
                   </span>
                 ))}
@@ -191,10 +192,10 @@ Enfoque Narrativo: ${candidateProfile.tonoNarrativo || 'Firmeza y honestidad'}.`
             </div>
 
             <div>
-              <div className="text-[10px] font-mono uppercase text-slate-400 font-bold">Herramientas & APIs:</div>
+              <div className="text-xs uppercase text-[var(--c-muted)] font-bold">Herramientas & APIs:</div>
               <div className="flex flex-wrap gap-1 mt-1">
                 {activeAgent.toolsAndAPIs.map((t, i) => (
-                  <span key={i} className="px-2 py-0.5 rounded-md bg-sky-500/15 border border-sky-400/30 text-[10px] text-sky-300 font-medium">
+                  <span key={i} className="px-2 py-0.5 rounded-md bg-[var(--c-info-soft)] text-xs text-[var(--c-info)] font-medium">
                     {t}
                   </span>
                 ))}
@@ -203,76 +204,76 @@ Enfoque Narrativo: ${candidateProfile.tonoNarrativo || 'Firmeza y honestidad'}.`
           </div>
         </div>
 
-        {/* Agent Execution Console */}
-        <div className="lg:col-span-8 p-5 rounded-3xl bg-slate-950/45 backdrop-blur-3xl border border-white/20 shadow-[0_15px_40px_rgba(0,0,0,0.5)] flex flex-col justify-between space-y-4">
+        {/* Consola de ejecución del agente */}
+        <div className="lg:col-span-8 p-4 rounded-2xl border border-[var(--c-border)] bg-[var(--c-surface)] flex flex-col justify-between space-y-4">
           <div className="space-y-3">
-            <div className="flex items-center justify-between border-b border-white/10 pb-3">
+            <div className="flex items-center justify-between border-b border-[var(--c-border)] pb-3">
               <div className="flex items-center gap-2">
-                <Terminal className="w-4 h-4 text-emerald-400" />
-                <h3 className="text-xs font-mono uppercase text-white font-bold tracking-wider">
-                  Consola de Ejecución • {activeAgent.codeName}
+                <Terminal className="w-4 h-4 text-[var(--c-accent)]" />
+                <h3 className="text-xs uppercase text-[var(--c-ink)] font-bold tracking-wide">
+                  Consola de Ejecución · {activeAgent.codeName}
                 </h3>
               </div>
-              <span className="text-[10px] font-mono text-emerald-300 flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-xs text-[var(--c-ok)] flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-[var(--c-ok)]" />
                 Pronto para Ejecutar
               </span>
             </div>
 
-            {/* Inputs */}
+            {/* Entradas */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="space-y-1">
-                <label className="text-[11px] font-semibold text-slate-300">Municipio de Referencia:</label>
+                <label className="text-xs font-semibold text-[var(--c-muted)]">Municipio de Referencia:</label>
                 <input
                   type="text"
                   value={targetMuniQuery}
                   onChange={(e) => setTargetMuniQuery(e.target.value)}
                   placeholder="Ej. Rionegro, Apartadó, Medellín..."
-                  className="w-full px-3 py-2 rounded-xl bg-white/10 border border-white/20 text-white text-xs font-medium focus:outline-none focus:border-sky-400"
+                  className="w-full px-3 py-2 text-xs font-medium"
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-[11px] font-semibold text-slate-300">Candidato Vinculado:</label>
-                <div className="px-3 py-2 rounded-xl bg-black/30 border border-white/10 text-amber-300 text-xs font-bold">
+                <label className="text-xs font-semibold text-[var(--c-muted)]">Candidato Vinculado:</label>
+                <div className="px-3 py-2 rounded-lg bg-[var(--c-sunken)] text-[var(--c-ink)] text-xs font-bold">
                   {candidateProfile.nombre} ({candidateProfile.afiliacionPartidista || 'Independiente'})
                 </div>
               </div>
             </div>
 
             <div className="space-y-1">
-              <label className="text-[11px] font-semibold text-slate-300">Instrucción / Misión Específica:</label>
+              <label className="text-xs font-semibold text-[var(--c-muted)]">Instrucción / Misión Específica:</label>
               <textarea
                 value={agentTaskPrompt}
                 onChange={(e) => setAgentTaskPrompt(e.target.value)}
                 rows={2}
-                className="w-full px-3 py-2 rounded-xl bg-white/10 border border-white/20 text-white text-xs font-medium focus:outline-none focus:border-sky-400 resize-none"
+                className="w-full px-3 py-2 text-xs font-medium resize-none"
               />
             </div>
 
             <button
               onClick={handleExecuteAgentTask}
               disabled={isRunningTask}
-              className="w-full py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-sky-600 hover:from-emerald-400 hover:to-sky-500 text-white font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(52,211,153,0.3)] transition disabled:opacity-50"
+              className="w-full min-h-9 px-3 rounded-lg bg-[var(--c-accent)] text-white font-semibold text-xs flex items-center justify-center gap-2 disabled:opacity-50"
             >
-              <Sparkles className={`w-4 h-4 text-emerald-200 ${isRunningTask ? 'animate-spin' : ''}`} />
+              <Sparkles className={`w-4 h-4 ${isRunningTask ? 'animate-spin' : ''}`} />
               <span>{isRunningTask ? 'Agente Procesando Misión...' : `Ejecutar Misión con ${activeAgent.codeName}`}</span>
             </button>
 
-            {/* Execution Result Log */}
+            {/* Registro del resultado de ejecución */}
             <div className="mt-4">
-              <div className="text-[10px] font-mono uppercase text-slate-400 font-bold mb-1">
+              <div className="text-xs uppercase text-[var(--c-muted)] font-bold mb-1">
                 Salida de la Ejecución:
               </div>
-              <div className="p-4 rounded-2xl bg-black/40 border border-white/10 min-h-[220px] max-h-[350px] overflow-y-auto text-xs text-slate-200 leading-relaxed font-mono whitespace-pre-line">
+              <div className="p-4 rounded-xl bg-[var(--c-sunken)] min-h-[220px] max-h-[350px] overflow-y-auto text-xs text-[var(--c-ink)] leading-relaxed font-mono whitespace-pre-line">
                 {isRunningTask ? (
-                  <div className="flex flex-col items-center justify-center py-16 space-y-2 text-center text-slate-400">
-                    <RefreshCw className="w-6 h-6 text-emerald-400 animate-spin" />
+                  <div className="flex flex-col items-center justify-center py-16 space-y-2 text-center text-[var(--c-muted)]">
+                    <RefreshCw className="w-6 h-6 text-[var(--c-accent)] animate-spin" />
                     <span>El agente {activeAgent.codeName} está consultando el Repositorio Proteus y cruzando fuentes con Gemini...</span>
                   </div>
                 ) : agentExecutionLog ? (
                   agentExecutionLog
                 ) : (
-                  <div className="text-slate-500 py-12 text-center">
+                  <div className="text-[var(--c-muted)] py-12 text-center">
                     Selecciona un agente y haz clic en "Ejecutar Misión" para ver su análisis especializado.
                   </div>
                 )}
@@ -280,7 +281,7 @@ Enfoque Narrativo: ${candidateProfile.tonoNarrativo || 'Firmeza y honestidad'}.`
             </div>
           </div>
 
-          <div className="text-[10px] text-slate-400 border-t border-white/10 pt-2 flex items-center justify-between">
+          <div className="text-xs text-[var(--c-muted)] border-t border-[var(--c-border)] pt-2 flex items-center justify-between">
             <span>Arquitectura Multi-Agente Autónoma Proteus</span>
             <span>Grounding: DANE + Registraduría + CIEF + Gemini Vision</span>
           </div>

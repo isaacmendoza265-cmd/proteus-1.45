@@ -264,45 +264,45 @@ export const AntigravityAgentConsole: React.FC = () => {
   };
 
   return (
-    <div id="antigravity-agent-module" className="space-y-6">
+    <div id="antigravity-agent-module" className="proteus-civico space-y-6">
       {/* Header and status banner */}
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 text-white shadow-xl">
+      <div className="rounded-2xl border border-[var(--c-border)] bg-[var(--c-surface)] p-5">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex items-center space-x-3.5">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-blue-700 flex items-center justify-center shadow-lg shadow-indigo-500/20">
-              <Bot className="w-6 h-6 text-white" />
+          <div className="flex items-center gap-3.5">
+            <div className="w-12 h-12 rounded-xl bg-[var(--c-accent-soft)] flex items-center justify-center shrink-0">
+              <Bot className="w-6 h-6 text-[var(--c-accent)]" />
             </div>
             <div>
-              <div className="flex items-center space-x-2">
-                <h2 className="text-xl font-black tracking-tight text-white">
+              <div className="flex items-center gap-2 flex-wrap">
+                <h2 className="font-titulo m-0 text-xl leading-tight font-medium">
                   Antigravity Agent
                 </h2>
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                <span className="px-2 py-0.5 rounded-md text-xs font-bold bg-[var(--c-border)] text-[var(--c-muted)]">
                   Google Interactions API
                 </span>
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="px-2 py-0.5 rounded-md text-xs font-bold bg-[var(--c-ok-soft)] text-[var(--c-ok)] flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[var(--c-ok)]" />
                   API Key Integrada
                 </span>
               </div>
-              <p className="text-xs text-slate-400 mt-0.5">
+              <p className="m-0 text-xs text-[var(--c-muted)] mt-0.5">
                 Agente autónomo de ingeniería de software y análisis electoral avanzado con ejecución en sandbox remoto.
               </p>
             </div>
           </div>
 
-          <div className="flex items-center space-x-2 bg-slate-800/80 px-3.5 py-2 rounded-xl border border-slate-700/60 text-xs">
-            <ShieldCheck className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+          <div className="flex items-center gap-2 bg-[var(--c-sunken)] px-3.5 py-2 rounded-lg border border-[var(--c-border)] text-xs">
+            <ShieldCheck className="w-4 h-4 text-[var(--c-ok)] shrink-0" />
             <div className="text-left">
-              <p className="text-[10px] uppercase font-bold text-slate-400">Servicio Autenticado</p>
-              <p className="text-[11px] font-semibold text-slate-200">
+              <p className="m-0 text-xs font-bold text-[var(--c-muted)]">Servicio Autenticado</p>
+              <p className="m-0 text-xs font-semibold">
                 {isLoadingStatus ? 'Verificando...' : status?.ready ? 'Conexión activa con Antigravity' : 'Servicio en espera'}
               </p>
             </div>
             <button
               onClick={fetchStatus}
               title="Refrescar estado de conexión"
-              className="p-1.5 hover:bg-slate-700 rounded-lg text-slate-400 hover:text-white transition-colors"
+              className="p-1.5 rounded-lg border border-[var(--c-border)] bg-[var(--c-surface)] text-[var(--c-muted)]"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${isLoadingStatus ? 'animate-spin' : ''}`} />
             </button>
@@ -310,22 +310,22 @@ export const AntigravityAgentConsole: React.FC = () => {
         </div>
 
         {/* Status specs pill row */}
-        <div className="mt-4 pt-3.5 border-t border-slate-800/80 grid grid-cols-2 md:grid-cols-4 gap-3 text-[11px]">
-          <div className="bg-slate-800/40 rounded-lg p-2.5 border border-slate-700/40">
-            <span className="text-slate-400 block text-[10px] font-bold uppercase">Identificador de Agente</span>
-            <span className="font-mono text-indigo-300">agents/antigravity</span>
+        <div className="mt-4 pt-3.5 border-t border-[var(--c-border)] grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
+          <div className="bg-[var(--c-sunken)] rounded-lg p-2.5 border border-[var(--c-border)]">
+            <span className="text-[var(--c-muted)] block font-bold">Identificador de Agente</span>
+            <span className="font-mono">agents/antigravity</span>
           </div>
-          <div className="bg-slate-800/40 rounded-lg p-2.5 border border-slate-700/40">
-            <span className="text-slate-400 block text-[10px] font-bold uppercase">Entorno de Ejecución</span>
-            <span className="font-mono text-emerald-300">Sandbox Remoto (Remote)</span>
+          <div className="bg-[var(--c-sunken)] rounded-lg p-2.5 border border-[var(--c-border)]">
+            <span className="text-[var(--c-muted)] block font-bold">Entorno de Ejecución</span>
+            <span className="font-mono">Sandbox Remoto (Remote)</span>
           </div>
-          <div className="bg-slate-800/40 rounded-lg p-2.5 border border-slate-700/40">
-            <span className="text-slate-400 block text-[10px] font-bold uppercase">Modo de Comunicación</span>
-            <span className="font-mono text-blue-300">Streaming SSE / JSON API</span>
+          <div className="bg-[var(--c-sunken)] rounded-lg p-2.5 border border-[var(--c-border)]">
+            <span className="text-[var(--c-muted)] block font-bold">Modo de Comunicación</span>
+            <span className="font-mono">Streaming SSE / JSON API</span>
           </div>
-          <div className="bg-slate-800/40 rounded-lg p-2.5 border border-slate-700/40">
-            <span className="text-slate-400 block text-[10px] font-bold uppercase">Seguridad de Clave</span>
-            <span className="text-slate-200 font-medium">Server-side proxy protegido</span>
+          <div className="bg-[var(--c-sunken)] rounded-lg p-2.5 border border-[var(--c-border)]">
+            <span className="text-[var(--c-muted)] block font-bold">Seguridad de Clave</span>
+            <span className="font-medium">Server-side proxy protegido</span>
           </div>
         </div>
       </div>
@@ -335,13 +335,13 @@ export const AntigravityAgentConsole: React.FC = () => {
         {/* Left column: Controls and Presets (5 cols) */}
         <div className="lg:col-span-5 space-y-4">
           {/* Presets card */}
-          <div className="bg-slate-900/60 backdrop-blur-xl border border-white/10 shadow-xl border border-white/10 rounded-2xl p-4 shadow-sm">
+          <div className="rounded-2xl border border-[var(--c-border)] bg-[var(--c-surface)] p-4">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-200 flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
+              <h3 className="text-xs font-bold flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-[var(--c-accent)]" />
                 Tareas Preconfiguradas de Proteus
               </h3>
-              <span className="text-[10px] font-medium text-slate-400">1-clic para cargar</span>
+              <span className="text-xs font-medium text-[var(--c-muted)]">1-clic para cargar</span>
             </div>
 
             <div className="space-y-2">
@@ -349,17 +349,17 @@ export const AntigravityAgentConsole: React.FC = () => {
                 <button
                   key={preset.id}
                   onClick={() => handleSelectPreset(preset)}
-                  className="w-full text-left p-2.5 rounded-xl border border-white/10 hover:border-indigo-300 bg-white/[0.04] backdrop-blur-sm border border-white/10/60 hover:bg-indigo-50/40 transition-all group"
+                  className="w-full text-left p-2.5 rounded-xl border border-[var(--c-border)] bg-[var(--c-surface)] hover:border-[var(--c-accent)]"
                 >
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-white group-hover:text-indigo-900">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-xs font-bold">
                       {preset.title}
                     </span>
-                    <span className="text-[9px] font-bold px-2 py-0.5 rounded-md bg-slate-900/60 backdrop-blur-xl border border-white/10 shadow-xl border border-white/10 text-slate-300">
+                    <span className="shrink-0 text-xs font-bold px-2 py-0.5 rounded-md bg-[var(--c-border)] text-[var(--c-muted)]">
                       {preset.badge}
                     </span>
                   </div>
-                  <p className="text-[11px] text-slate-400 mt-1 line-clamp-2 leading-relaxed">
+                  <p className="text-xs text-[var(--c-muted)] mt-1 line-clamp-2 leading-relaxed">
                     {preset.input}
                   </p>
                 </button>
@@ -368,14 +368,14 @@ export const AntigravityAgentConsole: React.FC = () => {
           </div>
 
           {/* Form input card */}
-          <div className="bg-slate-900/60 backdrop-blur-xl border border-white/10 shadow-xl border border-white/10 rounded-2xl p-5 shadow-sm space-y-4">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-200 flex items-center gap-1.5">
-              <Terminal className="w-3.5 h-3.5 text-slate-300" />
+          <div className="rounded-2xl border border-[var(--c-border)] bg-[var(--c-surface)] p-5 space-y-4">
+            <h3 className="text-xs font-bold flex items-center gap-1.5">
+              <Terminal className="w-3.5 h-3.5 text-[var(--c-muted)]" />
               Parámetros de la Tarea para Antigravity
             </h3>
 
             <div>
-              <label className="block text-xs font-bold text-slate-200 mb-1">
+              <label className="block text-xs font-bold mb-1">
                 Instrucción / Tarea para el Agente (Input) *
               </label>
               <textarea
@@ -383,12 +383,12 @@ export const AntigravityAgentConsole: React.FC = () => {
                 onChange={(e) => setTaskInput(e.target.value)}
                 placeholder="Ejemplo: Refactoriza la función de agregación de votos en Antioquia agregando validación de umbral y pruebas unitarias..."
                 rows={4}
-                className="w-full text-xs font-mono bg-white/[0.04] backdrop-blur-sm border border-white/10 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all resize-y"
+                className="w-full text-xs font-mono rounded-xl p-3 resize-y"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-200 mb-1">
+              <label className="block text-xs font-bold mb-1">
                 Contexto / Repositorio (Background)
               </label>
               <textarea
@@ -396,21 +396,21 @@ export const AntigravityAgentConsole: React.FC = () => {
                 onChange={(e) => setBackgroundContext(e.target.value)}
                 placeholder="Ejemplo: Repositorio Proteus Nacional. Aplicación React 19 + TypeScript + Vite. Arquitectura full-stack con Express y servidor autónomo."
                 rows={2}
-                className="w-full text-xs bg-white/[0.04] backdrop-blur-sm border border-white/10 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all resize-y"
+                className="w-full text-xs rounded-xl p-3 resize-y"
               />
             </div>
 
-            <div className="flex items-center justify-between pt-2 border-t border-white/10 text-xs">
-              <label className="flex items-center space-x-2 cursor-pointer select-none">
+            <div className="flex items-center justify-between pt-2 border-t border-[var(--c-border)] text-xs">
+              <label className="flex items-center gap-2 cursor-pointer select-none">
                 <input
                   type="checkbox"
                   checked={isStreamingMode}
                   onChange={(e) => setIsStreamingMode(e.target.checked)}
-                  className="rounded text-indigo-600 focus:ring-indigo-500 border-slate-300 w-4 h-4"
+                  className="w-4 h-4"
                 />
-                <span className="font-semibold text-slate-200">Streaming en tiempo real (SSE)</span>
+                <span className="font-semibold">Streaming en tiempo real (SSE)</span>
               </label>
-              <span className="text-[10px] text-slate-400">v1beta / preview</span>
+              <span className="text-xs text-[var(--c-muted)]">v1beta / preview</span>
             </div>
 
             {/* Actions */}
@@ -420,7 +420,7 @@ export const AntigravityAgentConsole: React.FC = () => {
                   id="btn-run-antigravity"
                   onClick={handleRunAntigravity}
                   disabled={!taskInput.trim()}
-                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-200 disabled:cursor-not-allowed text-white text-xs font-bold shadow-md shadow-indigo-600/20 transition-all"
+                  className="flex-1 min-h-9 flex items-center justify-center gap-2 px-4 rounded-lg bg-[var(--c-accent)] disabled:opacity-40 disabled:cursor-not-allowed text-white text-xs font-semibold"
                 >
                   <Play className="w-3.5 h-3.5 fill-current" />
                   Ejecutar con Antigravity
@@ -429,7 +429,7 @@ export const AntigravityAgentConsole: React.FC = () => {
                 <button
                   id="btn-stop-antigravity"
                   onClick={handleStop}
-                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold shadow-md shadow-rose-600/20 transition-all"
+                  className="flex-1 min-h-9 flex items-center justify-center gap-2 px-4 rounded-lg bg-[var(--c-warn-solid)] text-white text-xs font-semibold"
                 >
                   <Square className="w-3.5 h-3.5 fill-current" />
                   Detener Ejecución
@@ -443,7 +443,7 @@ export const AntigravityAgentConsole: React.FC = () => {
                   setRawOutput('');
                   setExecutionLogs([]);
                 }}
-                className="px-3 py-2.5 rounded-xl border border-white/10 hover:bg-slate-100 text-slate-300 text-xs font-semibold transition-colors"
+                className="min-h-9 px-3 rounded-lg border border-[var(--c-border)] bg-[var(--c-surface)] text-xs font-semibold"
                 title="Limpiar campos"
               >
                 Limpiar
@@ -455,25 +455,25 @@ export const AntigravityAgentConsole: React.FC = () => {
         {/* Right column: Terminal & Output (7 cols) */}
         <div className="lg:col-span-7 space-y-4">
           {/* Terminal Logs & Progress */}
-          <div className="bg-slate-950 border border-slate-800 rounded-2xl p-4 shadow-xl text-slate-100">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800 mb-3 text-xs">
-              <div className="flex items-center space-x-2">
-                <div className="flex space-x-1.5">
-                  <div className="w-3 h-3 rounded-full bg-rose-500/80" />
-                  <div className="w-3 h-3 rounded-full bg-amber-500/80" />
-                  <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
+          <div className="rounded-2xl border border-[var(--c-border)] bg-[var(--c-sunken)] p-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[var(--c-border)] mb-3 text-xs">
+              <div className="flex items-center gap-2">
+                <div className="flex gap-1.5">
+                  <div className="w-3 h-3 rounded-full bg-[var(--c-warn-solid)]" />
+                  <div className="w-3 h-3 rounded-full bg-[var(--c-warn)]" />
+                  <div className="w-3 h-3 rounded-full bg-[var(--c-ok)]" />
                 </div>
-                <span className="font-mono text-slate-400 text-[11px] ml-2">antigravity-agent://live-session</span>
+                <span className="font-mono text-[var(--c-muted)] text-xs ml-2">antigravity-agent://live-session</span>
               </div>
-              <div className="flex items-center space-x-3 text-[11px]">
+              <div className="flex items-center gap-3 text-xs">
                 {isRunning && (
-                  <span className="flex items-center gap-1.5 text-indigo-400 font-mono">
-                    <span className="w-2 h-2 rounded-full bg-indigo-500 animate-ping" />
+                  <span className="flex items-center gap-1.5 text-[var(--c-accent)] font-mono">
+                    <span className="w-2 h-2 rounded-full bg-[var(--c-accent)] animate-ping" />
                     Procesando en sandbox...
                   </span>
                 )}
                 {activeInteraction?.usage && (
-                  <span className="text-slate-400 font-mono text-[10px]">
+                  <span className="text-[var(--c-muted)] font-mono text-xs">
                     Tokens: {activeInteraction.usage.total_tokens || 0}
                   </span>
                 )}
@@ -481,14 +481,14 @@ export const AntigravityAgentConsole: React.FC = () => {
             </div>
 
             {/* Logs console */}
-            <div className="font-mono text-[11px] leading-relaxed max-h-48 overflow-y-auto space-y-1 text-slate-300 pr-2 scrollbar-thin">
+            <div className="font-mono text-xs leading-relaxed max-h-48 overflow-y-auto space-y-1 pr-2">
               {executionLogs.length === 0 ? (
-                <p className="text-slate-300 italic">Esperando que se inicie una tarea con el agente Antigravity...</p>
+                <p className="text-[var(--c-muted)] italic">Esperando que se inicie una tarea con el agente Antigravity...</p>
               ) : (
                 executionLogs.map((log, i) => (
-                  <div key={i} className="flex items-start space-x-2">
-                    <span className="text-slate-300 select-none">&gt;</span>
-                    <span className={log.includes('ERROR') ? 'text-rose-400 font-bold' : log.includes('completada') ? 'text-emerald-400 font-bold' : 'text-slate-300'}>
+                  <div key={i} className="flex items-start gap-2">
+                    <span className="text-[var(--c-muted)] select-none">&gt;</span>
+                    <span className={log.includes('ERROR') ? 'text-[var(--c-warn)] font-bold' : log.includes('completada') ? 'text-[var(--c-ok)] font-bold' : 'text-[var(--c-ink)]'}>
                       {log}
                     </span>
                   </div>
@@ -499,11 +499,11 @@ export const AntigravityAgentConsole: React.FC = () => {
           </div>
 
           {/* Result Output Viewer */}
-          <div className="bg-slate-900/60 backdrop-blur-xl border border-white/10 shadow-xl border border-white/10 rounded-2xl p-5 shadow-sm space-y-3">
-            <div className="flex items-center justify-between pb-3 border-b border-white/10">
-              <div className="flex items-center space-x-2">
-                <Code2 className="w-4 h-4 text-indigo-600" />
-                <h4 className="text-xs font-bold uppercase tracking-wider text-white">
+          <div className="rounded-2xl border border-[var(--c-border)] bg-[var(--c-surface)] p-5 space-y-3">
+            <div className="flex items-center justify-between pb-3 border-b border-[var(--c-border)]">
+              <div className="flex items-center gap-2">
+                <Code2 className="w-4 h-4 text-[var(--c-accent)]" />
+                <h4 className="text-xs font-bold">
                   Respuesta y Artefactos de Antigravity
                 </h4>
               </div>
@@ -511,12 +511,12 @@ export const AntigravityAgentConsole: React.FC = () => {
               {rawOutput && (
                 <button
                   onClick={handleCopy}
-                  className="flex items-center space-x-1.5 px-2.5 py-1 text-xs font-medium text-slate-300 hover:text-white bg-white/[0.04] backdrop-blur-sm border border-white/10 hover:bg-slate-100 border border-white/10 rounded-lg transition-colors"
+                  className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium border border-[var(--c-border)] bg-[var(--c-surface)] rounded-lg"
                 >
                   {copied ? (
                     <>
-                      <Check className="w-3.5 h-3.5 text-emerald-600" />
-                      <span className="text-emerald-700">Copiado</span>
+                      <Check className="w-3.5 h-3.5 text-[var(--c-ok)]" />
+                      <span className="text-[var(--c-ok)]">Copiado</span>
                     </>
                   ) : (
                     <>
@@ -529,25 +529,25 @@ export const AntigravityAgentConsole: React.FC = () => {
             </div>
 
             {errorMessage && (
-              <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-800 flex items-start gap-2">
-                <AlertCircle className="w-4 h-4 text-rose-600 flex-shrink-0 mt-0.5" />
+              <div className="p-3 bg-[var(--c-warn-soft)] border border-[var(--c-warn-solid)] rounded-xl text-xs text-[var(--c-warn)] flex items-start gap-2">
+                <AlertCircle className="w-4 h-4 text-[var(--c-warn)] shrink-0 mt-0.5" />
                 <div>
                   <p className="font-bold">Error en la ejecución de Antigravity:</p>
-                  <p className="font-mono text-[11px] mt-0.5">{errorMessage}</p>
+                  <p className="font-mono text-xs mt-0.5">{errorMessage}</p>
                 </div>
               </div>
             )}
 
-            <div className="min-h-[280px] max-h-[500px] overflow-y-auto p-4 bg-white/[0.04] backdrop-blur-sm border border-white/10 rounded-xl border border-white/10/80 text-xs text-white font-sans">
+            <div className="min-h-[280px] max-h-[500px] overflow-y-auto p-4 bg-[var(--c-sunken)] border border-[var(--c-border)] rounded-xl text-xs">
               {rawOutput ? (
-                <div className="markdown-body prose prose-sm max-w-none text-white">
+                <div className="markdown-body prose prose-sm max-w-none">
                   <ReactMarkdown>{rawOutput}</ReactMarkdown>
                 </div>
               ) : (
-                <div className="h-full flex flex-col items-center justify-center text-center p-8 text-slate-400 space-y-2">
-                  <Bot className="w-8 h-8 text-slate-300" />
+                <div className="h-full flex flex-col items-center justify-center text-center p-8 text-[var(--c-muted)] space-y-2">
+                  <Bot className="w-8 h-8 text-[var(--c-muted)]" />
                   <p className="text-xs font-medium">Los resultados generados por el agente Antigravity aparecerán aquí en tiempo real.</p>
-                  <p className="text-[11px] text-slate-400 max-w-sm">
+                  <p className="text-xs text-[var(--c-muted)] max-w-sm">
                     Selecciona una de las tareas de la izquierda o escribe una instrucción para auditar, diseñar o proyectar datos de Proteus Nacional.
                   </p>
                 </div>
