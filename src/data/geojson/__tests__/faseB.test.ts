@@ -3,10 +3,10 @@ import { MUNICIPAL_DIVISIONS_REGISTRY } from '../municipalDivisions';
 import { territorioFicha } from '../../../services/territoryProfileService';
 import registro from '../municipios/registroFaseB.json';
 
-describe('Cartografía de la fase B (42 municipios de Antioquia con más de 20.000 votantes)', () => {
+describe('Cartografía de las fases B (46, más de 20.000 votantes) y C (79, 20.000 o menos) de Antioquia', () => {
   const ids = Object.keys(registro);
-  it('están los 42 (más Itagüí, rehecho con el catastro) en el registro, con fuente', () => {
-    expect(ids).toHaveLength(43);
+  it('están los 125 municipios en el registro, con fuente', () => {
+    expect(ids).toHaveLength(122); // 125 - Medellín, Bello y Rionegro, que no usan este registro
     for (const id of ids) {
       expect(MUNICIPAL_DIVISIONS_REGISTRY[id]?.disponible).toBe(true);
       expect(MUNICIPAL_DIVISIONS_REGISTRY[id].fuente.length).toBeGreaterThan(20);
@@ -17,7 +17,8 @@ describe('Cartografía de la fase B (42 municipios de Antioquia con más de 20.0
       const e = MUNICIPAL_DIVISIONS_REGISTRY[id];
       const [div, sub] = await Promise.all([e.loadDivisions!(), e.loadSubdivisions!()]);
       const divIds = new Set(div.features.map((f) => String(f.id)));
-      expect(sub.features.length).toBeGreaterThan(5);
+      // Los municipios más pequeños de la fase C (p. ej. La Pintada) pueden tener solo un puñado de veredas.
+      expect(sub.features.length).toBeGreaterThan(0);
       for (const f of sub.features) {
         expect(divIds.has(String(f.properties.parentId))).toBe(true);
         expect(territorioFicha(String(f.id))?.padreId).toBe(f.properties.parentId);

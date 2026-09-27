@@ -36,20 +36,26 @@ describe('resultados por puesto', () => {
     expect(sumarEleccion(e, ['01214030201'])!.puestos).toBe(1);
     expect(sumarEleccion(e, [])).toBeNull();
   });
-  it('municipio sin resultados', async () => {
-    expect(tieneResultadosPorPuesto('05002')).toBe(false);
-    expect(await cargarElecciones('05002')).toEqual([]);
+  it('municipio sin resultados (fuera de Antioquia)', async () => {
+    expect(tieneResultadosPorPuesto('11001')).toBe(false);
+    expect(await cargarElecciones('11001')).toEqual([]);
   });
-  it('los 46 municipios de Antioquia con más de 20 mil en el censo tienen las cuatro elecciones y cuadran', async () => {
-    expect(MUNICIPIOS_CON_RESULTADOS).toHaveLength(46);
+  it('los 125 municipios de Antioquia tienen Alcaldía, Concejo, Senado y Cámara, y cuadran', async () => {
+    expect(MUNICIPIOS_CON_RESULTADOS).toHaveLength(125);
     for (const dane of MUNICIPIOS_CON_RESULTADOS) {
       const es = await cargarElecciones(dane);
-      expect(es.map((e) => e.id)).toEqual(['alcaldia-2023', 'concejo-2023', 'senado-2026', 'camara-2026', 'presidente-2026-1', 'presidente-2026-2']);
+      const base = ['alcaldia-2023', 'concejo-2023', 'senado-2026', 'camara-2026'];
+      const conPresidencial = es.some((e) => e.id === 'presidente-2026-1');
+      expect(es.map((e) => e.id)).toEqual(conPresidencial ? [...base, 'presidente-2026-1', 'presidente-2026-2'] : base);
       for (const e of es) {
         if (e.id === 'concejo-2023') continue;
         expect(sumarEleccion(e, Object.keys(e.puestos))!.votantes).toBe(e.municipio.votantes);
       }
     }
+  });
+  it('fase C (79 municipios con 20.000 votantes o menos): sin presidencial todavía', async () => {
+    const es = await cargarElecciones('05002'); // Abejorral
+    expect(es.map((e) => e.id)).toEqual(['alcaldia-2023', 'concejo-2023', 'senado-2026', 'camara-2026']);
   });
   it('Presidencia 2026 en Medellín: escrutinio mesa a mesa, sin cédulas', async () => {
     const es = await cargarElecciones('05001');

@@ -428,5 +428,795 @@
   "confianza": "oficial",
   "nota": "Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
   "name": "Itagüí"
+ },
+ "abejorral": {
+  "id": "abejorral",
+  "daneCode": "05002",
+  "divisionLabel": "Cabecera y 2 corregimientos",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 64 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Abejorral"
+ },
+ "abriaqui": {
+  "id": "abriaqui",
+  "daneCode": "05004",
+  "divisionLabel": "Cabecera y 1 corregimiento",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 12 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Abriaqui"
+ },
+ "alejandria": {
+  "id": "alejandria",
+  "daneCode": "05021",
+  "divisionLabel": "Cabecera y zona rural",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 14 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Alejandria"
+ },
+ "amalfi": {
+  "id": "amalfi",
+  "daneCode": "05031",
+  "divisionLabel": "Cabecera y 1 corregimiento",
+  "subdivisionLabel": "4 sectores urbanos (DANE) y 56 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Amalfi"
+ },
+ "angelopolis": {
+  "id": "angelopolis",
+  "daneCode": "05036",
+  "divisionLabel": "Cabecera y 1 corregimiento",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 12 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Angelopolis"
+ },
+ "angostura": {
+  "id": "angostura",
+  "daneCode": "05038",
+  "divisionLabel": "Cabecera y 1 corregimiento",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 47 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Angostura"
+ },
+ "anori": {
+  "id": "anori",
+  "daneCode": "05040",
+  "divisionLabel": "Cabecera y 1 corregimiento",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 51 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Anori"
+ },
+ "anza": {
+  "id": "anza",
+  "daneCode": "05044",
+  "divisionLabel": "Cabecera y 1 corregimiento",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 17 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Anza"
+ },
+ "argelia": {
+  "id": "argelia",
+  "daneCode": "05055",
+  "divisionLabel": "Cabecera y zona rural",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 50 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Argelia"
+ },
+ "armenia": {
+  "id": "armenia",
+  "daneCode": "05059",
+  "divisionLabel": "Cabecera y 1 corregimiento",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 10 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Armenia"
+ },
+ "belmira": {
+  "id": "belmira",
+  "daneCode": "05086",
+  "divisionLabel": "Cabecera y 1 corregimiento",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 15 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Belmira"
+ },
+ "betania": {
+  "id": "betania",
+  "daneCode": "05091",
+  "divisionLabel": "Cabecera y 1 corregimiento",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 28 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Betania"
+ },
+ "betulia": {
+  "id": "betulia",
+  "daneCode": "05093",
+  "divisionLabel": "Cabecera y 3 corregimientos",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 41 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Betulia"
+ },
+ "briceno": {
+  "id": "briceno",
+  "daneCode": "05107",
+  "divisionLabel": "Cabecera y 2 corregimientos",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 38 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Briceño"
+ },
+ "buritica": {
+  "id": "buritica",
+  "daneCode": "05113",
+  "divisionLabel": "Cabecera y 5 corregimientos",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 36 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Buritica"
+ },
+ "caicedo": {
+  "id": "caicedo",
+  "daneCode": "05125",
+  "divisionLabel": "Cabecera y zona rural",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 18 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Caicedo"
+ },
+ "campamento": {
+  "id": "campamento",
+  "daneCode": "05134",
+  "divisionLabel": "Cabecera y zona rural",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 33 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Campamento"
+ },
+ "caracoli": {
+  "id": "caracoli",
+  "daneCode": "05142",
+  "divisionLabel": "Cabecera y zona rural",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 15 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Caracoli"
+ },
+ "caramanta": {
+  "id": "caramanta",
+  "daneCode": "05145",
+  "divisionLabel": "Cabecera y 3 corregimientos",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 23 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Caramanta"
+ },
+ "carolina": {
+  "id": "carolina",
+  "daneCode": "05150",
+  "divisionLabel": "Cabecera y zona rural",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 6 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Carolina"
+ },
+ "canasgordas": {
+  "id": "canasgordas",
+  "daneCode": "05138",
+  "divisionLabel": "Cabecera y 4 corregimientos",
+  "subdivisionLabel": "2 sectores urbanos (DANE) y 60 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Cañasgordas"
+ },
+ "cisneros": {
+  "id": "cisneros",
+  "daneCode": "05190",
+  "divisionLabel": "Cabecera y zona rural",
+  "subdivisionLabel": "2 sectores urbanos (DANE) y 14 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Cisneros"
+ },
+ "cocorna": {
+  "id": "cocorna",
+  "daneCode": "05197",
+  "divisionLabel": "Cabecera y zona rural",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 77 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Cocorna"
+ },
+ "concepcion": {
+  "id": "concepcion",
+  "daneCode": "05206",
+  "divisionLabel": "Cabecera y zona rural",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 27 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Concepcion"
+ },
+ "concordia": {
+  "id": "concordia",
+  "daneCode": "05209",
+  "divisionLabel": "Cabecera y zona rural",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 24 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Concordia"
+ },
+ "donmatias": {
+  "id": "donmatias",
+  "daneCode": "05237",
+  "divisionLabel": "Cabecera y 1 corregimiento",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 18 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Don Matias"
+ },
+ "ebejico": {
+  "id": "ebejico",
+  "daneCode": "05240",
+  "divisionLabel": "Cabecera y 5 corregimientos",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 33 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Ebejico"
+ },
+ "entrerrios": {
+  "id": "entrerrios",
+  "daneCode": "05264",
+  "divisionLabel": "Cabecera y zona rural",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 11 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Entrerrios"
+ },
+ "fredonia": {
+  "id": "fredonia",
+  "daneCode": "05282",
+  "divisionLabel": "Cabecera y 3 corregimientos",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 38 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Fredonia"
+ },
+ "frontino": {
+  "id": "frontino",
+  "daneCode": "05284",
+  "divisionLabel": "Cabecera y 9 corregimientos",
+  "subdivisionLabel": "2 sectores urbanos (DANE) y 52 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Frontino"
+ },
+ "giraldo": {
+  "id": "giraldo",
+  "daneCode": "05306",
+  "divisionLabel": "Cabecera y 2 corregimientos",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 15 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Giraldo"
+ },
+ "granada": {
+  "id": "granada",
+  "daneCode": "05313",
+  "divisionLabel": "Cabecera y 1 corregimiento",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 51 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Granada"
+ },
+ "guadalupe": {
+  "id": "guadalupe",
+  "daneCode": "05315",
+  "divisionLabel": "Cabecera y zona rural",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 22 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Guadalupe"
+ },
+ "guatape": {
+  "id": "guatape",
+  "daneCode": "05321",
+  "divisionLabel": "Cabecera y zona rural",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 9 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Guatape"
+ },
+ "gomez_plata": {
+  "id": "gomez_plata",
+  "daneCode": "05310",
+  "divisionLabel": "Cabecera y 3 corregimientos",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 28 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Gomez Plata"
+ },
+ "heliconia": {
+  "id": "heliconia",
+  "daneCode": "05347",
+  "divisionLabel": "Cabecera y 3 corregimientos",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 18 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Heliconia"
+ },
+ "hispania": {
+  "id": "hispania",
+  "daneCode": "05353",
+  "divisionLabel": "Cabecera y zona rural",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 11 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Hispania"
+ },
+ "ituango": {
+  "id": "ituango",
+  "daneCode": "05361",
+  "divisionLabel": "Cabecera y 3 corregimientos",
+  "subdivisionLabel": "2 sectores urbanos (DANE) y 96 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Ituango"
+ },
+ "jardin": {
+  "id": "jardin",
+  "daneCode": "05364",
+  "divisionLabel": "Cabecera y zona rural",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 20 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Jardin"
+ },
+ "jerico": {
+  "id": "jerico",
+  "daneCode": "05368",
+  "divisionLabel": "Cabecera y 1 corregimiento",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 31 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Jerico"
+ },
+ "la_pintada": {
+  "id": "la_pintada",
+  "daneCode": "05390",
+  "divisionLabel": "Cabecera y zona rural",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 3 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "La Pintada"
+ },
+ "liborina": {
+  "id": "liborina",
+  "daneCode": "05411",
+  "divisionLabel": "Cabecera y 4 corregimientos",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 37 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Liborina"
+ },
+ "maceo": {
+  "id": "maceo",
+  "daneCode": "05425",
+  "divisionLabel": "Cabecera y 3 corregimientos",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 19 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Maceo"
+ },
+ "montebello": {
+  "id": "montebello",
+  "daneCode": "05467",
+  "divisionLabel": "Cabecera y 1 corregimiento",
+  "subdivisionLabel": "2 sectores urbanos (DANE) y 26 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Montebello"
+ },
+ "murindo": {
+  "id": "murindo",
+  "daneCode": "05475",
+  "divisionLabel": "Cabecera y 3 corregimientos",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 20 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Murindo"
+ },
+ "mutata": {
+  "id": "mutata",
+  "daneCode": "05480",
+  "divisionLabel": "Cabecera y 5 corregimientos",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 32 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Mutata"
+ },
+ "narino": {
+  "id": "narino",
+  "daneCode": "05483",
+  "divisionLabel": "Cabecera y 1 corregimiento",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 49 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Nariño"
+ },
+ "olaya": {
+  "id": "olaya",
+  "daneCode": "05501",
+  "divisionLabel": "Cabecera y 2 corregimientos",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 11 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Olaya"
+ },
+ "peque": {
+  "id": "peque",
+  "daneCode": "05543",
+  "divisionLabel": "Cabecera y 6 corregimientos",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 36 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Peque"
+ },
+ "penol": {
+  "id": "penol",
+  "daneCode": "05541",
+  "divisionLabel": "Cabecera y zona rural",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 24 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Peñol"
+ },
+ "pueblorrico": {
+  "id": "pueblorrico",
+  "daneCode": "05576",
+  "divisionLabel": "Cabecera y zona rural",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 20 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Pueblorrico"
+ },
+ "puerto_nare": {
+  "id": "puerto_nare",
+  "daneCode": "05585",
+  "divisionLabel": "Cabecera y 3 corregimientos",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 31 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Puerto Nare-La Magdalena"
+ },
+ "puerto_triunfo": {
+  "id": "puerto_triunfo",
+  "daneCode": "05591",
+  "divisionLabel": "Cabecera y 5 corregimientos",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 12 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Puerto Triunfo"
+ },
+ "sabanalarga": {
+  "id": "sabanalarga",
+  "daneCode": "05628",
+  "divisionLabel": "Cabecera y 1 corregimiento",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 32 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Sabanalarga"
+ },
+ "salgar": {
+  "id": "salgar",
+  "daneCode": "05642",
+  "divisionLabel": "Cabecera y 4 corregimientos",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 32 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Salgar"
+ },
+ "san_andres_de_cuerquia": {
+  "id": "san_andres_de_cuerquia",
+  "daneCode": "05647",
+  "divisionLabel": "Cabecera y zona rural",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 28 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "San Andres"
+ },
+ "san_carlos": {
+  "id": "san_carlos",
+  "daneCode": "05649",
+  "divisionLabel": "Cabecera y 3 corregimientos",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 74 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "San Carlos"
+ },
+ "san_francisco": {
+  "id": "san_francisco",
+  "daneCode": "05652",
+  "divisionLabel": "Cabecera y 1 corregimiento",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 41 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "San Francisco"
+ },
+ "san_jeronimo": {
+  "id": "san_jeronimo",
+  "daneCode": "05656",
+  "divisionLabel": "Cabecera y zona rural",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 32 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "San Jeronimo"
+ },
+ "san_jose_de_la_montana": {
+  "id": "san_jose_de_la_montana",
+  "daneCode": "05658",
+  "divisionLabel": "Cabecera y zona rural",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 8 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "San Jose De La Montaña"
+ },
+ "san_luis": {
+  "id": "san_luis",
+  "daneCode": "05660",
+  "divisionLabel": "Cabecera y 1 corregimiento",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 44 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "San Luis"
+ },
+ "san_rafael": {
+  "id": "san_rafael",
+  "daneCode": "05667",
+  "divisionLabel": "Cabecera y zona rural",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 57 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "San Rafael"
+ },
+ "san_roque": {
+  "id": "san_roque",
+  "daneCode": "05670",
+  "divisionLabel": "Cabecera y 3 corregimientos",
+  "subdivisionLabel": "2 sectores urbanos (DANE) y 50 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "San Roque"
+ },
+ "san_vicente_ferrer": {
+  "id": "san_vicente_ferrer",
+  "daneCode": "05674",
+  "divisionLabel": "Cabecera y 1 corregimiento",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 39 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "San Vicente"
+ },
+ "santo_domingo": {
+  "id": "santo_domingo",
+  "daneCode": "05690",
+  "divisionLabel": "Cabecera y 5 corregimientos",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 45 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Santo Domingo"
+ },
+ "sopetran": {
+  "id": "sopetran",
+  "daneCode": "05761",
+  "divisionLabel": "Cabecera y 7 corregimientos",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 34 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Sopetran"
+ },
+ "tarso": {
+  "id": "tarso",
+  "daneCode": "05792",
+  "divisionLabel": "Cabecera y zona rural",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 15 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Tarso"
+ },
+ "titiribi": {
+  "id": "titiribi",
+  "daneCode": "05809",
+  "divisionLabel": "Cabecera y 4 corregimientos",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 18 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Titiribi"
+ },
+ "toledo": {
+  "id": "toledo",
+  "daneCode": "05819",
+  "divisionLabel": "Cabecera y 2 corregimientos",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 18 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Toledo"
+ },
+ "tamesis": {
+  "id": "tamesis",
+  "daneCode": "05789",
+  "divisionLabel": "Cabecera y 2 corregimientos",
+  "subdivisionLabel": "4 sectores urbanos (DANE) y 37 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Tamesis"
+ },
+ "uramita": {
+  "id": "uramita",
+  "daneCode": "05842",
+  "divisionLabel": "Cabecera y 2 corregimientos",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 39 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Uramita"
+ },
+ "valdivia": {
+  "id": "valdivia",
+  "daneCode": "05854",
+  "divisionLabel": "Cabecera y 2 corregimientos",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 35 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Valdivia"
+ },
+ "valparaiso": {
+  "id": "valparaiso",
+  "daneCode": "05856",
+  "divisionLabel": "Cabecera y zona rural",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 22 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Valparaiso"
+ },
+ "vegachi": {
+  "id": "vegachi",
+  "daneCode": "05858",
+  "divisionLabel": "Cabecera y 1 corregimiento",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 26 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Vegachi"
+ },
+ "venecia": {
+  "id": "venecia",
+  "daneCode": "05861",
+  "divisionLabel": "Cabecera y 2 corregimientos",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 15 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Venecia"
+ },
+ "vigia_del_fuerte": {
+  "id": "vigia_del_fuerte",
+  "daneCode": "05873",
+  "divisionLabel": "Cabecera y 8 corregimientos",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 28 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Vigia Del Fuerte"
+ },
+ "yali": {
+  "id": "yali",
+  "daneCode": "05885",
+  "divisionLabel": "Cabecera y zona rural",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 27 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Yali"
+ },
+ "yolombo": {
+  "id": "yolombo",
+  "daneCode": "05890",
+  "divisionLabel": "Cabecera y 3 corregimientos",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 82 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Yolombo"
+ },
+ "yondo": {
+  "id": "yondo",
+  "daneCode": "05893",
+  "divisionLabel": "Cabecera y 1 corregimiento",
+  "subdivisionLabel": "1 sectores urbanos (DANE) y 58 veredas",
+  "fuente": "DANE, Marco Geoestadístico Nacional 2018: sectores urbanos de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
+  "confianza": "oficial",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Yondo-Casabe"
  }
 }

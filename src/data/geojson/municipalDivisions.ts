@@ -14,12 +14,15 @@ import rawRegistroB from './municipios/registroFaseB.json';
 export type ConfianzaFuente = 'oficial' | 'por verificar';
 
 /**
- * REGLA DE NIVELES DEL ZOOM MUNICIPAL (definida por Isaac, 24-sep-2026)
+ * REGLA DE NIVELES DEL ZOOM MUNICIPAL (definida por Isaac, 24-sep-2026; ampliada en la fase C, 26-sep-2026)
  * - Solo estas ciudades tienen el nivel intermedio de comunas (o localidades) entre municipio y
  *   barrio. Se podrán agregar Cali, Barranquilla, Bucaramanga y Cúcuta cuando haya cartografía.
  * - Los demás municipios pasan directo a su último nivel: barrios, o veredas/corregimientos y
  *   cabecera urbana cuando no distinguen barrios.
- * - Ese último nivel solo existe en municipios con más de 20.000 personas en el censo electoral.
+ * - Regla original (24-sep): ese último nivel solo existía en municipios con más de 20.000 personas
+ *   en el censo electoral. La fase C (26-sep) construyó el último nivel para los 125 municipios de
+ *   Antioquia, así que hoy no hay ese filtro por censo; `nivelesMunicipales` se conserva para cuando
+ *   se aplique el mismo criterio al resto del país.
  */
 export const CIUDADES_CON_COMUNAS = ['medellin', 'bello', 'itagui', 'bogota', 'cali', 'barranquilla', 'bucaramanga', 'cucuta'];
 export const CENSO_MINIMO_ULTIMO_NIVEL = 20_000;

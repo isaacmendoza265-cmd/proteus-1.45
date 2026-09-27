@@ -274,5 +274,400 @@
   "2023": "la_union",
   "2026": "la_union",
   "pres2026": "la_union"
+ },
+ "05002": {
+  "nombre": "Abejorral",
+  "2023": "abejorral",
+  "2026": "abejorral"
+ },
+ "05004": {
+  "nombre": "Abriaquí",
+  "2023": "abriaqui",
+  "2026": "abriaqui"
+ },
+ "05021": {
+  "nombre": "Alejandría",
+  "2023": "alejandria",
+  "2026": "alejandria"
+ },
+ "05031": {
+  "nombre": "Amalfi",
+  "2023": "amalfi",
+  "2026": "amalfi"
+ },
+ "05036": {
+  "nombre": "Angelópolis",
+  "2023": "angelopolis",
+  "2026": "angelopolis"
+ },
+ "05038": {
+  "nombre": "Angostura",
+  "2023": "angostura",
+  "2026": "angostura"
+ },
+ "05040": {
+  "nombre": "Anorí",
+  "2023": "anori",
+  "2026": "anori"
+ },
+ "05044": {
+  "nombre": "Anzá",
+  "2023": "anza",
+  "2026": "anza"
+ },
+ "05055": {
+  "nombre": "Argelia",
+  "2023": "argelia",
+  "2026": "argelia"
+ },
+ "05059": {
+  "nombre": "Armenia",
+  "2023": "armenia",
+  "2026": "armenia"
+ },
+ "05086": {
+  "nombre": "Belmira",
+  "2023": "belmira",
+  "2026": "belmira"
+ },
+ "05091": {
+  "nombre": "Betania",
+  "2023": "betania",
+  "2026": "betania"
+ },
+ "05093": {
+  "nombre": "Betulia",
+  "2023": "betulia",
+  "2026": "betulia"
+ },
+ "05107": {
+  "nombre": "Briceño",
+  "2023": "briceno",
+  "2026": "briceno"
+ },
+ "05113": {
+  "nombre": "Buriticá",
+  "2023": "buritica",
+  "2026": "buritica"
+ },
+ "05125": {
+  "nombre": "Caicedo",
+  "2023": "caicedo",
+  "2026": "caicedo"
+ },
+ "05134": {
+  "nombre": "Campamento",
+  "2023": "campamento",
+  "2026": "campamento"
+ },
+ "05142": {
+  "nombre": "Caracolí",
+  "2023": "caracoli",
+  "2026": "caracoli"
+ },
+ "05145": {
+  "nombre": "Caramanta",
+  "2023": "caramanta",
+  "2026": "caramanta"
+ },
+ "05150": {
+  "nombre": "Carolina",
+  "2023": "carolina",
+  "2026": "carolina"
+ },
+ "05138": {
+  "nombre": "Cañasgordas",
+  "2023": "canasgordas",
+  "2026": "canasgordas"
+ },
+ "05190": {
+  "nombre": "Cisneros",
+  "2023": "cisneros",
+  "2026": "cisneros"
+ },
+ "05197": {
+  "nombre": "Cocorná",
+  "2023": "cocorna",
+  "2026": "cocorna"
+ },
+ "05206": {
+  "nombre": "Concepción",
+  "2023": "concepcion",
+  "2026": "concepcion"
+ },
+ "05209": {
+  "nombre": "Concordia",
+  "2023": "concordia",
+  "2026": "concordia"
+ },
+ "05237": {
+  "nombre": "Donmatías",
+  "2023": "donmatias",
+  "2026": "donmatias"
+ },
+ "05240": {
+  "nombre": "Ebéjico",
+  "2023": "ebejico",
+  "2026": "ebejico"
+ },
+ "05264": {
+  "nombre": "Entrerríos",
+  "2023": "entrerrios",
+  "2026": "entrerrios"
+ },
+ "05282": {
+  "nombre": "Fredonia",
+  "2023": "fredonia",
+  "2026": "fredonia"
+ },
+ "05284": {
+  "nombre": "Frontino",
+  "2023": "frontino",
+  "2026": "frontino"
+ },
+ "05306": {
+  "nombre": "Giraldo",
+  "2023": "giraldo",
+  "2026": "giraldo"
+ },
+ "05313": {
+  "nombre": "Granada",
+  "2023": "granada",
+  "2026": "granada"
+ },
+ "05315": {
+  "nombre": "Guadalupe",
+  "2023": "guadalupe",
+  "2026": "guadalupe"
+ },
+ "05321": {
+  "nombre": "Guatapé",
+  "2023": "guatape",
+  "2026": "guatape"
+ },
+ "05310": {
+  "nombre": "Gómez Plata",
+  "2023": "gomez_plata",
+  "2026": "gomez_plata"
+ },
+ "05347": {
+  "nombre": "Heliconia",
+  "2023": "heliconia",
+  "2026": "heliconia"
+ },
+ "05353": {
+  "nombre": "Hispania",
+  "2023": "hispania",
+  "2026": "hispania"
+ },
+ "05361": {
+  "nombre": "Ituango",
+  "2023": "ituango",
+  "2026": "ituango"
+ },
+ "05364": {
+  "nombre": "Jardín",
+  "2023": "jardin",
+  "2026": "jardin"
+ },
+ "05368": {
+  "nombre": "Jericó",
+  "2023": "jerico",
+  "2026": "jerico"
+ },
+ "05390": {
+  "nombre": "La Pintada",
+  "2023": "la_pintada",
+  "2026": "la_pintada"
+ },
+ "05411": {
+  "nombre": "Liborina",
+  "2023": "liborina",
+  "2026": "liborina"
+ },
+ "05425": {
+  "nombre": "Maceo",
+  "2023": "maceo",
+  "2026": "maceo"
+ },
+ "05467": {
+  "nombre": "Montebello",
+  "2023": "montebello",
+  "2026": "montebello"
+ },
+ "05475": {
+  "nombre": "Murindó",
+  "2023": "murindo",
+  "2026": "murindo"
+ },
+ "05480": {
+  "nombre": "Mutatá",
+  "2023": "mutata",
+  "2026": "mutata"
+ },
+ "05483": {
+  "nombre": "Nariño",
+  "2023": "narino",
+  "2026": "narino"
+ },
+ "05501": {
+  "nombre": "Olaya",
+  "2023": "olaya",
+  "2026": "olaya"
+ },
+ "05543": {
+  "nombre": "Peque",
+  "2023": "peque",
+  "2026": "peque"
+ },
+ "05541": {
+  "nombre": "Peñol",
+  "2023": "penol",
+  "2026": "penol"
+ },
+ "05576": {
+  "nombre": "Pueblorrico",
+  "2023": "pueblorrico",
+  "2026": "pueblorrico"
+ },
+ "05585": {
+  "nombre": "Puerto Nare",
+  "2023": "puerto_nare",
+  "2026": "puerto_nare"
+ },
+ "05591": {
+  "nombre": "Puerto Triunfo",
+  "2023": "puerto_triunfo",
+  "2026": "puerto_triunfo"
+ },
+ "05628": {
+  "nombre": "Sabanalarga",
+  "2023": "sabanalarga",
+  "2026": "sabanalarga"
+ },
+ "05642": {
+  "nombre": "Salgar",
+  "2023": "salgar",
+  "2026": "salgar"
+ },
+ "05647": {
+  "nombre": "San Andrés De Cuerquía",
+  "2023": "san_andres_de_cuerquia",
+  "2026": "san_andres_de_cuerquia"
+ },
+ "05649": {
+  "nombre": "San Carlos",
+  "2023": "san_carlos",
+  "2026": "san_carlos"
+ },
+ "05652": {
+  "nombre": "San Francisco",
+  "2023": "san_francisco",
+  "2026": "san_francisco"
+ },
+ "05656": {
+  "nombre": "San Jerónimo",
+  "2023": "san_jeronimo",
+  "2026": "san_jeronimo"
+ },
+ "05658": {
+  "nombre": "San José De La Montaña",
+  "2023": "san_jose_de_la_montana",
+  "2026": "san_jose_de_la_montana"
+ },
+ "05660": {
+  "nombre": "San Luis",
+  "2023": "san_luis",
+  "2026": "san_luis"
+ },
+ "05667": {
+  "nombre": "San Rafael",
+  "2023": "san_rafael",
+  "2026": "san_rafael"
+ },
+ "05670": {
+  "nombre": "San Roque",
+  "2023": "san_roque",
+  "2026": "san_roque"
+ },
+ "05674": {
+  "nombre": "San Vicente Ferrer",
+  "2023": "san_vicente_ferrer",
+  "2026": "san_vicente_ferrer"
+ },
+ "05690": {
+  "nombre": "Santo Domingo",
+  "2023": "santo_domingo",
+  "2026": "santo_domingo"
+ },
+ "05761": {
+  "nombre": "Sopetrán",
+  "2023": "sopetran",
+  "2026": "sopetran"
+ },
+ "05792": {
+  "nombre": "Tarso",
+  "2023": "tarso",
+  "2026": "tarso"
+ },
+ "05809": {
+  "nombre": "Titiribí",
+  "2023": "titiribi",
+  "2026": "titiribi"
+ },
+ "05819": {
+  "nombre": "Toledo",
+  "2023": "toledo",
+  "2026": "toledo"
+ },
+ "05789": {
+  "nombre": "Támesis",
+  "2023": "tamesis",
+  "2026": "tamesis"
+ },
+ "05842": {
+  "nombre": "Uramita",
+  "2023": "uramita",
+  "2026": "uramita"
+ },
+ "05854": {
+  "nombre": "Valdivia",
+  "2023": "valdivia",
+  "2026": "valdivia"
+ },
+ "05856": {
+  "nombre": "Valparaíso",
+  "2023": "valparaiso",
+  "2026": "valparaiso"
+ },
+ "05858": {
+  "nombre": "Vegachí",
+  "2023": "vegachi",
+  "2026": "vegachi"
+ },
+ "05861": {
+  "nombre": "Venecia",
+  "2023": "venecia",
+  "2026": "venecia"
+ },
+ "05873": {
+  "nombre": "Vigía Del Fuerte",
+  "2023": "vigia_del_fuerte",
+  "2026": "vigia_del_fuerte"
+ },
+ "05885": {
+  "nombre": "Yalí",
+  "2023": "yali",
+  "2026": "yali"
+ },
+ "05890": {
+  "nombre": "Yolombó",
+  "2023": "yolombo",
+  "2026": "yolombo"
+ },
+ "05893": {
+  "nombre": "Yondó",
+  "2023": "yondo",
+  "2026": "yondo"
  }
 }

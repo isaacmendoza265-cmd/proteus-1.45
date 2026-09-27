@@ -36,10 +36,11 @@ describe('Regla de niveles del zoom municipal', () => {
     expect(MUNICIPAL_DIVISIONS_REGISTRY.rionegro.nivelComunas).toBe(false);
   });
 
-  it('el último nivel solo existe con más de 20.000 en el censo electoral', () => {
-    for (const m of Object.values(MUNICIPAL_DIVISIONS_REGISTRY).filter((x) => x.disponible && x.department === 'Antioquia')) {
-      expect(nivelesMunicipales(m.id, m.name).ultimoNivel).toBe(true);
-    }
+  // La regla original (24-sep) limitaba el último nivel (barrios/veredas) a municipios con más de
+  // 20.000 en el censo electoral. La fase C (26-sep) construyó ese nivel para los 125 municipios de
+  // Antioquia, así que la función se conserva (informativa, y para cuando se apliquen las mismas
+  // reglas al resto del país) pero ya no se usa para filtrar el registro.
+  it('nivelesMunicipales calcula el umbral de 20.000 según el censo electoral', () => {
     expect(nivelesMunicipales('abriaqui', 'Abriaquí').ultimoNivel).toBe(false); // 2.029
     expect(nivelesMunicipales('amaga', 'Amagá').ultimoNivel).toBe(true); // 24.772
   });

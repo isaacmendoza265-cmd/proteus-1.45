@@ -46,8 +46,33 @@ export function usePuestosTerritorio(muniId: string | null, nombreMunicipio?: st
     const entry = muniId ? MUNICIPAL_DIVISIONS_REGISTRY[muniId] : undefined;
     const m = entry ? getMunicipio20k(entry.name) : nombreMunicipio ? getMunicipio20k(nombreMunicipio) : undefined;
     if (!m) {
-      setEstado(VACIO);
-      return;
+      // Municipio con 20.000 votantes o menos (fase C): no hay censo 2026 por puesto con coordenadas
+      // (build_puestos_20k.py se limita a los municipios de más de 20.000), pero sí puede haber
+      // resultados 2023 por puesto con su propia ubicación (Divipole 2023): se ubican igual, para
+      // que el municipio y sus comunas/barrios muestren la Alcaldía y el Concejo 2023.
+      if (!entry) {
+        setEstado(VACIO);
+        return;
+      }
+      let activo = true;
+      setEstado({ ...VACIO, cargando: true });
+      Promise.all([entry.loadDivisions?.(), entry.loadSubdivisions?.(), cargarElecciones(entry.daneCode)])
+        .then(([divsCapa, subsCapa, elecciones]) => {
+          if (!activo) return;
+          const divs = divsCapa && { ...divsCapa, features: divsCapa.features.filter((f) => tieneFicha(String(f.id))) };
+          const subs = subsCapa && { ...subsCapa, features: subsCapa.features.filter((f) => tieneFicha(String(f.id))) };
+          const ub = elecciones.find((e) => e.codigos === '2023')?.ubicaciones ?? {};
+          setEstado({
+            ...VACIO, cargando: false,
+            resultadosDivision: ubicarResultados(ub, divs?.features ?? []),
+            resultadosSubdivision: ubicarResultados(ub, subs?.features ?? []),
+          });
+        })
+        .catch((err) => {
+          console.error('No se pudieron cargar los resultados 2023 del municipio:', err);
+          if (activo) setEstado(VACIO);
+        });
+      return () => { activo = false; };
     }
     if (!entry) {
       // Sin cartografía interna: solo los puestos del municipio
