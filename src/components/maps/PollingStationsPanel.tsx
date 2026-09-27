@@ -185,18 +185,23 @@ export const PollingStationsPanel: React.FC<PollingStationsPanelProps> = ({ curr
           </div>
 
           {resumenDivisiones.length > 0 && (
-            <div>
-              <div className="text-[11px] font-bold text-slate-300 mb-1.5">
-                Censo por {ubicacion!.entry.nivelComunas ? 'comuna / zona' : 'barrio / vereda'} según la ubicación de sus puestos
-                <span className="text-slate-500 font-normal"> · cartografía: {ubicacion!.entry.divisionLabel}</span>
-              </div>
-              <div className="flex flex-wrap gap-1.5">
+            <details className="group rounded-xl border border-white/15 px-3">
+              <summary className="flex items-center gap-2 py-2 cursor-pointer list-none text-[11px] font-bold text-slate-300">
+                <span className="text-slate-400 transition-transform group-open:rotate-90" aria-hidden>▸</span>
+                <span className="grow">
+                  Censo por {ubicacion!.entry.nivelComunas ? 'comuna / zona' : 'barrio / vereda'} según la ubicación de sus puestos ({resumenDivisiones.length})
+                  <span className="text-slate-500 font-normal"> · cartografía: {ubicacion!.entry.divisionLabel}</span>
+                </span>
+              </summary>
+              <ul className="m-0 p-0 pb-2 list-none flex flex-col max-h-80 overflow-y-auto">
                 {resumenDivisiones.map((d) => (
-                  <span key={d.id} className="px-2 py-1 rounded-lg bg-sky-500/10 border border-sky-400/20 text-[10px] text-sky-100">
-                    <strong>{d.nombre}</strong>: {fmt(d.censo)} · {d.puestos} p.
-                  </span>
+                  <li key={d.id} className="flex items-center gap-2 py-1.5 border-t border-white/10 text-xs">
+                    <span className="grow font-semibold truncate">{d.nombre}</span>
+                    <span className="tabular-nums font-semibold">{fmt(d.censo)}</span>
+                    <span className="w-20 text-right text-slate-400">{d.puestos} {d.puestos === 1 ? 'puesto' : 'puestos'}</span>
+                  </li>
                 ))}
-              </div>
+              </ul>
               {(ubicacion!.division!.sinCoordenadas.length > 0 || ubicacion!.division!.fueraDeLaCapa.length > 0) && (
                 <div className="mt-1.5 text-[10px] text-amber-200/80 flex items-start gap-1">
                   <AlertTriangle className="w-3 h-3 mt-px shrink-0" />
@@ -209,7 +214,7 @@ export const PollingStationsPanel: React.FC<PollingStationsPanelProps> = ({ curr
                   </span>
                 </div>
               )}
-            </div>
+            </details>
           )}
 
           <div className="flex items-center gap-2">

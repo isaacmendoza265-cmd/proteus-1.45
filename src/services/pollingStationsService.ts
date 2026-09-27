@@ -216,7 +216,9 @@ export interface AsignacionPuestos {
  * Solo usa las coordenadas de la Divipole 2023; no reparte ni estima nada.
  */
 export function asignarPuestosATerritorios(puestos: PuestoVotacion[], features: TerritoryGeoFeature[]): AsignacionPuestos {
-  const cajas = features.map((f) => {
+  // Contornos de dibujo (p. ej. 'medellin-base-outline', el límite de todo el distrito) no son un
+  // territorio: si entraran, se quedarían con los puestos de los corregimientos que cubren.
+  const cajas = features.filter((f) => !String(f.id).endsWith('-base-outline')).map((f) => {
     let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
     for (const rings of polygonsOf(f.geometry)) {
       for (const [x, y] of rings[0] ?? []) {

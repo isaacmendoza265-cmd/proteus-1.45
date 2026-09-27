@@ -52,6 +52,15 @@ describe('Puestos de los municipios con más de 20.000 votantes', () => {
     const navarra = puestos.find((p) => p.puesto === 'I.E. NAVARRA')!;
     expect(a.territorioDePuesto[navarra.codPuesto]).toBe('bello-div-9');
   });
+
+  it('Medellín: el contorno del distrito no se queda con puestos; los corregimientos sí tienen', async () => {
+    const puestos = await loadPuestosMunicipio(getMunicipio20k('Medellín')!);
+    const div = await MUNICIPAL_DIVISIONS_REGISTRY.medellin.loadDivisions!();
+    const a = asignarPuestosATerritorios(puestos, div.features);
+    expect(a.porTerritorio['medellin-base-outline']).toBeUndefined();
+    const corregimientos = Object.keys(a.porTerritorio).filter((id) => id.includes('correg'));
+    expect(corregimientos.length).toBe(5);
+  });
 });
 
 describe('Puestos de los 79 municipios de Antioquia con 20.000 votantes o menos (fase C)', () => {
