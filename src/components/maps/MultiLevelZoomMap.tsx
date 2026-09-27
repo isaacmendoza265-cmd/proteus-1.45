@@ -329,8 +329,16 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
         zoom: currentConfig.defaultZoom,
         zoomControl: false,
         // La licencia de OpenStreetMap exige mostrar la atribución
-        attributionControl: true
+        attributionControl: true,
+        // Los polígonos se dibujan con margen (50 % de la vista a cada lado): al arrastrar no se
+        // ven cortados mientras Leaflet redibuja
+        renderer: L.svg({ padding: 0.5 }),
       });
+      // Si el contenedor cambia de tamaño (se abre o cierra la ficha, cambia el ancho de la ventana),
+      // Leaflet debe saberlo: si no, deja franjas grises sin teselas y recorta la capa al área vieja.
+      const observador = new ResizeObserver(() => map.invalidateSize({ pan: false }));
+      observador.observe(mapContainerRef.current);
+      map.once('unload', () => observador.disconnect());
       map.attributionControl.setPrefix(false);
       map.attributionControl.setPosition('bottomright');
 
@@ -345,7 +353,7 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
       const panelPuestos = map.getPane('puestos')!;
       panelPuestos.style.zIndex = '450';
       panelPuestos.style.pointerEvents = 'none';
-      puestosRendererRef.current = L.svg({ pane: 'puestos' });
+      puestosRendererRef.current = L.svg({ pane: 'puestos', padding: 0.5 });
       puestosLayerRef.current = L.layerGroup().addTo(map);
       // Clic en cualquier otra cosa del mapa (fondo, comuna, barrio, municipio vecino) cierra la
       // ficha de puesto. El clic en un puesto no llega aquí (bubblingMouseEvents: false).
