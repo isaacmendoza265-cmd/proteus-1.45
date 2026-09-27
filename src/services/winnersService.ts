@@ -5,8 +5,8 @@
  *   src/data/electoral/ganadoresMunicipio.json), cargado bajo demanda.
  * - Escala municipal: suma de los puestos que caen en cada comuna/barrio/vereda (misma regla de la
  *   ficha: 2026 por el código del censo; los demás años por la ubicación de cada puesto ese año).
- * En Presidencia se colorea por candidato (los partidos de los candidatos presidenciales suelen ser
- * coaliciones sin color propio); en las demás, por el partido del ganador o la lista más votada.
+ * En Presidencia y Gobernación se colorea por candidato (sus partidos suelen ser coaliciones sin
+ * color propio); en las demás, por el partido del ganador o la lista más votada.
  */
 import { colorDePartido, COLOR_SIN_DATO } from '../data/electoral/partidoColors';
 import { sumarEleccion, type EleccionPuestos } from './electionResultsService';
@@ -27,8 +27,16 @@ export function cargarGanadores(): Promise<IndiceGanadores> {
 }
 
 export const esPresidencial = (id: string) => id.startsWith('presidente');
+/**
+ * Elecciones que se colorean por candidato: Presidencia y Gobernación. Tienen los mismos candidatos
+ * en todos los municipios, y sus partidos suelen ser coaliciones sin color propio ("Por Antioquia
+ * Firme", "Piensa En Grande"...): por partido todo el departamento saldría del mismo color.
+ */
+export const colorPorCandidato = (id: string) => esPresidencial(id) || id.startsWith('gobernacion');
 
 const PALETA_CANDIDATOS = ['#0284c7', '#a855f7', '#f59e0b', '#10b981', '#ef4444', '#64748b'];
+/** Candidato que no ganó ningún municipio (o del sexto en adelante) */
+export const COLOR_OTRO_CANDIDATO = PALETA_CANDIDATOS[PALETA_CANDIDATOS.length - 1];
 
 /** Color de cada candidato presidencial: por número de municipios ganados en Antioquia */
 export function coloresCandidatos(indice: IndiceGanadores, eleccionId: string): { nombre: string; color: string }[] {
@@ -39,7 +47,7 @@ export function coloresCandidatos(indice: IndiceGanadores, eleccionId: string): 
 
 export function colorGanador(eleccionId: string, g: { ganador: string; partido: string } | undefined, candidatos: { nombre: string; color: string }[]): string {
   if (!g) return COLOR_SIN_DATO;
-  if (esPresidencial(eleccionId)) return candidatos.find((c) => c.nombre === g.ganador)?.color ?? PALETA_CANDIDATOS[PALETA_CANDIDATOS.length - 1];
+  if (colorPorCandidato(eleccionId)) return candidatos.find((c) => c.nombre === g.ganador)?.color ?? PALETA_CANDIDATOS[PALETA_CANDIDATOS.length - 1];
   return colorDePartido(g.partido).color;
 }
 

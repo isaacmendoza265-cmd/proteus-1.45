@@ -32,7 +32,7 @@ import { ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA } from '../../data/antioquia12
 import { colorDePartido, COLOR_SIN_DATO, LEYENDA_PARTIDOS } from '../../data/electoral/partidoColors';
 import { cargarDemografia, cargarEconomia } from '../../services/territoryProfileService';
 import { cargarElecciones, sumarEleccion, tieneResultadosPorPuesto, tipoEleccion, type EleccionPuestos } from '../../services/electionResultsService';
-import { cargarGanadores, coloresCandidatos, colorGanador, esPresidencial, ganadoresPorTerritorio, type IndiceGanadores } from '../../services/winnersService';
+import { cargarGanadores, coloresCandidatos, colorGanador, colorPorCandidato, COLOR_OTRO_CANDIDATO, ganadoresPorTerritorio, type IndiceGanadores } from '../../services/winnersService';
 import {
   COLORES_ESTRATO,
   METRICAS_DEMOGRAFICAS,
@@ -152,7 +152,9 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
   const [hoveredFeature, setHoveredFeature] = useState<TerritoryGeoFeature | null>(null);
   // Por defecto, calles claras: el estilo aprobado (polígonos translúcidos con borde del mismo tono)
   const [mapaBase, setMapaBase] = useState<MapaBase>('calles');
-  const [antioquiaViewMode, setAntioquiaViewMode] = useState<'subregiones' | 'municipios'>('subregiones');
+  // Por defecto, los 125 municipios: son los que se colorean según la capa. Las subregiones se pintan
+  // con su color propio (no hay un ganador ni un indicador por subregión).
+  const [antioquiaViewMode, setAntioquiaViewMode] = useState<'subregiones' | 'municipios'>('municipios');
   const [customDeptDataset, setCustomDeptDataset] = useState<TerritoryFeatureCollection | null>(null);
   const [isLoadingDept, setIsLoadingDept] = useState<boolean>(false);
   const [deptDropdownOpen, setDeptDropdownOpen] = useState<boolean>(false);
@@ -213,7 +215,7 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
     cargarGanadores().then((i) => { if (activo) setIndiceGanadores(i); }).catch((e) => console.error('[Proteus] Índice de ganadores:', e));
     return () => { activo = false; };
   }, [activeLayer, indiceGanadores]);
-  const candidatosCapa = useMemo(() => (indiceGanadores && esPresidencial(eleccionCapa) ? coloresCandidatos(indiceGanadores, eleccionCapa) : []), [indiceGanadores, eleccionCapa]);
+  const candidatosCapa = useMemo(() => (indiceGanadores && colorPorCandidato(eleccionCapa) ? coloresCandidatos(indiceGanadores, eleccionCapa) : []), [indiceGanadores, eleccionCapa]);
   const nombreEleccionCapa = indiceGanadores?.elecciones.find((e) => e.id === eleccionCapa)?.nombre ?? 'Alcaldía 2023';
 
   // Cámara: última escala encuadrada y límites de la capa visible
@@ -1187,12 +1189,21 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
                   </select>
                 </label>
               </div>
-              {esPresidencial(eleccionCapa) ? candidatosCapa.map((c) => (
-                <div key={c.nombre} className="flex items-center gap-2">
-                  <span className="w-3 h-3 rounded-full inline-block" style={{ background: c.color }} />
-                  <span>{c.nombre}</span>
-                </div>
-              )) : LEYENDA_PARTIDOS.map((pc) => (
+              {colorPorCandidato(eleccionCapa) ? (
+                <>
+                  <div className="text-[10px] text-slate-400">Por candidato (sus partidos suelen ser coaliciones sin color propio)</div>
+                  {candidatosCapa.map((c) => (
+                    <div key={c.nombre} className="flex items-center gap-2">
+                      <span className="w-3 h-3 rounded-full inline-block" style={{ background: c.color }} />
+                      <span>{c.nombre}</span>
+                    </div>
+                  ))}
+                  <div className="flex items-center gap-2">
+                    <span className="w-3 h-3 rounded-full inline-block" style={{ background: COLOR_OTRO_CANDIDATO }} />
+                    <span>Otro candidato (ganó puestos, no municipios)</span>
+                  </div>
+                </>
+              ) : LEYENDA_PARTIDOS.map((pc) => (
                 <div key={pc.etiqueta} className="flex items-center gap-2">
                   <span className="w-3 h-3 rounded-full inline-block" style={{ background: pc.color }} />
                   <span>{pc.etiqueta}</span>
@@ -1200,8 +1211,13 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
               ))}
               <div className="flex items-center gap-2">
                 <span className="w-3 h-3 rounded-full inline-block" style={{ background: COLOR_SIN_DATO }} />
-                <span>Sin dato de partido</span>
+                <span>Sin dato</span>
               </div>
+              {currentLevel === 'departamental' && antioquiaViewMode === 'subregiones' && (
+                <div className="pt-1 mt-1 border-t border-white/10 text-[10px] leading-snug text-amber-200">
+                  Las subregiones se pintan con su color propio. Cambia a "125 Municipios" para ver el ganador de cada municipio.
+                </div>
+              )}
               {featuresWithoutParty > 0 && (
                 <div className="pt-1 mt-1 border-t border-white/10 text-[10px] leading-snug text-slate-400">
                   {isMunicipalScale

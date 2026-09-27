@@ -14,6 +14,7 @@ import {
 } from '../mapColorService';
 import { cargarDemografia, cargarEconomia } from '../territoryProfileService';
 import { cargarElecciones } from '../electionResultsService';
+import { cargarGanadores, colorGanador, colorPorCandidato, coloresCandidatos } from '../winnersService';
 
 describe('color del mapa por capa', () => {
   it('quintiles sin cortes repetidos y colores por clase', () => {
@@ -67,6 +68,15 @@ describe('color del mapa por capa', () => {
     expect(pm.fuente).toContain('2026');
     expect(valorMunicipio('05088', 12.3, 'economico', 'nbi').valor).toBe(12.3);
     expect(valorMunicipio('05088', undefined, 'economico', 'nbi').valor).toBeNull();
+  });
+
+  it('Gobernación 2023: cada candidato ganador con su color (no todo el departamento igual)', async () => {
+    const indice = await cargarGanadores();
+    expect(colorPorCandidato('gobernacion-2023')).toBe(true);
+    expect(colorPorCandidato('alcaldia-2023')).toBe(false);
+    const cands = coloresCandidatos(indice, 'gobernacion-2023');
+    const colores = new Set(Object.values(indice.ganadores['gobernacion-2023']).map(([ganador, partido]) => colorGanador('gobernacion-2023', { ganador, partido }, cands)));
+    expect(colores.size).toBe(4);
   });
 
   it('los puestos de cada elección son los de ese año', async () => {
