@@ -12,7 +12,9 @@ import { MapLayerControls } from '../../components/maps/MapLayerControls';
 import { MultiLevelZoomMap } from '../../components/maps/MultiLevelZoomMap';
 import { CommuneDeepAnalyticsDrawer } from '../../components/maps/CommuneDeepAnalyticsDrawer';
 import { PollingStationsPanel } from '../../components/maps/PollingStationsPanel';
-import { FichaTerritorio } from '../../components/territorio/FichaTerritorio';
+import { FichaTerritorio, type Seccion } from '../../components/territorio/FichaTerritorio';
+import { GeneradorContenido } from '../../components/territorio/GeneradorContenido';
+import { SELECCION_GENERAL, seleccionDesdeMapa, type PerfilCandidato } from '../../services/contentGeneratorService';
 import { RedDePoder3D } from '../../components/territorio/RedDePoder3D';
 import { usePuestosTerritorio, puestosDe, codigosResultadosDe } from '../../components/territorio/usePuestosTerritorio';
 import { territorioFicha, tieneFicha, municipioFichaPorDane, MUNICIPIOS_CON_FICHA } from '../../services/territoryProfileService';
@@ -44,14 +46,30 @@ const VALLE_ABURRA_CENSUS = ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA.filter((m) 
 interface TerritorialZoomHubViewProps {
   onNavigateToContentDirector?: (feature?: TerritoryGeoFeature) => void;
   onNavigateToVoterSegmentation?: (feature?: TerritoryGeoFeature) => void;
+  /** Perfil del candidato activo (nombre y estilo, para el generador de contenido) */
+  candidato?: PerfilCandidato | null;
 }
 
 export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
   onNavigateToContentDirector,
-  onNavigateToVoterSegmentation
+  onNavigateToVoterSegmentation,
+  candidato,
 }) => {
   const [currentLevel, setCurrentLevel] = useState<ZoomLevelId>('municipal');
   const [activeLayer, setActiveLayer] = useState<ThematicMetricLayer>('electoral');
+  // Mapa y ficha comparten la elección (año y tipo) y la capa elige la sección de la ficha:
+  // electoral → Política; demográfica y económica → Demografía (que trae también la economía).
+  const [eleccion, setEleccion] = useState<string>('alcaldia-2023');
+  const [seccionFicha, setSeccionFicha] = useState<Seccion>('politica');
+  const cambiarCapa = (capa: ThematicMetricLayer) => {
+    setActiveLayer(capa);
+    setSeccionFicha(capa === 'electoral' ? 'politica' : 'demografia');
+  };
+  const cambiarSeccionFicha = (s: Seccion) => {
+    setSeccionFicha(s);
+    if (s === 'politica') setActiveLayer('electoral');
+    else if (s === 'demografia' && activeLayer === 'electoral') setActiveLayer('demografico');
+  };
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFeature, setSelectedFeature] = useState<TerritoryGeoFeature | null>(null);
   // Municipio de los niveles 4 y 5 (ver src/data/geojson/municipalDivisions.ts)
@@ -88,6 +106,19 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
   const codigosResultadosFicha = useMemo(
     () => (fichaTerritorio ? codigosResultadosDe(puestosMuni, fichaTerritorio.tipo, fichaTerritorio.id) : []),
     [fichaTerritorio, puestosMuni],
+  );
+
+  // Generador de contenido: territorio elegido en el mapa ("General" si no hay) y los puestos de la ficha
+  const seleccionContenido = useMemo(() => {
+    const isMunicipal = currentLevel === 'municipal' || currentLevel === 'hiperlocal' || currentLevel === 'comunas-barrios';
+    if (!selectedFeature && !isMunicipal) return SELECCION_GENERAL;
+    const id = selectedFeature ? String(selectedFeature.id) : null;
+    const dane = selectedFeature ? ((selectedFeature.properties as { daneCode?: string }).daneCode ?? /(\d{5})$/.exec(id!)?.[1] ?? null) : null;
+    return seleccionDesdeMapa({ featureId: id, featureName: selectedFeature?.properties.name, muniId: isMunicipal ? selectedMunicipalityId : null, dane });
+  }, [selectedFeature, currentLevel, selectedMunicipalityId]);
+  const puestosDeFicha = useMemo(
+    () => (fichaTerritorio ? { territorioId: fichaTerritorio.id, codigosResultados: codigosResultadosFicha, codigos2026: puestosFicha.map((p) => p.codPuesto) } : null),
+    [fichaTerritorio, codigosResultadosFicha, puestosFicha],
   );
 
   const currentDataset = GEOJSON_LAYERS_BY_ZOOM[currentLevel];
@@ -222,7 +253,7 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
       {/* 3. Layer Controls (Choropleth Toggles & Search) */}
       <MapLayerControls
         activeLayer={activeLayer}
-        onChangeLayer={setActiveLayer}
+        onChangeLayer={cambiarCapa}
         searchQuery={searchQuery}
         onChangeSearchQuery={setSearchQuery}
         totalFeaturesCount={currentDataset?.features.length || 0}
@@ -249,6 +280,8 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
             }}
             comunaFiltroId={comunaAbierta?.id ?? null}
             onSelectComuna={handleSelectComuna}
+            eleccion={eleccion}
+            onCambiarEleccion={setEleccion}
           />
         </div>
 
@@ -262,6 +295,10 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
               sinUbicar={puestosMuni.sinUbicar}
               cargandoPuestos={puestosMuni.cargando}
               onVerRed={() => setVista('redes')}
+              eleccion={eleccion}
+              onCambiarEleccion={setEleccion}
+              seccion={seccionFicha}
+              onCambiarSeccion={cambiarSeccionFicha}
               onUsarComoActivo={selectedFeature ? () => activeTerritoryService.setFromGeoFeature(selectedFeature) : undefined}
             />
           </div>
@@ -279,6 +316,14 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
           </div>
         )}
       </div>
+
+      {/* 4.1. Generador de contenido enlazado a la selección del mapa */}
+      <GeneradorContenido
+        seleccionMapa={seleccionContenido}
+        eleccionId={eleccion}
+        ficha={puestosDeFicha}
+        candidato={candidato}
+      />
 
       {/* 4.2. Puestos de votación del territorio visible */}
       <PollingStationsPanel

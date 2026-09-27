@@ -123,6 +123,9 @@ interface MultiLevelZoomMapProps {
   comunaFiltroId?: string | null;
   /** Clic en una comuna (municipios con nivel de comunas): abre sus barrios */
   onSelectComuna?: (feature: TerritoryGeoFeature) => void;
+  /** Elección de la capa electoral (compartida con la ficha). Si no se pasa, el mapa guarda la suya. */
+  eleccion?: string;
+  onCambiarEleccion?: (id: string) => void;
 }
 
 /** Comuna a la que pertenece un barrio o vereda (Medellín usa comunaId; los demás, parentId) */
@@ -144,7 +147,9 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
   selectedMunicipalityId = 'medellin',
   onSelectMunicipality,
   comunaFiltroId = null,
-  onSelectComuna
+  onSelectComuna,
+  eleccion: eleccionExterna,
+  onCambiarEleccion,
 }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
@@ -207,7 +212,9 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
   }, [puestoSeleccionado]);
   const [eleccionesMuni, setEleccionesMuni] = useState<EleccionPuestos[]>([]);
   // Capa "Resultado electoral": elección que se colorea (2015-2026) y su índice de ganadores por municipio
-  const [eleccionCapa, setEleccionCapa] = useState<string>('alcaldia-2023');
+  const [eleccionInterna, setEleccionInterna] = useState<string>('alcaldia-2023');
+  const eleccionCapa = eleccionExterna ?? eleccionInterna;
+  const setEleccionCapa = (id: string) => (onCambiarEleccion ?? setEleccionInterna)(id);
   const [indiceGanadores, setIndiceGanadores] = useState<IndiceGanadores | null>(null);
   useEffect(() => {
     if (activeLayer !== 'electoral' || indiceGanadores) return;

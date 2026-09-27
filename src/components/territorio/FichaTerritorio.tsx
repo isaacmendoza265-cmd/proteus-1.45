@@ -11,7 +11,7 @@ import {
 import { cargarElecciones, sumarEleccion, tipoEleccion, ELECCIONES_PENDIENTES, type EleccionPuestos } from '../../services/electionResultsService';
 import type { PuestoVotacion } from '../../services/pollingStationsService';
 
-type Seccion = 'politica' | 'demografia' | 'censo' | 'grupos';
+export type Seccion = 'politica' | 'demografia' | 'censo' | 'grupos';
 const SECCIONES: [Seccion, string][] = [
   ['politica', 'Política'],
   ['demografia', 'Demografía'],
@@ -63,13 +63,24 @@ interface FichaTerritorioProps {
   onEntrar?: () => void;
   entrarLabel?: string;
   onUsarComoActivo?: () => void;
+  /** Elección elegida (compartida con el mapa). Si no se pasa, la ficha guarda la suya. */
+  eleccion?: string;
+  onCambiarEleccion?: (id: string) => void;
+  /** Sección abierta (el mapa la cambia según la capa). Si no se pasa, la ficha guarda la suya. */
+  seccion?: Seccion;
+  onCambiarSeccion?: (s: Seccion) => void;
 }
 
 export const FichaTerritorio: React.FC<FichaTerritorioProps> = ({
   territorio: t, puestosDentro, codigosResultados = [], sinUbicar = [], cargandoPuestos, onVerRed, onEntrar, entrarLabel, onUsarComoActivo,
+  eleccion: eleccionExterna, onCambiarEleccion, seccion: seccionExterna, onCambiarSeccion,
 }) => {
-  const [seccion, setSeccion] = useState<Seccion>('politica');
-  const [eleccion, setEleccion] = useState<string>('alcaldia-2023');
+  const [seccionInterna, setSeccionInterna] = useState<Seccion>('politica');
+  const [eleccionInterna, setEleccionInterna] = useState<string>('alcaldia-2023');
+  const seccion = seccionExterna ?? seccionInterna;
+  const setSeccion = (s: Seccion) => (onCambiarSeccion ?? setSeccionInterna)(s);
+  const eleccion = eleccionExterna ?? eleccionInterna;
+  const setEleccion = (id: string) => (onCambiarEleccion ?? setEleccionInterna)(id);
   const [elecciones, setElecciones] = useState<EleccionPuestos[] | null>(null);
   useEffect(() => {
     let activo = true;

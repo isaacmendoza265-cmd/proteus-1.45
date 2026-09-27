@@ -237,6 +237,46 @@ async function startServer() {
     }
   });
 
+  // Generador de contenido del mapa (src/services/contentGeneratorService.ts). La clave de Gemini se
+  // queda en el servidor; el cliente manda la instrucción y los datos del territorio.
+  const MODELO_CONTENIDO = 'gemini-3.8-flash';
+  app.post('/api/contenido/generar', async (req, res) => {
+    try {
+      const { sistema, instruccion } = req.body ?? {};
+      if (typeof instruccion !== 'string' || !instruccion.trim()) {
+        res.status(400).json({ error: "Falta la instrucción ('instruccion')." });
+        return;
+      }
+      if (instruccion.length > 20_000 || (typeof sistema === 'string' && sistema.length > 5_000)) {
+        res.status(400).json({ error: 'La instrucción es demasiado larga.' });
+        return;
+      }
+      const ai = getGenAI(req.headers['x-gemini-api-key'] as string | undefined);
+      const respuesta = await ai.models.generateContent({
+        model: MODELO_CONTENIDO,
+        contents: instruccion,
+        config: typeof sistema === 'string' && sistema.trim() ? { systemInstruction: sistema } : undefined,
+      });
+      res.json({ texto: respuesta.text ?? '', modelo: MODELO_CONTENIDO });
+    } catch (err: any) {
+      console.error('Error en /api/contenido/generar:', err);
+      // El SDK entrega el error de Google como JSON dentro del mensaje: se traduce a algo legible
+      let status = Number(err.status) || 500;
+      let detalle = String(err.message || '');
+      try {
+        const g = JSON.parse(detalle)?.error;
+        if (g) { status = Number(g.code) || status; detalle = `${g.status ?? ''} ${g.message ?? ''}`.trim(); }
+      } catch { /* el mensaje no era JSON */ }
+      const motivo =
+        status === 401 || status === 403
+          ? 'Google rechazó la clave de Gemini del servidor (sin permiso). Revisa GEMINI_API_KEY en .env y que el proyecto de Google AI Studio tenga acceso a la API.'
+          : status === 429
+            ? 'Se agotó la cuota de Gemini. Intenta más tarde.'
+            : 'No se pudo generar el contenido.';
+      res.status(status).json({ error: `${motivo} (${status}${detalle ? `: ${detalle}` : ''})` });
+    }
+  });
+
   // Vite middleware para entorno de desarrollo
   if (process.env.NODE_ENV !== 'production') {
     const vite = await createViteServer({

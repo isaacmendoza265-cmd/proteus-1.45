@@ -122,6 +122,7 @@ export default function App() {
         <TerritorialZoomHubView 
           onNavigateToContentDirector={() => setCurrentView('content-director')}
           onNavigateToVoterSegmentation={() => setCurrentView('voter-segmentation')}
+          candidato={candidateProfile}
         />
       )}
 
