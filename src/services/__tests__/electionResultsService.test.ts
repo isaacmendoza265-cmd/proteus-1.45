@@ -59,9 +59,17 @@ describe('resultados por puesto', () => {
     expect(go.porCandidato).toBe(true);
     expect(t.candidatos[0].votos).toBe(39828);
   });
-  it('fase C (79 municipios con 20.000 votantes o menos): sin presidencial todavía', async () => {
+  it('fase C (79 municipios con 20.000 votantes o menos): ya tienen Presidencia 2026 por puesto', async () => {
     const es = await cargarElecciones('05002'); // Abejorral
-    expect(es.map((e) => e.id)).toEqual(['alcaldia-2023', 'concejo-2023', 'gobernacion-2023', 'asamblea-2023', 'senado-2026', 'camara-2026']);
+    expect(es.map((e) => e.id)).toEqual([
+      'alcaldia-2023', 'concejo-2023', 'gobernacion-2023', 'asamblea-2023', 'senado-2026', 'camara-2026',
+      'presidente-2026-1', 'presidente-2026-2',
+    ]);
+    const v2 = es.find((e) => e.id === 'presidente-2026-2')!;
+    const t = sumarEleccion(v2, 'todos')!;
+    expect(t.votantes).toBe(8879);
+    expect(t.candidatos[0].nombre).toMatch(/Espriella/);
+    expect(t.candidatos[0].votos).toBe(7216);
   });
   it('Presidencia 2026 en Medellín: escrutinio mesa a mesa, sin cédulas', async () => {
     const es = await cargarElecciones('05001');

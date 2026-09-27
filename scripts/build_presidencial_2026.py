@@ -22,6 +22,12 @@ VUELTAS = {'v1': ('presidente-2026-1', 'Presidencia 2026 · 1.ª vuelta', '31-ma
 censo = defaultdict(dict)
 for p in json.load(open('src/data/electoral/puestos/antioquia.json')):
     censo[p['codMunicipio']][p['codPuesto']] = p
+# Municipios de fase C (<= 20.000 votantes): mismo censo por puesto, calculado aparte del umbral
+# nacional (scripts/build_puestos_fase_c_antioquia.py), sin tocar antioquia.json ni su criterio.
+_fase_c_path = 'src/data/electoral/puestos/antioquia_fase_c.json'
+if os.path.exists(_fase_c_path):
+    for p in json.load(open(_fase_c_path))['puestos']:
+        censo[p['codMunicipio']][p['codPuesto']] = p
 
 def construir(ruta, reg):
     filas = list(csv.DictReader(open(ruta, encoding='utf-8-sig'), delimiter=';'))
