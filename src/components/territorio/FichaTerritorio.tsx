@@ -9,7 +9,7 @@ import {
   demografia, censoElectoral, grupos, politica, fmt, pct,
   cargarDemografia, cargarEconomia, economia,
 } from '../../services/territoryProfileService';
-import { cargarElecciones, sumarEleccion, ELECCIONES_PENDIENTES, type EleccionPuestos } from '../../services/electionResultsService';
+import { cargarElecciones, sumarEleccion, tipoEleccion, ELECCIONES_PENDIENTES, type EleccionPuestos } from '../../services/electionResultsService';
 import type { PuestoVotacion } from '../../services/pollingStationsService';
 
 type Seccion = 'politica' | 'demografia' | 'censo' | 'grupos';
@@ -84,10 +84,35 @@ export const FichaTerritorio: React.FC<FichaTerritorioProps> = ({
   const pendiente = pendientes.find((x) => x.id === eleccion);
   /** Códigos de los puestos del territorio en la elección (2023 y 2026 usan códigos distintos) */
   const codigosDe = (e: EleccionPuestos): string[] | 'todos' =>
-    t.tipo === 'municipio' ? 'todos' : e.codigos === '2023' ? codigosResultados : puestosDentro.map((p) => p.codPuesto);
+    t.tipo === 'municipio' ? 'todos'
+      : e.codigos === '2026' ? puestosDentro.map((p) => p.codPuesto)
+        : codigosResultados.filter((k) => k.startsWith(`${e.codigos}|`)).map((k) => k.slice(e.codigos.length + 1));
   const resultado = useMemo(() => (eleccionSel ? sumarEleccion(eleccionSel, codigosDe(eleccionSel)) : null),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [eleccionSel, t.tipo, codigosResultados, puestosDentro]);
+  // Años con elecciones cargadas (la más reciente primero) y la misma elección en otros años
+  const anioSel = eleccionSel?.anio ?? Number(/(\d{4})/.exec(eleccion)?.[1] ?? 2023);
+  const anios = useMemo(() => [...new Set([...(elecciones ?? []).map((e) => e.anio), ...(pendientes.length ? [2026] : [])])].sort((a, b) => b - a),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [elecciones]);
+  const elegirAnio = (y: number) => {
+    const delAnio = (elecciones ?? []).filter((e) => e.anio === y);
+    const mismo = delAnio.find((e) => tipoEleccion(e.id) === tipoEleccion(eleccion));
+    setEleccion((mismo ?? delAnio[0])?.id ?? pendientes[0]?.id ?? eleccion);
+    setPuestoAbierto(null);
+  };
+  const comparacion = useMemo(() => {
+    if (!eleccionSel || !elecciones) return [];
+    return elecciones
+      .filter((e) => tipoEleccion(e.id) === tipoEleccion(eleccionSel.id))
+      .map((e) => {
+        const r = sumarEleccion(e, codigosDe(e));
+        const lider = r ? (e.porCandidato ? r.candidatos[0] : r.partidos[0]) : undefined;
+        return { id: e.id, anio: e.anio, votantes: r?.votantes ?? 0, puestos: r?.puestos ?? 0, lider: lider?.nombre, detalle: lider && 'partido' in lider ? String(lider.partido) : undefined, pct: lider?.pct ?? 0 };
+      })
+      .sort((a, b) => b.anio - a.anio);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [eleccionSel, elecciones, t.tipo, codigosResultados, puestosDentro]);
   const [verTodosPuestos, setVerTodosPuestos] = useState(false);
   const [puestoAbierto, setPuestoAbierto] = useState<string | null>(null);
   // Resultados de cada puesto del territorio en la elección elegida
@@ -168,9 +193,19 @@ export const FichaTerritorio: React.FC<FichaTerritorioProps> = ({
 
       {seccion === 'politica' && (
         <div className="flex flex-col gap-3" role="tabpanel">
+          {anios.length > 1 && (
+            <div role="group" aria-label="Año" className="flex flex-wrap gap-1">
+              {anios.map((y) => (
+                <button key={y} aria-pressed={anioSel === y} onClick={() => elegirAnio(y)}
+                  className={`min-h-8 px-2.5 rounded-md text-xs font-bold tabular-nums border ${anioSel === y ? 'bg-[var(--c-accent)] border-[var(--c-accent)] text-white' : 'border-[var(--c-border)] bg-[var(--c-surface)]'}`}>
+                  {y}
+                </button>
+              ))}
+            </div>
+          )}
           <div role="group" aria-label="Elección" className="flex flex-wrap gap-1">
-            {[...(elecciones ?? []).map((e) => ({ id: e.id, nombre: e.nombre, disponible: true })),
-              ...pendientes.map((e) => ({ id: e.id, nombre: e.nombre, disponible: false }))].map((o) => (
+            {[...(elecciones ?? []).filter((e) => e.anio === anioSel).map((e) => ({ id: e.id, nombre: e.nombre, disponible: true })),
+              ...pendientes.filter(() => anioSel === 2026).map((e) => ({ id: e.id, nombre: e.nombre, disponible: false }))].map((o) => (
               <button key={o.id} aria-pressed={eleccion === o.id} onClick={() => { setEleccion(o.id); setPuestoAbierto(null); }} title={o.disponible ? undefined : 'Pendiente'}
                 className={`min-h-8 px-2.5 rounded-md border text-xs font-semibold ${eleccion === o.id ? 'bg-[var(--c-accent-soft)] border-[var(--c-accent)] text-[var(--c-accent-text)]' : 'border-[var(--c-border)] bg-[var(--c-surface)]'} ${o.disponible ? '' : 'text-[var(--c-muted)] border-dashed'}`}>
                 {o.nombre}
@@ -190,7 +225,9 @@ export const FichaTerritorio: React.FC<FichaTerritorioProps> = ({
           {eleccionSel && (resultado ? (
             <div className="flex flex-col gap-2 px-3 py-2.5 rounded-xl bg-[var(--c-sunken)]">
               <Cabecera titulo={t.tipo === 'municipio' ? eleccionSel.nombre : `${eleccionSel.nombre} en sus puestos`} estado="oficial" fuente={eleccionSel.tipo === 'escrutinio' ? `Registraduría, escrutinio oficial ${eleccionSel.fecha}, mesa a mesa` : `Registraduría, preconteo ${eleccionSel.fecha} · puede diferir del escrutinio`} />
-              <span className="text-xs text-[var(--c-muted)]">{fmt(resultado.votantes)} votantes de {fmt(resultado.habilitados)} habilitados ({pct((100 * resultado.votantes) / Math.max(1, resultado.habilitados))}) · {fmt(resultado.puestos)} puesto(s)</span>
+              <span className="text-xs text-[var(--c-muted)]">{resultado.habilitados > 0
+                ? `${fmt(resultado.votantes)} votantes de ${fmt(resultado.habilitados)} habilitados (${pct((100 * resultado.votantes) / Math.max(1, resultado.habilitados))})`
+                : `${fmt(resultado.votantes)} votantes (el archivo de ${eleccionSel.anio} no trae habilitados)`} · {fmt(resultado.puestos)} puesto(s)</span>
               {eleccionSel.porCandidato ? (
                 resultado.candidatos.slice(0, 6).map((c, i) => (
                   <div key={c.nombre} className="flex items-center gap-2 text-sm">
@@ -226,6 +263,21 @@ export const FichaTerritorio: React.FC<FichaTerritorioProps> = ({
           ) : (
             <Aviso>No hay puestos de votación de esta elección dentro del territorio: sus residentes votan en puestos vecinos. No se reparte ni se estima.</Aviso>
           ))}
+          {comparacion.length > 1 && (
+            <div className="flex flex-col gap-1 px-3 py-2.5 rounded-xl border border-[var(--c-border)]">
+              <Cabecera titulo="La misma elección en otros años" estado="oficial" fuente="Registraduría: escrutinio mesa a mesa (2015-2022, Presidencia 2026) y preconteo (2023, Congreso 2026)" />
+              <div className="grid grid-cols-[3rem_1fr_auto] gap-x-2 gap-y-1 text-sm">
+                {comparacion.map((c) => (
+                  <React.Fragment key={c.id}>
+                    <button onClick={() => { setEleccion(c.id); setPuestoAbierto(null); }} className={`text-left tabular-nums font-bold ${c.id === eleccionSel?.id ? 'text-[var(--c-accent)]' : ''}`}>{c.anio}</button>
+                    <span className="min-w-0 flex flex-col"><span className="truncate font-semibold">{c.lider ?? 'Sin puestos en el territorio'}</span>{c.detalle && <span className="text-xs text-[var(--c-muted)] truncate">{c.detalle}</span>}</span>
+                    <span className="text-right tabular-nums">{c.lider ? pct(c.pct) : '—'}<span className="block text-xs text-[var(--c-muted)]">{fmt(c.votantes)} votos</span></span>
+                  </React.Fragment>
+                ))}
+              </div>
+              {t.tipo !== 'municipio' && <span className="text-xs text-[var(--c-muted)]">Cada año se suman los puestos que ese año quedaban dentro del territorio (ubicados por su nombre). Los que no se pudieron ubicar cuentan solo en el total del municipio.</span>}
+            </div>
+          )}
           {!eleccionSel && !pendiente && elecciones !== null && elecciones.length === 0 && pol.resultados.alcaldia && t.tipo === 'municipio' && (
             <div className="flex flex-col gap-1 px-3 py-2.5 rounded-xl border border-[var(--c-border)]">
               <Cabecera titulo="Alcaldía 2023 (escrutinio municipal)" estado="oficial" />
@@ -256,7 +308,7 @@ export const FichaTerritorio: React.FC<FichaTerritorioProps> = ({
                       </span>
                       <span className="text-right shrink-0">
                         <span className="block text-sm tabular-nums font-semibold">{fmt(f.votantes)}</span>
-                        <span className="block text-xs text-[var(--c-muted)]">{pct((100 * f.votantes) / Math.max(1, f.habilitados))} particip.</span>
+                        {f.habilitados > 0 && <span className="block text-xs text-[var(--c-muted)]">{pct((100 * f.votantes) / Math.max(1, f.habilitados))} particip.</span>}
                       </span>
                     </button>
                     {abierto && (
@@ -268,7 +320,7 @@ export const FichaTerritorio: React.FC<FichaTerritorioProps> = ({
                             <span className="w-12 text-right tabular-nums">{pct(c.pct)}</span>
                           </div>
                         ))}
-                        <span className="text-xs text-[var(--c-muted)]">{fmt(f.votantes)} votantes de {fmt(f.habilitados)} habilitados.</span>
+                        <span className="text-xs text-[var(--c-muted)]">{fmt(f.votantes)} votantes{f.habilitados > 0 ? ` de ${fmt(f.habilitados)} habilitados` : ''}.</span>
                       </div>
                     )}
                   </div>

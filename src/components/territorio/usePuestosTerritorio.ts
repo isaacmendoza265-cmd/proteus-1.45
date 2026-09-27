@@ -8,7 +8,7 @@ import {
   getMunicipioConPuestos, loadPuestosMunicipio, asignarPuestosATerritorios, puntoEnTerritorio, type PuestoVotacion,
 } from '../../services/pollingStationsService';
 import { tieneFicha } from '../../services/territoryProfileService';
-import { cargarElecciones } from '../../services/electionResultsService';
+import { cargarElecciones, type EleccionPuestos } from '../../services/electionResultsService';
 import type { TerritoryGeoFeature } from '../../data/geojson/types';
 
 export interface PuestosTerritorio {
@@ -19,17 +19,23 @@ export interface PuestosTerritorio {
   division: Record<string, string>;
   /** codPuesto -> id de barrio/vereda */
   subdivision: Record<string, string>;
-  /** Puestos de 2023 con resultados: código 2023 -> id de comuna/zona y de barrio/vereda */
+  /** Puestos de elecciones con códigos propios (2023 y la serie 2015-2022), ubicados por sus
+   *  coordenadas: "<año de los códigos>|<código>" -> id de comuna/zona y de barrio/vereda */
   resultadosDivision: Record<string, string>;
   resultadosSubdivision: Record<string, string>;
 }
 
-/** Ubica los puestos de 2023 (con coordenadas de la Divipole 2023) en los territorios de una capa */
-function ubicarResultados(ubicaciones: Record<string, { lat: number; lon: number }>, features: TerritoryGeoFeature[]): Record<string, string> {
+/** Ubica los puestos de las elecciones con códigos propios en los territorios de una capa */
+function ubicarResultados(elecciones: EleccionPuestos[], features: TerritoryGeoFeature[]): Record<string, string> {
   const out: Record<string, string> = {};
-  for (const [codigo, u] of Object.entries(ubicaciones)) {
-    const f = features.find((x) => puntoEnTerritorio(u.lon, u.lat, x));
-    if (f) out[codigo] = String(f.id);
+  const vistos = new Set<string>();
+  for (const e of elecciones) {
+    if (e.codigos === '2026' || !e.ubicaciones || vistos.has(e.codigos)) continue;
+    vistos.add(e.codigos);
+    for (const [codigo, u] of Object.entries(e.ubicaciones)) {
+      const f = features.find((x) => puntoEnTerritorio(u.lon, u.lat, x));
+      if (f) out[`${e.codigos}|${codigo}`] = String(f.id);
+    }
   }
   return out;
 }
@@ -60,11 +66,10 @@ export function usePuestosTerritorio(muniId: string | null, nombreMunicipio?: st
           if (!activo) return;
           const divs = divsCapa && { ...divsCapa, features: divsCapa.features.filter((f) => tieneFicha(String(f.id))) };
           const subs = subsCapa && { ...subsCapa, features: subsCapa.features.filter((f) => tieneFicha(String(f.id))) };
-          const ub = elecciones.find((e) => e.codigos === '2023')?.ubicaciones ?? {};
           setEstado({
             ...VACIO, cargando: false,
-            resultadosDivision: ubicarResultados(ub, divs?.features ?? []),
-            resultadosSubdivision: ubicarResultados(ub, subs?.features ?? []),
+            resultadosDivision: ubicarResultados(elecciones, divs?.features ?? []),
+            resultadosSubdivision: ubicarResultados(elecciones, subs?.features ?? []),
           });
         })
         .catch((err) => {
@@ -91,13 +96,12 @@ export function usePuestosTerritorio(muniId: string | null, nombreMunicipio?: st
         // Solo territorios con ficha (se descarta, p. ej., el contorno completo de Medellín)
         const divs = divsCapa && { ...divsCapa, features: divsCapa.features.filter((f) => tieneFicha(String(f.id))) };
         const subs = subsCapa && { ...subsCapa, features: subsCapa.features.filter((f) => tieneFicha(String(f.id))) };
-        const ub = elecciones.find((e) => e.codigos === '2023')?.ubicaciones ?? {};
         const a = asignarPuestosATerritorios(puestos, divs?.features ?? []);
         const b = asignarPuestosATerritorios(puestos, subs?.features ?? []);
         setEstado({
           cargando: false, todos: puestos, sinUbicar: divs?.features.length ? a.sinCoordenadas : [], division: a.territorioDePuesto, subdivision: b.territorioDePuesto,
-          resultadosDivision: ubicarResultados(ub, divs?.features ?? []),
-          resultadosSubdivision: ubicarResultados(ub, subs?.features ?? []),
+          resultadosDivision: ubicarResultados(elecciones, divs?.features ?? []),
+          resultadosSubdivision: ubicarResultados(elecciones, subs?.features ?? []),
         });
       })
       .catch((err) => {
@@ -116,7 +120,7 @@ export function puestosDe(p: PuestosTerritorio, tipo: 'municipio' | 'division' |
   return p.todos.filter((x) => mapa[x.codPuesto] === id);
 }
 
-/** Códigos 2023 de los puestos con resultados dentro de un territorio */
+/** Claves "<año>|<código>" de los puestos con resultados (códigos propios) dentro de un territorio */
 export function codigosResultadosDe(p: PuestosTerritorio, tipo: 'municipio' | 'division' | 'subdivision', id: string): string[] {
   if (tipo === 'municipio') return [];
   const mapa = tipo === 'division' ? p.resultadosDivision : p.resultadosSubdivision;

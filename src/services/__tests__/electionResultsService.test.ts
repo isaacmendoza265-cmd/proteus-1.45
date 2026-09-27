@@ -1,6 +1,16 @@
 import { describe, it, expect } from 'vitest';
 import { cargarElecciones, sumarEleccion, tieneResultadosPorPuesto, MUNICIPIOS_CON_RESULTADOS } from '../electionResultsService';
 
+// De la más reciente a la más antigua: 2026, 2023 y la serie histórica 2022-2015
+const SERIE = [
+  'senado-2026', 'camara-2026', 'presidente-2026-1', 'presidente-2026-2',
+  'alcaldia-2023', 'concejo-2023', 'gobernacion-2023', 'asamblea-2023',
+  'senado-2022', 'camara-2022', 'presidente-2022-1', 'presidente-2022-2',
+  'gobernacion-2019', 'asamblea-2019', 'alcaldia-2019', 'concejo-2019',
+  'presidente-2018-1', 'presidente-2018-2',
+  'gobernacion-2015', 'asamblea-2015', 'alcaldia-2015', 'concejo-2015',
+];
+
 const total = async (dane: string, id: string) => {
   const e = (await cargarElecciones(dane)).find((x) => x.id === id)!;
   return { e, total: sumarEleccion(e, 'todos')!, suma: sumarEleccion(e, Object.keys(e.puestos))! };
@@ -44,9 +54,7 @@ describe('resultados por puesto', () => {
     expect(MUNICIPIOS_CON_RESULTADOS).toHaveLength(125);
     for (const dane of MUNICIPIOS_CON_RESULTADOS) {
       const es = await cargarElecciones(dane);
-      const base = ['alcaldia-2023', 'concejo-2023', 'gobernacion-2023', 'asamblea-2023', 'senado-2026', 'camara-2026'];
-      const conPresidencial = es.some((e) => e.id === 'presidente-2026-1');
-      expect(es.map((e) => e.id)).toEqual(conPresidencial ? [...base, 'presidente-2026-1', 'presidente-2026-2'] : base);
+      expect(es.map((e) => e.id)).toEqual(SERIE);
       for (const e of es) {
         if (e.id === 'concejo-2023' || e.id === 'asamblea-2023') continue;
         expect(sumarEleccion(e, Object.keys(e.puestos))!.votantes).toBe(e.municipio.votantes);
@@ -61,10 +69,7 @@ describe('resultados por puesto', () => {
   });
   it('fase C (79 municipios con 20.000 votantes o menos): ya tienen Presidencia 2026 por puesto', async () => {
     const es = await cargarElecciones('05002'); // Abejorral
-    expect(es.map((e) => e.id)).toEqual([
-      'alcaldia-2023', 'concejo-2023', 'gobernacion-2023', 'asamblea-2023', 'senado-2026', 'camara-2026',
-      'presidente-2026-1', 'presidente-2026-2',
-    ]);
+    expect(es.map((e) => e.id)).toEqual(SERIE);
     const v2 = es.find((e) => e.id === 'presidente-2026-2')!;
     const t = sumarEleccion(v2, 'todos')!;
     expect(t.votantes).toBe(8879);
@@ -81,5 +86,29 @@ describe('resultados por puesto', () => {
     expect(t.candidatos[0].nombre).toMatch(/Espriella/);
     expect(t.candidatos[0].votos).toBe(819802);
     expect(JSON.stringify(v2)).not.toMatch(/CANCEDULA|cedula/i);
+  });
+  it('serie histórica: Medellín 2019 y 2015, Antioquia 2018; sin habilitados ni cédulas', async () => {
+    const q = await total('05001', 'alcaldia-2019');
+    expect(q.total.candidatos[0].nombre).toMatch(/Quintero/);
+    expect(q.total.candidatos[0].votos).toBe(304034);
+    expect(q.suma.votantes).toBe(q.total.votantes);
+    expect(q.e.tipo).toBe('escrutinio');
+    expect(q.total.habilitados).toBe(0);
+    const f = await total('05001', 'alcaldia-2015');
+    expect(f.total.candidatos[0].nombre).toMatch(/Gutierrez/);
+    const d = await total('05001', 'presidente-2018-2');
+    expect(d.total.candidatos[0].nombre).toBe('Ivan Duque');
+    expect(d.total.partidos[0].nombre).toMatch(/Centro Democr/);
+    for (const e of await cargarElecciones('05001')) expect(JSON.stringify(e.candidatos)).not.toMatch(/\d{7,}/);
+  });
+  it('los puestos históricos llevan ubicación propia (en Antioquia, la gran mayoría ubicados)', async () => {
+    let total = 0, ubicados = 0;
+    for (const dane of MUNICIPIOS_CON_RESULTADOS) {
+      const e19 = (await cargarElecciones(dane)).find((e) => e.id === 'alcaldia-2019')!;
+      expect(e19.codigos).toBe('2019');
+      total += Object.keys(e19.puestos).length;
+      ubicados += Object.keys(e19.puestos).filter((c) => e19.ubicaciones?.[c]).length;
+    }
+    expect(ubicados / total).toBeGreaterThan(0.9);
   });
 });

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { 
@@ -31,6 +31,7 @@ import { ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA } from '../../data/antioquia12
 import { colorDePartido, COLOR_SIN_DATO, LEYENDA_PARTIDOS } from '../../data/electoral/partidoColors';
 import { cargarEconomia, economia, territorioFicha } from '../../services/territoryProfileService';
 import { cargarElecciones, sumarEleccion, type EleccionPuestos } from '../../services/electionResultsService';
+import { cargarGanadores, coloresCandidatos, colorGanador, esPresidencial, ganadoresPorTerritorio, type IndiceGanadores } from '../../services/winnersService';
 
 // Estrato 1 (bajo) -> 6 (alto). Mismos colores que la barra de "viviendas por estrato" de la ficha.
 const COLORES_ESTRATO = ['#9B2C2C', '#C05621', '#B7791F', '#2F855A', '#2B6CB0', '#553C9A'];
@@ -126,6 +127,17 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
   // Ficha de puesto: se abre al hacer clic en un marcador
   const [puestoSeleccionado, setPuestoSeleccionado] = useState<PuestoVotacion | null>(null);
   const [eleccionesMuni, setEleccionesMuni] = useState<EleccionPuestos[]>([]);
+  // Capa "Resultado electoral": elección que se colorea (2015-2026) y su índice de ganadores por municipio
+  const [eleccionCapa, setEleccionCapa] = useState<string>('alcaldia-2023');
+  const [indiceGanadores, setIndiceGanadores] = useState<IndiceGanadores | null>(null);
+  useEffect(() => {
+    if (activeLayer !== 'electoral' || indiceGanadores) return;
+    let activo = true;
+    cargarGanadores().then((i) => { if (activo) setIndiceGanadores(i); }).catch((e) => console.error('[Proteus] Índice de ganadores:', e));
+    return () => { activo = false; };
+  }, [activeLayer, indiceGanadores]);
+  const candidatosCapa = useMemo(() => (indiceGanadores && esPresidencial(eleccionCapa) ? coloresCandidatos(indiceGanadores, eleccionCapa) : []), [indiceGanadores, eleccionCapa]);
+  const nombreEleccionCapa = indiceGanadores?.elecciones.find((e) => e.id === eleccionCapa)?.nombre ?? 'Alcaldía 2023';
 
   // Cámara: última escala encuadrada y límites de la capa visible
   const lastCameraKeyRef = useRef<string>('');
@@ -146,8 +158,10 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
     const p = feature.properties;
     
     if (activeLayer === 'electoral') {
-      // Alcaldía 2023 (escrutinio oficial): partido del alcalde electo, municipio por municipio.
-      // Sin dato de partido (territorios sin resultado, p. ej. comunas y barrios) => color neutro.
+      // Elección elegida (2015-2026): municipio por municipio, o comuna/barrio/vereda por sus puestos.
+      // Presidencia: color por candidato; las demás, por el partido del ganador o de la lista más votada.
+      if (indiceGanadores || isMunicipalScale) return colorGanador(eleccionCapa, ganadorDe(feature), candidatosCapa);
+      // Mientras carga el índice: Alcaldía 2023 del maestro de municipios
       if (!p.winnerParty && !p.predominantParty) return COLOR_SIN_DATO;
       return colorDePartido(p.predominantParty || p.winnerParty).color;
     }
@@ -353,6 +367,17 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
 
   // Ubicar los puestos en las comunas, barrios o veredas visibles (solo escala municipal)
   const municipalFeatures = isMunicipalScale ? (usesCustomMuni ? customMuniDataset?.features : GEOJSON_LAYERS_BY_ZOOM[currentLevel]?.features) : undefined;
+  // Ganador de la elección elegida en cada comuna/barrio/vereda (suma de los puestos que caen dentro)
+  const ganadorTerritorio = useMemo(() => {
+    const e = eleccionesMuni.find((x) => x.id === eleccionCapa);
+    return e && municipalFeatures?.length ? ganadoresPorTerritorio(e, municipalFeatures, puestos) : {};
+  }, [eleccionesMuni, eleccionCapa, municipalFeatures, puestos]);
+  const ganadorDe = (feature: TerritoryGeoFeature) => {
+    if (isMunicipalScale) return ganadorTerritorio[String(feature.id)];
+    const dane = (feature.properties as { daneCode?: string }).daneCode ?? /(\d{5})$/.exec(String(feature.id))?.[1];
+    const g = dane ? indiceGanadores?.ganadores[eleccionCapa]?.[dane] : undefined;
+    return g ? { ganador: g[0], partido: g[1], pct: g[2], votantes: g[3], puestos: 0 } : undefined;
+  };
   useEffect(() => {
     if (!municipalFeatures?.length || !puestos.length) {
       setAsignacion(null);
@@ -595,7 +620,11 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
 
         const isCorregimiento = Boolean((feature.properties as any).isCorregimiento || feature.id.includes('correg'));
         const metricDisplay = 
-          activeLayer === 'electoral' ? ((p as any).electedMayor ? `Alcalde electo: ${(p as any).electedMayor} (${p.predominantParty || p.winnerParty})` : (p.predominantParty || p.winnerParty) ? `Ganador: ${p.predominantParty || p.winnerParty}` : `${(p as any).tipo || 'Territorio'}${(p as any).parentName ? ' · ' + (p as any).parentName : ''} · sin dato electoral`) :
+          activeLayer === 'electoral' ? (() => {
+            const g = ganadorDe(feature);
+            if (g) return `${nombreEleccionCapa}: ${g.ganador}${g.partido !== g.ganador ? ` (${g.partido})` : ''} · ${g.pct.toFixed(1)} %`;
+            return `${(p as any).tipo || 'Territorio'}${(p as any).parentName ? ' · ' + (p as any).parentName : ''} · sin puestos de ${nombreEleccionCapa} dentro`;
+          })() :
           activeLayer === 'demografico' ? (() => {
             const ficha = isMunicipalScale ? territorioFicha(String(feature.id)) : null;
             const eco = ficha ? economia(ficha) : null;
@@ -652,7 +681,7 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
       }
     }
 
-  }, [currentLevel, activeLayer, searchQuery, selectedFeature, antioquiaViewMode, selectedDepartmentName, customDeptDataset, usesCustomMuni, customMuniDataset, asignacion, economiaLista]);
+  }, [currentLevel, activeLayer, searchQuery, selectedFeature, antioquiaViewMode, selectedDepartmentName, customDeptDataset, usesCustomMuni, customMuniDataset, asignacion, economiaLista, eleccionCapa, indiceGanadores, ganadorTerritorio]);
 
   // Leyenda honesta: cuántos territorios de la escala actual no tienen dato de partido
   // (se pintan con el color de su agrupación territorial, no con un color de partido)
@@ -842,8 +871,18 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
         <div className="space-y-1 text-[11px] text-slate-300 font-medium">
           {activeLayer === 'electoral' && (
             <>
-              <div className="text-[9px] text-slate-400 mb-0.5">Alcaldía 2023 · escrutinio oficial</div>
-              {LEYENDA_PARTIDOS.map((pc) => (
+              <label className="flex flex-col gap-0.5 mb-1">
+                <span className="text-[10px] text-slate-400">Elección</span>
+                <select value={eleccionCapa} onChange={(e) => setEleccionCapa(e.target.value)} className="text-xs rounded px-1 py-0.5">
+                  {(indiceGanadores?.elecciones ?? [{ id: 'alcaldia-2023', nombre: 'Alcaldía 2023' }]).map((e) => <option key={e.id} value={e.id}>{e.nombre}</option>)}
+                </select>
+              </label>
+              {esPresidencial(eleccionCapa) ? candidatosCapa.map((c) => (
+                <div key={c.nombre} className="flex items-center gap-2">
+                  <span className="w-3 h-3 rounded-full inline-block" style={{ background: c.color }} />
+                  <span>{c.nombre}</span>
+                </div>
+              )) : LEYENDA_PARTIDOS.map((pc) => (
                 <div key={pc.etiqueta} className="flex items-center gap-2">
                   <span className="w-3 h-3 rounded-full inline-block" style={{ background: pc.color }} />
                   <span>{pc.etiqueta}</span>
@@ -855,8 +894,8 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
               </div>
               {featuresWithoutParty > 0 && (
                 <div className="pt-1 mt-1 border-t border-white/10 text-[10px] leading-snug text-slate-400">
-                  {currentLevel === 'comunas-barrios'
-                    ? 'Sin resultado por comuna o barrio (falta el E-14 por puesto agregado a ese nivel): se pintan en gris.'
+                  {isMunicipalScale
+                    ? 'Cada territorio suma los puestos que caen dentro; los que no tienen puestos de esa elección se pintan en gris.'
                     : `${featuresWithoutParty} territorios sin dato de partido: se pintan en gris.`}
                 </div>
               )}
