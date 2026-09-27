@@ -24,7 +24,7 @@ describe('Registro de divisiones municipales', () => {
     expect(divisiones.features.length).toBeGreaterThan(0);
     const huerfanas = subdivisiones.features.filter((f) => !ids.has(f.properties.parentId));
     // Itagüí: la cabecera del corregimiento El Manzanillo queda fuera de las 7 comunas de la fuente
-    expect(huerfanas.map((f) => f.properties.name)).toEqual(m.id === 'itagui' ? ['Cabecera Corregimental'] : []);
+    expect(huerfanas.map((f) => f.properties.name)).toEqual([]);
   });
 });
 

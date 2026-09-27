@@ -64,7 +64,7 @@ const DIV_B = import.meta.glob<{ default: unknown }>('./municipios/*.divisiones.
 const SUB_B = import.meta.glob<{ default: unknown }>('./municipios/*.subdivisiones.geo.json');
 const REGISTRO_B = rawRegistroB as Record<string, { id: string; name: string; daneCode: string; divisionLabel: string; subdivisionLabel: string; fuente: string; confianza: ConfianzaFuente; nota: string }>;
 const FASE_B: Record<string, MunicipalDivisionEntry> = Object.fromEntries(Object.values(REGISTRO_B).map((r) => [r.id, {
-  ...r, department: 'Antioquia', disponible: true, nivelComunas: false,
+  ...r, department: 'Antioquia', disponible: true, nivelComunas: CIUDADES_CON_COMUNAS.includes(r.id),
   loadDivisions: () => DIV_B[`./municipios/${r.id}.divisiones.geo.json`]().then(asFC),
   loadSubdivisions: () => SUB_B[`./municipios/${r.id}.subdivisiones.geo.json`]().then(asFC),
 }]));
@@ -84,15 +84,6 @@ export const MUNICIPAL_DIVISIONS_REGISTRY: Record<string, MunicipalDivisionEntry
     fuente: 'Catastro Distrital de Bogotá (IDECA)', confianza: 'oficial', disponible: true, nivelComunas: true,
     loadDivisions: () => import('./municipios/bogota.divisiones.geo.json').then(asFC),
     loadSubdivisions: () => import('./municipios/bogota.subdivisiones.geo.json').then(asFC),
-  },
-  itagui: {
-    id: 'itagui', name: 'Itagüí', department: 'Antioquia', daneCode: '05360',
-    divisionLabel: '7 comunas', subdivisionLabel: '85 barrios',
-    fuente: 'Capa pública de ArcGIS "Infraestructura Deportiva y Recreativa de Itagüí" (2026)',
-    confianza: 'por verificar', disponible: true, nivelComunas: true,
-    nota: 'La fuente no incluye la zona rural del corregimiento El Manzanillo (solo su cabecera).',
-    loadDivisions: () => import('./municipios/itagui.divisiones.geo.json').then(asFC),
-    loadSubdivisions: () => import('./municipios/itagui.subdivisiones.geo.json').then(asFC),
   },
   rionegro: {
     id: 'rionegro', name: 'Rionegro', department: 'Antioquia', daneCode: '05615',

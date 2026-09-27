@@ -11,7 +11,6 @@
  *
  * Nada se inventa: cuando no hay dato, la ficha lo dice y explica por qué.
  */
-import rawBello from '../data/dane/belloCnpv2018Barrios.json';
 import rawIndice from '../data/territorio/indiceTerritorios.json';
 import { getDaneMunicipio } from './daneMunicipalService';
 import { getResultado2023, type Resultado2023 } from './electoralResults2023Service';
@@ -78,11 +77,11 @@ interface IndiceMunicipio {
   subdivisiones: Record<string, { nombre: string; tipo: string; padre: string }>;
 }
 const INDICE = rawIndice as unknown as Record<string, IndiceMunicipio>;
-const BELLO = rawBello as unknown as DemografiaData;
-export const DEMOGRAFIA_BELLO_META = BELLO.meta;
 
 /** Municipios con demografía por barrio cargada (código DANE) */
-const DEMOGRAFIA_POR_MUNICIPIO: Record<string, DemografiaData> = { '05088': BELLO };
+// Bello ya no usa la consulta por polígono (belloCnpv2018Barrios.json): su demografía sale de las manzanas
+// (src/data/dane/cnpv2018/bello.json), como el resto del área metropolitana.
+const DEMOGRAFIA_POR_MUNICIPIO: Record<string, DemografiaData> = {};
 
 // Fase B: población del CNPV 2018 por barrio/sección/vereda, un archivo por municipio, cargado bajo demanda
 const CARGADORES_DEM = import.meta.glob<{ default: unknown }>('../data/dane/cnpv2018/*.json');

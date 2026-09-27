@@ -5,8 +5,8 @@ import registro from '../municipios/registroFaseB.json';
 
 describe('Cartografía de la fase B (42 municipios de Antioquia con más de 20.000 votantes)', () => {
   const ids = Object.keys(registro);
-  it('están los 42 en el registro, con fuente', () => {
-    expect(ids).toHaveLength(42);
+  it('están los 42 (más Itagüí, rehecho con el catastro) en el registro, con fuente', () => {
+    expect(ids).toHaveLength(43);
     for (const id of ids) {
       expect(MUNICIPAL_DIVISIONS_REGISTRY[id]?.disponible).toBe(true);
       expect(MUNICIPAL_DIVISIONS_REGISTRY[id].fuente.length).toBeGreaterThan(20);

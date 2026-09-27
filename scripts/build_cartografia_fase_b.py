@@ -44,6 +44,7 @@ BARRIOS.update({
     'la_estrella': ('_originales/barrios_fase_b/la_estrella.geojson', None, 'nombre_uni', 'oficial', 'la_estrella'),
     'sabaneta': ('_originales/sabaneta/barrios.geojson', 'PK_BARRIO', 'NOMBRE', 'oficial', None),
     'marinilla': ('_originales/marinilla/barrios.geojson', 'cod_barrio', 'nom_barrio', 'oficial', None),
+    'itagui': ('_originales/barrios_fase_b/itagui.geojson', 'CODIGO_BAR', 'NMG', 'oficial', None),
 })
 FUENTE_TXT = {'sabaneta': 'Alcaldía de Sabaneta, barrios del PBOT (ArcGIS Online de la Alcaldía)',
               'marinilla': 'Municipio de Marinilla, Secretaría de Planeación: capa "Barrios" (ArcGIS Online del municipio)'}
@@ -164,7 +165,9 @@ def construir(slug, dane):
         for f in sorted(comunas, key=lambda f: f['properties']['COD_LOC_COM']):
             p = f['properties']
             num = re.sub(r'\D', '', p['COD_LOC_COM'])[-2:]
-            divs.append((f'C{num}', f"Comuna {int(num)} - {titulo(p['NOM_LOC_COM'])}" if not re.match(r'(?i)comuna', p['NOM_LOC_COM']) else titulo(p['NOM_LOC_COM']), 'Comuna', limpia(shape(f['geometry']), TOL_URB)))
+            nom = p['NOM_LOC_COM']
+            nombre = f"Comuna {int(num)}" if re.match(r'(?i)^comuna\s*0*\d+$', nom.strip()) else (f"Comuna {int(num)} - {titulo(nom)}" if not re.match(r'(?i)comuna', nom) else titulo(nom))
+            divs.append((f'C{num}', nombre, 'Comuna', limpia(shape(f['geometry']), TOL_URB)))
     else:
         divs.append(('U', 'Cabecera municipal', 'Zona urbana', zona_urb))
     # Divisiones rurales: corregimientos de la Gobernación; cada vereda va al que contiene su punto interior
@@ -194,6 +197,14 @@ def construir(slug, dane):
             return dentro[0][0]
         return max((d for d in divs if d[2] == 'Comuna'), key=lambda d: d[3].intersection(g).area)[0]
 
+    # Las comunas del DANE no coinciden exactamente con los barrios oficiales: cada comuna se dibuja
+    # como la unión de los barrios que se le asignan (así los bordes coinciden con los barrios).
+    if comunas and slug != 'envigado':
+        miembros = {}
+        for code, nombre, tipo, g in urb:
+            miembros.setdefault(padre(tipo, g, code), []).append(g)
+        divs = [(c, n, t, limpia(unary_union(miembros[c]).buffer(0), TOL_URB) if t == 'Comuna' and c in miembros else g) for c, n, t, g in divs
+                if not (t == 'Comuna' and c not in miembros)]
     fdivs, fsubs, idiv, isub = [], [], {}, {}
     nombre_div = {d[0]: d[1] for d in divs}
     for k, (code, nombre, tipo, g) in enumerate(divs):
@@ -217,7 +228,7 @@ def construir(slug, dane):
     etiqueta_urb = {'barrios': f'{n_urb} barrios', 'secciones': f'{n_urb} secciones urbanas (DANE)', 'sectores': f'{n_urb} sectores urbanos (DANE)'}[tipo_urb]
     registro = {
         'id': slug, 'daneCode': dane,
-        'divisionLabel': (f'{len(comunas)} comunas' if comunas else 'Cabecera') + (f' y {n_corr} corregimientos' if n_corr else ' y zona rural'),
+        'divisionLabel': (f'{len(comunas)} comunas' if comunas else 'Cabecera') + (f' y {n_corr} corregimiento' + ('s' if n_corr > 1 else '') if n_corr else ' y zona rural'),
         'subdivisionLabel': f'{etiqueta_urb} y {n_rur} veredas',
         'fuente': f'{fuente_urb}; veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)' + ('; comunas: DANE 2018' if comunas and slug != 'envigado' else ''),
         'confianza': conf,

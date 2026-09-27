@@ -82,7 +82,7 @@
  "la_ceja": {
   "id": "la_ceja",
   "daneCode": "05376",
-  "divisionLabel": "Cabecera y 1 corregimientos",
+  "divisionLabel": "Cabecera y 1 corregimiento",
   "subdivisionLabel": "12 barrios y 17 veredas",
   "fuente": "Gobernación de Antioquia, Catastro Departamental (Cartografía básica predial, capa Barrios); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
   "confianza": "oficial",
@@ -102,7 +102,7 @@
  "chigorodo": {
   "id": "chigorodo",
   "daneCode": "05172",
-  "divisionLabel": "Cabecera y 1 corregimientos",
+  "divisionLabel": "Cabecera y 1 corregimiento",
   "subdivisionLabel": "37 barrios y 34 veredas",
   "fuente": "Gobernación de Antioquia, Catastro Departamental (Cartografía básica predial, capa Barrios); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
   "confianza": "oficial",
@@ -212,7 +212,7 @@
  "segovia": {
   "id": "segovia",
   "daneCode": "05736",
-  "divisionLabel": "Cabecera y 1 corregimientos",
+  "divisionLabel": "Cabecera y 1 corregimiento",
   "subdivisionLabel": "20 barrios y 29 veredas",
   "fuente": "Gobernación de Antioquia, Catastro Departamental (Cartografía básica predial, capa Barrios); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
   "confianza": "oficial",
@@ -262,7 +262,7 @@
  "urrao": {
   "id": "urrao",
   "daneCode": "05847",
-  "divisionLabel": "Cabecera y 1 corregimientos",
+  "divisionLabel": "Cabecera y 1 corregimiento",
   "subdivisionLabel": "18 barrios y 57 veredas",
   "fuente": "Gobernación de Antioquia, Catastro Departamental (Cartografía básica predial, capa Barrios); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
   "confianza": "oficial",
@@ -302,7 +302,7 @@
  "san_pedro": {
   "id": "san_pedro",
   "daneCode": "05664",
-  "divisionLabel": "Cabecera y 1 corregimientos",
+  "divisionLabel": "Cabecera y 1 corregimiento",
   "subdivisionLabel": "4 secciones urbanas (DANE) y 19 veredas",
   "fuente": "DANE, Marco Geoestadístico Nacional 2018: secciones urbanas de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
   "confianza": "oficial",
@@ -412,11 +412,21 @@
  "la_union": {
   "id": "la_union",
   "daneCode": "05400",
-  "divisionLabel": "Cabecera y 1 corregimientos",
+  "divisionLabel": "Cabecera y 1 corregimiento",
   "subdivisionLabel": "7 secciones urbanas (DANE) y 24 veredas",
   "fuente": "DANE, Marco Geoestadístico Nacional 2018: secciones urbanas de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
   "confianza": "oficial",
   "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
   "name": "La Unión"
+ },
+ "itagui": {
+  "id": "itagui",
+  "daneCode": "05360",
+  "divisionLabel": "6 comunas y 1 corregimiento",
+  "subdivisionLabel": "64 barrios y 8 veredas",
+  "fuente": "Alcaldía de Itagüí, Catastro (publicado por el AMVA, Observatorio Inmobiliario Catastral); nombres con la codificación corregida; veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025); comunas: DANE 2018",
+  "confianza": "oficial",
+  "nota": "Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "name": "Itagüí"
  }
 }

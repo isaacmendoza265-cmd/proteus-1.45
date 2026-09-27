@@ -1,6 +1,6 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeAll } from 'vitest';
 import {
-  territorioBello, territorioFicha, tieneFicha, demografia, censoElectoral, grupos, politica, actoresDeTerritorio, sumarDemografia,
+  cargarDemografia, territorioBello, territorioFicha, tieneFicha, demografia, censoElectoral, grupos, politica, actoresDeTerritorio, sumarDemografia,
 } from '../territoryProfileService';
 import type { PuestoVotacion } from '../pollingStationsService';
 
@@ -19,12 +19,16 @@ describe('territorios de Bello', () => {
   });
 });
 
+beforeAll(async () => { await cargarDemografia('05088'); });
+
 describe('demografía', () => {
   it('la comuna es la suma de sus barrios', () => {
     const com = demografia(territorioBello('bello-div-6')!);
     expect(com.estado).toBe('oficial');
-    expect(com.datos!.personas).toBe(35900);
-    expect(com.datos!.hombres + com.datos!.mujeres).toBe(35900);
+    // Suma de las manzanas del CNPV 2018 cuyo centro cae en los barrios de la comuna
+    expect(com.datos!.personas).toBe(49424);
+    expect(com.datos!.hombres + com.datos!.mujeres).toBe(49424);
+    expect(com.datos!.etiquetasEdad).toHaveLength(9);
     expect(com.proyeccion.estado).toBe('estimado');
   });
   it('el municipio tiene proyección oficial', () => {
@@ -32,11 +36,9 @@ describe('demografía', () => {
     expect(m.proyeccion.estado).toBe('oficial');
     expect(m.proyeccion.valor).toBe(609168);
   });
-  it('una zona anonimizada dice que no hay sexo ni edad', () => {
+  it('la zona rural solo cuenta las manzanas (centros poblados) y no tiene proyección', () => {
     const sf = demografia(territorioBello('bello-div-SF')!);
-    expect(sf.conDetalle).toBe(false);
-    expect(sf.estado).toBe('sin-informacion');
-    expect(sf.motivo).toMatch(/anonimiza|rural/);
+    expect(sf.datos!.personas).toBe(1922);
     expect(sf.proyeccion.estado).toBe('sin-informacion');
   });
   it('cuenta aparte las personas anonimizadas', () => {
@@ -71,8 +73,9 @@ describe('censo y grupos', () => {
     expect(g.segmentos).toHaveLength(6);
   });
   it('sin demografía no estima grupos', () => {
-    const sf = territorioBello('bello-div-SF')!;
-    expect(grupos(demografia(sf), censoElectoral(sf, [])).estado).toBe('sin-informacion');
+    // Rionegro no tiene demografía por barrio cargada
+    const c2 = territorioFicha('rionegro-div-C2')!;
+    expect(grupos(demografia(c2), censoElectoral(c2, [])).estado).toBe('sin-informacion');
   });
 });
 

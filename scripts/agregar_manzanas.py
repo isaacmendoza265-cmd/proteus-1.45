@@ -24,9 +24,9 @@ def territorio(lon, lat):
     pt = Point(lon, lat)
     for i in tree.query(pt):
         if geoms[i].contains(pt): return feats[i]['id']
-    # manzana en un borde: el territorio más cercano (≤ 60 m)
+    # manzana en un borde o en un hueco entre polígonos: el territorio más cercano (≤ 150 m)
     i = tree.nearest(pt)
-    return feats[i]['id'] if geoms[i].distance(pt) < 0.0006 else None
+    return feats[i]["id"] if geoms[i].distance(pt) < 0.0015 else None
 
 n = lambda x: int(x or 0)
 out, sin, dem = {}, 0, {}
