@@ -40,6 +40,6 @@ describe('Demografía CNPV 2018 de la fase B', () => {
     const barrio = demografia(territorioFicha('caucasia-sub-B0515401000001') ?? territorioFicha(Object.keys((await import('../../territorio/indiceTerritorios.json')).default.caucasia.subdivisiones)[0])!);
     expect(barrio.datos).not.toBeNull();
     const muni = demografia(territorioFicha('caucasia')!);
-    expect(muni.datos!.personas).toBe(75062);
+    expect(muni.datos!.personas).toBe(79448); // manzanas del CNPV 2018 dentro de barrios y veredas
   });
 });
