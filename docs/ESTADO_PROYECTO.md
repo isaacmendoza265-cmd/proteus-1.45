@@ -2,7 +2,7 @@
 
 Última actualización: 27-sep-2026 (Claude Opus, rama `codex/navegacion-mapa`). **Todo agente debe actualizar este archivo al terminar.**
 Repositorio local: `C:\Users\isaac\OneDrive\Documentos\Proyecto Proteus`. Remoto: github.com/isaacmendoza265-cmd/proteus-1.45.
-`main` local: `14db9bf` (GitHub tiene `1968fd5`). Rama `codex/navegacion-mapa` con `33020c4`, `f0b3769`, `26f6b57` y `95acefc`, sin subir ni fusionar.
+`main` local: `14db9bf` (GitHub tiene `1968fd5`). Rama `codex/navegacion-mapa` con `33020c4`, `f0b3769`, `26f6b57`, `95acefc` y `c55ef86`, sin subir ni fusionar.
 Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en el PATH de los agentes
 (`$env:Path = "C:\Program Files\nodejs;" + $env:Path`). `npx tsc` también revisa las carpetas locales ignoradas
 (`_archivo/`, `_originales/`, `SUBIR_A_GITHUB/`) y da 24 errores ahí: no cuentan, `src/` está limpio.
@@ -75,6 +75,8 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
   `territoryProfileService.ts`; ficha: `src/components/territorio/`.
 
 ## 5. Bitácora (agregar arriba lo más reciente)
+- 27-sep (Opus, `codex/navegacion-mapa`) `c55ef86`: el mapa se ajusta cuando cambia su contenedor (ResizeObserver →
+  invalidateSize); antes quedaban franjas grises y la capa cortada al abrir/cerrar la ficha.
 - 27-sep (Opus, `codex/navegacion-mapa`) `95acefc`: Gobernación coloreada por candidato (sus coaliciones no tienen
   color propio y todo Antioquia salía igual); la vista de Antioquia abre en 125 municipios.
 - 27-sep (Opus, `codex/navegacion-mapa`) `26f6b57`: puestos coloreados también en Valle de Aburrá y Antioquia
