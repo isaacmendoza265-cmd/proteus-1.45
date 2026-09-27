@@ -23,7 +23,8 @@ export type NavViewId =
   | 'antioquia-subregiones'
   | 'antioquia-municipios'
   | 'antigravity-console'
-  | 'brand-manual';
+  | 'brand-manual'
+  | 'marco-metodologico';
 
 export type ModuleId = 'inicio' | 'territorio' | 'electorado' | 'contenido' | 'diae' | 'ajustes';
 
@@ -65,10 +66,11 @@ export const MODULES: ModuleDef[] = [
   },
   { id: 'diae', label: 'Día E', descripcion: 'Auditoría de actas E-14 y E-24 y reclamaciones.', icon: ShieldCheck, vistas: [{ id: 'electoral-audit-forensics', label: 'Auditoría E-14 / E-24' }] },
   {
-    id: 'ajustes', label: 'Ajustes', descripcion: 'Perfil del candidato, identidad visual y herramientas técnicas.', icon: SlidersHorizontal,
+    id: 'ajustes', label: 'Ajustes', descripcion: 'Perfil del candidato, identidad visual, marco metodológico y herramientas técnicas.', icon: SlidersHorizontal,
     vistas: [
       { id: 'national-candidates', label: 'Perfil del candidato' },
       { id: 'brand-manual', label: 'Identidad visual' },
+      { id: 'marco-metodologico', label: 'Marco metodológico' },
       { id: 'antigravity-console', label: 'Consola técnica' },
     ],
   },

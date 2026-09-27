@@ -302,11 +302,12 @@ export const FichaTerritorio: React.FC<FichaTerritorioProps> = ({
             </div>
           )}
           {porPuesto.length > 0 && (
-            <div className="flex flex-col gap-1">
-              <div className="flex items-center gap-2">
+            <details className="group flex flex-col gap-1 rounded-lg border border-[var(--c-border)] px-2.5">
+              <summary className="flex items-center gap-2 py-2 cursor-pointer list-none">
+                <span className="text-[var(--c-muted)] transition-transform group-open:rotate-90" aria-hidden>▸</span>
                 <span className="text-sm font-bold grow">Resultados por puesto de votación ({fmt(porPuesto.length)})</span>
-                <span className="text-xs text-[var(--c-muted)]">Clic para ver el detalle</span>
-              </div>
+                <span className="text-xs text-[var(--c-muted)]">{eleccionSel?.nombre}</span>
+              </summary>
               {(verTodosPuestos ? porPuesto : porPuesto.slice(0, 10)).map((f) => {
                 const abierto = puestoAbierto === f.codigo;
                 const lider = f.top[0];
@@ -338,25 +339,30 @@ export const FichaTerritorio: React.FC<FichaTerritorioProps> = ({
                 );
               })}
               {porPuesto.length > 10 && (
-                <button onClick={() => setVerTodosPuestos(!verTodosPuestos)} className="self-start min-h-8 px-2.5 rounded-md border border-[var(--c-border)] text-xs font-semibold">
+                <button onClick={() => setVerTodosPuestos(!verTodosPuestos)} className="self-start min-h-8 mb-2 px-2.5 rounded-md border border-[var(--c-border)] text-xs font-semibold">
                   {verTodosPuestos ? 'Ver menos' : `Ver los ${fmt(porPuesto.length)} puestos`}
                 </button>
               )}
-            </div>
+            </details>
           )}
-          <Cabecera titulo="Actores con presencia declarada" estado="estimado" etiqueta="Sin verificar" fuente={pol.fuenteActores} />
-          {pol.actores.length ? (
-            <ul className="m-0 p-0 list-none flex flex-col">
-              {pol.actores.map((a) => (
-                <li key={a.id} className="py-1.5 border-t border-[var(--c-border)] flex flex-col">
-                  <span className="text-sm font-semibold">{a.nombre}</span>
-                  <span className="text-xs text-[var(--c-muted)]">{a.cargo} · {a.casa}</span>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <span className="text-sm text-[var(--c-muted)]">La base curada no asocia actores a este territorio.</span>
-          )}
+          <details className="group rounded-lg border border-[var(--c-border)] px-2.5">
+            <summary className="flex items-center gap-2 py-2 cursor-pointer list-none">
+              <span className="text-[var(--c-muted)] transition-transform group-open:rotate-90" aria-hidden>▸</span>
+              <span className="grow"><Cabecera titulo={`Actores con presencia declarada (${pol.actores.length})`} estado="estimado" etiqueta="Sin verificar" fuente={pol.fuenteActores} /></span>
+            </summary>
+            {pol.actores.length ? (
+              <ul className="m-0 p-0 pb-2 list-none flex flex-col">
+                {pol.actores.map((a) => (
+                  <li key={a.id} className="py-1.5 border-t border-[var(--c-border)] flex flex-col">
+                    <span className="text-sm font-semibold">{a.nombre}</span>
+                    <span className="text-xs text-[var(--c-muted)]">{a.cargo} · {a.casa}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="m-0 pb-2 text-sm text-[var(--c-muted)]">La base curada no asocia actores a este territorio.</p>
+            )}
+          </details>
           {onVerRed && (
             <button onClick={onVerRed} className="self-start min-h-9 px-3 rounded-lg border border-[var(--c-border)] bg-[var(--c-surface)] text-sm font-semibold">Ver la red de poder de {t.municipio}</button>
           )}
@@ -474,15 +480,22 @@ export const FichaTerritorio: React.FC<FichaTerritorioProps> = ({
             <Cifra label="Hombres" value={fmt(cen.hombres)} />
           </div>
           {cen.puestos.length > 0 && (
-            <ul className="m-0 p-0 list-none flex flex-col">
-              {cen.puestos.slice(0, 10).map((p) => (
-                <li key={p.codPuesto} className="flex items-center gap-2 py-1.5 border-t border-[var(--c-border)] text-sm">
-                  <span className="grow font-semibold truncate" title={p.divipole2023?.direccion ?? undefined}>{nombrePuesto(p)}</span>
-                  <span className="tabular-nums font-semibold">{fmt(p.total)}</span>
-                  <span className="w-16 text-right text-[var(--c-muted)]">{fmt(p.mesas)} mesas</span>
-                </li>
-              ))}
-            </ul>
+            <details className="group rounded-lg border border-[var(--c-border)] px-2.5">
+              <summary className="flex items-center gap-2 py-2 cursor-pointer list-none">
+                <span className="text-[var(--c-muted)] transition-transform group-open:rotate-90" aria-hidden>▸</span>
+                <span className="text-sm font-bold grow">Puestos de votación ({fmt(cen.puestos.length)})</span>
+                <span className="text-xs text-[var(--c-muted)]">habilitados · mesas</span>
+              </summary>
+              <ul className="m-0 p-0 pb-2 list-none flex flex-col max-h-80 overflow-y-auto">
+                {cen.puestos.map((p) => (
+                  <li key={p.codPuesto} className="flex items-center gap-2 py-1.5 border-t border-[var(--c-border)] text-sm">
+                    <span className="grow font-semibold truncate" title={p.divipole2023?.direccion ?? undefined}>{nombrePuesto(p)}</span>
+                    <span className="tabular-nums font-semibold">{fmt(p.total)}</span>
+                    <span className="w-16 text-right text-[var(--c-muted)]">{fmt(p.mesas)} mesas</span>
+                  </li>
+                ))}
+              </ul>
+            </details>
           )}
           <span className="text-xs text-[var(--c-muted)]">{cen.nota}</span>
         </div>

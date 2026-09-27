@@ -25,6 +25,7 @@ import {
   type TerritorioFicha,
 } from './territoryProfileService';
 import { valorDemografico } from './mapColorService';
+import { reglasPiso3 } from './marcoService';
 
 // --- Medios y tipos de pieza ------------------------------------------------------------------
 
@@ -274,7 +275,9 @@ export const SISTEMA_CONTENIDO = [
   '- Respeta las normas de publicidad política de Colombia (Ley 130 de 1994, Ley 1475 de 2011 y reglas del CNE): en piezas pagadas indica que es publicidad política pagada y deja un espacio para el responsable.',
   '- No prometas lo que un cargo no puede hacer. Habla de propuestas, no de dádivas.',
   '- Entrega solo la pieza pedida, lista para usar, en el formato indicado. Al final, en una línea, di qué datos de la sección DATOS usaste.',
-].join('\n');
+  // Reglamento de interpretación vigente (marco metodológico, Capa 1): reglas del piso 3
+  reglasPiso3(),
+].filter(Boolean).join('\n');
 
 export function armarInstruccion(args: {
   sel: SeleccionTerritorio;

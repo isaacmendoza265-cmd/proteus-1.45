@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   MEDIOS,
   SELECCION_GENERAL,
+  SISTEMA_CONTENIDO,
   SUBREGIONES,
   armarInstruccion,
   barriosDe,
@@ -55,5 +56,10 @@ describe('generador de contenido', () => {
     const txt = armarInstruccion({ sel: SELECCION_GENERAL, medio: MEDIOS[0], tipo: MEDIOS[0].tipos[0], tema: '', datos: d });
     expect(txt).toContain('DATOS');
     expect(txt).toContain(MEDIOS[0].tipos[0].formato);
+  });
+
+  it('las instrucciones a Gemini incluyen el piso 3 del reglamento del marco', () => {
+    expect(SISTEMA_CONTENIDO).toContain('MARCO DE PROTEUS');
+    expect(SISTEMA_CONTENIDO).toContain('habitantes habilitados');
   });
 });

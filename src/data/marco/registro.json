@@ -1,0 +1,43 @@
+{
+  "bloques": [
+    {
+      "id": "diagrama-capas",
+      "capa": 0,
+      "titulo": "Diagrama de organización por capas de complejidad",
+      "familia": null,
+      "version": null,
+      "estado": "revisado",
+      "archivo": "MARCO TEÓRICO DE PROTEUS.docx",
+      "sha256": "1c0c66ba7e34b1978f1926311407c4071cf910b7fae722763bb39ab0817bc028",
+      "ingestado": "2026-09-27",
+      "texto": "capa0/diagrama-capas.md",
+      "caracteres": 2533
+    },
+    {
+      "id": "dossier-familia-4-arrastre",
+      "capa": 1,
+      "titulo": "Dossier de fuentes — Familia 4: Arrastre y cruce entre contiendas",
+      "familia": "Familia 4: Arrastre",
+      "version": null,
+      "estado": "revisado",
+      "archivo": "Dossier Proteus Capa 1 — Familia 4  Arrastre.docx",
+      "sha256": "ec4228f87731317246f27fca52f40e7b65c7e4110c74f13d0f97114dbe518399",
+      "ingestado": "2026-09-27",
+      "texto": "capa1/dossier-familia-4-arrastre.md",
+      "caracteres": 15698
+    },
+    {
+      "id": "reglamento-v1-2",
+      "capa": 1,
+      "titulo": "Marco teórico de interpretación y análisis cualitativo de variables (reglamento)",
+      "familia": null,
+      "version": "1.2",
+      "estado": "revisado",
+      "archivo": "Proteus marco general.docx",
+      "sha256": "0fb32945f178f852ebc5e4268238461e7a79a533cd603d6b2f1743e038f7fd4f",
+      "ingestado": "2026-09-27",
+      "texto": "capa1/reglamento-v1-2.md",
+      "caracteres": 24351
+    }
+  ]
+}

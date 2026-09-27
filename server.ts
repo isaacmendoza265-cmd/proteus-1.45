@@ -247,7 +247,8 @@ async function startServer() {
         res.status(400).json({ error: "Falta la instrucción ('instruccion')." });
         return;
       }
-      if (instruccion.length > 20_000 || (typeof sistema === 'string' && sistema.length > 5_000)) {
+      // El sistema incluye las reglas del piso 3 del marco metodológico (varios miles de caracteres)
+      if (instruccion.length > 20_000 || (typeof sistema === 'string' && sistema.length > 15_000)) {
         res.status(400).json({ error: 'La instrucción es demasiado larga.' });
         return;
       }

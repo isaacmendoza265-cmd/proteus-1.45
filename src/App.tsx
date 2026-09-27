@@ -36,6 +36,7 @@ const ElectoralForensicsAuditView = lazy(() => import('./modules/audit/Electoral
 // System & Agent Views
 const AntigravityAgentConsole = lazy(() => import('./components/AntigravityAgentConsole').then((m) => ({ default: m.AntigravityAgentConsole })));
 const BrandIdentityView = lazy(() => import('./modules/system/BrandIdentityView').then((m) => ({ default: m.BrandIdentityView })));
+const MarcoMetodologicoView = lazy(() => import('./modules/marco/MarcoMetodologicoView').then((m) => ({ default: m.MarcoMetodologicoView })));
 
 // Candidate Profile Types & Defaults
 import { 
@@ -212,6 +213,10 @@ export default function App() {
 
       {currentView === 'brand-manual' && (
         <BrandIdentityView />
+      )}
+
+      {currentView === 'marco-metodologico' && (
+        <MarcoMetodologicoView />
       )}
 
       {/* Global Candidate Customization Modal */}
