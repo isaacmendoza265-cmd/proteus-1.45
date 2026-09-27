@@ -10,7 +10,7 @@ import {
   ZOOM_LEVELS_CONFIG,
   ANTIOQUIA_125_MUNICIPIOS_GEOJSON
 } from '../../data/geojson';
-import { Maximize2, Layers, Compass, Sparkles, Map, Building, Megaphone, ChevronDown, Check, Vote, Sun, Moon, Satellite, X } from 'lucide-react';
+import { Maximize2, Layers, Compass, Sparkles, Map, Building, Megaphone, ChevronDown, Check, Vote, Sun, Moon, Satellite, X, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import { SubregionAggregationEngine } from '../../services/subregionAggregationEngine';
 import { ColombiaMunicipalitiesGeoService } from '../../services/colombiaMunicipalitiesGeoService';
 import { MUNICIPAL_DIVISIONS_REGISTRY, resolveMunicipality } from '../../data/geojson/municipalDivisions';
@@ -83,7 +83,17 @@ interface MultiLevelZoomMapProps {
   /** Municipio de los niveles 4 y 5 (id del registro de divisiones municipales) */
   selectedMunicipalityId?: string;
   onSelectMunicipality?: (muniId: string) => void;
+  /** Comuna abierta: en el nivel de barrios solo se muestran los suyos */
+  comunaFiltroId?: string | null;
+  /** Clic en una comuna (municipios con nivel de comunas): abre sus barrios */
+  onSelectComuna?: (feature: TerritoryGeoFeature) => void;
 }
+
+/** Comuna a la que pertenece un barrio o vereda (Medellín usa comunaId; los demás, parentId) */
+const comunaDe = (f: TerritoryGeoFeature): string | undefined => {
+  const p = f.properties as { parentId?: string; comunaId?: string };
+  return p.parentId ?? p.comunaId;
+};
 
 export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
   currentLevel,
@@ -96,7 +106,9 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
   selectedDepartmentName = 'Antioquia',
   onSelectDepartmentName,
   selectedMunicipalityId = 'medellin',
-  onSelectMunicipality
+  onSelectMunicipality,
+  comunaFiltroId = null,
+  onSelectComuna
 }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
@@ -116,6 +128,26 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
   const [customMuniDataset, setCustomMuniDataset] = useState<TerritoryFeatureCollection | null>(null);
   const [isLoadingMuni, setIsLoadingMuni] = useState<boolean>(false);
   const [muniDropdownOpen, setMuniDropdownOpen] = useState<boolean>(false);
+  // Barra lateral del mapa (territorio, capa, puestos): se oculta para dejar el mapa libre.
+  // La preferencia se recuerda en este navegador.
+  const [panelAbierto, setPanelAbierto] = useState<boolean>(() => {
+    try { return localStorage.getItem('proteus.mapa.panel') !== 'cerrado'; } catch { return true; }
+  });
+  const alternarPanel = () => setPanelAbierto((v) => {
+    try { localStorage.setItem('proteus.mapa.panel', v ? 'cerrado' : 'abierto'); } catch { /* sin almacenamiento */ }
+    return !v;
+  });
+  // Comunas del municipio, para mostrarlas alrededor de la comuna abierta en el nivel de barrios
+  const [divisionesMuni, setDivisionesMuni] = useState<TerritoryFeatureCollection | null>(null);
+  useEffect(() => {
+    setDivisionesMuni(null);
+    if (currentLevel !== 'comunas-barrios' || !activeMuni.nivelComunas || !activeMuni.loadDivisions) return;
+    let activo = true;
+    activeMuni.loadDivisions()
+      .then((fc) => { if (activo) setDivisionesMuni(fc); })
+      .catch((e) => console.error('[Proteus] No se pudieron cargar las comunas:', e));
+    return () => { activo = false; };
+  }, [currentLevel, activeMuni]);
 
   // Puestos de votación (los 125 municipios de Antioquia y los de más de 20.000 votantes del país; ver pollingStationsService)
   const [showPuestos, setShowPuestos] = useState<boolean>(true);
@@ -123,9 +155,16 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
   const [puestosScope, setPuestosScope] = useState<string>('');
   const [asignacion, setAsignacion] = useState<AsignacionPuestos | null>(null);
   const puestosLayerRef = useRef<L.LayerGroup | null>(null);
-  const puestosRendererRef = useRef<L.Canvas | null>(null);
+  const puestosRendererRef = useRef<L.Renderer | null>(null);
   // Ficha de puesto: se abre al hacer clic en un marcador
   const [puestoSeleccionado, setPuestoSeleccionado] = useState<PuestoVotacion | null>(null);
+  // Esc cierra la ficha de puesto
+  useEffect(() => {
+    if (!puestoSeleccionado) return;
+    const alTeclear = (e: KeyboardEvent) => { if (e.key === 'Escape') setPuestoSeleccionado(null); };
+    window.addEventListener('keydown', alTeclear);
+    return () => window.removeEventListener('keydown', alTeclear);
+  }, [puestoSeleccionado]);
   const [eleccionesMuni, setEleccionesMuni] = useState<EleccionPuestos[]>([]);
   // Capa "Resultado electoral": elección que se colorea (2015-2026) y su índice de ganadores por municipio
   const [eleccionCapa, setEleccionCapa] = useState<string>('alcaldia-2023');
@@ -228,11 +267,18 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
       const lg = L.layerGroup().addTo(map);
       geoJsonLayerGroupRef.current = lg;
 
-      // Puestos de votación: panel propio por encima de los polígonos
+      // Puestos de votación: panel propio por encima de los polígonos. Va en SVG y el panel no
+      // recibe clics: solo los círculos. Antes era un canvas que cubría todo el mapa y se quedaba
+      // con los clics de comunas y barrios.
       map.createPane('puestos');
-      map.getPane('puestos')!.style.zIndex = '450';
-      puestosRendererRef.current = L.canvas({ pane: 'puestos' });
+      const panelPuestos = map.getPane('puestos')!;
+      panelPuestos.style.zIndex = '450';
+      panelPuestos.style.pointerEvents = 'none';
+      puestosRendererRef.current = L.svg({ pane: 'puestos' });
       puestosLayerRef.current = L.layerGroup().addTo(map);
+      // Clic en cualquier otra cosa del mapa (fondo, comuna, barrio, municipio vecino) cierra la
+      // ficha de puesto. El clic en un puesto no llega aquí (bubblingMouseEvents: false).
+      map.on('click', () => setPuestoSeleccionado(null));
       mapInstanceRef.current = map;
     }
 
@@ -408,6 +454,7 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
         weight: 1,
         fillColor: aproximado ? '#f59e0b' : '#10b981',
         fillOpacity: 0.85,
+        bubblingMouseEvents: false,
       });
       marker.bindTooltip(
         `<div style="font-family: system-ui, sans-serif; font-size: 11px; max-width: 260px;">
@@ -454,8 +501,14 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
     }
     if (!dataset) return;
 
+    // Comuna abierta: solo sus barrios y veredas
+    const verSoloComuna = currentLevel === 'comunas-barrios' && comunaFiltroId;
+    // Clic en una comuna abre sus barrios (solo municipios con nivel de comunas)
+    const abreBarrios = (currentLevel === 'municipal' || currentLevel === 'hiperlocal') && activeMuni.nivelComunas && !!onSelectComuna;
+
     // Filter features if searchQuery is present
     const filteredFeatures = dataset.features.filter((f) => {
+      if (verSoloComuna && comunaDe(f) !== comunaFiltroId) return false;
       if (!searchQuery.trim()) return true;
       const q = searchQuery.toLowerCase();
       return (
@@ -465,6 +518,52 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
         (f.properties.subregion && f.properties.subregion.toLowerCase().includes(q))
       );
     });
+
+    // Contexto clicable debajo de la capa principal: los demás municipios de Antioquia (abrir otro
+    // municipio sin volver a la subregión) y las demás comunas del municipio (cambiar de comuna
+    // sin volver al nivel de comunas). No se superponen con lo que se está viendo.
+    const estiloContexto: L.PathOptions = { fillColor: '#94a3b8', fillOpacity: 0.06, color: '#64748b', weight: 1, dashArray: '2, 3', opacity: 0.7 };
+    const agregarContexto = (features: TerritoryGeoFeature[], etiqueta: string, alHacerClic: (f: TerritoryGeoFeature) => void) => {
+      if (!features.length) return;
+      layerGroup.addLayer(L.geoJSON({ type: 'FeatureCollection', features } as any, {
+        style: () => estiloContexto,
+        onEachFeature: (feat: any, layer: L.Layer) => {
+          const f = feat as TerritoryGeoFeature;
+          layer.bindTooltip(
+            `<div style="font-family: system-ui, sans-serif; font-weight: 700; font-size: 11px;">
+              <div style="color: #94a3b8; font-size: 9px; text-transform: uppercase;">${etiqueta}</div>
+              <div style="color: #ffffff; font-size: 12px; font-weight: 900;">${escapeHtml(f.properties.name)}</div>
+              <div style="color: #34d399; font-size: 9px; margin-top: 3px;">Clic para abrir</div>
+            </div>`,
+            { sticky: true, className: 'leaflet-glass-tooltip' }
+          );
+          layer.on({
+            mouseover: (e: any) => e.target.setStyle({ fillOpacity: 0.2, weight: 2 }),
+            mouseout: (e: any) => e.target.setStyle(estiloContexto),
+            click: () => alHacerClic(f),
+          });
+        },
+      }));
+    };
+    if (isMunicipalScale && activeMuni.department === 'Antioquia') {
+      agregarContexto(
+        ANTIOQUIA_125_MUNICIPIOS_GEOJSON.features.filter((f) => (f.properties as { daneCode?: string }).daneCode !== activeMuni.daneCode),
+        'Otro municipio',
+        (f) => {
+          const muni = resolveMunicipality({ id: f.id, name: f.properties.name, daneCode: (f.properties as { daneCode?: string }).daneCode });
+          if (!muni?.disponible) return;
+          onSelectMunicipality?.(muni.id);
+          onDrillDown('municipal', String(f.id));
+        },
+      );
+    }
+    if (verSoloComuna && divisionesMuni && onSelectComuna) {
+      agregarContexto(
+        divisionesMuni.features.filter((f) => f.id !== comunaFiltroId && f.id !== 'medellin-base-outline'),
+        'Otra comuna',
+        onSelectComuna,
+      );
+    }
 
     const geoJsonData: any = {
       type: 'FeatureCollection',
@@ -518,6 +617,13 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
         const feature = feat as TerritoryGeoFeature;
         const p = feature.properties;
 
+        // Contorno del distrito de Medellín: solo dibujo. Cubre todas las comunas y, si recibiera
+        // eventos, se quedaría con sus clics. (Se fija antes de que la capa entre al mapa.)
+        if (feature.id === 'medellin-base-outline') {
+          (layer as L.Path).options.interactive = false;
+          return;
+        }
+
         // Hover events
         layer.on({
           mouseover: (e: any) => {
@@ -534,17 +640,8 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
             const l = e.target;
             const isSelected = selectedFeature?.id === feature.id;
             const isCorreg = Boolean((feature.properties as any).isCorregimiento || feature.id.includes('correg'));
-            const isOutline = feature.id === 'medellin-base-outline';
 
-            if (isOutline) {
-              l.setStyle({
-                fillColor: '#0284c7',
-                fillOpacity: 0.04,
-                color: '#38bdf8',
-                weight: 1.5,
-                dashArray: '4, 4'
-              });
-            } else if (isCorreg) {
+            if (isCorreg) {
               l.setStyle({
                 fillColor: isSelected ? '#fbbf24' : '#f59e0b',
                 fillOpacity: isSelected ? 0.75 : 0.42,
@@ -567,6 +664,12 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
             setHoveredFeature(null);
           },
           click: (e: any) => {
+            // Comuna: abrir sus barrios (el encuadre lo hace el cambio de escala)
+            if (abreBarrios) {
+              onSelectComuna!(feature);
+              return;
+            }
+
             onSelectFeature(feature);
 
             // If feature has bounds or layer getBounds, fit smoothly
@@ -605,19 +708,6 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
           }
         });
 
-        // Medellín base boundary tooltip
-        if (feature.id === 'medellin-base-outline') {
-          layer.bindTooltip(
-            `<div style="font-family: system-ui, sans-serif; font-weight: 700; font-size: 11px;">
-              <div style="color: #38bdf8; font-size: 9px; text-transform: uppercase;">Límite Municipal Completo</div>
-              <div style="color: #ffffff; font-size: 12px; font-weight: 900;">Distrito de Medellín (374.8 km²)</div>
-              <div style="color: #cbd5e1; font-size: 10px;">Zona Rural (5 Corregimientos) y Zona Urbana (16 Comunas)</div>
-            </div>`,
-            { sticky: true, className: 'leaflet-glass-tooltip' }
-          );
-          return;
-        }
-
         const isCorregimiento = Boolean((feature.properties as any).isCorregimiento || feature.id.includes('correg'));
         const metricDisplay = 
           activeLayer === 'electoral' ? (() => {
@@ -650,7 +740,9 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
             ${corregimientoHtml}
             <div style="color: #cbd5e1; margin-top: 2px;">${metricDisplay}</div>
             ${asignacion?.porTerritorio[String(feature.id)] ? `<div style="color: #34d399; margin-top: 2px;">Censo en sus puestos: ${asignacion.porTerritorio[String(feature.id)].censo.toLocaleString('es-CO')} · ${asignacion.porTerritorio[String(feature.id)].puestos} puestos</div>` : ''}
-            ${(p.isInteractiveTarget || currentLevel === 'nacional') ? '<div style="color: #34d399; font-size: 9px; margin-top: 3px;">✨ Clic para hacer zoom</div>' : ''}
+            ${abreBarrios
+              ? '<div style="color: #34d399; font-size: 9px; margin-top: 3px;">Clic para ver sus barrios</div>'
+              : (p.isInteractiveTarget || currentLevel === 'nacional') ? '<div style="color: #34d399; font-size: 9px; margin-top: 3px;">✨ Clic para hacer zoom</div>' : ''}
           </div>`,
           { sticky: true, className: 'leaflet-glass-tooltip' }
         );
@@ -671,7 +763,7 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
     }
     lastLayerBoundsRef.current = layerBounds;
 
-    const cameraKey = [currentLevel, antioquiaViewMode, selectedDepartmentName, customDeptDataset?.name, usesCustomMuni ? selectedMunicipalityId : 'medellin', customMuniDataset?.name].join('|');
+    const cameraKey = [currentLevel, antioquiaViewMode, selectedDepartmentName, customDeptDataset?.name, usesCustomMuni ? selectedMunicipalityId : 'medellin', customMuniDataset?.name, verSoloComuna ? comunaFiltroId : ''].join('|');
     if (cameraKey !== lastCameraKeyRef.current) {
       lastCameraKeyRef.current = cameraKey;
       if (layerBounds) {
@@ -681,7 +773,7 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
       }
     }
 
-  }, [currentLevel, activeLayer, searchQuery, selectedFeature, antioquiaViewMode, selectedDepartmentName, customDeptDataset, usesCustomMuni, customMuniDataset, asignacion, economiaLista, eleccionCapa, indiceGanadores, ganadorTerritorio]);
+  }, [currentLevel, activeLayer, searchQuery, selectedFeature, antioquiaViewMode, selectedDepartmentName, customDeptDataset, usesCustomMuni, customMuniDataset, asignacion, economiaLista, eleccionCapa, indiceGanadores, ganadorTerritorio, comunaFiltroId, onSelectComuna, divisionesMuni]);
 
   // Leyenda honesta: cuántos territorios de la escala actual no tienen dato de partido
   // (se pintan con el color de su agrupación territorial, no con un color de partido)
@@ -709,9 +801,45 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
       {/* Map container DOM */}
       <div ref={mapContainerRef} className="w-full h-full z-0" />
 
+      {/* Barra lateral ocultable: territorio, contenido, capa y puestos (antes flotaban sobre el mapa) */}
+      {!panelAbierto && (
+        <button
+          onClick={alternarPanel}
+          className="absolute top-4 left-4 z-20 px-3 py-2 rounded-xl bg-slate-950/85 hover:bg-slate-900 text-slate-200 hover:text-white border border-white/20 backdrop-blur-xl shadow-lg text-xs font-bold flex items-center gap-2 transition"
+          title="Mostrar la barra lateral del mapa"
+          aria-expanded={false}
+        >
+          <PanelLeftOpen className="w-4 h-4 text-sky-400" />
+          Capas y leyenda
+        </button>
+      )}
+      <aside
+        className={`absolute top-0 left-0 bottom-0 z-20 w-72 max-w-[85%] flex flex-col gap-2 p-2 overflow-y-auto bg-slate-950/90 backdrop-blur-2xl border-r border-white/20 shadow-2xl transition-transform duration-300 ${panelAbierto ? 'translate-x-0' : '-translate-x-full pointer-events-none'}`}
+        aria-label="Barra lateral del mapa"
+        aria-hidden={!panelAbierto}
+      >
+        <div className="flex items-center justify-between px-1">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Capas y leyenda</span>
+          <button onClick={alternarPanel} className="p-1.5 rounded-lg hover:bg-white/10 text-slate-300 hover:text-white" title="Ocultar la barra lateral" aria-expanded={true}>
+            <PanelLeftClose className="w-4 h-4" />
+          </button>
+        </div>
+
+      {/* Generar contenido para el territorio seleccionado */}
+      {selectedFeature && onGenerateContent && (
+        <button
+          onClick={() => onGenerateContent(selectedFeature)}
+          className="w-full px-3 py-2 rounded-xl bg-gradient-to-r from-sky-500/90 to-blue-600/90 hover:from-sky-400 hover:to-indigo-500 text-white text-xs font-black border border-white/40 flex items-center gap-2 transition text-left"
+          title={`Generar contenido con IA para ${selectedFeature.properties.name}`}
+        >
+          <Megaphone className="w-4 h-4 text-sky-200 shrink-0" />
+          <span>Generar contenido: {selectedFeature.properties.name}</span>
+        </button>
+      )}
+
       {/* Antioquia Toggle / Department Selector */}
       {currentLevel === 'departamental' && (
-        <div className="absolute top-4 left-4 z-10 flex flex-wrap items-center gap-2 p-1.5 rounded-2xl bg-slate-950/85 backdrop-blur-2xl border border-white/20 shadow-[0_8px_25px_rgba(0,0,0,0.5)] pointer-events-auto">
+        <div className="flex flex-wrap items-center gap-2 p-1.5 rounded-xl bg-white/5 border border-white/10">
           {(!selectedDepartmentName || selectedDepartmentName.toLowerCase() === 'antioquia') ? (
             <>
               <button
@@ -767,7 +895,7 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
             </button>
 
             {deptDropdownOpen && (
-              <div className="absolute top-full left-0 mt-1.5 w-52 max-h-60 overflow-y-auto rounded-2xl bg-slate-900/95 backdrop-blur-2xl border border-white/20 shadow-2xl p-1 z-30 space-y-0.5">
+              <div className="mt-1.5 w-full max-h-60 overflow-y-auto rounded-xl bg-slate-900/95 border border-white/20 p-1 space-y-0.5">
                 <div className="text-[9px] font-mono uppercase text-slate-400 px-2 py-1 font-bold">
                   Seleccionar Departamento
                 </div>
@@ -801,7 +929,7 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
 
       {/* Selector de municipio (niveles 4 y 5) */}
       {isMunicipalScale && (
-        <div className="absolute top-4 left-4 z-10 flex flex-wrap items-center gap-2 p-1.5 rounded-2xl bg-slate-950/85 backdrop-blur-2xl border border-white/20 shadow-[0_8px_25px_rgba(0,0,0,0.5)] pointer-events-auto max-w-[70%]">
+        <div className="flex flex-wrap items-center gap-2 p-1.5 rounded-xl bg-white/5 border border-white/10">
           <div className="px-2 py-1 text-xs">
             <div className="font-black text-amber-300 flex items-center gap-1.5">
               <Building className="w-3.5 h-3.5 text-amber-400" />
@@ -826,7 +954,7 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
                 <ChevronDown className="w-3 h-3 text-slate-400" />
               </button>
               {muniDropdownOpen && (
-                <div className="absolute top-full left-0 mt-1.5 w-60 rounded-2xl bg-slate-900/95 backdrop-blur-2xl border border-white/20 shadow-2xl p-1 z-30 space-y-0.5">
+                <div className="mt-1.5 w-60 max-w-full max-h-60 overflow-y-auto rounded-xl bg-slate-900/95 border border-white/20 p-1 space-y-0.5">
                   {Object.values(MUNICIPAL_DIVISIONS_REGISTRY).map((m) => {
                     const isCur = m.id === activeMuni.id;
                     return (
@@ -855,8 +983,8 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
         </div>
       )}
 
-      {/* Floating Legend Overlay (Bottom Left) */}
-      <div className="absolute bottom-4 left-4 z-10 p-3 rounded-2xl bg-slate-950/70 backdrop-blur-2xl border border-white/20 shadow-2xl text-xs max-w-xs pointer-events-auto">
+      {/* Leyenda de la capa temática */}
+      <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-xs">
         <div className="flex items-center justify-between gap-2 mb-2 pb-1 border-b border-white/10">
           <span className="font-bold text-white uppercase text-[10px] tracking-wider flex items-center gap-1.5">
             <Layers className="w-3.5 h-3.5 text-sky-400" />
@@ -970,9 +1098,9 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
         </div>
       </div>
 
-      {/* Leyenda de puestos de votación (abajo a la derecha) */}
+      {/* Leyenda de puestos de votación */}
       {showPuestos && puestosScope && (
-        <div className="absolute bottom-8 right-4 z-10 p-3 rounded-2xl bg-slate-950/70 backdrop-blur-2xl border border-white/20 shadow-2xl text-[11px] max-w-xs pointer-events-auto text-slate-300">
+        <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-[11px] text-slate-300">
           <div className="font-bold text-white uppercase text-[10px] tracking-wider flex items-center gap-1.5 mb-1">
             <Vote className="w-3.5 h-3.5 text-emerald-400" />
             {puestosScope}
@@ -989,6 +1117,7 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
           )}
         </div>
       )}
+      </aside>
 
       {/* Ficha de puesto (clic en un marcador) */}
       {puestoSeleccionado && (() => {
@@ -1080,20 +1209,6 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
           })}
         </div>
       </div>
-
-      {/* Quick Floating Action: Generate content for selected feature */}
-      {selectedFeature && onGenerateContent && (
-        <div className="absolute top-4 left-4 z-10 animate-fadeIn pointer-events-auto">
-          <button
-            onClick={() => onGenerateContent(selectedFeature)}
-            className="px-3.5 py-2 rounded-2xl bg-gradient-to-r from-sky-500/90 to-blue-600/90 hover:from-sky-400 hover:to-indigo-500 text-white text-xs font-black shadow-[0_0_20px_rgba(56,189,248,0.5)] border border-white/40 flex items-center gap-2 transition-all transform hover:scale-[1.03] active:scale-95 cursor-pointer backdrop-blur-xl"
-            title={`Generar contenido con IA para ${selectedFeature.properties.name}`}
-          >
-            <Megaphone className="w-4 h-4 text-sky-200" />
-            <span>Generar Contenido: {selectedFeature.properties.name}</span>
-          </button>
-        </div>
-      )}
 
       {/* Dynamic Hover Banner (Top Center) */}
       {hoveredFeature && (

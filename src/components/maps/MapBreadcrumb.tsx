@@ -9,6 +9,8 @@ interface MapBreadcrumbProps {
   selectedDepartmentName?: string;
   /** Nombre del municipio de los niveles 4 y 5 */
   selectedMunicipalityName?: string;
+  /** Comuna abierta en el nivel de barrios */
+  selectedComunaName?: string;
   onResetToNational: () => void;
 }
 
@@ -18,6 +20,7 @@ export const MapBreadcrumb: React.FC<MapBreadcrumbProps> = ({
   selectedFeatureName,
   selectedDepartmentName,
   selectedMunicipalityName,
+  selectedComunaName,
   onResetToNational
 }) => {
   const levels = ORDERED_ZOOM_LEVELS;
@@ -81,7 +84,7 @@ export const MapBreadcrumb: React.FC<MapBreadcrumbProps> = ({
                   {getLevelIcon(lvl)}
                 </span>
                 <span>
-                  {lvl === 'departamental' && selectedDepartmentName ? selectedDepartmentName : lvl === 'municipal' && selectedMunicipalityName ? selectedMunicipalityName : config.shortLabel}
+                  {lvl === 'departamental' && selectedDepartmentName ? selectedDepartmentName : lvl === 'municipal' && selectedMunicipalityName ? selectedMunicipalityName : lvl === 'comunas-barrios' && selectedComunaName ? `Barrios de ${selectedComunaName}` : config.shortLabel}
                 </span>
               </button>
             </React.Fragment>

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { 
   ZoomLevelId, 
   ThematicMetricLayer, 
@@ -56,6 +56,14 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
   const [selectedFeature, setSelectedFeature] = useState<TerritoryGeoFeature | null>(null);
   // Municipio de los niveles 4 y 5 (ver src/data/geojson/municipalDivisions.ts)
   const [selectedMunicipalityId, setSelectedMunicipalityId] = useState<string>('medellin');
+  // Comuna abierta: el nivel de barrios muestra solo los suyos
+  const [comunaAbierta, setComunaAbierta] = useState<{ id: string; name: string } | null>(null);
+  const handleSelectComuna = useCallback((feature: TerritoryGeoFeature) => {
+    setComunaAbierta({ id: String(feature.id), name: feature.properties.name });
+    setSelectedFeature(feature);
+    setSearchQuery('');
+    setCurrentLevel('comunas-barrios');
+  }, []);
   const [selectedDepartmentName, setSelectedDepartmentName] = useState<string>('Antioquia');
   const [e24ModalOpen, setE24ModalOpen] = useState(false);
   // Vista del módulo: mapa con ficha, o red de poder en 3D
@@ -123,6 +131,7 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
       setSelectedDepartmentName(departmentName);
     }
     setCurrentLevel(targetLevel);
+    setComunaAbierta(null);
     setSearchQuery(''); // el filtro de un nivel no aplica al siguiente (ocultaría sus barrios)
     // Find target feature if exists in new dataset
     const nextDataset = GEOJSON_LAYERS_BY_ZOOM[targetLevel];
@@ -134,12 +143,15 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
 
   // Handle level change from breadcrumb or cards
   const handleSelectLevel = (level: ZoomLevelId) => {
+    // Volver a "Barrios" desde la misma escala conserva la comuna abierta
+    if (level !== currentLevel) setComunaAbierta(null);
     setCurrentLevel(level);
     setSelectedFeature(null);
   };
 
   // Reset to National view
   const handleResetToNational = () => {
+    setComunaAbierta(null);
     setCurrentLevel('nacional');
     setSelectedFeature(null);
     setSelectedDepartmentName('Antioquia');
@@ -185,6 +197,7 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
           onVerMunicipio={(nombre) => {
             const entry = Object.values(MUNICIPAL_DIVISIONS_REGISTRY).find((e) => e.name === nombre);
             if (entry) {
+              setComunaAbierta(null);
               setSelectedMunicipalityId(entry.id);
               setCurrentLevel('municipal');
               setSelectedFeature(null);
@@ -202,6 +215,7 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
         selectedFeatureName={selectedFeature ? selectedFeature.properties.name : null}
         selectedDepartmentName={selectedDepartmentName}
         selectedMunicipalityName={MUNICIPAL_DIVISIONS_REGISTRY[selectedMunicipalityId]?.name}
+        selectedComunaName={currentLevel === 'comunas-barrios' ? comunaAbierta?.name : undefined}
         onResetToNational={handleResetToNational}
       />
 
@@ -229,9 +243,12 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
             onSelectDepartmentName={setSelectedDepartmentName}
             selectedMunicipalityId={selectedMunicipalityId}
             onSelectMunicipality={(id) => {
+              setComunaAbierta(null);
               setSelectedMunicipalityId(id);
               setSelectedFeature(null);
             }}
+            comunaFiltroId={comunaAbierta?.id ?? null}
+            onSelectComuna={handleSelectComuna}
           />
         </div>
 

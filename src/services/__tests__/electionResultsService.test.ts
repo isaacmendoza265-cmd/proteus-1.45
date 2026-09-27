@@ -64,7 +64,8 @@ describe('resultados por puesto', () => {
         expect(suma.partidos.reduce((t, p) => t + p.votos, 0)).toBe(muni.partidos.reduce((t, p) => t + p.votos, 0));
       }
     }
-  });
+    // Carga los JSON de los 125 municipios: ~4,5 s sola; con el servidor de desarrollo abierto pasaba de 5 s
+  }, 30_000);
   it('Gobernación 2023 en Rionegro: mismo censo que Alcaldía, gobernador electo con más votos', async () => {
     const { e: go, total: t } = await total('05615', 'gobernacion-2023');
     expect(t.votantes).toBe(82751);
