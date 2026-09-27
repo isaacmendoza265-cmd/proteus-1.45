@@ -1,8 +1,11 @@
 # Proteus — estado del proyecto (memoria compartida entre agentes)
 
-Última actualización: 27-sep-2026 (Claude Opus). **Todo agente debe actualizar este archivo al terminar.**
+Última actualización: 27-sep-2026 (Claude Opus, rama `codex/navegacion-mapa`). **Todo agente debe actualizar este archivo al terminar.**
 Repositorio local: `C:\Users\isaac\OneDrive\Documentos\Proyecto Proteus`. Remoto: github.com/isaacmendoza265-cmd/proteus-1.45.
-Último commit local: `1968fd5`. **Sin subir a GitHub** varios commits: Isaac sube con `SUBIR_A_GITHUB`.
+`main` local: `14db9bf` (GitHub tiene `1968fd5`). Rama `codex/navegacion-mapa` con `33020c4` y `f0b3769`, sin subir ni fusionar.
+Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en el PATH de los agentes
+(`$env:Path = "C:\Program Files\nodejs;" + $env:Path`). `npx tsc` también revisa las carpetas locales ignoradas
+(`_archivo/`, `_originales/`, `SUBIR_A_GITHUB/`) y da 24 errores ahí: no cuentan, `src/` está limpio.
 
 ## 1. Qué está hecho en Antioquia (125 municipios)
 - **Cartografía**: 46 municipios > 20.000 votantes con comunas/barrios y veredas; 79 municipios ≤ 20.000
@@ -16,9 +19,12 @@ Repositorio local: `C:\Users\isaac\OneDrive\Documentos\Proyecto Proteus`. Remoto
 - **Puestos 2026**: 1.280 en Antioquia; 57 sin ubicar (22 en los grandes, 35 rurales en los pequeños).
   Coordenadas: Divipole 2023 → dirección → lugar → OpenStreetMap (validado: urbano mediana 40 m) →
   cabecera/centro poblado/vereda (aproximada).
-- **App**: ficha de territorio con selector de año, capa de ganador por elección, panel y ficha de puesto,
-  visor E-24 de Medellín con datos reales, estética "sobrio cívico" en todas las vistas.
-- Verificación al último commit: tsc limpio, 206 pruebas, build OK.
+- **App**: ficha de territorio con selector de año, panel y ficha de puesto, visor E-24 de Medellín con
+  datos reales, estética "sobrio cívico" en todas las vistas.
+- **Mapa** (27-sep): clic en comuna → sus barrios; clic en barrio → ficha; comunas y municipios vecinos
+  clicables alrededor (sin volver a la subregión); barra lateral ocultable con territorio, capa y puestos.
+  Capas Electoral (año + tipo; puestos de esa elección), Demográfica y Económica (`mapColorService.ts`).
+- Verificación al último commit (`f0b3769`): tsc limpio en `src/`, 211 pruebas, build OK.
 
 ## 2. Decisiones de Isaac (respetarlas)
 - Seguridad, marco teórico y etapa 2 (social listening, encuestas): aplazados.
@@ -30,8 +36,18 @@ Repositorio local: `C:\Users\isaac\OneDrive\Documentos\Proyecto Proteus`. Remoto
 - Municipios ≤ 20.000 votantes: sin barrios, solo cabecera y veredas; ubicar puestos aunque sea aproximado.
 - Puestos 2026 que no existían en 2015: normal, no es error.
 - Descargas: pedir permiso por lote (archivo, fuente, tamaño).
+- 27-sep: navegación del mapa por clic (comuna → barrio; barrio directo si el municipio no tiene comunas;
+  cambiar de comuna o municipio sin retroceder). Recuadros del mapa en barra lateral ocultable. La ficha de
+  puesto se cierra al hacer clic en otra cosa.
+- 27-sep: el mapa colorea territorios y puestos según la capa: electoral (año; tipo de elección),
+  demográfica y económica. Capas NBI y Riesgo quitadas como botones (NBI dentro de la económica; Riesgo sin fuente).
 
 ## 3. Pendientes (en orden sugerido)
+0. **Datos simulados en pantalla (hallados el 27-sep, sin corregir)**: "Día E" muestra actas E-14/E-24 mesa a
+   mesa escritas a mano (`src/data/electoralAudit/electoralAuditMasterData.ts`); "Contenido" usa 2.650.000
+   habitantes fijos para Medellín (`activeTerritoryContextService.ts`, `antioquiaSubregionesData.ts`,
+   `antioquia125MunicipalitiesMasterData.ts`); "Electorado" muestra "votos proyectados" sin método
+   (`voterDemographicsService.ts`). Isaac no ha decidido si van antes de P4.
 1. **P4 — Presupuesto de alcaldía** (lo más rápido): CUIPO en datos.gov.co, API Socrata:
    "OVCF - CUIPO - Programación de Gastos" (`d9mu-h6ar`) y "Ejecución de Gastos" (`4f7r-epif`).
    Filtrar Antioquia, vigencia 2025/2026; mostrar total y por habitante. Pendiente de aprobación de Isaac.
@@ -59,6 +75,12 @@ Repositorio local: `C:\Users\isaac\OneDrive\Documentos\Proyecto Proteus`. Remoto
   `territoryProfileService.ts`; ficha: `src/components/territorio/`.
 
 ## 5. Bitácora (agregar arriba lo más reciente)
+- 27-sep (Opus, `codex/navegacion-mapa`) `f0b3769`: color por capa (electoral año+tipo con los puestos de cada
+  elección; demográfica y económica con CNPV 2018 por manzana, proyección 2026 y NBI); corregimientos de
+  Medellín con el color de la capa.
+- 27-sep (Opus, `codex/navegacion-mapa`) `33020c4`: la capa de puestos (canvas) y el contorno de Medellín se
+  quedaban con los clics; comuna → sus barrios; comunas y municipios vecinos clicables; barra lateral
+  ocultable; la ficha de puesto se cierra con clic fuera o Esc; límite de 30 s a la prueba de los 125 municipios.
 - 27-sep (Opus) `1968fd5`: puestos sin coordenadas ubicados con OpenStreetMap (111 → 57 sin ubicar).
 - 27-sep (Opus) `aa5f6c3`: Altavista/Palmitas, sector Ovejas, sexo × edad 2026, puestos rurales aproximados.
 - 27-sep (Opus) `7610f3c`, `e3de622`: serie histórica 2015-2022 por puesto; visor E-24 real; Concejo 2023 corregido.
