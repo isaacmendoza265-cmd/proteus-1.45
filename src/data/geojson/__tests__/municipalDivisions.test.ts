@@ -36,13 +36,15 @@ describe('Regla de niveles del zoom municipal', () => {
     expect(MUNICIPAL_DIVISIONS_REGISTRY.rionegro.nivelComunas).toBe(false);
   });
 
-  // La regla original (24-sep) limitaba el último nivel (barrios/veredas) a municipios con más de
-  // 20.000 en el censo electoral. La fase C (26-sep) construyó ese nivel para los 125 municipios de
-  // Antioquia, así que la función se conserva (informativa, y para cuando se apliquen las mismas
-  // reglas al resto del país) pero ya no se usa para filtrar el registro.
-  it('nivelesMunicipales calcula el umbral de 20.000 según el censo electoral', () => {
+  it('municipios con 20.000 votantes o menos: solo cabecera y veredas; los demás, barrios', async () => {
     expect(nivelesMunicipales('abriaqui', 'Abriaquí').ultimoNivel).toBe(false); // 2.029
     expect(nivelesMunicipales('amaga', 'Amagá').ultimoNivel).toBe(true); // 24.772
+    for (const m of Object.values(MUNICIPAL_DIVISIONS_REGISTRY)) {
+      if (m.department !== 'Antioquia' || nivelesMunicipales(m.id, m.name).ultimoNivel) continue;
+      const sub = await m.loadSubdivisions!();
+      expect(sub.features.filter((f) => f.properties.tipo === 'Cabecera')).toHaveLength(1);
+      expect(sub.features.every((f) => ['Cabecera', 'Vereda'].includes(String(f.properties.tipo)))).toBe(true);
+    }
   });
 
   it('Bello: 12 comunas, 132 barrios y 19 veredas (planos del POT), todos con padre', async () => {

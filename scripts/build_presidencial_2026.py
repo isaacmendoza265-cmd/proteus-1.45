@@ -24,9 +24,9 @@ for p in json.load(open('src/data/electoral/puestos/antioquia.json')):
     censo[p['codMunicipio']][p['codPuesto']] = p
 # Municipios de fase C (<= 20.000 votantes): mismo censo por puesto, calculado aparte del umbral
 # nacional (scripts/build_puestos_fase_c_antioquia.py), sin tocar antioquia.json ni su criterio.
-_fase_c_path = 'src/data/electoral/puestos/antioquia_fase_c.json'
+_fase_c_path = 'src/data/electoral/puestosFaseC/antioquia.json'
 if os.path.exists(_fase_c_path):
-    for p in json.load(open(_fase_c_path))['puestos']:
+    for p in json.load(open(_fase_c_path)):
         censo[p['codMunicipio']][p['codPuesto']] = p
 
 def construir(ruta, reg):

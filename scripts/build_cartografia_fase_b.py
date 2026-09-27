@@ -16,6 +16,9 @@ Salida:
 - src/data/territorio/indiceTerritorios.json (divisiones y subdivisiones de cada municipio)
 - src/data/geojson/municipios/registroFaseB.json (datos para el registro de divisiones)
 
+Regla de Isaac (27-sep-2026): los municipios con 20.000 votantes o menos en el censo electoral 2026 no
+se dividen en barrios: su zona urbana es UNA sola unidad, la cabecera, y lo rural son sus veredas.
+
 Uso: python3 scripts/build_cartografia_fase_b.py <lista.json>   (lista: [{slug, dane}])
 """
 import json, os, re, sys
@@ -80,7 +83,7 @@ def leer(ruta):
 
 CORREGIMIENTOS = [f for f in json.load(open('_originales/barrios_fase_b/corregimientos.geojson'))['features'] if f.get('geometry')]
 
-def construir(slug, dane):
+def construir(slug, dane, solo_cabecera=False):
     base = f'_originales/dane_mgn/{slug}'
     veredas = leer(f'{base}/veredas.geojson')
     comunas = leer(f'{base}/comunas.geojson')
@@ -106,6 +109,11 @@ def construir(slug, dane):
                 urb.append((f'B{code}', nombre, 'Barrio', limpia(g, TOL_URB)))
             fuente_urb = FUENTE_TXT.get(slug) or FUENTES_B[slug]['fuente']
             tipo_urb = 'barrios'
+    if tipo_urb is None and solo_cabecera:
+        conf = 'oficial'
+        secs = [shape(f['geometry']).buffer(0) for f in leer(f'{base}/sectores_urbanos.geojson') if f['properties'].get('CLAS_CCDGO') == '1']
+        urb.append(('CAB', 'Cabecera municipal', 'Cabecera', limpia(unary_union(secs).buffer(0), TOL_URB)))
+        fuente_urb, tipo_urb = 'DANE, Marco Geoestadístico Nacional 2018: cabecera municipal (unión de sus sectores urbanos)', 'cabecera'
     if tipo_urb is None:
         conf = 'oficial'
         ruta_sec = f'{base}/secciones_urbanas.geojson'
@@ -225,14 +233,15 @@ def construir(slug, dane):
     json.dump({'type': 'FeatureCollection', 'features': fdivs}, open(f'{OUT}/{slug}.divisiones.geo.json', 'w'), ensure_ascii=False, separators=(',', ':'))
     json.dump({'type': 'FeatureCollection', 'features': fsubs}, open(f'{OUT}/{slug}.subdivisiones.geo.json', 'w'), ensure_ascii=False, separators=(',', ':'))
     n_urb, n_rur = len(urb), len(rur)
-    etiqueta_urb = {'barrios': f'{n_urb} barrios', 'secciones': f'{n_urb} secciones urbanas (DANE)', 'sectores': f'{n_urb} sectores urbanos (DANE)'}[tipo_urb]
+    etiqueta_urb = {'cabecera': 'Cabecera', 'barrios': f'{n_urb} barrios', 'secciones': f'{n_urb} secciones urbanas (DANE)', 'sectores': f'{n_urb} sectores urbanos (DANE)'}[tipo_urb]
     registro = {
         'id': slug, 'daneCode': dane,
         'divisionLabel': (f'{len(comunas)} comunas' if comunas else 'Cabecera') + (f' y {n_corr} corregimiento' + ('s' if n_corr > 1 else '') if n_corr else ' y zona rural'),
         'subdivisionLabel': f'{etiqueta_urb} y {n_rur} veredas',
         'fuente': f'{fuente_urb}; veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)' + ('; comunas: DANE 2018' if comunas and slug != 'envigado' else ''),
         'confianza': conf,
-        'nota': ('No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. ' if tipo_urb != 'barrios' else '')
+        'nota': ('Municipio con 20.000 votantes o menos: la zona urbana es una sola unidad (la cabecera), sin división por barrios. ' if tipo_urb == 'cabecera'
+                 else 'No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. ' if tipo_urb != 'barrios' else '')
                 + 'Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.',
     }
     return idiv, isub, registro, (n_urb, n_rur, os.path.getsize(f'{OUT}/{slug}.subdivisiones.geo.json'))
@@ -242,8 +251,9 @@ if __name__ == '__main__':
     indice = json.load(open('src/data/territorio/indiceTerritorios.json'))
     reg_path = f'{OUT}/registroFaseB.json'
     registro = json.load(open(reg_path)) if os.path.exists(reg_path) else {}
+    censo = {m['dane']: m['total'] for m in json.load(open('src/data/electoral/censoElectoral2026.json'))['municipios']}
     for m in lista:
-        idiv, isub, r, (nu, nr, tam) = construir(m['slug'], m['dane'])
+        idiv, isub, r, (nu, nr, tam) = construir(m['slug'], m['dane'], solo_cabecera=censo.get(m['dane'], 0) <= 20_000)
         indice[m['slug']]['divisiones'] = idiv
         indice[m['slug']]['subdivisiones'] = isub
         r['name'] = {'antioquia': 'Santa Fe de Antioquia'}.get(m['slug'], indice[m['slug']]['nombre'])  # nombre que reconoce el censo

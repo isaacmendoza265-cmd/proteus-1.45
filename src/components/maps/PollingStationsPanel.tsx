@@ -6,14 +6,14 @@ import { ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA } from '../../data/antioquia12
 import {
   AsignacionPuestos,
   Municipio20k,
-  MUNICIPIOS_20K,
+  MUNICIPIOS_CON_PUESTOS,
   PUESTOS_META,
   PuestoVotacion,
   UMBRAL_MUNICIPIOS_PUESTOS,
   asignarPuestosATerritorios,
   describirCruce,
-  getMunicipio20k,
-  getMunicipios20kDepartamento,
+  getMunicipioConPuestos,
+  getMunicipiosConPuestosDepartamento,
   loadPuestosMunicipio,
   normalizarPuesto,
   tieneCoordenadas,
@@ -35,7 +35,7 @@ const titulo = (s: string) => s.toLowerCase().replace(/(^|[\s(.-])(\p{L})/gu, (_
 /** Registro de cartografía municipal (comunas/barrios) de un municipio, si existe */
 function cartografiaDe(m: Municipio20k): MunicipalDivisionEntry | undefined {
   return Object.values(MUNICIPAL_DIVISIONS_REGISTRY).find(
-    (e) => e.disponible && getMunicipio20k(e.name, e.department)?.codMunicipio === m.codMunicipio,
+    (e) => e.disponible && getMunicipioConPuestos(e.name, e.department)?.codMunicipio === m.codMunicipio,
   );
 }
 
@@ -47,22 +47,22 @@ interface Ubicacion {
 }
 
 /**
- * Puestos de votación del territorio que se está viendo en el mapa: lista de municipios con más
- * de 20.000 votantes y, para el municipio elegido, sus puestos con censo, mesas, dirección y la
+ * Puestos de votación del territorio que se está viendo en el mapa: lista de municipios con puestos
+ * cargados y, para el municipio elegido, sus puestos con censo, mesas, dirección y la
  * comuna/barrio donde caen según la cartografía disponible.
  */
 export const PollingStationsPanel: React.FC<PollingStationsPanelProps> = ({ currentLevel, selectedDepartmentName, selectedMunicipalityId }) => {
   const isMunicipal = currentLevel === 'municipal' || currentLevel === 'hiperlocal' || currentLevel === 'comunas-barrios';
 
   const municipios = useMemo<Municipio20k[]>(() => {
-    if (currentLevel === 'nacional') return MUNICIPIOS_20K;
-    if (currentLevel === 'metropolitano') return MUNICIPIOS_20K.filter((m) => m.dane && VALLE_ABURRA_DANE.has(m.dane));
+    if (currentLevel === 'nacional') return MUNICIPIOS_CON_PUESTOS;
+    if (currentLevel === 'metropolitano') return MUNICIPIOS_CON_PUESTOS.filter((m) => m.dane && VALLE_ABURRA_DANE.has(m.dane));
     if (isMunicipal) {
       const e = MUNICIPAL_DIVISIONS_REGISTRY[selectedMunicipalityId];
-      const m = e && getMunicipio20k(e.name, e.department);
+      const m = e && getMunicipioConPuestos(e.name, e.department);
       return m ? [m] : [];
     }
-    return getMunicipios20kDepartamento(selectedDepartmentName || 'Antioquia');
+    return getMunicipiosConPuestosDepartamento(selectedDepartmentName || 'Antioquia');
   }, [currentLevel, isMunicipal, selectedDepartmentName, selectedMunicipalityId]);
 
   const [codigo, setCodigo] = useState<string>('');

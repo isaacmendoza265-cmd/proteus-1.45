@@ -8,6 +8,9 @@ import {
   loadPuestosDepartamento,
   loadPuestosMunicipio,
   tieneCoordenadas,
+  MUNICIPIOS_FASE_C,
+  getMunicipioConPuestos,
+  getMunicipiosConPuestosDepartamento,
 } from '../pollingStationsService';
 import { MUNICIPAL_DIVISIONS_REGISTRY } from '../../data/geojson/municipalDivisions';
 
@@ -46,5 +49,34 @@ describe('Puestos de los municipios con más de 20.000 votantes', () => {
     // Divipole 2023: I.E. Navarra está en la comuna 9 (Guasimalito)
     const navarra = puestos.find((p) => p.puesto === 'I.E. NAVARRA')!;
     expect(a.territorioDePuesto[navarra.codPuesto]).toBe('bello-div-9');
+  });
+});
+
+describe('Puestos de los 79 municipios de Antioquia con 20.000 votantes o menos (fase C)', () => {
+  it('están los 79, cuadran con el censo municipal y la mayoría queda ubicada', async () => {
+    expect(MUNICIPIOS_FASE_C).toHaveLength(79);
+    expect(getMunicipiosConPuestosDepartamento('Antioquia')).toHaveLength(125);
+    expect(getMunicipio20k('Abriaquí')).toBeUndefined();
+    expect(getMunicipioConPuestos('Abriaquí')?.censo).toBe(getMunicipalitiesCensus('antioquia').find((m) => m.nombre === 'ABRIAQUI')!.total);
+    let total = 0, ubicados = 0;
+    for (const m of MUNICIPIOS_FASE_C) {
+      const lista = await loadPuestosMunicipio(m);
+      expect(lista).toHaveLength(m.puestos);
+      expect(lista.reduce((s, p) => s + p.total, 0)).toBe(m.censo);
+      total += lista.length;
+      ubicados += lista.filter(tieneCoordenadas).length;
+    }
+    expect(ubicados / total).toBeGreaterThan(0.75);
+  });
+
+  it('Abejorral: solo cabecera y veredas; los puestos ubicados caen en ellas', async () => {
+    const m = getMunicipioConPuestos('Abejorral')!;
+    const puestos = await loadPuestosMunicipio(m);
+    const sub = await MUNICIPAL_DIVISIONS_REGISTRY.abejorral.loadSubdivisions!();
+    expect(new Set(sub.features.map((f) => f.properties.tipo))).toEqual(new Set(['Cabecera', 'Vereda']));
+    const a = asignarPuestosATerritorios(puestos, sub.features);
+    expect(a.fueraDeLaCapa).toEqual([]);
+    const cab = puestos.find((p) => p.zona === '00')!;
+    expect(a.territorioDePuesto[cab.codPuesto]).toBe('abejorral-sub-CAB');
   });
 });

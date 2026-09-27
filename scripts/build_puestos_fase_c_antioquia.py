@@ -10,13 +10,15 @@ ni su salida (resumen.json / MUNICIPIOS_20K): ese archivo sigue significando "m�
 en todo el país" en el resto de la app. Con este archivo, Antioquia queda con sus 125 municipios con
 puesto + coordenadas, sin cambiar el criterio nacional ni afectar a ningún otro departamento.
 
-La app (pollingStationsService) todavía no consume este archivo: hoy solo sirve para adjuntar
-coordenadas a los resultados 2026 (Congreso, Cámara, Presidencia) de estos 79 municipios, igual que
-build_resultados_puesto_2023.py hace por su cuenta para 2023. Conectarlo al mapa (marcadores de
-puesto, agregación por comuna/barrio) es un paso de UI aparte, no incluido aquí.
+Ubicación aproximada (regla de Isaac, 27-sep-2026: en estos municipios solo se distingue cabecera
+de veredas). Los puestos que no cruzan con la Divipole 2023 se ubican así, marcados 'aproximada':
+- zona urbana (00-89) o 90/98: en la cabecera (punto interior del polígono de la cabecera);
+- zona 99 (rural): en la vereda cuyo nombre aparece en el nombre del puesto ("CER GUAYABAL",
+  "SD EL PITAL I.E. ..."), o en el corregimiento si es el nombre del corregimiento el que aparece;
+- lo demás queda sin ubicar (cuenta solo en el total del municipio).
 
-Uso: python3 scripts/build_puestos_fase_c_antioquia.py
-Salida: src/data/electoral/puestos/antioquia_fase_c.json
+Uso: python3 scripts/build_puestos_fase_c_antioquia.py   (después de build_cartografia_fase_b.py)
+Salida: src/data/electoral/puestosFaseC/resumen.json (municipios) y antioquia.json (puestos)
 """
 import collections
 import csv
@@ -25,9 +27,55 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from build_puestos_20k import ROOT, CENSO, DIVIPOLE, CENSO_JSON, norm, cruzar, coordenadas  # noqa: E402
+from build_puestos_20k import ROOT, CENSO, DIVIPOLE, CENSO_JSON, norm, canon, cruzar, coordenadas  # noqa: E402
+from shapely.geometry import shape, Point  # noqa: E402
+from shapely.ops import unary_union  # noqa: E402
 
-OUT = ROOT / 'src/data/electoral/puestos/antioquia_fase_c.json'
+OUT_DIR = ROOT / 'src/data/electoral/puestosFaseC'
+GENERICAS_RURALES = set('VDA VEREDA VDAS CORREG CORREGIMIENTO INSPECCION INSP POLICIA SD IER CER CEDR ER EU E U CASETA COMUNAL SALON ESCUELA'.split())
+FUENTE_APROX = 'Ubicación aproximada: cabecera o vereda del municipio según la zona y el nombre del puesto (sin coordenadas en la Divipole 2023)'
+
+
+def tokens(s):
+    return [w for w in canon(s).split() if w not in GENERICAS_RURALES]
+
+
+def cargar_territorios(slug):
+    ruta_s = ROOT / f'src/data/geojson/municipios/{slug}.subdivisiones.geo.json'
+    ruta_d = ROOT / f'src/data/geojson/municipios/{slug}.divisiones.geo.json'
+    subs = json.loads(ruta_s.read_text(encoding='utf-8'))['features']
+    divs = json.loads(ruta_d.read_text(encoding='utf-8'))['features']
+    cab = next((f for f in subs if f['properties']['tipo'] == 'Cabecera'), None)
+    ver = [(tokens(f['properties']['name']), f) for f in subs if f['properties']['tipo'] == 'Vereda']
+    cor = [(tokens(f['properties']['name'].replace('Corregimiento ', '')), f) for f in divs if f['properties']['tipo'] == 'Corregimiento']
+    return cab, [v for v in ver if v[0]], [c for c in cor if c[0]]
+
+
+def punto(f):
+    p = shape(f['geometry']).representative_point()
+    return round(p.y, 6), round(p.x, 6)
+
+
+def contiene(nombre_tok, puesto_tok):
+    """Todas las palabras del territorio aparecen seguidas en el nombre del puesto."""
+    n = len(nombre_tok)
+    return any(puesto_tok[i:i + n] == nombre_tok for i in range(len(puesto_tok) - n + 1))
+
+
+def ubicar_aproximado(p, cab, veredas, corrs):
+    if p['zona'] != '99':
+        if not cab:
+            return None
+        lat, lon = punto(cab)
+        return {'tipo': 'cabecera', 'lat': lat, 'lon': lon, 'territorio': cab['properties']['name']}
+    t = tokens(p['puesto'])
+    for lista, tipo in ((veredas, 'vereda'), (corrs, 'corregimiento')):
+        cands = [(len(n), f) for n, f in lista if contiene(n, t)]
+        if cands:
+            f = max(cands, key=lambda x: x[0])[1]
+            lat, lon = punto(f)
+            return {'tipo': tipo, 'lat': lat, 'lon': lon, 'territorio': f['properties']['name']}
+    return None
 UMBRAL = 20_000
 
 
@@ -54,6 +102,19 @@ def main():
         if not divi:
             raise SystemExit(f"Municipio sin Divipole: {m['nombre']}")
         cruce = cruzar(filas, divi)
+        # Puestos rurales que en 2026 llevan el nombre del lugar más el de la escuela
+        # ("CHAGUALAL IER ZOILA DUQUE BAENA") y en la Divipole 2023 solo el del lugar ("CHAGUALAL")
+        usados = {x[0] for x in cruce.values()}
+        for c in filas:
+            if c['cod_puesto'] in cruce or c['cod_puesto'][5:7] != '99':
+                continue
+            t = tokens(c['puesto'])
+            cands = [(len(tokens(d['puesto'])), i) for i, d in enumerate(divi)
+                     if i not in usados and tokens(d['puesto']) and contiene(tokens(d['puesto']), t)]
+            if cands:
+                i = max(cands)[1]
+                cruce[c['cod_puesto']] = (i, 'lugar', 1.0)
+                usados.add(i)
         con_coord = 0
         for c in sorted(filas, key=lambda r: r['cod_puesto']):
             x = cruce.get(c['cod_puesto'])
@@ -80,8 +141,43 @@ def main():
             'puestosConCoordenadas': con_coord,
         })
 
+    # Ubicación aproximada de los que no cruzaron (cabecera / vereda / corregimiento)
+    slug_de = {v['dane']: k for k, v in json.loads((ROOT / 'src/data/territorio/indiceTerritorios.json').read_text(encoding='utf-8')).items()}
+    dane_de = {m['codMunicipio']: m['dane'] for m in municipios}
+    terr, limites = {}, {}
+    for p in puestos:
+        cod = p['codMunicipio']
+        if cod not in terr:
+            terr[cod] = cargar_territorios(slug_de[dane_de[cod]])
+            subs = json.loads((ROOT / f'src/data/geojson/municipios/{slug_de[dane_de[cod]]}.subdivisiones.geo.json').read_text(encoding='utf-8'))['features']
+            limites[cod] = unary_union([shape(f['geometry']).buffer(0) for f in subs]).buffer(0.005)
+        d = p['divipole2023']
+        if d and d.get('lat') is not None:
+            if limites[cod].contains(Point(d['lon'], d['lat'])):
+                continue
+            # Coordenada de la Divipole fuera del municipio (error de la fuente): se descarta
+            stats['divipole_fuera_del_municipio'] += 1
+            stats[d['cruce']] -= 1
+            stats['sin_divipole'] += 1
+            p['divipole2023'] = None
+        u = ubicar_aproximado(p, *terr[cod])
+        if not u:
+            stats['sin_ubicar'] += 1
+            continue
+        stats['aprox_' + u['tipo']] += 1
+        if p['divipole2023'] is None:
+            stats['sin_divipole'] -= 1
+        p['divipole2023'] = {'puesto': p['puesto'], 'direccion': None, 'lat': u['lat'], 'lon': u['lon'],
+                             'cruce': u['tipo'], 'similitud': 1.0, 'precision': 'aproximada',
+                             'territorio': u['territorio'], 'fuente': FUENTE_APROX}
+    for m in municipios:
+        m['puestosConCoordenadas'] = sum(1 for p in puestos if p['codMunicipio'] == m['codMunicipio'] and (p['divipole2023'] or {}).get('lat') is not None)
+    stats.pop('sin_divipole', None) if stats.get('sin_divipole') == 0 else None
+
     dump = lambda obj: json.dumps(obj, ensure_ascii=False, separators=(',', ':')) + '\n'
-    OUT.write_text(dump({
+    OUT_DIR.mkdir(parents=True, exist_ok=True)
+    (OUT_DIR / 'antioquia.json').write_text(dump(puestos), encoding='utf-8')
+    (OUT_DIR / 'resumen.json').write_text(dump({
         'meta': {
             'criterio': 'Municipios de Antioquia con censo electoral <= 20.000 (fase C), aparte del '
                         'umbral nacional de scripts/build_puestos_20k.py (> 20.000 en todo el país).',
@@ -89,13 +185,14 @@ def main():
                 'Registraduría, censo electoral por puesto, corte 30-abr-2026',
                 'Registraduría, Divipole Elecciones Territoriales 2023 con georreferenciación (datos.gov.co mv2e-prx5)',
             ],
-            'nota': 'Mismo cruce por nombre que build_puestos_20k.py. Los puestos sin divipole2023 no '
-                    'se pudieron cruzar (en su mayoría, creados después de 2023).',
+            'nota': 'Mismo cruce por nombre que build_puestos_20k.py. Los que no cruzan se ubican de forma '
+                    'aproximada en la cabecera o en su vereda (precision: aproximada). Los que tampoco así se '
+                    'ubican quedan sin coordenadas y cuentan solo en el total del municipio.',
             'cruce': dict(stats),
         },
-        'municipios': municipios, 'puestos': puestos,
+        'municipios': municipios,
     }), encoding='utf-8')
-    print(f'OK {OUT.relative_to(ROOT)}: {len(municipios)} municipios, {len(puestos)} puestos, cruce {dict(stats)}')
+    print(f'OK {OUT_DIR.relative_to(ROOT)}: {len(municipios)} municipios, {len(puestos)} puestos, cruce {dict(stats)}')
 
 
 if __name__ == '__main__':

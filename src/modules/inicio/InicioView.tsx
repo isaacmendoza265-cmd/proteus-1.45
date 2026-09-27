@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import { getDepartmentCensus, CENSUS_META } from '../../services/electoralCensusService';
-import { getMunicipios20kDepartamento } from '../../services/pollingStationsService';
+import { getMunicipios20kDepartamento, getMunicipiosConPuestosDepartamento } from '../../services/pollingStationsService';
 import { useActiveTerritory } from '../../services/activeTerritoryContextService';
 import type { NavViewId } from '../../components/layout/navigation';
 
@@ -17,8 +17,9 @@ export const InicioView: React.FC<Props> = ({ onNavigate }) => {
   const { activeTerritory } = useActiveTerritory();
   const dep = getDepartmentCensus('antioquia');
   const m20 = getMunicipios20kDepartamento('antioquia');
-  const puestos20 = m20.reduce((s, m) => s + m.puestos, 0);
-  const ubicados = m20.reduce((s, m) => s + m.puestosConCoordenadas, 0);
+  const todos = getMunicipiosConPuestosDepartamento('antioquia');
+  const puestos20 = todos.reduce((s, m) => s + m.puestos, 0);
+  const ubicados = todos.reduce((s, m) => s + m.puestosConCoordenadas, 0);
   const corte = CENSUS_META.corte.split('-').reverse().join('/');
   const nombre = activeTerritory.name;
 
@@ -26,7 +27,7 @@ export const InicioView: React.FC<Props> = ({ onNavigate }) => {
     { label: 'Censo electoral de Antioquia', value: dep ? fmt(dep.total) : '—', nota: `Registraduría, corte ${corte}` },
     { label: 'Mesas', value: dep ? fmt(dep.mesas) : '—', nota: dep ? `en ${fmt(dep.puestos)} puestos` : '' },
     { label: 'Municipios', value: dep ? fmt(dep.municipios) : '125', nota: `${m20.length} con más de 20.000 votantes` },
-    { label: 'Puestos ubicados en el mapa', value: fmt(ubicados), nota: `de ${fmt(puestos20)} en esos ${m20.length} municipios` },
+    { label: 'Puestos ubicados en el mapa', value: fmt(ubicados), nota: `de ${fmt(puestos20)} en los ${todos.length} municipios` },
   ];
   const continuar: { modulo: string; titulo: string; detalle: string; v: NavViewId }[] = [
     { modulo: 'Territorio', titulo: `Seguir explorando ${nombre}`, detalle: 'Mapa de país a barrio, ficha en cuatro secciones y redes de poder.', v: 'territorial-zoom' },

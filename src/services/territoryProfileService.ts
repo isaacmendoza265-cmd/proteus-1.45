@@ -205,7 +205,7 @@ export function demografia(t: TerritorioFicha): SeccionDemografia {
   }
   const subs = indiceDe(t).subdivisiones;
   const urbano2018 = Object.keys(subs)
-    .filter((k) => ['Barrio', 'Sección urbana', 'Sector urbano'].includes(subs[k].tipo))
+    .filter((k) => ['Barrio', 'Sección urbana', 'Sector urbano', 'Cabecera'].includes(subs[k].tipo))
     .reduce((s, k) => s + (data.porTerritorio[k]?.[0] ?? 0), 0);
 
   let proyeccion: SeccionDemografia['proyeccion'];

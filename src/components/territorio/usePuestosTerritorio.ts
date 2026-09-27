@@ -5,7 +5,7 @@
 import { useEffect, useState } from 'react';
 import { MUNICIPAL_DIVISIONS_REGISTRY } from '../../data/geojson/municipalDivisions';
 import {
-  getMunicipio20k, loadPuestosMunicipio, asignarPuestosATerritorios, puntoEnTerritorio, type PuestoVotacion,
+  getMunicipioConPuestos, loadPuestosMunicipio, asignarPuestosATerritorios, puntoEnTerritorio, type PuestoVotacion,
 } from '../../services/pollingStationsService';
 import { tieneFicha } from '../../services/territoryProfileService';
 import { cargarElecciones } from '../../services/electionResultsService';
@@ -44,12 +44,11 @@ export function usePuestosTerritorio(muniId: string | null, nombreMunicipio?: st
   const [estado, setEstado] = useState<PuestosTerritorio>(VACIO);
   useEffect(() => {
     const entry = muniId ? MUNICIPAL_DIVISIONS_REGISTRY[muniId] : undefined;
-    const m = entry ? getMunicipio20k(entry.name) : nombreMunicipio ? getMunicipio20k(nombreMunicipio) : undefined;
+    const m = entry ? getMunicipioConPuestos(entry.name) : nombreMunicipio ? getMunicipioConPuestos(nombreMunicipio) : undefined;
     if (!m) {
-      // Municipio con 20.000 votantes o menos (fase C): no hay censo 2026 por puesto con coordenadas
-      // (build_puestos_20k.py se limita a los municipios de más de 20.000), pero sí puede haber
-      // resultados 2023 por puesto con su propia ubicación (Divipole 2023): se ubican igual, para
-      // que el municipio y sus comunas/barrios muestren la Alcaldía y el Concejo 2023.
+      // Municipio con cartografía pero sin puestos 2026 cargados: puede haber resultados 2023 por
+      // puesto con su propia ubicación (Divipole 2023); se ubican igual. (Desde el 27-sep los 79
+      // municipios de fase C sí tienen puestos 2026: getMunicipioConPuestos los encuentra.)
       if (!entry) {
         setEstado(VACIO);
         return;

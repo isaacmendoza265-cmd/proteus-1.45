@@ -14,15 +14,14 @@ import rawRegistroB from './municipios/registroFaseB.json';
 export type ConfianzaFuente = 'oficial' | 'por verificar';
 
 /**
- * REGLA DE NIVELES DEL ZOOM MUNICIPAL (definida por Isaac, 24-sep-2026; ampliada en la fase C, 26-sep-2026)
+ * REGLA DE NIVELES DEL ZOOM MUNICIPAL (definida por Isaac, 24-sep-2026; ajustada el 27-sep-2026)
  * - Solo estas ciudades tienen el nivel intermedio de comunas (o localidades) entre municipio y
  *   barrio. Se podrán agregar Cali, Barranquilla, Bucaramanga y Cúcuta cuando haya cartografía.
- * - Los demás municipios pasan directo a su último nivel: barrios, o veredas/corregimientos y
- *   cabecera urbana cuando no distinguen barrios.
- * - Regla original (24-sep): ese último nivel solo existía en municipios con más de 20.000 personas
- *   en el censo electoral. La fase C (26-sep) construyó el último nivel para los 125 municipios de
- *   Antioquia, así que hoy no hay ese filtro por censo; `nivelesMunicipales` se conserva para cuando
- *   se aplique el mismo criterio al resto del país.
+ * - Los demás municipios pasan directo a su último nivel.
+ * - Municipios con más de 20.000 votantes: barrios (o unidades del DANE si no hay mapa de barrios)
+ *   y veredas.
+ * - Municipios con 20.000 votantes o menos: SOLO cabecera (una unidad) y veredas, sin barrios
+ *   (scripts/build_cartografia_fase_b.py). `nivelesMunicipales` expone ese umbral.
  */
 export const CIUDADES_CON_COMUNAS = ['medellin', 'bello', 'itagui', 'bogota', 'cali', 'barranquilla', 'bucaramanga', 'cucuta'];
 export const CENSO_MINIMO_ULTIMO_NIVEL = 20_000;
@@ -32,6 +31,7 @@ export function nivelesMunicipales(id: string, municipio: string, departamento =
   const censo = getMunicipalCensus(municipio, departamento)?.total;
   return {
     comunas: CIUDADES_CON_COMUNAS.includes(id),
+    /** true: barrios; false: solo cabecera y veredas */
     ultimoNivel: censo !== undefined && censo > CENSO_MINIMO_ULTIMO_NIVEL,
     censo,
   };

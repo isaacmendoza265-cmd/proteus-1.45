@@ -1,6 +1,7 @@
 /// <reference types="vite/client" />
 /**
- * PUESTOS DE VOTACIÓN (municipios con más de 20.000 votantes)
+ * PUESTOS DE VOTACIÓN (municipios con más de 20.000 votantes en todo el país, más los 79 municipios
+ * de Antioquia con 20.000 o menos: fase C, scripts/build_puestos_fase_c_antioquia.py)
  *
  * - Censo, mesas y código de cada puesto: censo electoral de la Registraduría, corte 30-abr-2026.
  * - Dirección, comuna y coordenadas: Divipole 2023 georreferenciada de la Registraduría
@@ -11,12 +12,17 @@
  * siempre (≈50 KB); los puestos se cargan por departamento, bajo demanda.
  */
 import resumen from '../data/electoral/puestos/resumen.json';
+import resumenFaseC from '../data/electoral/puestosFaseC/resumen.json';
 import { getMunicipalCensus, normalizeTerritoryName, resolveDepartmentId } from './electoralCensusService';
 import type { TerritoryGeoFeature } from '../data/geojson/types';
 
 /** exacto/normalizado/aproximado: por nombre con la Divipole 2023. direccion: misma dirección que un puesto de la
  *  Divipole 2023 (se usan sus coordenadas). geocodificado: dirección de la Divipole 2026 ubicada en OpenStreetMap. */
-export type TipoCruce = 'exacto' | 'normalizado' | 'aproximado' | 'direccion' | 'geocodificado';
+export type TipoCruce = 'exacto' | 'normalizado' | 'aproximado' | 'direccion' | 'geocodificado'
+  /** Solo fase C: el nombre del lugar de la Divipole 2023 aparece en el nombre del puesto 2026 */
+  | 'lugar'
+  /** Solo fase C, ubicación aproximada: en la cabecera o en la vereda que nombra el puesto */
+  | 'cabecera' | 'vereda' | 'corregimiento';
 
 export interface UbicacionDivipole {
   /** Nombre del puesto en la Divipole 2023 */
@@ -33,6 +39,8 @@ export interface UbicacionDivipole {
   /** Solo en ubicaciones complementarias: 'puesto' (el edificio) o 'aproximada' (cruce de calles o vereda) */
   precision?: 'puesto' | 'aproximada';
   fuente?: string;
+  /** Solo en ubicaciones aproximadas de fase C: cabecera, vereda o corregimiento donde se puso el punto */
+  territorio?: string;
 }
 
 export interface PuestoVotacion {
@@ -75,6 +83,27 @@ export const UMBRAL_MUNICIPIOS_PUESTOS = 20_000;
 
 const porCodigo = new Map(MUNICIPIOS_20K.map((m) => [m.codMunicipio, m]));
 
+/** Municipios de Antioquia con 20.000 votantes o menos (fase C): solo cabecera y veredas */
+export const MUNICIPIOS_FASE_C: Municipio20k[] = (resumenFaseC as unknown as Resumen).municipios;
+const codigosFaseC = new Set(MUNICIPIOS_FASE_C.map((m) => m.codMunicipio));
+/** Todos los municipios con puestos cargados (> 20.000 del país + fase C de Antioquia) */
+export const MUNICIPIOS_CON_PUESTOS: Municipio20k[] = [...MUNICIPIOS_20K, ...MUNICIPIOS_FASE_C];
+const porCodigoTodos = new Map(MUNICIPIOS_CON_PUESTOS.map((m) => [m.codMunicipio, m]));
+
+/** Como getMunicipio20k, pero también encuentra los municipios de fase C */
+export function getMunicipioConPuestos(nameOrDane: string, department = 'antioquia'): Municipio20k | undefined {
+  const censo = getMunicipalCensus(nameOrDane, department);
+  return censo ? porCodigoTodos.get(censo.codigoRegistraduria) : undefined;
+}
+
+/** Municipios con puestos cargados de un departamento, de mayor a menor censo */
+export function getMunicipiosConPuestosDepartamento(department: string): Municipio20k[] {
+  const dep = resolveDepartmentId(department);
+  return dep ? MUNICIPIOS_CON_PUESTOS.filter((m) => m.departamento === dep).sort((a, b) => b.censo - a.censo) : [];
+}
+
+export const esMunicipioFaseC = (m: Municipio20k) => codigosFaseC.has(m.codMunicipio);
+
 /** Municipio por código de la Registraduría (p. ej. '01001' = Medellín) */
 export function getMunicipio20kByRegistraduria(codigo: string): Municipio20k | undefined {
   return porCodigo.get(codigo);
@@ -98,21 +127,38 @@ export function getMunicipios20kDepartamento(department: string): Municipio20k[]
 // --- Carga bajo demanda ------------------------------------------------------------------
 
 const cargadores = import.meta.glob<{ default: PuestoVotacion[] }>(['../data/electoral/puestos/*.json', '!../data/electoral/puestos/resumen.json']);
+const cargadoresFaseC = import.meta.glob<{ default: PuestoVotacion[] }>(['../data/electoral/puestosFaseC/*.json', '!../data/electoral/puestosFaseC/resumen.json']);
 const cache = new Map<string, Promise<PuestoVotacion[]>>();
 
-/** Todos los puestos (de municipios > 20.000) de un departamento */
+function cargar(clave: string, loader?: () => Promise<{ default: PuestoVotacion[] }>): Promise<PuestoVotacion[]> {
+  if (!loader) return Promise.resolve([]);
+  if (!cache.has(clave)) cache.set(clave, loader().then((m) => m.default));
+  return cache.get(clave)!;
+}
+
+/** Puestos de los municipios con más de 20.000 votantes de un departamento */
 export function loadPuestosDepartamento(department: string): Promise<PuestoVotacion[]> {
   const dep = resolveDepartmentId(department);
-  const loader = dep ? cargadores[`../data/electoral/puestos/${dep}.json`] : undefined;
-  if (!dep || !loader) return Promise.resolve([]);
-  if (!cache.has(dep)) cache.set(dep, loader().then((m) => m.default));
-  return cache.get(dep)!;
+  return dep ? cargar(dep, cargadores[`../data/electoral/puestos/${dep}.json`]) : Promise.resolve([]);
+}
+
+/** Todos los puestos cargados de un departamento (> 20.000 más fase C, si la tiene) */
+export async function loadTodosPuestosDepartamento(department: string): Promise<PuestoVotacion[]> {
+  const dep = resolveDepartmentId(department);
+  if (!dep) return [];
+  const [a, b] = await Promise.all([loadPuestosDepartamento(dep), cargar(`faseC-${dep}`, cargadoresFaseC[`../data/electoral/puestosFaseC/${dep}.json`])]);
+  return [...a, ...b];
 }
 
 export async function loadPuestosMunicipio(m: Municipio20k): Promise<PuestoVotacion[]> {
-  const lista = await loadPuestosDepartamento(m.departamento);
+  const lista = codigosFaseC.has(m.codMunicipio)
+    ? await cargar(`faseC-${m.departamento}`, cargadoresFaseC[`../data/electoral/puestosFaseC/${m.departamento}.json`])
+    : await loadPuestosDepartamento(m.departamento);
   return lista.filter((p) => p.codMunicipio === m.codMunicipio);
 }
+
+/** Nombre del municipio por su código de la Registraduría */
+export const nombreMunicipioPuestos = (codigo: string) => porCodigoTodos.get(codigo)?.municipio ?? '';
 
 export function tieneCoordenadas(p: PuestoVotacion): p is PuestoVotacion & { divipole2023: UbicacionDivipole & { lat: number; lon: number } } {
   return p.divipole2023?.lat != null && p.divipole2023?.lon != null;
@@ -210,6 +256,9 @@ export function describirCruce(p: PuestoVotacion): string {
   if (d.cruce === 'exacto') return 'Ubicado con la Divipole 2023 (mismo nombre)';
   if (d.cruce === 'normalizado') return `Ubicado con la Divipole 2023 (nombre equivalente: ${d.puesto})`;
   if (d.cruce === 'direccion') return `Ubicado por su dirección 2026 (${d.direccion}), la misma de un puesto de la Divipole 2023`;
+  if (d.cruce === 'lugar') return `Ubicado con la Divipole 2023 (el lugar "${d.puesto}" está en el nombre del puesto)`;
+  if (d.cruce === 'cabecera') return 'Ubicación aproximada: en la cabecera municipal (sin coordenadas propias)';
+  if (d.cruce === 'vereda' || d.cruce === 'corregimiento') return `Ubicación aproximada: en ${d.cruce === 'vereda' ? 'la vereda' : 'el corregimiento'} ${d.territorio} (por el nombre del puesto)`;
   if (d.cruce === 'geocodificado') return `Ubicado por su dirección 2026 (${d.direccion}) en OpenStreetMap${d.precision === 'aproximada' ? ' · ubicación aproximada' : ''}`;
   return `Ubicado por nombre parecido (${Math.round(d.similitud * 100)} %): ${d.puesto}. Conviene verificar`;
 }

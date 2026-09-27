@@ -19,7 +19,9 @@ import {
   PuestoVotacion,
   asignarPuestosATerritorios,
   describirCruce,
-  getMunicipio20k,
+  getMunicipioConPuestos,
+  loadTodosPuestosDepartamento,
+  nombreMunicipioPuestos,
   loadPuestosDepartamento,
   loadPuestosMunicipio,
   tieneCoordenadas,
@@ -114,7 +116,7 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
   const [isLoadingMuni, setIsLoadingMuni] = useState<boolean>(false);
   const [muniDropdownOpen, setMuniDropdownOpen] = useState<boolean>(false);
 
-  // Puestos de votación (municipios con más de 20.000 votantes; ver pollingStationsService)
+  // Puestos de votación (los 125 municipios de Antioquia y los de más de 20.000 votantes del país; ver pollingStationsService)
   const [showPuestos, setShowPuestos] = useState<boolean>(true);
   const [puestos, setPuestos] = useState<PuestoVotacion[]>([]);
   const [puestosScope, setPuestosScope] = useState<string>('');
@@ -311,14 +313,14 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
     let load: (() => Promise<PuestoVotacion[]>) | null = null;
     if (currentLevel === 'departamental') {
       const dept = selectedDepartmentName || 'Antioquia';
-      scope = `Puestos de ${dept} (municipios con más de 20.000 votantes)`;
-      load = () => loadPuestosDepartamento(dept);
+      scope = `Puestos de ${dept}`;
+      load = () => loadTodosPuestosDepartamento(dept);
     } else if (currentLevel === 'metropolitano') {
       const codigos = new Set(MUNICIPIOS_20K.filter((m) => m.dane && VALLE_ABURRA_DANE.has(m.dane)).map((m) => m.codMunicipio));
       scope = 'Puestos del Valle de Aburrá';
       load = () => loadPuestosDepartamento('antioquia').then((l) => l.filter((p) => codigos.has(p.codMunicipio)));
     } else if (isMunicipalScale) {
-      const m = getMunicipio20k(activeMuni.name, activeMuni.department);
+      const m = getMunicipioConPuestos(activeMuni.name, activeMuni.department);
       if (m) {
         scope = `Puestos de ${activeMuni.name}`;
         load = () => loadPuestosMunicipio(m);
@@ -368,7 +370,7 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
     if (!showPuestos) return;
     const nombreTerritorio: Record<string, string> = {};
     for (const f of municipalFeatures ?? []) nombreTerritorio[String(f.id)] = f.properties.name;
-    const municipioDe = (cod: string) => MUNICIPIOS_20K.find((m) => m.codMunicipio === cod)?.municipio ?? '';
+    const municipioDe = nombreMunicipioPuestos;
     for (const p of puestos) {
       if (!tieneCoordenadas(p)) continue;
       const d = p.divipole2023;
@@ -937,14 +939,14 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
             {puestosScope}
           </div>
           <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-emerald-500 inline-block border border-white" /> Ubicado con la Divipole 2023</div>
-          <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-amber-500 inline-block border border-amber-300" /> Ubicado por nombre parecido (verificar)</div>
+          <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-amber-500 inline-block border border-amber-300" /> Ubicado por nombre parecido o ubicación aproximada (cabecera o vereda)</div>
           <div className="mt-1 text-[10px] text-slate-400 leading-snug">
             {puestos.filter(tieneCoordenadas).length.toLocaleString('es-CO')} de {puestos.length.toLocaleString('es-CO')} puestos en el mapa (tamaño = censo 2026).
-            {puestos.length - puestos.filter(tieneCoordenadas).length > 0 && ` ${(puestos.length - puestos.filter(tieneCoordenadas).length).toLocaleString('es-CO')} sin coordenadas (puestos nuevos).`}
+            {puestos.length - puestos.filter(tieneCoordenadas).length > 0 && ` ${(puestos.length - puestos.filter(tieneCoordenadas).length).toLocaleString('es-CO')} sin ubicar (cuentan solo en el total del municipio).`}
             {asignacion && asignacion.fueraDeLaCapa.length > 0 && ` ${asignacion.fueraDeLaCapa.length} fuera de la capa del municipio.`}
           </div>
           {puestos.length === 0 && isMunicipalScale && (
-            <div className="text-[10px] text-slate-400">Municipio con 20.000 votantes o menos: no se cargan puestos.</div>
+            <div className="text-[10px] text-slate-400">Este municipio no tiene puestos cargados.</div>
           )}
         </div>
       )}
