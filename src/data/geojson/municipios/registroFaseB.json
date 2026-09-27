@@ -96,7 +96,7 @@
   "subdivisionLabel": "10 secciones urbanas (DANE) y 25 veredas",
   "fuente": "DANE, Marco Geoestadístico Nacional 2018: secciones urbanas de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
   "confianza": "oficial",
-  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda. Revisado el 27-sep-2026: el catastro de Girardota publicado por el AMVA trae manzanas con código de barrio, pero sin nombres ni capa de barrios; tampoco hay una capa pública de barrios en ArcGIS Online.",
   "name": "Girardota"
  },
  "chigorodo": {
@@ -226,7 +226,7 @@
   "subdivisionLabel": "8 secciones urbanas (DANE) y 35 veredas",
   "fuente": "DANE, Marco Geoestadístico Nacional 2018: secciones urbanas de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
   "confianza": "oficial",
-  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda. Revisado el 27-sep-2026: el Catastro Departamental solo trae la cabecera y los centros poblados, no barrios; tampoco hay una capa pública de barrios en ArcGIS Online.",
   "name": "El Santuario"
  },
  "san_pedro_de_uraba": {
@@ -286,7 +286,7 @@
   "subdivisionLabel": "5 secciones urbanas (DANE) y 21 veredas",
   "fuente": "DANE, Marco Geoestadístico Nacional 2018: secciones urbanas de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
   "confianza": "oficial",
-  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda. Revisado el 27-sep-2026: el Catastro Departamental solo trae la cabecera y los centros poblados, no barrios; tampoco hay una capa pública de barrios en ArcGIS Online.",
   "name": "Amagá"
  },
  "antioquia": {
@@ -296,7 +296,7 @@
   "subdivisionLabel": "16 secciones urbanas (DANE) y 42 veredas",
   "fuente": "DANE, Marco Geoestadístico Nacional 2018: secciones urbanas de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
   "confianza": "oficial",
-  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda. Revisado el 27-sep-2026: el Catastro Departamental solo trae la cabecera y los centros poblados, no barrios; tampoco hay una capa pública de barrios en ArcGIS Online.",
   "name": "Santa Fe de Antioquia"
  },
  "san_pedro": {
@@ -306,7 +306,7 @@
   "subdivisionLabel": "4 secciones urbanas (DANE) y 19 veredas",
   "fuente": "DANE, Marco Geoestadístico Nacional 2018: secciones urbanas de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
   "confianza": "oficial",
-  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda. Revisado el 27-sep-2026: el Catastro Departamental solo trae la cabecera y los centros poblados, no barrios; tampoco hay una capa pública de barrios en ArcGIS Online.",
   "name": "San Pedro de Los Milagros"
  },
  "remedios": {
@@ -346,7 +346,7 @@
   "subdivisionLabel": "7 secciones urbanas (DANE) y 20 veredas",
   "fuente": "DANE, Marco Geoestadístico Nacional 2018: secciones urbanas de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
   "confianza": "oficial",
-  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda. Revisado el 27-sep-2026: la base geográfica municipal publicada (2023) trae un solo polígono urbano, la cabecera; tampoco hay una capa pública de barrios en ArcGIS Online.",
   "name": "Retiro"
  },
  "santa_barbara": {
@@ -366,7 +366,7 @@
   "subdivisionLabel": "11 secciones urbanas (DANE) y 21 veredas",
   "fuente": "DANE, Marco Geoestadístico Nacional 2018: secciones urbanas de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
   "confianza": "oficial",
-  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda. Revisado el 27-sep-2026: el Catastro Departamental solo trae la cabecera y los centros poblados, no barrios; tampoco hay una capa pública de barrios en ArcGIS Online.",
   "name": "Nechí"
  },
  "zaragoza": {
@@ -376,7 +376,7 @@
   "subdivisionLabel": "6 secciones urbanas (DANE) y 75 veredas",
   "fuente": "DANE, Marco Geoestadístico Nacional 2018: secciones urbanas de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
   "confianza": "oficial",
-  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda. Revisado el 27-sep-2026: el Catastro Departamental solo trae la cabecera y los centros poblados, no barrios; tampoco hay una capa pública de barrios en ArcGIS Online.",
   "name": "Zaragoza"
  },
  "san_juan_de_uraba": {
@@ -416,7 +416,7 @@
   "subdivisionLabel": "7 secciones urbanas (DANE) y 24 veredas",
   "fuente": "DANE, Marco Geoestadístico Nacional 2018: secciones urbanas de la cabecera (sin nombre de barrio); veredas: DANE, nivel de referencia de veredas 2024; corregimientos: Gobernación de Antioquia (2025)",
   "confianza": "oficial",
-  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.",
+  "nota": "No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda. Revisado el 27-sep-2026: el Catastro Departamental solo trae la cabecera y los centros poblados, no barrios; tampoco hay una capa pública de barrios en ArcGIS Online.",
   "name": "La Unión"
  },
  "itagui": {

@@ -7,8 +7,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import {
   type TerritorioFicha, type EstadoDato, ETIQUETA_ESTADO,
   demografia, censoElectoral, grupos, politica, fmt, pct,
-  cargarDemografia, cargarEconomia, economia,
-} from '../../services/territoryProfileService';
+  cargarDemografia, cargarEconomia, economia, piramide2026 } from '../../services/territoryProfileService';
 import { cargarElecciones, sumarEleccion, tipoEleccion, ELECCIONES_PENDIENTES, type EleccionPuestos } from '../../services/electionResultsService';
 import type { PuestoVotacion } from '../../services/pollingStationsService';
 
@@ -143,6 +142,7 @@ export const FichaTerritorio: React.FC<FichaTerritorioProps> = ({
   const dem = useMemo(() => demografia(t), [t, demLista]);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const eco = useMemo(() => economia(t), [t, demLista]);
+  const pir = useMemo(() => piramide2026(t), [t]);
   const cen = useMemo(() => censoElectoral(t, puestosDentro, sinUbicar), [t, puestosDentro, sinUbicar]);
   const gru = useMemo(() => grupos(dem, cen), [dem, cen]);
   const pol = useMemo(() => politica(t), [t]);
@@ -423,6 +423,29 @@ export const FichaTerritorio: React.FC<FichaTerritorioProps> = ({
               <span className="text-xs text-[var(--c-muted)]">{eco.nota}</span>
             </div>
           )}
+          {pir && (() => {
+            const max = Math.max(1, ...pir.hombres, ...pir.mujeres);
+            const alcance = pir.alcance === 'municipio' ? 'todo el municipio' : pir.alcance === 'cabecera' ? 'la cabecera municipal' : 'el resto rural (centros poblados y rural disperso)';
+            return (
+              <div className="flex flex-col gap-1.5 px-3 py-2.5 rounded-xl border border-[var(--c-border)]">
+                <Cabecera titulo="Sexo y edad 2026" estado="oficial" fuente={`${pir.fuente} · ${alcance}`} />
+                <span className="text-xs text-[var(--c-muted)]">{fmt(pir.total)} personas; {fmt(pir.mayores18)} de 18 años o más ({pct((100 * pir.mayores18) / Math.max(1, pir.total))}).</span>
+                <div className="flex justify-between text-xs font-bold text-[var(--c-muted)]"><span>Hombres</span><span>Mujeres</span></div>
+                <div className="flex flex-col gap-px">
+                  {[...pir.grupos].reverse().map((g, k) => {
+                    const i = pir.grupos.length - 1 - k;
+                    return (
+                      <div key={g} className="grid grid-cols-[1fr_3rem_1fr] items-center gap-1 text-[11px]" title={`${g}: ${fmt(pir.hombres[i])} hombres, ${fmt(pir.mujeres[i])} mujeres`}>
+                        <span className="flex justify-end"><span className="block h-2 rounded-l-sm bg-[#3E5C8A]" style={{ width: `${(100 * pir.hombres[i]) / max}%` }} /></span>
+                        <span className="text-center tabular-nums text-[var(--c-muted)]">{g}</span>
+                        <span><span className="block h-2 rounded-r-sm bg-[#A84A5E]" style={{ width: `${(100 * pir.mujeres[i]) / max}%` }} /></span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })()}
           <div className="flex flex-col gap-1 px-3 py-2.5 rounded-xl border border-[var(--c-border)]">
             <Cabecera titulo="Proyección 2026" estado={dem.proyeccion.estado} />
             <span className="text-sm text-[var(--c-muted)]">{dem.proyeccion.texto}</span>

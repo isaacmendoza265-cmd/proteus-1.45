@@ -99,10 +99,10 @@ export const MUNICIPAL_DIVISIONS_REGISTRY: Record<string, MunicipalDivisionEntry
   },
   bello: {
     id: 'bello', name: 'Bello', department: 'Antioquia', daneCode: '05088',
-    divisionLabel: '12 comunas urbanas y la zona rural (corregimiento San Félix y veredas sin corregimiento)', subdivisionLabel: '132 barrios y 19 veredas',
+    divisionLabel: '12 comunas urbanas y la zona rural (corregimiento San Félix y veredas sin corregimiento)', subdivisionLabel: '132 barrios, 19 veredas y el sector Ovejas',
     fuente: 'Alcaldía de Bello - barrios del POT (Acuerdo 033 de 2009), datos.gov.co pnhh-ccwd; comuna de cada barrio según el plano del POT "Comunas y Barrios" (PL13) y veredas según el plano "Veredas" (PL14), Secretaría de Planeación, digitalizados',
     confianza: 'oficial', disponible: true, nivelComunas: true,
-    nota: 'Barrios y comunas oficiales del POT. 123 de 132 barrios caen en una sola comuna; 9 (zonas en desarrollo, industriales y asentamientos de borde) se asignan a la comuna donde está la mayor parte. Los nombres de las comunas 1 a 11 son los de la Divipole 2023 de la Registraduría (misma numeración; coincide en 34 de 35 puestos). La 12 (El Pinar) no tiene nombre oficial. Las 19 veredas se digitalizaron del plano PL14 (10 forman el corregimiento San Félix); el POT deja fuera de sus veredas el sector de Ovejas, que el límite DANE sí incluye.',
+    nota: 'Barrios y comunas oficiales del POT. 123 de 132 barrios caen en una sola comuna; 9 (zonas en desarrollo, industriales y asentamientos de borde) se asignan a la comuna donde está la mayor parte. Los nombres de las comunas 1 a 11 son los de la Divipole 2023 de la Registraduría (misma numeración; coincide en 34 de 35 puestos). Las 19 veredas se digitalizaron del plano PL14 (10 forman el corregimiento San Félix). El POT deja fuera de sus veredas el sector de Ovejas, que el límite DANE sí incluye: se agrega aparte (área de las veredas DANE 2024 que no cubre el POT). La comuna 12 no tiene nombre en el POT (plano PL13: sector El Pinar).',
     loadDivisions: () => import('./municipios/bello.divisiones.geo.json').then(asFC),
     loadSubdivisions: () => import('./municipios/bello.subdivisiones.geo.json').then(asFC),
   },

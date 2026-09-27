@@ -54,8 +54,10 @@ describe('Regla de niveles del zoom municipal', () => {
     expect(div.features.filter((f) => f.properties.tipo === 'Zona rural').map((f) => f.properties.name).sort())
       .toEqual(['Corregimiento San Félix', 'Veredas sin corregimiento']);
     expect(sub.features.filter((f) => f.properties.tipo === 'Barrio')).toHaveLength(132);
-    const veredas = sub.features.filter((f) => f.properties.tipo === 'Vereda');
+    const veredas = sub.features.filter((f) => f.properties.tipo === 'Vereda' && f.id !== 'bello-sub-OVEJAS');
     expect(veredas).toHaveLength(19);
+    // Sector Ovejas: dentro del límite DANE pero fuera de las veredas del POT (scripts/completar_bello_ovejas.py)
+    expect(sub.features.find((f) => f.id === 'bello-sub-OVEJAS')?.properties.parentId).toBe('bello-div-RUR');
     expect(veredas.filter((f) => f.properties.parentName === 'Corregimiento San Félix')).toHaveLength(10);
     expect(sub.features.every((f) => f.properties.parentId)).toBe(true);
   });

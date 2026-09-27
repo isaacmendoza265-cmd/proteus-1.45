@@ -107,15 +107,18 @@ const exterior = empty();
 const departamentos = {};
 const municipios = new Map();
 const medellinZonas = {};
-// Zona 99 (corregimientos): puestos cuyo nombre ubica el corregimiento sin ambigüedad.
-// El resto (El Manzanillo, María Paulina Taborda, Débora Arango, Pacha Mama, El Limonar,
-// Héctor Rogelio Montoya) queda "sin asignar" hasta cruzarlo con la Divipole georreferenciada.
+// Zona 99 (corregimientos). A* = San Antonio de Prado, B* = San Cristóbal, 33-36 = Santa Elena (por
+// código). Los demás se ubicaron el 27-sep-2026 con las coordenadas de la Divipole 2023 dentro de los
+// límites oficiales del Distrito (Planeac_Barrio_Vereda_DM), y coinciden con la comuna que les pone la
+// Divipole cuando la trae: El Manzanillo (01), María Paulina Taborda (02), Débora Arango (03) y Pacha
+// Mama (04) en Altavista; El Limonar (10) en San Antonio de Prado; Héctor Rogelio Montoya (17) en Palmitas.
+const POR_COORDENADAS = { '01': 'altavista', '02': 'altavista', '03': 'altavista', '04': 'altavista', '10': 'san-antonio', '17': 'palmitas' };
 const CORREGIMIENTO_POR_PUESTO = (cod) => {
   const p = cod.slice(7);
   if (/^A\d$/.test(p)) return 'san-antonio';
   if (/^B\d$/.test(p)) return 'san-cristobal';
   if (['33', '34', '35', '36'].includes(p)) return 'santa-elena';
-  return 'sin-asignar';
+  return POR_COORDENADAS[p] ?? 'sin-asignar';
 };
 const medellinCorregimientos = {};
 

@@ -53,6 +53,13 @@ FUENTE_TXT = {'sabaneta': 'Alcaldía de Sabaneta, barrios del PBOT (ArcGIS Onlin
               'marinilla': 'Municipio de Marinilla, Secretaría de Planeación: capa "Barrios" (ArcGIS Online del municipio)'}
 NO_BARRIO = re.compile(r'(?i)^(#|cabecera municipal|limite urbano\.?|zona (de )?expansi[oó]n.*|zona urbanizable|sin identificar|calle 6|santa fe de antioquia)$')
 
+# Búsqueda de barrios con nombre (27-sep-2026) en los municipios grandes que siguen con unidades del DANE
+REVISION_BARRIOS = {
+    'girardota': 'el catastro de Girardota publicado por el AMVA trae manzanas con código de barrio, pero sin nombres ni capa de barrios',
+    'retiro': 'la base geográfica municipal publicada (2023) trae un solo polígono urbano, la cabecera',
+    '*': 'el Catastro Departamental solo trae la cabecera y los centros poblados, no barrios',
+}
+
 def es_cabecera(codigo):
     c = str(codigo)
     if len(c) == 13:  # depto 2 + municipio 3 + sector 2 + corregimiento 3 + barrio 3
@@ -242,7 +249,9 @@ def construir(slug, dane, solo_cabecera=False):
         'confianza': conf,
         'nota': ('Municipio con 20.000 votantes o menos: la zona urbana es una sola unidad (la cabecera), sin división por barrios. ' if tipo_urb == 'cabecera'
                  else 'No se encontró un mapa público de barrios con límites: la zona urbana se muestra por unidades del DANE, sin nombre de barrio. ' if tipo_urb != 'barrios' else '')
-                + 'Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.',
+                + 'Las veredas se recortan donde se cruzan con la zona urbana. Los centros poblados quedan dentro de su vereda.'
+                + (f' Revisado el 27-sep-2026: {REVISION_BARRIOS.get(slug, REVISION_BARRIOS["*"])}; tampoco hay una capa pública de barrios en ArcGIS Online.'
+                   if tipo_urb in ('secciones', 'sectores') and not solo_cabecera else ''),
     }
     return idiv, isub, registro, (n_urb, n_rur, os.path.getsize(f'{OUT}/{slug}.subdivisiones.geo.json'))
 

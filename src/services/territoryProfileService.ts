@@ -11,6 +11,7 @@
  *
  * Nada se inventa: cuando no hay dato, la ficha lo dice y explica por qué.
  */
+import rawSexoEdad from '../data/dane/proyeccionSexoEdad2026.json';
 import rawIndice from '../data/territorio/indiceTerritorios.json';
 import { getDaneMunicipio } from './daneMunicipalService';
 import { getResultado2023, type Resultado2023 } from './electoralResults2023Service';
@@ -230,6 +231,43 @@ export function demografia(t: TerritorioFicha): SeccionDemografia {
     proyeccion = { ...proyeccion, texto: `${proyeccion.texto} Incluye ${fmt(datos.personasAnonimizadas)} personas en zonas anonimizadas, sin sexo ni edad.` };
   }
   return { estado: conDetalle ? 'oficial' : 'sin-informacion', datos, conDetalle, motivo, fuente, proyeccion };
+}
+
+// --- 2a. Sexo y edad 2026 (proyección oficial del DANE por municipio y área) ------------------
+// El CNPV 2018 por manzana trae la edad sin separarla por sexo; el cruce sexo x edad solo existe en la
+// proyección municipal del DANE, que distingue cabecera y resto (centros poblados y rural disperso).
+
+interface AreaSexoEdad { h: number[]; m: number[]; mayores18: number }
+const SEXO_EDAD = rawSexoEdad as unknown as { meta: { fuente: string; grupos: string[] }; municipios: Record<string, Partial<Record<'total' | 'cabecera' | 'rural', AreaSexoEdad>>> };
+
+export interface PiramideSexoEdad {
+  /** Área de la proyección que corresponde al territorio */
+  alcance: 'municipio' | 'cabecera' | 'rural';
+  grupos: string[];
+  hombres: number[];
+  mujeres: number[];
+  total: number;
+  mayores18: number;
+  fuente: string;
+}
+
+/** Pirámide 2026 del territorio: municipio, su cabecera o todo su resto rural. Null por debajo (no se reparte). */
+export function piramide2026(t: TerritorioFicha): PiramideSexoEdad | null {
+  const m = SEXO_EDAD.municipios[t.dane];
+  if (!m) return null;
+  let alcance: PiramideSexoEdad['alcance'] | null = null;
+  if (t.tipo === 'municipio') alcance = 'municipio';
+  else if (t.clase === 'Cabecera' || (t.tipo === 'division' && t.clase === 'Zona urbana')) alcance = 'cabecera';
+  else if (t.tipo === 'division' && t.clase === 'Zona rural') {
+    // Solo si esa división es TODO el resto rural (sin corregimientos aparte)
+    if (!Object.values(indiceDe(t).divisiones).some((d) => d.tipo === 'Corregimiento')) alcance = 'rural';
+  }
+  const a = alcance && m[alcance === 'municipio' ? 'total' : alcance];
+  if (!alcance || !a) return null;
+  return {
+    alcance, grupos: SEXO_EDAD.meta.grupos, hombres: a.h, mujeres: a.m,
+    total: a.h.reduce((x, y) => x + y, 0) + a.m.reduce((x, y) => x + y, 0), mayores18: a.mayores18, fuente: SEXO_EDAD.meta.fuente,
+  };
 }
 
 // --- 2b. Condiciones económicas (datos por manzana del DANE, sumados por barrio/vereda) ----------------

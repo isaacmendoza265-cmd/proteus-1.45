@@ -203,17 +203,18 @@ export function getMedellinComunaCensus(comuna: number): CensusFigures | undefin
 }
 
 /**
- * Corregimientos: la zona 99 los agrupa a todos. Solo se reparten los puestos que el
- * nombre ubica sin duda (ver scripts/build_censo_electoral.mjs); Altavista y Palmitas
- * comparten puestos que no se pueden separar sin la Divipole georreferenciada.
+ * Corregimientos: la zona 99 los agrupa a todos. Cada puesto se atribuye a su corregimiento por su
+ * código (San Antonio de Prado, San Cristóbal, Santa Elena) o, desde el 27-sep-2026, por las
+ * coordenadas de la Divipole 2023 dentro de los límites del Distrito (Altavista, Palmitas y El
+ * Limonar); ver scripts/build_censo_electoral.mjs.
  */
 export function getMedellinCorregimientoCensus(id: string): CensusFigures | undefined {
   const key = id.replace(/^med-correg-/, '');
   return key === 'sin-asignar' ? undefined : DATA.medellinCorregimientos[key];
 }
 
-/** Puestos de la zona 99 que aún no se pueden atribuir a Altavista o Palmitas */
-export const MEDELLIN_CORREGIMIENTOS_SIN_ASIGNAR = DATA.medellinCorregimientos['sin-asignar'];
+/** Puestos de la zona 99 sin corregimiento atribuido (hoy ninguno) */
+export const MEDELLIN_CORREGIMIENTOS_SIN_ASIGNAR: CensusFigures = DATA.medellinCorregimientos['sin-asignar'] ?? { mujeres: 0, hombres: 0, total: 0, mesas: 0, puestos: 0 };
 
 /** Zona 90: votantes inscritos en el puesto censo (no se ubican en ninguna comuna) */
 export const MEDELLIN_PUESTO_CENSO = DATA.medellinZonas['90'];

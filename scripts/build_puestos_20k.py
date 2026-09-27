@@ -22,8 +22,11 @@ import csv
 import difflib
 import json
 import re
+import sys
 import unicodedata
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 ROOT = Path(__file__).resolve().parent.parent
 CENSO = ROOT / '_originales/censo_electoral/censo_puestos_2026-04-30.csv'
@@ -180,6 +183,8 @@ def main():
         for m in municipios:
             m['puestosConCoordenadas'] = sum(1 for p in puestos if p['codMunicipio'] == m['codMunicipio'] and (p['divipole2023'] or {}).get('lat') is not None)
 
+    ubicar_rurales_antioquia(puestos, municipios, divi_mun, stats)
+
     municipios.sort(key=lambda x: -x['censo'])
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     for f in OUT_DIR.glob('*.json'):
@@ -206,6 +211,56 @@ def main():
         (OUT_DIR / f'{dep}.json').write_text(dump(lista), encoding='utf-8')
     print(f'OK {OUT_DIR.relative_to(ROOT)}: {len(municipios)} municipios, {len(puestos)} puestos en '
           f'{len(por_dep)} departamentos, cruce {dict(stats)}')
+
+
+def ubicar_rurales_antioquia(puestos, municipios, divi_mun, stats):
+    """Antioquia (27-sep-2026): los puestos RURALES (zona 99) que siguen sin coordenadas se ubican de forma
+    aproximada: 1) el lugar de la Divipole 2023 que aparece en su nombre ("LOS CARGUEROS I.E. ..."),
+    2) el centro poblado del DANE que nombra ("I.E.R. URAMA"), o 3) el punto interior de la vereda que nombra ("SD RIVERAS DEL CAUCA ..."). Se marcan 'aproximada'.
+    Los urbanos sin coordenadas se dejan sin ubicar: ponerlos en el centro de la cabecera los asignaría a
+    un barrio equivocado. Solo usa la cartografía de Antioquia (src/data/geojson/municipios)."""
+    from build_puestos_fase_c_antioquia import tokens, contiene, cargar_territorios, punto, centro_poblado
+    indice = json.loads((ROOT / 'src/data/territorio/indiceTerritorios.json').read_text(encoding='utf-8'))
+    slug_de = {v['dane']: k for k, v in indice.items()}
+    info = {m['codMunicipio']: m for m in municipios if m['departamento'] == 'antioquia'}
+    terr = {}
+    for p in puestos:
+        m = info.get(p['codMunicipio'])
+        if not m or p['zona'] != '99' or (p['divipole2023'] and p['divipole2023'].get('lat') is not None):
+            continue
+        slug = slug_de.get(m['dane'])
+        if not slug or not (ROOT / f'src/data/geojson/municipios/{slug}.subdivisiones.geo.json').exists():
+            continue
+        t = tokens(p['puesto'])
+        divi = divi_mun.get((norm('ANTIOQUIA'), norm(m['municipio'])), [])
+        lugares = [(len(tokens(d['puesto'])), d) for d in divi if tokens(d['puesto']) and contiene(tokens(d['puesto']), t) and coordenadas(d)['lat'] is not None]
+        u = None
+        if lugares:
+            d = max(lugares, key=lambda x: x[0])[1]
+            c = coordenadas(d)
+            u = {'lat': c['lat'], 'lon': c['lon'], 'territorio': d['puesto'].strip(), 'cruce': 'lugar'}
+        elif (cp := centro_poblado(slug, t)):
+            u = {'lat': cp[0], 'lon': cp[1], 'territorio': cp[2], 'cruce': 'centro poblado'}
+        else:
+            if slug not in terr:
+                terr[slug] = cargar_territorios(slug)
+            _, veredas, corrs = terr[slug]
+            for lista, tipo in ((veredas, 'vereda'), (corrs, 'corregimiento')):
+                cands = [(len(n), f) for n, f in lista if contiene(n, t)]
+                if cands:
+                    f = max(cands, key=lambda x: x[0])[1]
+                    lat, lon = punto(f)
+                    u = {'lat': lat, 'lon': lon, 'territorio': f['properties']['name'], 'cruce': tipo}
+                    break
+        if u:
+            stats[u['cruce']] += 1
+            stats['sin_divipole'] -= 1
+            p['divipole2023'] = {'puesto': p['puesto'], 'comuna': None, 'direccion': None, 'lat': u['lat'], 'lon': u['lon'],
+                                 'cruce': u['cruce'], 'similitud': 1.0, 'precision': 'aproximada', 'territorio': u['territorio'],
+                                 'fuente': 'Ubicación aproximada: lugar o vereda que nombra el puesto (sin coordenadas en la Divipole 2023)'}
+    for m in municipios:
+        if m['codMunicipio'] in info:
+            m['puestosConCoordenadas'] = sum(1 for p in puestos if p['codMunicipio'] == m['codMunicipio'] and (p['divipole2023'] or {}).get('lat') is not None)
 
 if __name__ == '__main__':
     main()

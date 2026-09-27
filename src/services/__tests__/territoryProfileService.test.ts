@@ -38,7 +38,9 @@ describe('demografía', () => {
   });
   it('la zona rural solo cuenta las manzanas (centros poblados) y no tiene proyección', () => {
     const sf = demografia(territorioBello('bello-div-SF')!);
-    expect(sf.datos!.personas).toBe(1922);
+    // 923 desde el 27-sep: ~1.000 personas en manzanas fuera de las veredas del POT se sumaban a la vereda
+    // más cercana de San Félix; ahora caen en el sector Ovejas (fuera del corregimiento)
+    expect(sf.datos!.personas).toBe(923);
     expect(sf.proyeccion.estado).toBe('sin-informacion');
   });
   it('cuenta aparte las personas anonimizadas', () => {
@@ -126,5 +128,17 @@ describe('Medellín: demografía y economía por manzana', () => {
     expect(e.estratoModa).toBe(2);
     expect(economia(territorioFicha('barrio-1403')!)!.estratoModa).toBe(5);
     expect(economia(territorioFicha('comuna-14')!)!.estratoPromedio!).toBeGreaterThan(4.5);
+  });
+});
+
+describe('Sexo y edad 2026 (proyección DANE por municipio y área)', () => {
+  it('municipio y cabecera cuadran con la proyección oficial; por debajo no se reparte', async () => {
+    const { piramide2026, territorioFicha } = await import('../territoryProfileService');
+    expect(piramide2026(territorioFicha('medellin')!)!.total).toBe(2526795);
+    const cab = piramide2026(territorioFicha('abejorral-sub-CAB')!)!;
+    expect(cab.alcance).toBe('cabecera');
+    expect(cab.total).toBe(8520);
+    expect(cab.hombres).toHaveLength(17);
+    expect(piramide2026(territorioFicha('bello-div-4')!)).toBeNull();
   });
 });

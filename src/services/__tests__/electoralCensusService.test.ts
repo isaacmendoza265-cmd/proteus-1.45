@@ -119,10 +119,12 @@ describe('Medellín por comuna y corregimiento', () => {
   });
 
   it('el reparto de la zona 99 entre corregimientos no pierde votantes', () => {
-    const asignados = sum(['san-antonio', 'san-cristobal', 'santa-elena'].map((c) => getMedellinCorregimientoCensus(c)!.total));
+    const asignados = sum(['san-antonio', 'san-cristobal', 'santa-elena', 'altavista', 'palmitas'].map((c) => getMedellinCorregimientoCensus(c)!.total));
     expect(asignados + MEDELLIN_CORREGIMIENTOS_SIN_ASIGNAR.total).toBe(getMedellinZoneCensus('99')!.total);
-    expect(getMedellinCorregimientoCensus('med-correg-altavista')).toBeUndefined();
-    expect(getMedellinCorregimientoCensus('med-correg-palmitas')).toBeUndefined();
+    expect(MEDELLIN_CORREGIMIENTOS_SIN_ASIGNAR.total).toBe(0);
+    // Ubicados por las coordenadas de la Divipole 2023 (27-sep-2026)
+    expect(getMedellinCorregimientoCensus('med-correg-altavista')!.total).toBe(11449);
+    expect(getMedellinCorregimientoCensus('med-correg-palmitas')!.total).toBe(2704);
   });
 
   it('los datos del Valle de Aburrá y de las comunas usan el censo oficial', () => {
@@ -133,7 +135,8 @@ describe('Medellín por comuna y corregimiento', () => {
     for (const c of Object.values(MEDELLIN_COMUNAS_DATA)) {
       if (c.zone === 'Urbana') expect(c.electoralCensus).toBe(getMedellinComunaCensus(c.number)!.total);
     }
-    expect(MEDELLIN_COMUNAS_DATA['med-correg-palmitas'].electoralCensusSource).toBe('estimado');
+    expect(MEDELLIN_COMUNAS_DATA['med-correg-palmitas'].electoralCensusSource).toBe('oficial');
+    expect(MEDELLIN_COMUNAS_DATA['med-correg-palmitas'].electoralCensus).toBe(2704);
   });
 
   it('zona 99 = corregimientos y zona 90 = puesto censo; los pesos por zona suman 1', () => {

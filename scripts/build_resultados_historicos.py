@@ -34,7 +34,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from build_puestos_20k import norm, canon, similitud, aceptable  # noqa: E402
-from build_puestos_fase_c_antioquia import tokens, contiene, cargar_territorios, punto  # noqa: E402
+from build_puestos_fase_c_antioquia import tokens, contiene, cargar_territorios, punto, centro_poblado  # noqa: E402
 from shapely.geometry import shape, Point  # noqa: E402
 from shapely.ops import unary_union  # noqa: E402
 
@@ -194,7 +194,7 @@ def pools():
     return pool
 
 
-def ubicar(nombre, zona, candidatos, territorio, pequeno, limite):
+def ubicar(nombre, zona, candidatos, territorio, pequeno, limite, slug=None):
     """-> {'lat','lon'} (+ 'a': 1 si es aproximada) o None"""
     def ok(lat, lon):
         return limite is None or limite.contains(Point(lon, lat))
@@ -230,6 +230,9 @@ def ubicar(nombre, zona, candidatos, territorio, pequeno, limite):
     cab, veredas, corrs = territorio
     if zona == '99' and nombre:
         t = tokens(nombre)
+        cp = centro_poblado(slug, t) if slug else None
+        if cp:
+            return {'lat': cp[0], 'lon': cp[1], 'a': 1}
         for lista in (veredas, corrs):
             cands = [(len(nm), f) for nm, f in lista if contiene(nm, t)]
             if cands:
@@ -329,7 +332,7 @@ def main(anio):
         ubic = {}
         todos = set().union(*[E['puestos'].keys() for E in elecciones.values()])
         for cod in sorted(todos):
-            u = ubicar(nombres[reg].get(cod), zonas[reg].get(cod, ''), pool.get(reg, []), territorio, pequeno, limite)
+            u = ubicar(nombres[reg].get(cod), zonas[reg].get(cod, ''), pool.get(reg, []), territorio, pequeno, limite, slug)
             if u:
                 ubic[cod] = u
                 resumen['aproximada' if u.get('a') else 'ubicado'] += 1

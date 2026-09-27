@@ -13,7 +13,8 @@ puesto + coordenadas, sin cambiar el criterio nacional ni afectar a ningún otro
 Ubicación aproximada (regla de Isaac, 27-sep-2026: en estos municipios solo se distingue cabecera
 de veredas). Los puestos que no cruzan con la Divipole 2023 se ubican así, marcados 'aproximada':
 - zona urbana (00-89) o 90/98: en la cabecera (punto interior del polígono de la cabecera);
-- zona 99 (rural): en la vereda cuyo nombre aparece en el nombre del puesto ("CER GUAYABAL",
+- zona 99 (rural): en el centro poblado del DANE que nombra el puesto, o en la vereda cuyo nombre
+  aparece en el nombre del puesto ("CER GUAYABAL",
   "SD EL PITAL I.E. ..."), o en el corregimiento si es el nombre del corregimiento el que aparece;
 - lo demás queda sin ubicar (cuenta solo en el total del municipio).
 
@@ -51,6 +52,31 @@ def cargar_territorios(slug):
     return cab, [v for v in ver if v[0]], [c for c in cor if c[0]]
 
 
+_CPOB = {}
+
+
+def centro_poblado(slug, t):
+    """Centro poblado del DANE (MGN 2018, zona urbana: NOM_CPOB) cuyo nombre aparece en el nombre del
+    puesto (tokens t), o que contiene todo el nombre del puesto si es el único. -> (lat, lon, nombre) o None"""
+    if slug not in _CPOB:
+        ruta = ROOT / f'_originales/dane_mgn/{slug}/zona_urbana.geojson'
+        feats = json.loads(ruta.read_text(encoding='utf-8'))['features'] if ruta.exists() else []
+        cp = [f for f in feats if f.get('geometry') and f['properties'].get('NOM_CPOB') and f['properties'].get('CLAS_CCDGO', '2') != '1']
+        _CPOB[slug] = [(tokens(f['properties']['NOM_CPOB']), f) for f in cp if tokens(f['properties']['NOM_CPOB'])]
+    lista = _CPOB[slug]
+    if not t:
+        return None
+    hits = [(len(n), f) for n, f in lista if contiene(n, t)]
+    if not hits:
+        inv = [(len(n), f) for n, f in lista if contiene(t, n)]
+        hits = inv if len(inv) == 1 else []
+    if not hits:
+        return None
+    f = max(hits, key=lambda x: x[0])[1]
+    p = shape(f['geometry']).representative_point()
+    return round(p.y, 6), round(p.x, 6), f['properties']['NOM_CPOB'].title()
+
+
 def punto(f):
     p = shape(f['geometry']).representative_point()
     return round(p.y, 6), round(p.x, 6)
@@ -62,13 +88,17 @@ def contiene(nombre_tok, puesto_tok):
     return any(puesto_tok[i:i + n] == nombre_tok for i in range(len(puesto_tok) - n + 1))
 
 
-def ubicar_aproximado(p, cab, veredas, corrs):
+def ubicar_aproximado(p, cab, veredas, corrs, slug=None):
     if p['zona'] != '99':
         if not cab:
             return None
         lat, lon = punto(cab)
         return {'tipo': 'cabecera', 'lat': lat, 'lon': lon, 'territorio': cab['properties']['name']}
     t = tokens(p['puesto'])
+    if slug:
+        cp = centro_poblado(slug, t)
+        if cp:
+            return {'tipo': 'centro poblado', 'lat': cp[0], 'lon': cp[1], 'territorio': cp[2]}
     for lista, tipo in ((veredas, 'vereda'), (corrs, 'corregimiento')):
         cands = [(len(n), f) for n, f in lista if contiene(n, t)]
         if cands:
@@ -160,7 +190,7 @@ def main():
             stats[d['cruce']] -= 1
             stats['sin_divipole'] += 1
             p['divipole2023'] = None
-        u = ubicar_aproximado(p, *terr[cod])
+        u = ubicar_aproximado(p, *terr[cod], slug=slug_de[dane_de[cod]])
         if not u:
             stats['sin_ubicar'] += 1
             continue

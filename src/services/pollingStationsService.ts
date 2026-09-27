@@ -21,8 +21,8 @@ import type { TerritoryGeoFeature } from '../data/geojson/types';
 export type TipoCruce = 'exacto' | 'normalizado' | 'aproximado' | 'direccion' | 'geocodificado'
   /** Solo fase C: el nombre del lugar de la Divipole 2023 aparece en el nombre del puesto 2026 */
   | 'lugar'
-  /** Solo fase C, ubicación aproximada: en la cabecera o en la vereda que nombra el puesto */
-  | 'cabecera' | 'vereda' | 'corregimiento';
+  /** Ubicación aproximada (Antioquia): en la cabecera, o en el centro poblado o la vereda que nombra el puesto */
+  | 'cabecera' | 'vereda' | 'corregimiento' | 'centro poblado';
 
 export interface UbicacionDivipole {
   /** Nombre del puesto en la Divipole 2023 */
@@ -258,7 +258,7 @@ export function describirCruce(p: PuestoVotacion): string {
   if (d.cruce === 'direccion') return `Ubicado por su dirección 2026 (${d.direccion}), la misma de un puesto de la Divipole 2023`;
   if (d.cruce === 'lugar') return `Ubicado con la Divipole 2023 (el lugar "${d.puesto}" está en el nombre del puesto)`;
   if (d.cruce === 'cabecera') return 'Ubicación aproximada: en la cabecera municipal (sin coordenadas propias)';
-  if (d.cruce === 'vereda' || d.cruce === 'corregimiento') return `Ubicación aproximada: en ${d.cruce === 'vereda' ? 'la vereda' : 'el corregimiento'} ${d.territorio} (por el nombre del puesto)`;
+  if (d.cruce === 'vereda' || d.cruce === 'corregimiento' || d.cruce === 'centro poblado') return `Ubicación aproximada: en ${d.cruce === 'vereda' ? 'la vereda' : d.cruce === 'corregimiento' ? 'el corregimiento' : 'el centro poblado'} ${d.territorio} (por el nombre del puesto)`;
   if (d.cruce === 'geocodificado') return `Ubicado por su dirección 2026 (${d.direccion}) en OpenStreetMap${d.precision === 'aproximada' ? ' · ubicación aproximada' : ''}`;
   return `Ubicado por nombre parecido (${Math.round(d.similitud * 100)} %): ${d.puesto}. Conviene verificar`;
 }
