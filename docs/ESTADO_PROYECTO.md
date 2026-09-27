@@ -2,7 +2,7 @@
 
 Última actualización: 27-sep-2026 (Claude Opus, rama `codex/navegacion-mapa`). **Todo agente debe actualizar este archivo al terminar.**
 Repositorio local: `C:\Users\isaac\OneDrive\Documentos\Proyecto Proteus`. Remoto: github.com/isaacmendoza265-cmd/proteus-1.45.
-`main` local: `14db9bf` (GitHub tiene `1968fd5`). Rama `codex/navegacion-mapa` con `33020c4`, `f0b3769`, `26f6b57`, `95acefc`, `c55ef86`, `d0df840` y `efde46a`, sin subir ni fusionar.
+`main` local: `14db9bf` (GitHub tiene `1968fd5`). Rama `codex/navegacion-mapa` con `33020c4`, `f0b3769`, `26f6b57`, `95acefc`, `c55ef86`, `d0df840`, `efde46a` y `93d3108`, sin subir ni fusionar.
 Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en el PATH de los agentes
 (`$env:Path = "C:\Program Files\nodejs;" + $env:Path`). `npx tsc` también revisa las carpetas locales ignoradas
 (`_archivo/`, `_originales/`, `SUBIR_A_GITHUB/`) y da 24 errores ahí: no cuentan, `src/` está limpio.
@@ -89,6 +89,8 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
   `territoryProfileService.ts`; ficha: `src/components/territorio/`.
 
 ## 5. Bitácora (agregar arriba lo más reciente)
+- 27-sep (Opus, `codex/navegacion-mapa`) `93d3108`: censo por comuna/zona del panel de puestos en lista desplegable;
+  el contorno de Medellín se quedaba con los 27 puestos (135.063 habilitados) de los 5 corregimientos: corregido.
 - 27-sep (Opus, `codex/navegacion-mapa`) `efde46a`: marco metodológico (ingesta por bloques, 4 capas, bloque 1:
   diagrama, reglamento v1.2 y dossier Familia 4; vista Ajustes › Marco metodológico; piso 3 en el generador);
   listas desplegables en la ficha.
