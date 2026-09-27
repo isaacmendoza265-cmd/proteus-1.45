@@ -2,7 +2,7 @@
 
 Última actualización: 27-sep-2026 (Claude Opus, rama `codex/navegacion-mapa`). **Todo agente debe actualizar este archivo al terminar.**
 Repositorio local: `C:\Users\isaac\OneDrive\Documentos\Proyecto Proteus`. Remoto: github.com/isaacmendoza265-cmd/proteus-1.45.
-`main` local: `14db9bf` (GitHub tiene `1968fd5`). Rama `codex/navegacion-mapa` con `33020c4`, `f0b3769`, `26f6b57`, `95acefc`, `c55ef86` y `d0df840`, sin subir ni fusionar.
+`main` local: `14db9bf` (GitHub tiene `1968fd5`). Rama `codex/navegacion-mapa` con `33020c4`, `f0b3769`, `26f6b57`, `95acefc`, `c55ef86`, `d0df840` y `efde46a`, sin subir ni fusionar.
 Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en el PATH de los agentes
 (`$env:Path = "C:\Program Files\nodejs;" + $env:Path`). `npx tsc` también revisa las carpetas locales ignoradas
 (`_archivo/`, `_originales/`, `SUBIR_A_GITHUB/`) y da 24 errores ahí: no cuentan, `src/` está limpio.
@@ -27,7 +27,11 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
 - Verificación al último commit (`f0b3769`): tsc limpio en `src/`, 211 pruebas, build OK.
 
 ## 2. Decisiones de Isaac (respetarlas)
-- Seguridad, marco teórico y etapa 2 (social listening, encuestas): aplazados.
+- Seguridad y etapa 2 (social listening, encuestas): aplazados.
+- 27-sep: **marco metodológico** en marcha (antes aplazado). 4 capas (interpretación/publicidad × general/local),
+  subido por bloques. Bloque 1: reglamento de interpretación v1.2 + dossier Familia 4 (arrastre). El reglamento
+  vigente prevalece sobre cualquier salida de la aplicación (ver `docs/marco/README.md`).
+- 27-sep: listas de puestos y de actores de la ficha, desplegables.
 - Estrato: se mantiene CNPV 2018 hasta encontrar la estratificación vigente (cada municipio tiene la suya;
   luego investigar por municipio, de los más grandes a los más pequeños).
 - Pobreza monetaria: rescindida (no existe por municipio). Usar NBI.
@@ -46,6 +50,11 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
   generador de contenido con Gemini 3.8 (territorio del mapa, red o medio, tipo de pieza).
 
 ## 3. Pendientes (en orden sugerido)
+000. **Marco metodológico, bloques siguientes**: Isaac los subirá por partes. Capa 1: dossiers de las familias
+   1 (temporal), 2 (mismo ciclo) y 3 (ecológica); capas 2, 3 y 4 vacías. Ingesta: `scripts/ingestar_marco.mjs`.
+   Reglas del reglamento v1.2 que la app aún no cumple del todo (a revisar con Isaac): regla 5 (los puestos con
+   ubicación aproximada hoy colorean el barrio igual que los exactos), reglas 1/13/17 (tabla de correlaciones y
+   arrastre por recorte: módulo por construir), regla 6/14 (fichas B de casas con tipo_fuente, vigente_al, estado).
 00. **Clave de Gemini**: la de `.env` recibe 403 "Your project has been denied access". Isaac debe revisarla en
    Google AI Studio; sin eso el generador no produce texto (la interfaz muestra el motivo).
 0. **Datos simulados en pantalla (hallados el 27-sep, sin corregir)**: "Día E" muestra actas E-14/E-24 mesa a
@@ -80,6 +89,9 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
   `territoryProfileService.ts`; ficha: `src/components/territorio/`.
 
 ## 5. Bitácora (agregar arriba lo más reciente)
+- 27-sep (Opus, `codex/navegacion-mapa`) `efde46a`: marco metodológico (ingesta por bloques, 4 capas, bloque 1:
+  diagrama, reglamento v1.2 y dossier Familia 4; vista Ajustes › Marco metodológico; piso 3 en el generador);
+  listas desplegables en la ficha.
 - 27-sep (Opus, `codex/navegacion-mapa`) `d0df840`: mapa y ficha comparten elección y capa→sección; generador
   de contenido (subregión › municipio › comuna › barrio, medio y tipo de pieza) con gemini-3.8-flash vía
   `POST /api/contenido/generar` (clave en el servidor). La clave de `.env` da 403 PERMISSION_DENIED.
