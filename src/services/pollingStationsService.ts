@@ -159,6 +159,8 @@ export async function loadPuestosMunicipio(m: Municipio20k): Promise<PuestoVotac
 
 /** Nombre del municipio por su código de la Registraduría */
 export const nombreMunicipioPuestos = (codigo: string) => porCodigoTodos.get(codigo)?.municipio ?? '';
+/** Código DANE del municipio por su código de la Registraduría (null si no está cargado) */
+export const daneMunicipioPuestos = (codigo: string) => porCodigoTodos.get(codigo)?.dane ?? null;
 
 export function tieneCoordenadas(p: PuestoVotacion): p is PuestoVotacion & { divipole2023: UbicacionDivipole & { lat: number; lon: number } } {
   return p.divipole2023?.lat != null && p.divipole2023?.lon != null;

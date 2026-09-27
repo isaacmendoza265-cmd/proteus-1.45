@@ -22,6 +22,7 @@ import {
   getMunicipioConPuestos,
   loadTodosPuestosDepartamento,
   nombreMunicipioPuestos,
+  daneMunicipioPuestos,
   loadPuestosDepartamento,
   loadPuestosMunicipio,
   tieneCoordenadas,
@@ -30,7 +31,7 @@ import {
 import { ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA } from '../../data/antioquia125MunicipalitiesMasterData';
 import { colorDePartido, COLOR_SIN_DATO, LEYENDA_PARTIDOS } from '../../data/electoral/partidoColors';
 import { cargarDemografia, cargarEconomia } from '../../services/territoryProfileService';
-import { cargarElecciones, sumarEleccion, tipoEleccion, type EleccionPuestos } from '../../services/electionResultsService';
+import { cargarElecciones, sumarEleccion, tieneResultadosPorPuesto, tipoEleccion, type EleccionPuestos } from '../../services/electionResultsService';
 import { cargarGanadores, coloresCandidatos, colorGanador, esPresidencial, ganadoresPorTerritorio, type IndiceGanadores } from '../../services/winnersService';
 import {
   COLORES_ESTRATO,
@@ -52,8 +53,25 @@ import {
   type ValorTerritorio,
 } from '../../services/mapColorService';
 
-// Puestos en escalas mayores al municipio: sin color por capa (se ve al abrir un municipio)
+// Puestos sin dato para la capa (otros departamentos, o mientras cargan los resultados)
 const COLOR_PUESTO_NEUTRO = '#e2e8f0';
+
+// NBI oficial del DANE por municipio (capa de los 125 municipios de Antioquia)
+const NBI_POR_DANE = new globalThis.Map<string, number>(
+  ANTIOQUIA_125_MUNICIPIOS_GEOJSON.features.map((f) => [String((f.properties as { daneCode?: string }).daneCode), f.properties.nbiPercentage as number]),
+);
+/** Código DANE de un municipio de la capa (algunas capas no lo traen: se busca por nombre) */
+const daneDeFeature = (f: TerritoryGeoFeature): string | undefined =>
+  (f.properties as { daneCode?: string }).daneCode ?? /(\d{5})$/.exec(String(f.id))?.[1] ?? resolveMunicipality({ id: String(f.id), name: f.properties.name })?.daneCode;
+
+/** Radio del círculo de un puesto: crece con su censo y se achica al alejar el mapa (zoom < 15) */
+const radioPuesto = (habilitados: number, zoom: number) => {
+  const base = Math.max(2.5, Math.min(10, Math.sqrt(habilitados) / 12));
+  const factor = Math.min(1, Math.max(0.2, 2 ** ((zoom - 15) / 2)));
+  return Math.max(1.5, base * factor);
+};
+/** Grosor del borde: fino al alejar, para que el borde no tape el color del puesto */
+const bordePuesto = (zoom: number) => (zoom >= 14 ? 1 : zoom >= 12 ? 0.6 : 0.3);
 
 // Códigos DANE del Valle de Aburrá (nivel metropolitano)
 const VALLE_ABURRA_DANE = new Set(
@@ -174,6 +192,8 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
   const [asignacion, setAsignacion] = useState<AsignacionPuestos | null>(null);
   const puestosLayerRef = useRef<L.LayerGroup | null>(null);
   const puestosRendererRef = useRef<L.Renderer | null>(null);
+  // Círculos dibujados con su censo y si son aproximados, para ajustar el tamaño al cambiar el zoom
+  const marcadoresPuestosRef = useRef<[L.CircleMarker, number, boolean][]>([]);
   // Ficha de puesto: se abre al hacer clic en un marcador
   const [puestoSeleccionado, setPuestoSeleccionado] = useState<PuestoVotacion | null>(null);
   // Esc cierra la ficha de puesto
@@ -247,11 +267,12 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
   const valorDe = (feature: TerritoryGeoFeature): ValorTerritorio => {
     if (activeLayer === 'electoral') return { valor: null, texto: '', fuente: '' };
     if (isMunicipalScale) return valorSubdivision(String(feature.id), activeLayer, metricaActiva);
-    const p = feature.properties as { daneCode?: string; nbiPercentage?: number };
-    const dane = p.daneCode ?? /(\d{5})$/.exec(String(feature.id))?.[1];
-    if (!dane) return { valor: null, texto: 'Sin información', fuente: '' };
-    return valorMunicipio(dane, p.nbiPercentage, activeLayer, metricaActiva);
+    const dane = daneDeFeature(feature);
+    return dane ? valorDeMunicipio(dane) : { valor: null, texto: 'Sin información', fuente: '' };
   };
+  /** Dato de un municipio por su código DANE (proyección 2026 o NBI) */
+  const valorDeMunicipio = (dane: string): ValorTerritorio =>
+    activeLayer === 'electoral' ? { valor: null, texto: '', fuente: '' } : valorMunicipio(dane, NBI_POR_DANE.get(dane), activeLayer, metricaActiva);
 
   /** Capa de polígonos de la escala actual (antes de la búsqueda) */
   const datasetActual = (): TerritoryFeatureCollection | null => {
@@ -268,8 +289,10 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
   // Clases de la escala continua: quintiles de los valores de los territorios visibles
   const escalaCapa = useMemo(() => {
     if (activeLayer === 'electoral' || esCategorica) return null;
-    if (currentLevel === 'departamental' && antioquiaViewMode === 'subregiones') return null;
-    const feats = (datasetActual()?.features ?? []).filter((f) => !(currentLevel === 'comunas-barrios' && comunaFiltroId && comunaDe(f) !== comunaFiltroId));
+    // Subregiones: se pintan con su color propio; la escala sirve para los puestos (valor de su municipio)
+    const enSubregiones = currentLevel === 'departamental' && antioquiaViewMode === 'subregiones';
+    const base = enSubregiones ? ANTIOQUIA_125_MUNICIPIOS_GEOJSON : datasetActual();
+    const feats = (base?.features ?? []).filter((f) => !(currentLevel === 'comunas-barrios' && comunaFiltroId && comunaDe(f) !== comunaFiltroId));
     const valores = feats.map((f) => valorDe(f).valor).filter((v): v is number => v !== null);
     return { valores, cortes: cortesQuintiles(valores) };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -325,6 +348,14 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
       // Clic en cualquier otra cosa del mapa (fondo, comuna, barrio, municipio vecino) cierra la
       // ficha de puesto. El clic en un puesto no llega aquí (bubblingMouseEvents: false).
       map.on('click', () => setPuestoSeleccionado(null));
+      // Tamaño de los puestos según el zoom: al alejar se achican y su borde se adelgaza
+      map.on('zoomend', () => {
+        const z = map.getZoom();
+        for (const [m, habilitados, aproximado] of marcadoresPuestosRef.current) {
+          m.setRadius(radioPuesto(habilitados, z));
+          m.setStyle({ weight: bordePuesto(z) * (aproximado ? 1.5 : 1) });
+        }
+      });
       mapInstanceRef.current = map;
     }
 
@@ -457,6 +488,28 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
     return () => { active = false; };
   }, [isMunicipalScale, activeMuni.daneCode]);
 
+  // Capa electoral fuera de la escala municipal: resultados por puesto de cada municipio visible
+  // (solo Antioquia los tiene). Se cargan todos y se dibujan de una vez.
+  const [eleccionesPorDane, setEleccionesPorDane] = useState<Record<string, EleccionPuestos[]>>({});
+  const [cargandoResultados, setCargandoResultados] = useState(false);
+  const danesPuestos = useMemo(
+    () => [...new Set(puestos.map((p) => daneMunicipioPuestos(p.codMunicipio)).filter((d): d is string => !!d && tieneResultadosPorPuesto(d)))].sort().join(','),
+    [puestos],
+  );
+  useEffect(() => {
+    if (isMunicipalScale || activeLayer !== 'electoral' || !danesPuestos) return;
+    const danes = danesPuestos.split(',');
+    if (danes.every((d) => eleccionesPorDane[d])) return;
+    let activo = true;
+    setCargandoResultados(true);
+    Promise.all(danes.map((d) => cargarElecciones(d).then((l) => [d, l] as const)))
+      .then((pares) => { if (activo) setEleccionesPorDane((prev) => ({ ...prev, ...Object.fromEntries(pares) })); })
+      .catch((e) => console.error('[Proteus] Resultados por puesto:', e))
+      .finally(() => { if (activo) setCargandoResultados(false); });
+    return () => { activo = false; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isMunicipalScale, activeLayer, danesPuestos]);
+
   // Ubicar los puestos en las comunas, barrios o veredas visibles (solo escala municipal)
   const municipalFeatures = isMunicipalScale ? (usesCustomMuni ? customMuniDataset?.features : GEOJSON_LAYERS_BY_ZOOM[currentLevel]?.features) : undefined;
   // Ganador de la elección elegida en cada comuna/barrio/vereda (suma de los puestos que caen dentro)
@@ -488,33 +541,57 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
     const featurePorId: Record<string, TerritoryGeoFeature> = {};
     for (const f of municipalFeatures ?? []) featurePorId[String(f.id)] = f;
     const municipioDe = nombreMunicipioPuestos;
-    // Borde: blanco si la ubicación es la del puesto; ámbar punteado si es aproximada
-    const borde = (aproximado: boolean) => ({ color: aproximado ? '#f59e0b' : '#f8fafc', dashArray: aproximado ? '2, 2' : undefined, weight: aproximado ? 1.5 : 1 });
-    const radio = (n: number) => Math.max(2.5, Math.min(10, Math.sqrt(n) / 12));
+    const zoom = mapInstanceRef.current?.getZoom() ?? 12;
+    marcadoresPuestosRef.current = [];
+    // Borde: blanco si la ubicación es la del puesto; ámbar punteado si es aproximada. El radio y el
+    // grosor dependen del zoom (se ajustan en 'zoomend') para que al alejar no tapen los territorios.
+    const circulo = (lat: number, lon: number, habilitados: number, fillColor: string, aproximado: boolean) => {
+      const m = L.circleMarker([lat, lon], {
+        renderer, radius: radioPuesto(habilitados, zoom), fillColor, fillOpacity: 0.9, bubblingMouseEvents: false,
+        color: aproximado ? '#f59e0b' : '#f8fafc', dashArray: aproximado ? '2, 2' : undefined, weight: bordePuesto(zoom) * (aproximado ? 1.5 : 1),
+      });
+      marcadoresPuestosRef.current.push([m, habilitados, aproximado]);
+      return m;
+    };
 
-    // Capa electoral a escala municipal: los puestos DE ESA ELECCIÓN (los códigos y ubicaciones
-    // cambian por elección), coloreados por el ganador en cada puesto
-    const eleccion = activeLayer === 'electoral' && isMunicipalScale ? eleccionesMuni.find((e) => e.id === eleccionCapa) : undefined;
-    if (eleccion) {
-      for (const pt of puntosEleccion(eleccion, puestos)) {
-        const color = colorGanador(eleccionCapa, pt.ganador ? { ganador: pt.ganador, partido: pt.partido! } : undefined, candidatosCapa);
-        const marker = L.circleMarker([pt.lat, pt.lon], {
-          renderer, radius: radio(pt.habilitados), fillColor: color, fillOpacity: 0.9, bubblingMouseEvents: false, ...borde(pt.aproximado),
-        });
-        marker.bindTooltip(
-          `<div style="font-family: system-ui, sans-serif; font-size: 11px; max-width: 260px;">
-            <div style="color: #34d399; font-size: 9px; text-transform: uppercase; font-weight: 800;">Puesto · ${escapeHtml(eleccion.nombre)}</div>
-            <div style="color: #ffffff; font-size: 12px; font-weight: 900;">${escapeHtml(titulo(pt.nombre))}</div>
-            <div style="color: #ffffff; margin-top: 3px; font-weight: 800;">${pt.ganador ? `${escapeHtml(pt.ganador)}${pt.partido && pt.partido !== pt.ganador ? ` (${escapeHtml(pt.partido)})` : ''} · ${pt.pct!.toFixed(1).replace('.', ',')} %` : 'Sin votos registrados'}</div>
-            <div style="color: #cbd5e1;">${pt.habilitados.toLocaleString('es-CO')} habilitados · ${eleccion.tipo === 'preconteo' ? 'preconteo' : 'escrutinio'} de la Registraduría</div>
-            ${pt.aproximado ? '<div style="color: #fbbf24; font-size: 9px; margin-top: 2px;">Ubicación aproximada (cabecera o vereda)</div>' : ''}
-          </div>`,
-          { sticky: true, className: 'leaflet-glass-tooltip' },
-        );
-        if (pt.puesto2026) marker.on('click', () => setPuestoSeleccionado(pt.puesto2026));
-        layer.addLayer(marker);
+    // Capa electoral: los puestos DE ESA ELECCIÓN (los códigos y ubicaciones cambian por elección),
+    // coloreados por el ganador en cada puesto. Fuera de la escala municipal, municipio por municipio.
+    if (activeLayer === 'electoral') {
+      const grupos: { e: EleccionPuestos; puestos2026: PuestoVotacion[]; municipio: string }[] = [];
+      if (isMunicipalScale) {
+        const e = eleccionesMuni.find((x) => x.id === eleccionCapa);
+        if (e) grupos.push({ e, puestos2026: puestos, municipio: activeMuni.name });
+      } else {
+        const porDane = new globalThis.Map<string, PuestoVotacion[]>();
+        for (const p of puestos) {
+          const dane = daneMunicipioPuestos(p.codMunicipio);
+          if (dane) porDane.set(dane, [...(porDane.get(dane) ?? []), p]);
+        }
+        for (const [dane, ps] of porDane) {
+          const e = eleccionesPorDane[dane]?.find((x) => x.id === eleccionCapa);
+          if (e) grupos.push({ e, puestos2026: ps, municipio: titulo(municipioDe(ps[0].codMunicipio)) });
+        }
       }
-      return;
+      for (const { e, puestos2026, municipio } of grupos) {
+        for (const pt of puntosEleccion(e, puestos2026)) {
+          const color = colorGanador(eleccionCapa, pt.ganador ? { ganador: pt.ganador, partido: pt.partido! } : undefined, candidatosCapa);
+          const marker = circulo(pt.lat, pt.lon, pt.habilitados, color, pt.aproximado);
+          marker.bindTooltip(
+            `<div style="font-family: system-ui, sans-serif; font-size: 11px; max-width: 260px;">
+              <div style="color: #34d399; font-size: 9px; text-transform: uppercase; font-weight: 800;">Puesto · ${escapeHtml(municipio)} · ${escapeHtml(e.nombre)}</div>
+              <div style="color: #ffffff; font-size: 12px; font-weight: 900;">${escapeHtml(titulo(pt.nombre))}</div>
+              <div style="color: #ffffff; margin-top: 3px; font-weight: 800;">${pt.ganador ? `${escapeHtml(pt.ganador)}${pt.partido && pt.partido !== pt.ganador ? ` (${escapeHtml(pt.partido)})` : ''} · ${pt.pct!.toFixed(1).replace('.', ',')} %` : 'Sin votos registrados'}</div>
+              <div style="color: #cbd5e1;">${pt.habilitados.toLocaleString('es-CO')} habilitados · ${e.tipo === 'preconteo' ? 'preconteo' : 'escrutinio'} de la Registraduría</div>
+              ${pt.aproximado ? '<div style="color: #fbbf24; font-size: 9px; margin-top: 2px;">Ubicación aproximada (cabecera o vereda)</div>' : ''}
+            </div>`,
+            { sticky: true, className: 'leaflet-glass-tooltip' },
+          );
+          if (pt.puesto2026) marker.on('click', () => setPuestoSeleccionado(pt.puesto2026));
+          layer.addLayer(marker);
+        }
+      }
+      if (grupos.length) return;
+      // Sin resultados por puesto (otro departamento, o todavía cargando): puestos 2026 en neutro
     }
 
     for (const p of puestos) {
@@ -523,27 +600,28 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
       const aproximado = d.cruce === 'aproximado' || d.precision === 'aproximada';
       const territorio = asignacion?.territorioDePuesto[p.codPuesto];
       const fTerritorio = territorio ? featurePorId[territorio] : undefined;
-      // Demográfica y económica a escala municipal: % de mujeres del propio puesto (censo 2026);
-      // los demás indicadores no existen por puesto y se toma el color del barrio o vereda donde está.
+      // Demográfica y económica: % de mujeres del propio puesto (censo 2026); los demás indicadores no
+      // existen por puesto y se toma el color del barrio o vereda donde está (escala municipal) o el de
+      // su municipio (escalas mayores).
       let fillColor = COLOR_PUESTO_NEUTRO;
-      let dato = '';
-      if (isMunicipalScale && activeLayer !== 'electoral') {
+      let dato = activeLayer === 'electoral' ? (cargandoResultados ? 'Cargando resultados por puesto…' : 'Sin resultados por puesto de esta elección') : '';
+      if (activeLayer !== 'electoral') {
         if (activeLayer === 'demografico' && metricaDem === 'mujeres' && p.mujeres + p.hombres > 0) {
           const v = (100 * p.mujeres) / (p.mujeres + p.hombres);
           fillColor = colorDeValor(v);
           dato = `Mujeres en el censo 2026 del puesto: ${v.toFixed(1).replace('.', ',')} %`;
-        } else if (fTerritorio) {
-          const v = valorDe(fTerritorio);
-          fillColor = colorDeValor(v.valor);
-          dato = `${nombreMetrica} del territorio donde está: ${v.texto}`;
+        } else if (isMunicipalScale) {
+          const v = fTerritorio ? valorDe(fTerritorio) : null;
+          fillColor = colorDeValor(v?.valor ?? null);
+          dato = v ? `${nombreMetrica} del territorio donde está: ${v.texto}` : `${nombreMetrica}: sin información (el puesto no cae en ningún territorio de la capa)`;
         } else {
-          fillColor = COLOR_SIN_DATO;
-          dato = `${nombreMetrica}: sin información (el puesto no cae en ningún territorio de la capa)`;
+          const dane = daneMunicipioPuestos(p.codMunicipio);
+          const v = dane ? valorDeMunicipio(dane) : null;
+          fillColor = colorDeValor(v?.valor ?? null);
+          dato = `${nombreMetrica} de su municipio: ${v?.texto ?? 'Sin información'}`;
         }
       }
-      const marker = L.circleMarker([d.lat, d.lon], {
-        renderer, radius: radio(p.total), fillColor, fillOpacity: 0.9, bubblingMouseEvents: false, ...borde(aproximado),
-      });
+      const marker = circulo(d.lat, d.lon, p.total, fillColor, aproximado);
       marker.bindTooltip(
         `<div style="font-family: system-ui, sans-serif; font-size: 11px; max-width: 260px;">
           <div style="color: #34d399; font-size: 9px; text-transform: uppercase; font-weight: 800;">Puesto de votación · ${escapeHtml(municipioDe(p.codMunicipio))}</div>
@@ -561,7 +639,7 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
       layer.addLayer(marker);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [puestos, showPuestos, asignacion, municipalFeatures, activeLayer, eleccionCapa, eleccionesMuni, candidatosCapa, isMunicipalScale, escalaCapa, metricaActiva, metricaDem, economiaLista, demografiaLista]);
+  }, [puestos, showPuestos, asignacion, municipalFeatures, activeLayer, eleccionCapa, eleccionesMuni, eleccionesPorDane, cargandoResultados, candidatosCapa, isMunicipalScale, escalaCapa, metricaActiva, metricaDem, economiaLista, demografiaLista]);
 
   // Synchronize GeoJSON features and camera transitions when currentLevel, activeLayer, or searchQuery changes
   useEffect(() => {
@@ -1189,13 +1267,14 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
             {puestosScope}
           </div>
           <div className="leading-snug">
-            {!isMunicipalScale
-              ? 'Color de cada puesto: se ve al abrir un municipio.'
-              : activeLayer === 'electoral'
-              ? 'Color: ganador en el puesto. Se muestran los puestos de esa elección, con su ubicación de ese año.'
+            {activeLayer === 'electoral'
+              ? `Color: ganador en el puesto. Se muestran los puestos de esa elección, con su ubicación de ese año.${cargandoResultados ? ' Cargando resultados…' : ''}${!isMunicipalScale ? ' Solo Antioquia tiene resultados por puesto.' : ''}`
               : activeLayer === 'demografico' && metricaDem === 'mujeres'
               ? 'Color: % de mujeres en el censo 2026 del puesto (misma escala).'
-              : 'Color: el del barrio o vereda donde está el puesto (el indicador no existe por puesto).'}
+              : isMunicipalScale
+              ? 'Color: el del barrio o vereda donde está el puesto (el indicador no existe por puesto).'
+              : 'Color: el de su municipio (el indicador no existe por puesto).'}
+            {' '}El tamaño crece con el censo y se reduce al alejar el mapa.
           </div>
           <div className="flex items-center gap-2 mt-1"><span className="w-3 h-3 rounded-full inline-block border border-white bg-slate-400" /> Ubicación del puesto</div>
           <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-full inline-block border-2 border-dashed border-amber-500 bg-slate-400" /> Ubicación aproximada (cabecera o vereda)</div>
