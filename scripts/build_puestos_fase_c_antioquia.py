@@ -28,7 +28,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from build_puestos_20k import ROOT, CENSO, DIVIPOLE, CENSO_JSON, norm, canon, cruzar, coordenadas  # noqa: E402
+from build_puestos_20k import ROOT, CENSO, DIVIPOLE, CENSO_JSON, norm, canon, cruzar, coordenadas, cargar_osm_antioquia, ubicacion_osm  # noqa: E402
 from shapely.geometry import shape, Point  # noqa: E402
 from shapely.ops import unary_union  # noqa: E402
 
@@ -175,6 +175,7 @@ def main():
     slug_de = {v['dane']: k for k, v in json.loads((ROOT / 'src/data/territorio/indiceTerritorios.json').read_text(encoding='utf-8')).items()}
     dane_de = {m['codMunicipio']: m['dane'] for m in municipios}
     terr, limites = {}, {}
+    osm = cargar_osm_antioquia()
     for p in puestos:
         cod = p['codMunicipio']
         if cod not in terr:
@@ -190,6 +191,13 @@ def main():
             stats[d['cruce']] -= 1
             stats['sin_divipole'] += 1
             p['divipole2023'] = None
+        if p['codPuesto'] in osm:  # coordenada de OpenStreetMap, mejor que el centro de la cabecera o de la vereda
+            stats['osm'] += 1
+            if p['divipole2023'] is None:
+                stats['sin_divipole'] -= 1
+            p['divipole2023'] = ubicacion_osm(p, osm[p['codPuesto']])
+            p['divipole2023'].pop('comuna')
+            continue
         u = ubicar_aproximado(p, *terr[cod], slug=slug_de[dane_de[cod]])
         if not u:
             stats['sin_ubicar'] += 1

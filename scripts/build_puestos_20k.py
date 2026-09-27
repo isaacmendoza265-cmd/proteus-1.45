@@ -213,6 +213,20 @@ def main():
           f'{len(por_dep)} departamentos, cruce {dict(stats)}')
 
 
+OSM_ANTIOQUIA = ROOT / 'src/data/electoral/puestosOsmAntioquia.json'
+FUENTE_OSM = 'OpenStreetMap (© colaboradores de OSM, ODbL): colegio, escuela o lugar con el nombre del puesto, dentro del municipio'
+
+
+def cargar_osm_antioquia():
+    """Coordenadas OSM validadas por scripts/geocodificar_puestos_osm_antioquia.py ({codPuesto: {...}})."""
+    return json.loads(OSM_ANTIOQUIA.read_text(encoding='utf-8'))['puestos'] if OSM_ANTIOQUIA.exists() else {}
+
+
+def ubicacion_osm(p, o):
+    return {'puesto': p['puesto'], 'comuna': None, 'direccion': None, 'lat': o['lat'], 'lon': o['lon'], 'cruce': 'osm',
+            'similitud': 1.0, 'precision': o['precision'], 'territorio': o['nombreOsm'], 'fuente': FUENTE_OSM}
+
+
 def ubicar_rurales_antioquia(puestos, municipios, divi_mun, stats):
     """Antioquia (27-sep-2026): los puestos RURALES (zona 99) que siguen sin coordenadas se ubican de forma
     aproximada: 1) el lugar de la Divipole 2023 que aparece en su nombre ("LOS CARGUEROS I.E. ..."),
@@ -224,9 +238,17 @@ def ubicar_rurales_antioquia(puestos, municipios, divi_mun, stats):
     slug_de = {v['dane']: k for k, v in indice.items()}
     info = {m['codMunicipio']: m for m in municipios if m['departamento'] == 'antioquia'}
     terr = {}
+    osm = cargar_osm_antioquia()
     for p in puestos:
         m = info.get(p['codMunicipio'])
-        if not m or p['zona'] != '99' or (p['divipole2023'] and p['divipole2023'].get('lat') is not None):
+        if not m or (p['divipole2023'] and p['divipole2023'].get('lat') is not None):
+            continue
+        if p['codPuesto'] in osm:  # urbano o rural: coordenada de OpenStreetMap (ver geocodificar_puestos_osm_antioquia.py)
+            stats['osm'] += 1
+            stats['sin_divipole'] -= 1
+            p['divipole2023'] = ubicacion_osm(p, osm[p['codPuesto']])
+            continue
+        if p['zona'] != '99':
             continue
         slug = slug_de.get(m['dane'])
         if not slug or not (ROOT / f'src/data/geojson/municipios/{slug}.subdivisiones.geo.json').exists():

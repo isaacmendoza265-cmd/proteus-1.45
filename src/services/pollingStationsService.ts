@@ -22,7 +22,7 @@ export type TipoCruce = 'exacto' | 'normalizado' | 'aproximado' | 'direccion' | 
   /** Solo fase C: el nombre del lugar de la Divipole 2023 aparece en el nombre del puesto 2026 */
   | 'lugar'
   /** Ubicación aproximada (Antioquia): en la cabecera, o en el centro poblado o la vereda que nombra el puesto */
-  | 'cabecera' | 'vereda' | 'corregimiento' | 'centro poblado';
+  | 'cabecera' | 'vereda' | 'corregimiento' | 'centro poblado' | 'osm';
 
 export interface UbicacionDivipole {
   /** Nombre del puesto en la Divipole 2023 */
@@ -37,7 +37,7 @@ export interface UbicacionDivipole {
   cruce: TipoCruce;
   similitud: number;
   /** Solo en ubicaciones complementarias: 'puesto' (el edificio) o 'aproximada' (cruce de calles o vereda) */
-  precision?: 'puesto' | 'aproximada';
+  precision?: 'puesto' | 'aproximada' | 'osm';
   fuente?: string;
   /** Solo en ubicaciones aproximadas de fase C: cabecera, vereda o corregimiento donde se puso el punto */
   territorio?: string;
@@ -259,6 +259,7 @@ export function describirCruce(p: PuestoVotacion): string {
   if (d.cruce === 'lugar') return `Ubicado con la Divipole 2023 (el lugar "${d.puesto}" está en el nombre del puesto)`;
   if (d.cruce === 'cabecera') return 'Ubicación aproximada: en la cabecera municipal (sin coordenadas propias)';
   if (d.cruce === 'vereda' || d.cruce === 'corregimiento' || d.cruce === 'centro poblado') return `Ubicación aproximada: en ${d.cruce === 'vereda' ? 'la vereda' : d.cruce === 'corregimiento' ? 'el corregimiento' : 'el centro poblado'} ${d.territorio} (por el nombre del puesto)`;
+  if (d.cruce === 'osm') return `Ubicado en OpenStreetMap (${d.territorio}, con el nombre del puesto)${d.precision === 'aproximada' ? ' · ubicación aproximada' : ''}`;
   if (d.cruce === 'geocodificado') return `Ubicado por su dirección 2026 (${d.direccion}) en OpenStreetMap${d.precision === 'aproximada' ? ' · ubicación aproximada' : ''}`;
   return `Ubicado por nombre parecido (${Math.round(d.similitud * 100)} %): ${d.puesto}. Conviene verificar`;
 }

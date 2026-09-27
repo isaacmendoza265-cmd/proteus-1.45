@@ -11,6 +11,8 @@ import {
   MUNICIPIOS_FASE_C,
   getMunicipioConPuestos,
   getMunicipiosConPuestosDepartamento,
+  loadTodosPuestosDepartamento,
+  describirCruce,
 } from '../pollingStationsService';
 import { MUNICIPAL_DIVISIONS_REGISTRY } from '../../data/geojson/municipalDivisions';
 
@@ -67,6 +69,18 @@ describe('Puestos de los 79 municipios de Antioquia con 20.000 votantes o menos 
       ubicados += lista.filter(tieneCoordenadas).length;
     }
     expect(ubicados / total).toBeGreaterThan(0.75);
+  });
+
+  it('Antioquia (125 municipios): quedan como máximo 64 puestos sin ubicar y los de OSM caen en su municipio', async () => {
+    const todos = await loadTodosPuestosDepartamento('Antioquia');
+    expect(todos.filter((p) => !tieneCoordenadas(p)).length).toBeLessThanOrEqual(64);
+    const osm = todos.filter((p) => p.divipole2023?.cruce === 'osm');
+    expect(osm.length).toBeGreaterThan(50);
+    for (const p of osm) {
+      expect(p.divipole2023!.precision === 'osm' || p.divipole2023!.precision === 'aproximada').toBe(true);
+      if (p.zona === '99') expect(p.divipole2023!.precision).toBe('aproximada');
+      expect(describirCruce(p)).toContain('OpenStreetMap');
+    }
   });
 
   it('Abejorral: solo cabecera y veredas; los puestos ubicados caen en ellas', async () => {
