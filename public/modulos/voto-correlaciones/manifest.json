@@ -1,0 +1,520 @@
+{
+  "nombre": "voto-correlaciones",
+  "version": "0.3.0",
+  "construido": "2026-09-27T20:34:22",
+  "datos_generados": "2026-09-27T20:34:15",
+  "fuente": "Registro Nacional de Encuestas CNE 2026 (Ley 2494 de 2025, art. 12)",
+  "encuestas": 43,
+  "firmas": [
+    "Acumulado · Abril 2026",
+    "Acumulado · Ciclo completo 2026",
+    "Acumulado · Del Congreso a la 1.ª vuelta",
+    "Acumulado · Enero 2026",
+    "Acumulado · Entre vueltas",
+    "Acumulado · Febrero 2026",
+    "Acumulado · Junio 2026",
+    "Acumulado · Marzo 2026",
+    "Acumulado · Mayo 2026",
+    "Acumulado · Precampaña (hasta el 8 de marzo)",
+    "AtlasIntel",
+    "Centro Nacional de Consultoría",
+    "Cifras y Conceptos",
+    "Corporación Miguel Maldonado",
+    "Cámara de Comercio de Valledupar",
+    "GAD3",
+    "Guarumo / EcoAnalítica",
+    "Invamer",
+    "Tempo Consultoría"
+  ],
+  "n_min_supresion": 30,
+  "archivos": {
+    "data/agregados.json": {
+      "bytes": 8408636,
+      "sha256": "3dfb44ff45b211bafb5a811390e2a44a94dc986afd3fa27046f0021420d0adaa"
+    },
+    "data/territorial/index.json": {
+      "bytes": 60391,
+      "sha256": "af1cf64f490ec952ddf9a2429e0d2c9b627bfd14262d308142fc3b48e8650c14"
+    },
+    "data/territorial/t_departamento__aprobacion__voto_1v.json": {
+      "bytes": 557506,
+      "sha256": "fe510ca5af68190db8acf5d5d4c6328d6513a404e346375941ea9b87e9e1742a"
+    },
+    "data/territorial/t_departamento__aprobacion__voto_2v.json": {
+      "bytes": 177713,
+      "sha256": "a5bb4c7288f84e5f355c55198f6c3a84a34892edc6ebf5a64511569d1f621d36"
+    },
+    "data/territorial/t_departamento__aprobacion__voto_senado.json": {
+      "bytes": 568047,
+      "sha256": "a0045f2b7ad2be3abd45775f35547e952f4ec6bdf29d18c00ba3f4177b3693ca"
+    },
+    "data/territorial/t_departamento__edad4__aprobacion.json": {
+      "bytes": 178290,
+      "sha256": "f6d7715d69af7601fde603708b17a4ea0fda8e179f3419f6dc6a271cc6e1644e"
+    },
+    "data/territorial/t_departamento__edad4__evaluacion.json": {
+      "bytes": 48987,
+      "sha256": "d6fa7669180e97cdfc68b9a13b7cb6caa93bc25f9247e49341e3ceecebf706f3"
+    },
+    "data/territorial/t_departamento__edad4__voto_1v.json": {
+      "bytes": 1133184,
+      "sha256": "1d6ef985af4eead82f316f07dea52f6e14f2c94a120a43a3aca95a2bed5ace7b"
+    },
+    "data/territorial/t_departamento__edad4__voto_2v.json": {
+      "bytes": 362794,
+      "sha256": "fdf162572daa3c4dbefed1f3543371b8984a9c708e8d1e19ee97983b7945e694"
+    },
+    "data/territorial/t_departamento__edad4__voto_senado.json": {
+      "bytes": 755598,
+      "sha256": "527d09cf22fbd770feae218c1e8ccdf01563b1f435b4bfd08f92a104f65a1877"
+    },
+    "data/territorial/t_departamento__educacion3__aprobacion.json": {
+      "bytes": 141811,
+      "sha256": "813c22acada8bfbad8887a388ee5a5d525e026a4ff9963871a6e4fb17a25b9c8"
+    },
+    "data/territorial/t_departamento__educacion3__evaluacion.json": {
+      "bytes": 6880,
+      "sha256": "b4fe5e065900ea1b23c0efcb7ee219660adaf63faef10819a2948f077eabeb1b"
+    },
+    "data/territorial/t_departamento__educacion3__voto_1v.json": {
+      "bytes": 900618,
+      "sha256": "073fa53ef28bece832667ff64ff7efa7d294f4ff6beac4e2a20c6c007f1d0e98"
+    },
+    "data/territorial/t_departamento__educacion3__voto_2v.json": {
+      "bytes": 271483,
+      "sha256": "8498f371b3a4b9e9ff3dd244a07f499dd275e1d72812fe8e04e8ad33167fba67"
+    },
+    "data/territorial/t_departamento__educacion3__voto_senado.json": {
+      "bytes": 581118,
+      "sha256": "285df7073520adf102e3c78aa3f39e62fe30d976ef9b021b05c2cf9ec12d8246"
+    },
+    "data/territorial/t_departamento__estrato__aprobacion.json": {
+      "bytes": 45322,
+      "sha256": "5bbd7dcc7c235d8be4210f0caef2f9eaa2fa9b0d302bbdf31574df701581fdd8"
+    },
+    "data/territorial/t_departamento__estrato__evaluacion.json": {
+      "bytes": 50752,
+      "sha256": "532fc6d3a16f0e0636127884efb335fe664fa19705cf2bbe8bb463e775111ca0"
+    },
+    "data/territorial/t_departamento__estrato__voto_1v.json": {
+      "bytes": 755771,
+      "sha256": "1e9c8f93b163f2b32177d28fcc80b05d0f4efe7727b1bd83ab544f28fa90e378"
+    },
+    "data/territorial/t_departamento__estrato__voto_2v.json": {
+      "bytes": 245688,
+      "sha256": "66ae76295b7181e7a0cb831dbcb43be0dd63a3b0d115dbf424f0d62329b245a8"
+    },
+    "data/territorial/t_departamento__estrato__voto_senado.json": {
+      "bytes": 135441,
+      "sha256": "17cec11b905302c54741e7f214676ea957a26c97a94890e64a12be9d2b6da91c"
+    },
+    "data/territorial/t_departamento__evaluacion__voto_1v.json": {
+      "bytes": 82984,
+      "sha256": "51a0f6987cccd2fb61c3085a2f04f4e823e7cf6c201c4dca95a0ac87f83407e9"
+    },
+    "data/territorial/t_departamento__evaluacion__voto_2v.json": {
+      "bytes": 41229,
+      "sha256": "13afe52192e5f6256613ec773d0ae614158980752d603ae38bc470a6eb761192"
+    },
+    "data/territorial/t_departamento__ideologia__aprobacion.json": {
+      "bytes": 184466,
+      "sha256": "3e84f306efaf87f646b90bade23fdfd91e18933f75eb8c0f30f21f635a66a79f"
+    },
+    "data/territorial/t_departamento__ideologia__evaluacion.json": {
+      "bytes": 48422,
+      "sha256": "c121c476902c042f61d3300e9d4f9cf89fa8b2ca979030ab71b630a85dd80efc"
+    },
+    "data/territorial/t_departamento__ideologia__voto_1v.json": {
+      "bytes": 929665,
+      "sha256": "8170c592979f53292f76497170e8b3a4e5c5e5f662cd0fb21ec7e443dc80b1bf"
+    },
+    "data/territorial/t_departamento__ideologia__voto_2v.json": {
+      "bytes": 320815,
+      "sha256": "66cc4d1cde0871b35d5d0e0a92487319fdd9a17eb0b96cb6cb3913163c70b889"
+    },
+    "data/territorial/t_departamento__ideologia__voto_senado.json": {
+      "bytes": 748258,
+      "sha256": "d458b24986aa23c9ba964fbd7780802d7191bec532143d13583db175b49e1e35"
+    },
+    "data/territorial/t_departamento__probabilidad_voto__aprobacion.json": {
+      "bytes": 41950,
+      "sha256": "4b4c788b0973162236de5402f26c4dfaf0df14d550e034c129e560d8fe08c7a6"
+    },
+    "data/territorial/t_departamento__probabilidad_voto__evaluacion.json": {
+      "bytes": 31212,
+      "sha256": "c17702454525e1a3268b7f62f8473ccb725a3b2723178b977287524897224390"
+    },
+    "data/territorial/t_departamento__probabilidad_voto__voto_1v.json": {
+      "bytes": 541143,
+      "sha256": "25d72d5b82c7f3e1dbfd71f990853950573526d40fc4775c8e0aaa0d63a59cc5"
+    },
+    "data/territorial/t_departamento__probabilidad_voto__voto_2v.json": {
+      "bytes": 159581,
+      "sha256": "241e26c6c15be138a142564dbd09331034718dee8a9743278eaafeb14b3e39b7"
+    },
+    "data/territorial/t_departamento__probabilidad_voto__voto_senado.json": {
+      "bytes": 86756,
+      "sha256": "a3b1d7198d45b43a125580d350be1354c5bd327f503ee077663f1ae9ce76b940"
+    },
+    "data/territorial/t_departamento__sexo__aprobacion.json": {
+      "bytes": 118521,
+      "sha256": "50d9c2309a14ce1c0183afef4002ff54f360914c4ab8167bd62396d39ea3c210"
+    },
+    "data/territorial/t_departamento__sexo__evaluacion.json": {
+      "bytes": 36905,
+      "sha256": "5b10593c9e0599ca0b52170e7f4fcc157d0520b565ea421b41c0d7eecffa976c"
+    },
+    "data/territorial/t_departamento__sexo__voto_1v.json": {
+      "bytes": 812140,
+      "sha256": "07e4500005b8f26f9b1d8892ec89bd6a2ca1815750dde72523840a276397c3ab"
+    },
+    "data/territorial/t_departamento__sexo__voto_2v.json": {
+      "bytes": 255079,
+      "sha256": "c1b45b7072cfea54a280804fb0d9c7c17437121a6fb48f1b7f503ec640cc0fcd"
+    },
+    "data/territorial/t_departamento__sexo__voto_senado.json": {
+      "bytes": 557145,
+      "sha256": "62c4e90f47adfe6c7ad2c618fa04cd5fedbe90b33c1ad05dc6ffb16fdc753046"
+    },
+    "data/territorial/t_departamento__voto_1v__aprobacion.json": {
+      "bytes": 202509,
+      "sha256": "68b3db13a62aaa53bf43fe120cde1339d2180cf151f8145f02432b14e0885886"
+    },
+    "data/territorial/t_departamento__voto_1v__evaluacion.json": {
+      "bytes": 44785,
+      "sha256": "2c9a98fb26c3ee94a4022a669151f4119f582cdca6eae0f9e8f2d27dc93b1cbf"
+    },
+    "data/territorial/t_departamento__voto_1v__voto_2v.json": {
+      "bytes": 363773,
+      "sha256": "7589e556c0011cfe8b5f4daab9ddc2167eba14b3c6d055c6bd182f3efac2ea14"
+    },
+    "data/territorial/t_departamento__voto_1v__voto_senado.json": {
+      "bytes": 789748,
+      "sha256": "5427fd6168502f26373885c34038fc52e30b8f1983f86a79ef1c8a0967ddf659"
+    },
+    "data/territorial/t_departamento__voto_2022_2v__aprobacion.json": {
+      "bytes": 157506,
+      "sha256": "a9ae89efabbb60fe1bc63af142e770c8acdb96ca5b7ef16e19bf31d1a3f3b545"
+    },
+    "data/territorial/t_departamento__voto_2022_2v__evaluacion.json": {
+      "bytes": 3895,
+      "sha256": "a0f0a74f8d58d629cad8f2089d90e08e70c1413397183e8c02f178e3aaaafe6a"
+    },
+    "data/territorial/t_departamento__voto_2022_2v__voto_1v.json": {
+      "bytes": 703414,
+      "sha256": "be6c9f331372ec3848270c11ef73a5130b8f40e813a115b48ede3ba2c04f4d47"
+    },
+    "data/territorial/t_departamento__voto_2022_2v__voto_2v.json": {
+      "bytes": 228211,
+      "sha256": "5c7273f4ebdd50399c1b384fc4d5d0197b1296e90f37697a1ae63a80a24350be"
+    },
+    "data/territorial/t_departamento__voto_2022_2v__voto_senado.json": {
+      "bytes": 696081,
+      "sha256": "8a5f3e724aee9cdacf006ada4a73389149d320ca8747a39af935b42d1b85f365"
+    },
+    "data/territorial/t_departamento__voto_2v__aprobacion.json": {
+      "bytes": 177513,
+      "sha256": "e0f238853d15bdcb92e602b48617b92d2bfb79784378230d83f6a26646927522"
+    },
+    "data/territorial/t_departamento__voto_2v__evaluacion.json": {
+      "bytes": 47902,
+      "sha256": "7deb19d2704c7d425ac79bea20ae0d39858c0a745e3bed8ddce70962f9b23245"
+    },
+    "data/territorial/t_departamento__voto_2v__voto_1v.json": {
+      "bytes": 1099433,
+      "sha256": "a6c5a5d1cea025b59f81d1658ccd6e5a8c2c51146764714925bc381639b7d760"
+    },
+    "data/territorial/t_departamento__voto_2v__voto_senado.json": {
+      "bytes": 749113,
+      "sha256": "5b15b27fa8ee6dc27ac05de780fba538fa6abf4569557bda73d5e971f884dbac"
+    },
+    "data/territorial/t_departamento__voto_senado__aprobacion.json": {
+      "bytes": 211945,
+      "sha256": "2c9be543a3134bbcc231b15b4272fa8bfdb5277f467c27d1090ff9bad3881f82"
+    },
+    "data/territorial/t_departamento__voto_senado__voto_1v.json": {
+      "bytes": 736785,
+      "sha256": "6b3a80b4b71d16dc5851f9d8c0408b05c0d1dbc8715dd381bcde93d3737fe37c"
+    },
+    "data/territorial/t_departamento__voto_senado__voto_2v.json": {
+      "bytes": 271340,
+      "sha256": "15e4d6a29cb4f9e89f044ab6d2f2020d65e1dc211beadacab001d8db79440bf0"
+    },
+    "data/territorial/t_departamento__zona__aprobacion.json": {
+      "bytes": 29133,
+      "sha256": "e246a9037ddfbfa3d276f3affac499e81983eef7f142daa0674e3570e15c7231"
+    },
+    "data/territorial/t_departamento__zona__evaluacion.json": {
+      "bytes": 25650,
+      "sha256": "da70b2c0a0c88cfe7327681a8fdd52e2f4cc91cc0db8aeffeb668ce1e9b556d4"
+    },
+    "data/territorial/t_departamento__zona__voto_1v.json": {
+      "bytes": 387992,
+      "sha256": "bcf928b95429544e51f2a3dbcd2876eb7a07243fd64f3aca5e837c3b267f5b97"
+    },
+    "data/territorial/t_departamento__zona__voto_2v.json": {
+      "bytes": 117166,
+      "sha256": "cc0f0e557de8e56f5fd07a0366f7cb36866f56bb0cba77c754eff60aa551d4c2"
+    },
+    "data/territorial/t_departamento__zona__voto_senado.json": {
+      "bytes": 57230,
+      "sha256": "599e8f7f1b30d5251b06c35b1debc323300b2de2067f07c1f5a88e0b290c4a38"
+    },
+    "data/territorial/t_municipio__aprobacion__voto_1v.json": {
+      "bytes": 806275,
+      "sha256": "f20144ee4c002b5e010adb0407ece875394ecab0202f353e799ffbb409bff060"
+    },
+    "data/territorial/t_municipio__aprobacion__voto_2v.json": {
+      "bytes": 307351,
+      "sha256": "441621bae068724a40e2718da500c5f293379a5d51e6b420f0cbaba11d022aca"
+    },
+    "data/territorial/t_municipio__aprobacion__voto_senado.json": {
+      "bytes": 840658,
+      "sha256": "00f6aca50e648cc7f7668860740cd454b21d6ce26b6f9d4ee8e278c958188702"
+    },
+    "data/territorial/t_municipio__edad4__aprobacion.json": {
+      "bytes": 232548,
+      "sha256": "49599bbb0b562c93ff2c141dd3e8c821ade1de5b52f67587336d522344194505"
+    },
+    "data/territorial/t_municipio__edad4__evaluacion.json": {
+      "bytes": 40814,
+      "sha256": "02a26cb600a581233c8fd0d4e2adbb9e50f6d34dae5af647861cb410155d93eb"
+    },
+    "data/territorial/t_municipio__edad4__voto_1v.json": {
+      "bytes": 1372676,
+      "sha256": "1e505b52589f7ca129c146ab07120a415e96ca3d8d21c1ef6bf815b461560b60"
+    },
+    "data/territorial/t_municipio__edad4__voto_2v.json": {
+      "bytes": 483919,
+      "sha256": "e9975d82b852343f2e3890cbadd8855163e1d45ce2f421c4e4e8c913871a4370"
+    },
+    "data/territorial/t_municipio__edad4__voto_senado.json": {
+      "bytes": 883446,
+      "sha256": "f5a300b1afb716e772e0f75bafdd7f94b02b0e4c15819be89c9d2e638d690174"
+    },
+    "data/territorial/t_municipio__educacion3__aprobacion.json": {
+      "bytes": 248372,
+      "sha256": "865f31ccb49e9392faa99183e3856562a4ab90c2e2a7c0e2383c252739b5a0d1"
+    },
+    "data/territorial/t_municipio__educacion3__evaluacion.json": {
+      "bytes": 8749,
+      "sha256": "0093525cfed76456ed5094b46971a5a84db8ad39ad627e0f2d6203a6ac7ae679"
+    },
+    "data/territorial/t_municipio__educacion3__voto_1v.json": {
+      "bytes": 1291125,
+      "sha256": "e693b8ccd31f80e6c4fba627d2ddab888b5107d88ea82d7e66d07e1ced009a1e"
+    },
+    "data/territorial/t_municipio__educacion3__voto_2v.json": {
+      "bytes": 454264,
+      "sha256": "cf4f4bd696837a317bb5a34f7c55378fe823fd4ba4657b6a6ae049fe85a7b748"
+    },
+    "data/territorial/t_municipio__educacion3__voto_senado.json": {
+      "bytes": 879843,
+      "sha256": "8696075715102c0c038a3c1ec5fd7086d79b084fd5e9833e9065307fa3d6a437"
+    },
+    "data/territorial/t_municipio__estrato__aprobacion.json": {
+      "bytes": 31023,
+      "sha256": "125cce62cd023e376a82bb786bc1f39dbe10a85cae039194f481bdedc780c71a"
+    },
+    "data/territorial/t_municipio__estrato__evaluacion.json": {
+      "bytes": 43801,
+      "sha256": "7fead26a0abe8413fafa03d292361544a74e2c29a340c7c345b94f9aa82a9f50"
+    },
+    "data/territorial/t_municipio__estrato__voto_1v.json": {
+      "bytes": 791682,
+      "sha256": "202307ad410b9c84a89ea946e904ea009345d9b895dc967c7884b6d2e78d5409"
+    },
+    "data/territorial/t_municipio__estrato__voto_2v.json": {
+      "bytes": 276900,
+      "sha256": "56165691cf1deddf1d163b720a272792cbc78d549a40dce68a8ddd48808a9d8c"
+    },
+    "data/territorial/t_municipio__estrato__voto_senado.json": {
+      "bytes": 111886,
+      "sha256": "fe905c8cef2494d94eebb22821790535a6d5913c214c32714cc2bccca4824218"
+    },
+    "data/territorial/t_municipio__evaluacion__voto_1v.json": {
+      "bytes": 74075,
+      "sha256": "83826f3b82927ee1cffb57ee9336e079cc2c03589e2eceef38240f5110017ee2"
+    },
+    "data/territorial/t_municipio__evaluacion__voto_2v.json": {
+      "bytes": 40413,
+      "sha256": "ae48380f420b6276efb854640bbf2fe09e4843072d1b337f29d9203cc7f099f7"
+    },
+    "data/territorial/t_municipio__ideologia__aprobacion.json": {
+      "bytes": 229519,
+      "sha256": "476f7e8c547222d86d35d620ea2dde37596d1b062a5a230fd8934dc74dd3136c"
+    },
+    "data/territorial/t_municipio__ideologia__evaluacion.json": {
+      "bytes": 40001,
+      "sha256": "8d54522c6bc3c40a33c9ef31618faa39b570bb33d8113146ab2e54f0d177ab5e"
+    },
+    "data/territorial/t_municipio__ideologia__voto_1v.json": {
+      "bytes": 1036591,
+      "sha256": "be66a44273b96488d35e3f1a16b800b752ccd9124b31bdfcb6085269c4358ca8"
+    },
+    "data/territorial/t_municipio__ideologia__voto_2v.json": {
+      "bytes": 410390,
+      "sha256": "fa1cff3c00471b8fe670b647130ba43634f1355e569481500251fd25e085daee"
+    },
+    "data/territorial/t_municipio__ideologia__voto_senado.json": {
+      "bytes": 808136,
+      "sha256": "97195a1aea3c62b8f9f9b46c5a39ce81e53140043c91a28f8143bc5da7c0b4c3"
+    },
+    "data/territorial/t_municipio__probabilidad_voto__aprobacion.json": {
+      "bytes": 31415,
+      "sha256": "becbcb1b2cf43c8dbb511b98dcd2514acd7d1d861adbdbff50131ff9c4f95c1a"
+    },
+    "data/territorial/t_municipio__probabilidad_voto__evaluacion.json": {
+      "bytes": 45041,
+      "sha256": "3892999b9c19c040d34a2484a8c82dccb11cd094160b7b98a13c3b08dcea3346"
+    },
+    "data/territorial/t_municipio__probabilidad_voto__voto_1v.json": {
+      "bytes": 593329,
+      "sha256": "5063986060e9309b241b998f5cfa88ffa272aa7c9a409ca5af3cc3feab4147ee"
+    },
+    "data/territorial/t_municipio__probabilidad_voto__voto_2v.json": {
+      "bytes": 208981,
+      "sha256": "5a3ab73afaea6222b09402ae8bdaf4fbdb0c9ff141e2981810d82ea15b893e8c"
+    },
+    "data/territorial/t_municipio__probabilidad_voto__voto_senado.json": {
+      "bytes": 86356,
+      "sha256": "8c661cc0ed1a8549ddeaecc1ec54b69620e4c30a80946d9d672981c8023abc88"
+    },
+    "data/territorial/t_municipio__sexo__aprobacion.json": {
+      "bytes": 258169,
+      "sha256": "2e674c06db26b76663f2065d59cdb8fbe5e1f4cf4940721dca883af5f0a862ee"
+    },
+    "data/territorial/t_municipio__sexo__evaluacion.json": {
+      "bytes": 41919,
+      "sha256": "a054667e113c4e660f06eea7dade48a74ab4dbdc450654a18f47ef81899c6b68"
+    },
+    "data/territorial/t_municipio__sexo__voto_1v.json": {
+      "bytes": 1446459,
+      "sha256": "3f8197ec2715c32e829868a38db366a4d162c39ff7aad75b655b7a57746618f0"
+    },
+    "data/territorial/t_municipio__sexo__voto_2v.json": {
+      "bytes": 520990,
+      "sha256": "e47a40a2542ee911609ce984141857b215ccce01489d9853cbbf6827672c6a06"
+    },
+    "data/territorial/t_municipio__sexo__voto_senado.json": {
+      "bytes": 1006838,
+      "sha256": "cd944b329e988fda0890e2342ab6ccacd3ad24bd75fd999703ce1dba40694f69"
+    },
+    "data/territorial/t_municipio__voto_1v__aprobacion.json": {
+      "bytes": 193240,
+      "sha256": "f70fbef1dd9c1333ae8c7181e9cc82fa75bf5d9332d490b7db18b156c41af362"
+    },
+    "data/territorial/t_municipio__voto_1v__evaluacion.json": {
+      "bytes": 35194,
+      "sha256": "136aa86bae898e99c5c3d7820b781dff514961e9a02893b486f3dcb7196d2b95"
+    },
+    "data/territorial/t_municipio__voto_1v__voto_2v.json": {
+      "bytes": 348142,
+      "sha256": "b9e5824d3ab5136430dcb23903730716573f7719efb5ea2da2a6c652bee32156"
+    },
+    "data/territorial/t_municipio__voto_1v__voto_senado.json": {
+      "bytes": 671348,
+      "sha256": "a159dc18e3024765596e1e08b8aa24c98d48731dfe5f0d06b57a23e7a462c483"
+    },
+    "data/territorial/t_municipio__voto_2022_2v__aprobacion.json": {
+      "bytes": 217388,
+      "sha256": "b5805a0b1da2b2d44ec96e1b762207882e0153347f08215b72e45da889eb2c38"
+    },
+    "data/territorial/t_municipio__voto_2022_2v__evaluacion.json": {
+      "bytes": 3445,
+      "sha256": "83f4ac8ee536fcdedfebd66e500c36c2cb58784afd168a36ee2ce23c4f4e1a11"
+    },
+    "data/territorial/t_municipio__voto_2022_2v__voto_1v.json": {
+      "bytes": 802966,
+      "sha256": "c55ea1c4d6a7716aecbe955592db62bd38aa0ffd624c970db129c9568dfac51a"
+    },
+    "data/territorial/t_municipio__voto_2022_2v__voto_2v.json": {
+      "bytes": 313764,
+      "sha256": "d921a3275d5b9a8f22476997a183aa00d452e990075e8a7b8dd4cd73fe0782c4"
+    },
+    "data/territorial/t_municipio__voto_2022_2v__voto_senado.json": {
+      "bytes": 820510,
+      "sha256": "c0a7f1b0bcc715e220c36cd738832847282c84316a7625c646ee32f20d4c8380"
+    },
+    "data/territorial/t_municipio__voto_2v__aprobacion.json": {
+      "bytes": 272617,
+      "sha256": "f99d4a61085241f27062f177bdc20a2e9b61b34597ededafab86fee99a86b2ff"
+    },
+    "data/territorial/t_municipio__voto_2v__evaluacion.json": {
+      "bytes": 40208,
+      "sha256": "fb8bc85379838fc75272414e3c641a11b82c23b809e1e0496974f46ee02de32a"
+    },
+    "data/territorial/t_municipio__voto_2v__voto_1v.json": {
+      "bytes": 1406144,
+      "sha256": "39833806d2aac3cbfc23064367102c6e947372ad02e8192b13cd086da9e91177"
+    },
+    "data/territorial/t_municipio__voto_2v__voto_senado.json": {
+      "bytes": 969687,
+      "sha256": "13b080e72b8696f73638c390e78c997a2e48c6b17e91956270423f88557dca49"
+    },
+    "data/territorial/t_municipio__voto_senado__aprobacion.json": {
+      "bytes": 154235,
+      "sha256": "fcc7569d6dabe91e6dbe4e6595e2b1d35cc16d829c06509d814f2be75c8bd0b0"
+    },
+    "data/territorial/t_municipio__voto_senado__voto_1v.json": {
+      "bytes": 445569,
+      "sha256": "a93fc49c7433e80d788fcacd2de123aaff04c0bef10da83bdb08e1a2449c5a14"
+    },
+    "data/territorial/t_municipio__voto_senado__voto_2v.json": {
+      "bytes": 200089,
+      "sha256": "7e0f300ce8a774106b5271590a57ccf5c827a701bbb2866988e2972c44d9b0dd"
+    },
+    "data/territorial/t_municipio__zona__aprobacion.json": {
+      "bytes": 31049,
+      "sha256": "8ba01c04501a25ff2fd2d2795e6c905d4f7922774bed5cd1bb1883df5d1a6187"
+    },
+    "data/territorial/t_municipio__zona__evaluacion.json": {
+      "bytes": 37406,
+      "sha256": "72cb980b212a70666476ef7859987250e96c0153cfe3c3ffbb120150d797b715"
+    },
+    "data/territorial/t_municipio__zona__voto_1v.json": {
+      "bytes": 497319,
+      "sha256": "15d6eafcb7b37b76b5cdd16b88282674fbf3d1c385f23327227937a8418eb876"
+    },
+    "data/territorial/t_municipio__zona__voto_2v.json": {
+      "bytes": 176968,
+      "sha256": "27416b4ca11a710e2491f9cfed97ae777c50e96e9203c831aa4d6b34840f9d1d"
+    },
+    "data/territorial/t_municipio__zona__voto_senado.json": {
+      "bytes": 68340,
+      "sha256": "29ecc740e95ffcc76c783734c6038872d4adf4974f7a7cc3e371acc7f5996942"
+    },
+    "ejemplos/basico.html": {
+      "bytes": 518,
+      "sha256": "86fc814edbc93dab44e3a2935b2617954edce7a40fa57f9c317948c650b8ac8d"
+    },
+    "ejemplos/mapa-divipola.html": {
+      "bytes": 4689,
+      "sha256": "87549edde7b898b68a3e8df4a5da7324274cedecb0e186a08456ac00670115ba"
+    },
+    "esquema_armonizado.md": {
+      "bytes": 4838,
+      "sha256": "e560fef8911358ccd0bedc2b21d495b6cfde6534c0b98793bb54a9712af5726f"
+    },
+    "index.html": {
+      "bytes": 1962,
+      "sha256": "f6875766c2fe17ef6de671790efc47be934390c77713525349fabd536c71d699"
+    },
+    "INTEGRACION.md": {
+      "bytes": 10974,
+      "sha256": "8ff47a05c653afed72d019f7fd5dac36e9d563d33053e4247156ec0dc5aa4097"
+    },
+    "integracion_app_anfitriona.md": {
+      "bytes": 2487,
+      "sha256": "cc51bb7a5c479b67f81523866ead2e1f920675db4cf8200831baf20ddb68de3b"
+    },
+    "servidor.ps1": {
+      "bytes": 1937,
+      "sha256": "41c21b2b75077c28e5b11fc05b2c187daa488f017633ae884f69bed706cb1f82"
+    },
+    "voto-correlaciones.js": {
+      "bytes": 68464,
+      "sha256": "00fddf770fd97d6f94699748a3ca9899efbc65aa5cab8368dde540372007c344"
+    }
+  }
+}

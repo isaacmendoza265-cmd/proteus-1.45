@@ -7,12 +7,14 @@ import React, { useState, lazy, Suspense } from 'react';
 import { AppShell } from './components/layout/AppShell';
 import type { NavViewId } from './components/layout/navigation';
 import { ErrorBoundary } from './components/ui/ErrorBoundary';
+import type { SeleccionEncuestas } from './components/encuestas/VotoCorrelaciones';
 
 const InicioView = lazy(() => import('./modules/inicio/InicioView').then((m) => ({ default: m.InicioView })));
 
 // National Views
 const NationalDashboardView = lazy(() => import('./modules/national/NationalDashboardView').then((m) => ({ default: m.NationalDashboardView })));
 import { CandidateProfilesView } from './modules/national/CandidateProfilesView';
+const Encuestas2026View = lazy(() => import('./modules/electorado/Encuestas2026View').then((m) => ({ default: m.Encuestas2026View })));
 const CampaignToolsView = lazy(() => import('./modules/national/CampaignToolsView').then((m) => ({ default: m.CampaignToolsView })));
 
 // Multi-Scale Territorial Zoom (GIS Continuo 5 Escalas)
@@ -53,6 +55,8 @@ const STORAGE_PROFILE_KEY = "cmt_proteus_active_profile";
 export default function App() {
   const [currentView, setCurrentView] = useState<NavViewId>('inicio');
   const [candidateModalOpen, setCandidateModalOpen] = useState(false);
+  // Encuestas 2026 abiertas desde el mapa, ya situadas en un territorio
+  const [seleccionEncuestas, setSeleccionEncuestas] = useState<SeleccionEncuestas | null>(null);
   
   // Manage candidate profile state
   const [candidateProfile, setCandidateProfile] = useState<CandidateProfile>(() => {
@@ -114,6 +118,10 @@ export default function App() {
         />
       )}
 
+      {currentView === 'encuestas-2026' && (
+        <Encuestas2026View seleccion={seleccionEncuestas} onVolverAlMapa={() => setCurrentView('territorial-zoom')} />
+      )}
+
       {currentView === 'national-tools' && (
         <CampaignToolsView />
       )}
@@ -123,6 +131,7 @@ export default function App() {
         <TerritorialZoomHubView 
           onNavigateToContentDirector={() => setCurrentView('content-director')}
           onNavigateToVoterSegmentation={() => setCurrentView('voter-segmentation')}
+          onAbrirEncuestas={(sel) => { setSeleccionEncuestas(sel); setCurrentView('encuestas-2026'); }}
           candidato={candidateProfile}
         />
       )}

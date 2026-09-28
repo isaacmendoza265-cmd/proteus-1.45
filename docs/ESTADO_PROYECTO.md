@@ -1,8 +1,8 @@
 # Proteus — estado del proyecto (memoria compartida entre agentes)
 
-Última actualización: 27-sep-2026 (Claude Opus, rama `codex/navegacion-mapa`). **Todo agente debe actualizar este archivo al terminar.**
+Última actualización: 28-sep-2026 (Claude Opus: `main` = Inicio nuevo + encuestas 2026 fusionadas). **Todo agente debe actualizar este archivo al terminar.**
 Repositorio local: `C:\Users\isaac\OneDrive\Documentos\Proyecto Proteus`. Remoto: github.com/isaacmendoza265-cmd/proteus-1.45.
-`main` local: `14db9bf` (GitHub tiene `1968fd5`). Rama `codex/navegacion-mapa` con `33020c4`, `f0b3769`, `26f6b57`, `95acefc`, `c55ef86`, `d0df840`, `efde46a`, `93d3108`, `25ac50b` y `1187a79`, sin subir ni fusionar.
+Ramas `codex/navegacion-mapa`, `claude/inicio` y `claude/encuestas-2026` ya fusionadas en `main` (28-sep). No subir bundles a GitHub por la web: se aplican con `git fetch <bundle>`.
 Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en el PATH de los agentes
 (`$env:Path = "C:\Program Files\nodejs;" + $env:Path`). `npx tsc` también revisa las carpetas locales ignoradas
 (`_archivo/`, `_originales/`, `SUBIR_A_GITHUB/`) y da 24 errores ahí: no cuentan, `src/` está limpio.
@@ -24,10 +24,17 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
 - **Mapa** (27-sep): clic en comuna → sus barrios; clic en barrio → ficha; comunas y municipios vecinos
   clicables alrededor (sin volver a la subregión); barra lateral ocultable con territorio, capa y puestos.
   Capas Electoral (año + tipo; puestos de esa elección), Demográfica y Económica (`mapColorService.ts`).
+- **Encuestas 2026** (27-sep, rama `claude/encuestas-2026`): módulo `<voto-correlaciones>` 0.3.0 (proyecto
+  voto-demografia-2026: 43 encuestas y acumulados del Registro Nacional de Encuestas del CNE, solo agregados, n < 30
+  suprimido) en `public/modulos/voto-correlaciones/`. Vista Electorado › Encuestas 2026 con la estética cívica
+  (tema claro/oscuro) y, debajo del mapa, "Encuestas y urnas": acumulado de la fase previa a cada elección
+  (Senado, 1.ª y 2.ª vuelta) frente al resultado oficial del municipio o de Antioquia, con IC 95 %.
 - Verificación al último commit (`f0b3769`): tsc limpio en `src/`, 211 pruebas, build OK.
 
 ## 2. Decisiones de Isaac (respetarlas)
-- Seguridad y etapa 2 (social listening, encuestas): aplazados.
+- Seguridad y etapa 2 (social listening, encuestas propias): aplazados.
+- 27-sep: integrar el módulo de encuestas CNE 2026 (`voto-correlaciones`, de la aplicación modular de encuestas)
+  "de forma orgánica y útil" (libertad de diseño). Encuestas CNE a municipio o departamento, nunca a barrio (reglamento v1.2).
 - 27-sep: **marco metodológico** en marcha (antes aplazado). 4 capas (interpretación/publicidad × general/local),
   subido por bloques. Bloque 1: reglamento de interpretación v1.2 + dossier Familia 4 (arrastre). El reglamento
   vigente prevalece sobre cualquier salida de la aplicación (ver `docs/marco/README.md`).
@@ -103,6 +110,14 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
   `scripts/build_figuras_inicio.py` → `src/assets/inicio/*.svg` + `src/data/inicio/figuras.json`. Números leídos
   de los servicios (censo, puestos, elecciones). Día E y Red de poder llevan aviso (datos de ejemplo / en verificación).
   Reemplaza el Inicio anterior (KPI + "continuar" + estado de datos). 232 pruebas, build OK.
+- 27-sep (Opus, `claude/encuestas-2026`): integración de `<voto-correlaciones>` 0.3.0. `scripts/importar_voto_correlaciones.py`
+  copia el paquete (dist o .zip) a `public/modulos/voto-correlaciones/`; `encuestasService.ts` (estimación por
+  municipio/departamento con n efectivo de Kish e IC de Wilson, igual que el módulo; cruce con el escrutinio de la
+  Registraduría; emparejamiento de nombres); `VotoCorrelaciones.tsx` (envoltorio React, tokens --c-* → --vc-*);
+  `Encuestas2026View.tsx`; `EncuestasTerritorio.tsx` bajo el mapa, con botón que abre la evolución del mismo
+  territorio. Hallazgo: en 1.ª vuelta las encuestas (9-mar a 31-may) subestimaron a De la Espriella en ~25 pts en
+  Medellín y Antioquia y sobreestimaron a Paloma Valencia en ~20; Cepeda cayó dentro del intervalo.
+  Verificado: tsc limpio, 236 pruebas, build OK, capturas claro/oscuro.
 - 27-sep (Opus, `codex/navegacion-mapa`) `1187a79`: análisis narrativo debajo del mapa (Valle de Aburrá + 30
   municipios de mayor censo; Medellín por comuna). 4 familias de correlación calculadas (Regla 17), verbos
   epistémicos y cita de fuente por oración (`municipioNarrativeService.ts`, sin Gemini, determinista).

@@ -18,6 +18,7 @@ const fmt = (n: number) => n.toLocaleString('es-CO');
 const millones = (n: number) => `${(n / 1e6).toLocaleString('es-CO', { maximumFractionDigits: 1 })} millones`;
 /** Rionegro queda entre las columnas del Valle de Aburrá: su etiqueta taparía el mapa */
 const ETIQUETAS_VISIBLES = ['05001', '05045', '05154'];
+const palabra = (n: number) => ['Cero', 'Una', 'Dos', 'Tres', 'Cuatro', 'Cinco', 'Seis', 'Siete', 'Ocho', 'Nueve', 'Diez'][n] ?? String(n);
 const serif = { fontFamily: "'Newsreader', Georgia, serif" };
 
 interface Props {
@@ -84,6 +85,7 @@ export const InicioView: React.FC<Props> = ({ onNavigate }) => {
     { quien: 'DANE', que: 'Censo 2018 por manzana y proyecciones 2026', color: 'var(--n-azul)' },
     { quien: 'DANE', que: 'Marco geoestadístico: veredas y centros poblados', color: 'var(--n-azul)' },
     { quien: 'ALCALDÍAS · GOBERNACIÓN', que: 'Comunas y barrios de los POT, alcaldes electos', color: 'var(--n-verde)' },
+    { quien: 'CNE', que: 'Registro Nacional de Encuestas 2026, solo agregados', color: 'var(--n-ambar)' },
     { quien: 'OPENSTREETMAP', que: 'Ubicación de puestos sin coordenadas', color: '#D9C38A' },
   ];
   const pasos = [
@@ -117,6 +119,10 @@ export const InicioView: React.FC<Props> = ({ onNavigate }) => {
     {
       t: 'Puestos de votación', v: 'territorial-zoom', d: 'Censo, mesas, dirección y resultado de cada puesto, filtrados por el área que se elige en el mapa.',
       icono: <svg width="120" height="72" viewBox="0 0 120 72" aria-hidden><path d="M30 58 C30 58 16 40 16 30 A14 14 0 0 1 44 30 C44 40 30 58 30 58 Z" fill="#4A2029" stroke="#F08A9A" strokeWidth="1.4" /><circle cx="30" cy="30" r="5" fill="#F0CE8C" /><path d="M78 50 C78 50 68 37 68 30 A10 10 0 0 1 88 30 C88 37 78 50 78 50 Z" fill="none" stroke="#F0CE8C" strokeWidth="1.4" /><path d="M102 40 C102 40 95 31 95 26 A7 7 0 0 1 109 26 C109 31 102 40 102 40 Z" fill="none" stroke="#50565C" strokeWidth="1.4" /></svg>,
+    },
+    {
+      t: 'Encuestas 2026', v: 'encuestas-2026', d: 'Las encuestas registradas ante el CNE, por demografía y territorio, frente al resultado oficial de cada elección.', nota: 'Estimado: a municipio o departamento, nunca a barrio',
+      icono: <svg width="120" height="72" viewBox="0 0 120 72" aria-hidden><line x1="8" y1="66" x2="112" y2="66" stroke="#2B2F34" strokeWidth="1.4" /><g fill="#4A2029" stroke="#F08A9A" strokeWidth="1.2"><rect x="16" y="30" width="16" height="36" rx="2" /><rect x="52" y="14" width="16" height="52" rx="2" /><rect x="88" y="40" width="16" height="26" rx="2" /></g><g stroke="#F0CE8C" strokeWidth="1.6"><line x1="12" y1="22" x2="36" y2="22" /><line x1="48" y1="8" x2="72" y2="8" /><line x1="84" y1="46" x2="108" y2="46" /></g></svg>,
     },
     {
       t: 'Día E', v: 'electoral-audit-forensics', d: 'Visor E-24 por zona y auditoría de mesas para acompañar el escrutinio.', nota: 'Las actas de la auditoría aún son de ejemplo',
@@ -181,7 +187,7 @@ export const InicioView: React.FC<Props> = ({ onNavigate }) => {
       {/* ESQUEMA */}
       <section id="inicio-esquema" className="bg-[var(--n-alt)] border-t border-[var(--n-line-suave)] px-6 md:px-12 xl:px-20 py-24 flex flex-col gap-14 scroll-mt-4">
         <Encabezado eyebrow="EL ESQUEMA" titulo={<>De la fuente oficial<br />al territorio que decide.</>}
-          texto="Seis fuentes públicas entran por la izquierda. Cinco pasos las limpian y las cruzan. Salen ordenadas en seis niveles del territorio y se ven en seis herramientas." />
+          texto={`${palabra(fuentes.length)} fuentes públicas entran por la izquierda. Cinco pasos las limpian y las cruzan. Salen ordenadas en seis niveles del territorio y se ven en ${palabra(salidas.length).toLowerCase()} herramientas.`} />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-14 gap-y-12">
           <Columna paso="01 · ENTRA" titulo="Fuentes" der>
             {fuentes.map((f) => (
@@ -241,7 +247,7 @@ export const InicioView: React.FC<Props> = ({ onNavigate }) => {
 
       {/* QUÉ OFRECE */}
       <section className="bg-[var(--n-alt)] border-t border-[var(--n-line-suave)] px-6 md:px-12 xl:px-20 py-24 flex flex-col gap-14">
-        <Encabezado eyebrow="QUÉ OFRECE" titulo={<>Seis maneras de leer<br />el mismo territorio.</>}
+        <Encabezado eyebrow="QUÉ OFRECE" titulo={<>{palabra(salidas.length)} maneras de leer<br />el mismo territorio.</>}
           texto="Todas beben de la misma base: lo que cambia en una se ve en las demás." />
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           {salidas.map((s) => (

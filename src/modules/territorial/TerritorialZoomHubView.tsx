@@ -15,6 +15,8 @@ import { PollingStationsPanel } from '../../components/maps/PollingStationsPanel
 import { FichaTerritorio, type Seccion } from '../../components/territorio/FichaTerritorio';
 import { GeneradorContenido } from '../../components/territorio/GeneradorContenido';
 import { AnalisisNarrativoMunicipio } from '../../components/territorio/AnalisisNarrativoMunicipio';
+import { EncuestasTerritorio } from '../../components/territorio/EncuestasTerritorio';
+import type { SeleccionEncuestas } from '../../components/encuestas/VotoCorrelaciones';
 import { SELECCION_GENERAL, seleccionDesdeMapa, type PerfilCandidato } from '../../services/contentGeneratorService';
 import { RedDePoder3D } from '../../components/territorio/RedDePoder3D';
 import { usePuestosTerritorio, puestosDe, codigosResultadosDe } from '../../components/territorio/usePuestosTerritorio';
@@ -47,6 +49,8 @@ const VALLE_ABURRA_CENSUS = ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA.filter((m) 
 interface TerritorialZoomHubViewProps {
   onNavigateToContentDirector?: (feature?: TerritoryGeoFeature) => void;
   onNavigateToVoterSegmentation?: (feature?: TerritoryGeoFeature) => void;
+  /** Abre Electorado › Encuestas 2026 situado en el territorio del mapa */
+  onAbrirEncuestas?: (s: SeleccionEncuestas) => void;
   /** Perfil del candidato activo (nombre y estilo, para el generador de contenido) */
   candidato?: PerfilCandidato | null;
 }
@@ -54,6 +58,7 @@ interface TerritorialZoomHubViewProps {
 export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
   onNavigateToContentDirector,
   onNavigateToVoterSegmentation,
+  onAbrirEncuestas,
   candidato,
 }) => {
   const [currentLevel, setCurrentLevel] = useState<ZoomLevelId>('municipal');
@@ -133,6 +138,15 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
     if (fichaTerritorio?.tipo === 'subdivision') return fichaTerritorio.padreId ?? null;
     return comunaAbierta?.id ?? null;
   }, [daneNarrativa, fichaTerritorio, comunaAbierta]);
+
+  // Encuestas y urnas (debajo del análisis): municipio del mapa o, si no hay, Antioquia. Nunca a barrio.
+  const daneEncuestas = useMemo(() => {
+    if (daneNarrativa) return daneNarrativa;
+    const d = selectedFeature ? ((selectedFeature.properties as { daneCode?: string }).daneCode ?? /(\d{5})$/.exec(String(selectedFeature.id))?.[1]) : null;
+    return d && d.startsWith('05') ? d : null;
+  }, [daneNarrativa, selectedFeature]);
+  const nombreMunicipioEncuestas = daneNarrativa ? MUNICIPAL_DIVISIONS_REGISTRY[selectedMunicipalityId]?.name : selectedFeature?.properties.name;
+  const encuestasBajoMunicipio = isMunicipalScale && (currentLevel !== 'municipal' || !!selectedFeature);
 
   const currentDataset = GEOJSON_LAYERS_BY_ZOOM[currentLevel];
   const currentLevelConfig = ZOOM_LEVELS_CONFIG[currentLevel];
@@ -304,6 +318,16 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
           {vista === 'mapa' && (
             <div className="mt-5">
               <AnalisisNarrativoMunicipio dane={daneNarrativa} comunaId={comunaNarrativaId} />
+            </div>
+          )}
+          {vista === 'mapa' && selectedDepartmentName === 'Antioquia' && (
+            <div className="mt-5">
+              <EncuestasTerritorio
+                dane={daneEncuestas}
+                nombreMunicipio={nombreMunicipioEncuestas}
+                bajoMunicipio={encuestasBajoMunicipio}
+                onAbrirEncuestas={onAbrirEncuestas}
+              />
             </div>
           )}
         </div>

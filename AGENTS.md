@@ -25,6 +25,9 @@ Foco actual: **terminar Antioquia** (125 municipios). Resto del país (fases D y
 - Puestos: los códigos cambian por elección; se cruzan por nombre. Coordenadas aproximadas se marcan
   `precision: 'aproximada'`. OpenStreetMap: solo con la regla de `scripts/geocodificar_puestos_osm_antioquia.py`.
 - No cambiar el umbral nacional de `scripts/build_puestos_20k.py` (`MUNICIPIOS_20K` = > 20.000 en todo el país).
+- Encuestas 2026: el módulo `public/modulos/voto-correlaciones/` NO se edita a mano; se actualiza con
+  `scripts/importar_voto_correlaciones.py` desde el paquete de voto-demografia-2026. Solo agregados; nunca bajar
+  encuestas a comuna o barrio.
 - Marco metodológico: todo análisis o pieza sigue el reglamento de interpretación vigente
   (`src/data/marco/capa1/reglamento-*.md`); si algo lo contradice, prevalece el reglamento. Los bloques nuevos
   se ingestan con `scripts/ingestar_marco.mjs` (ver `docs/marco/README.md`).
