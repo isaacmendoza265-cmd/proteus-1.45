@@ -2,7 +2,7 @@
 
 Última actualización: 27-sep-2026 (Claude Opus, rama `codex/navegacion-mapa`). **Todo agente debe actualizar este archivo al terminar.**
 Repositorio local: `C:\Users\isaac\OneDrive\Documentos\Proyecto Proteus`. Remoto: github.com/isaacmendoza265-cmd/proteus-1.45.
-`main` local: `14db9bf` (GitHub tiene `1968fd5`). Rama `codex/navegacion-mapa` con `33020c4`, `f0b3769`, `26f6b57`, `95acefc`, `c55ef86`, `d0df840`, `efde46a` y `93d3108`, sin subir ni fusionar.
+`main` local: `14db9bf` (GitHub tiene `1968fd5`). Rama `codex/navegacion-mapa` con `33020c4`, `f0b3769`, `26f6b57`, `95acefc`, `c55ef86`, `d0df840`, `efde46a`, `93d3108` y `25ac50b`, sin subir ni fusionar.
 Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en el PATH de los agentes
 (`$env:Path = "C:\Program Files\nodejs;" + $env:Path`). `npx tsc` también revisa las carpetas locales ignoradas
 (`_archivo/`, `_originales/`, `SUBIR_A_GITHUB/`) y da 24 errores ahí: no cuentan, `src/` está limpio.
@@ -32,6 +32,8 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
   subido por bloques. Bloque 1: reglamento de interpretación v1.2 + dossier Familia 4 (arrastre). El reglamento
   vigente prevalece sobre cualquier salida de la aplicación (ver `docs/marco/README.md`).
 - 27-sep: listas de puestos y de actores de la ficha, desplegables.
+- 27-sep: **el mapa es el filtro de todo**: el usuario navega por el mapa y cada herramienta (ficha, puestos,
+  generador de contenido) sigue el área elegida. Subregión: primer clic la elige, el segundo abre el municipio.
 - Estrato: se mantiene CNPV 2018 hasta encontrar la estratificación vigente (cada municipio tiene la suya;
   luego investigar por municipio, de los más grandes a los más pequeños).
 - Pobreza monetaria: rescindida (no existe por municipio). Usar NBI.
@@ -89,6 +91,8 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
   `territoryProfileService.ts`; ficha: `src/components/territorio/`.
 
 ## 5. Bitácora (agregar arriba lo más reciente)
+- 27-sep (Opus, `codex/navegacion-mapa`) `25ac50b`: panel de puestos como ventana desplegable filtrada por el mapa
+  (departamento › subregión › municipio › comuna › barrio); subregiones seleccionables en la vista de subregiones.
 - 27-sep (Opus, `codex/navegacion-mapa`) `93d3108`: censo por comuna/zona del panel de puestos en lista desplegable;
   el contorno de Medellín se quedaba con los 27 puestos (135.063 habilitados) de los 5 corregimientos: corregido.
 - 27-sep (Opus, `codex/navegacion-mapa`) `efde46a`: marco metodológico (ingesta por bloques, 4 capas, bloque 1:
