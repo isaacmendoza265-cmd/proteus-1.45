@@ -54,6 +54,8 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
 
 - 27-sep: el mapa y el panel derecho muestran la misma selección (elección y capa); el mapa lleva un
   generador de contenido con Gemini 3.8 (territorio del mapa, red o medio, tipo de pieza).
+- 28-sep: Inicio = página de presentación en esquema (fuentes, proceso, organización, salidas), diseño aprobado en
+  el lienzo "Proteus — página de inicio" de claude.ai. Siempre oscura, con figuras 3D de mapas reales.
 
 ## 3. Pendientes (en orden sugerido)
 000. **Marco metodológico, bloques siguientes**: Isaac los subirá por partes. Capa 1: dossiers de las familias
@@ -95,6 +97,12 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
   `territoryProfileService.ts`; ficha: `src/components/territorio/`.
 
 ## 5. Bitácora (agregar arriba lo más reciente)
+- 28-sep (Claude Opus, rama `claude/inicio`): nueva página de Inicio "noche cívica" en forma de esquema (fuentes →
+  proceso → organización → qué ofrece), con dos figuras 3D de geometría real: Antioquia con una columna por municipio
+  (altura = censo 2026) y las capas del territorio apiladas. `src/modules/inicio/InicioView.tsx`; figuras con
+  `scripts/build_figuras_inicio.py` → `src/assets/inicio/*.svg` + `src/data/inicio/figuras.json`. Números leídos
+  de los servicios (censo, puestos, elecciones). Día E y Red de poder llevan aviso (datos de ejemplo / en verificación).
+  Reemplaza el Inicio anterior (KPI + "continuar" + estado de datos). 232 pruebas, build OK.
 - 27-sep (Opus, `codex/navegacion-mapa`) `1187a79`: análisis narrativo debajo del mapa (Valle de Aburrá + 30
   municipios de mayor censo; Medellín por comuna). 4 familias de correlación calculadas (Regla 17), verbos
   epistémicos y cita de fuente por oración (`municipioNarrativeService.ts`, sin Gemini, determinista).

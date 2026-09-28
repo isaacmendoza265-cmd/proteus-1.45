@@ -1,0 +1,47 @@
+{
+ "mapa": {
+  "ancho": 820,
+  "alto": 700,
+  "etiquetas": [
+   {
+    "dane": "05045",
+    "nombre": "Apartadó",
+    "x": 170,
+    "y": 227
+   },
+   {
+    "dane": "05154",
+    "nombre": "Caucasia",
+    "x": 516,
+    "y": 248
+   },
+   {
+    "dane": "05001",
+    "nombre": "Medellín",
+    "x": 385,
+    "y": 189
+   },
+   {
+    "dane": "05615",
+    "nombre": "Rionegro",
+    "x": 432,
+    "y": 429
+   }
+  ]
+ },
+ "capas": {
+  "ancho": 600,
+  "alto": 900,
+  "centros": [
+   90,
+   255,
+   420,
+   595,
+   760
+  ],
+  "barrios": 332,
+  "comunas": 16,
+  "corregimientos": 5,
+  "puestosMedellin": 250
+ }
+}

@@ -869,3 +869,13 @@ input:focus, select:focus, textarea:focus {
   font-weight: 500 !important;
   letter-spacing: -0.01em;
 }
+
+/* Inicio (página de presentación): noche cívica. Siempre oscura, con o sin tema oscuro. */
+.inicio-noche {
+  --n-bg: #0E1012; --n-alt: #121416; --n-card: #1A1D20; --n-card-proceso: #1F1417;
+  --n-line: #2B2F34; --n-line-suave: #22262A; --n-line-proceso: #4A2029;
+  --n-ink: #ECE9E3; --n-muted: #A9AFB5; --n-dim: #8A9096;
+  --n-oro: #F0CE8C; --n-guinda: #A3243A; --n-rosa: #F08A9A; --n-azul: #9DB8E0; --n-verde: #7FD1A8; --n-ambar: #E0B45A;
+  background: var(--n-bg); color: var(--n-ink);
+}
+.inicio-noche .i-mono { font-family: 'IBM Plex Mono', ui-monospace, monospace; letter-spacing: 0.12em; }
