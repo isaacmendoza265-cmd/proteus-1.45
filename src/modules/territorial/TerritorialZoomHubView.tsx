@@ -14,6 +14,7 @@ import { CommuneDeepAnalyticsDrawer } from '../../components/maps/CommuneDeepAna
 import { PollingStationsPanel } from '../../components/maps/PollingStationsPanel';
 import { FichaTerritorio, type Seccion } from '../../components/territorio/FichaTerritorio';
 import { GeneradorContenido } from '../../components/territorio/GeneradorContenido';
+import { AnalisisNarrativoMunicipio } from '../../components/territorio/AnalisisNarrativoMunicipio';
 import { SELECCION_GENERAL, seleccionDesdeMapa, type PerfilCandidato } from '../../services/contentGeneratorService';
 import { RedDePoder3D } from '../../components/territorio/RedDePoder3D';
 import { usePuestosTerritorio, puestosDe, codigosResultadosDe } from '../../components/territorio/usePuestosTerritorio';
@@ -122,6 +123,16 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
     () => (fichaTerritorio ? { territorioId: fichaTerritorio.id, codigosResultados: codigosResultadosFicha, codigos2026: puestosFicha.map((p) => p.codPuesto) } : null),
     [fichaTerritorio, codigosResultadosFicha, puestosFicha],
   );
+
+  // Análisis narrativo (debajo del mapa): municipio activo y, en Medellín, la comuna abierta o
+  // seleccionada (si no hay ninguna, el análisis es de todo Medellín)
+  const daneNarrativa = isMunicipalScale ? MUNICIPAL_DIVISIONS_REGISTRY[selectedMunicipalityId]?.daneCode ?? null : null;
+  const comunaNarrativaId = useMemo(() => {
+    if (daneNarrativa !== '05001') return null;
+    if (fichaTerritorio?.tipo === 'division') return fichaTerritorio.id;
+    if (fichaTerritorio?.tipo === 'subdivision') return fichaTerritorio.padreId ?? null;
+    return comunaAbierta?.id ?? null;
+  }, [daneNarrativa, fichaTerritorio, comunaAbierta]);
 
   const currentDataset = GEOJSON_LAYERS_BY_ZOOM[currentLevel];
   const currentLevelConfig = ZOOM_LEVELS_CONFIG[currentLevel];
@@ -290,6 +301,11 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
             subregionSel={subregionSel?.id ?? null}
             onSelectSubregion={setSubregionSel}
           />
+          {vista === 'mapa' && (
+            <div className="mt-5">
+              <AnalisisNarrativoMunicipio dane={daneNarrativa} comunaId={comunaNarrativaId} />
+            </div>
+          )}
         </div>
 
         {fichaTerritorio && (
