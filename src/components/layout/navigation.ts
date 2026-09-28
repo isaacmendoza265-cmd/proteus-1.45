@@ -13,6 +13,7 @@ export type NavViewId =
   | 'territorial-zoom'
   | 'municipal-repository'
   | 'voter-segmentation'
+  | 'encuestas-2026'
   | 'content-director'
   | 'targeted-advertising'
   | 'multimedia-studio'
@@ -49,10 +50,11 @@ export const MODULES: ModuleDef[] = [
     ],
   },
   {
-    id: 'electorado', label: 'Electorado', descripcion: 'Segmentos de votantes y escenarios electorales.', icon: Users,
+    id: 'electorado', label: 'Electorado', descripcion: 'Segmentos de votantes, encuestas registradas ante el CNE y escenarios electorales.', icon: Users,
     vistas: [
       { id: 'voter-segmentation', label: 'Segmentos' },
-      { id: 'national-tools', label: 'Escenarios y encuestas' },
+      { id: 'encuestas-2026', label: 'Encuestas 2026' },
+      { id: 'national-tools', label: 'Escenarios y procesador' },
     ],
   },
   {

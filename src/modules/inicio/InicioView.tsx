@@ -32,6 +32,7 @@ export const InicioView: React.FC<Props> = ({ onNavigate }) => {
   const continuar: { modulo: string; titulo: string; detalle: string; v: NavViewId }[] = [
     { modulo: 'Territorio', titulo: `Seguir explorando ${nombre}`, detalle: 'Mapa de país a barrio, ficha en cuatro secciones y redes de poder.', v: 'territorial-zoom' },
     { modulo: 'Electorado', titulo: 'Segmentos del territorio activo', detalle: 'La misma lista de segmentos alimenta Contenido y Publicidad.', v: 'voter-segmentation' },
+    { modulo: 'Electorado', titulo: 'Encuestas 2026', detalle: '43 encuestas y acumulados del CNE, por demografía y territorio, frente al resultado oficial.', v: 'encuestas-2026' },
     { modulo: 'Contenido', titulo: `Nuevo discurso para ${nombre}`, detalle: 'Con datos del territorio y fuentes citadas.', v: 'content-director' },
   ];
   const fuentes: { dato: string; fuente: string; estado: string; tono: 'ok' | 'warn' | 'muted' }[] = [
@@ -40,6 +41,7 @@ export const InicioView: React.FC<Props> = ({ onNavigate }) => {
     { dato: 'Población y NBI', fuente: 'DANE: proyecciones 2026 y CNPV 2018; por barrio en Bello', estado: 'Oficial', tono: 'ok' },
     { dato: 'Puestos de votación', fuente: 'Censo 2026 por puesto cruzado con la Divipole 2023', estado: `${Math.round((100 * ubicados) / Math.max(1, puestos20))} % ubicados`, tono: 'warn' },
     { dato: 'Redes de poder', fuente: 'Base curada del desarrollador; sin enlaces web todavía', estado: 'Sin verificar', tono: 'warn' },
+    { dato: 'Encuestas 2026', fuente: 'Microdatos del Registro Nacional de Encuestas (CNE), solo agregados', estado: 'Estimado', tono: 'warn' },
     { dato: 'Segmentos de votantes', fuente: 'Motor de segmentación (modelado)', estado: 'Estimado', tono: 'warn' },
   ];
   const color = { ok: 'text-[var(--c-ok)]', warn: 'text-[var(--c-warn)]', muted: 'text-[var(--c-muted)]' };
@@ -60,7 +62,7 @@ export const InicioView: React.FC<Props> = ({ onNavigate }) => {
           </div>
         ))}
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
         {continuar.map((c) => (
           <button key={c.titulo} onClick={() => onNavigate(c.v)} className="text-left p-5 min-h-[132px] rounded-xl bg-[var(--c-surface)] border border-[var(--c-border)] hover:border-[var(--c-accent)] flex flex-col gap-2 transition-colors">
             <span className="text-xs font-bold uppercase tracking-wide text-[var(--c-accent-text)]">{c.modulo}</span>
