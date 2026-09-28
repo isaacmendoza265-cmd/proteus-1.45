@@ -126,6 +126,9 @@ interface MultiLevelZoomMapProps {
   /** Elección de la capa electoral (compartida con la ficha). Si no se pasa, el mapa guarda la suya. */
   eleccion?: string;
   onCambiarEleccion?: (id: string) => void;
+  /** Subregión elegida (vista de subregiones): primer clic la elige, el segundo abre el municipio */
+  subregionSel?: string | null;
+  onSelectSubregion?: (sub: { id: string; nombre: string } | null) => void;
 }
 
 /** Comuna a la que pertenece un barrio o vereda (Medellín usa comunaId; los demás, parentId) */
@@ -150,6 +153,8 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
   onSelectComuna,
   eleccion: eleccionExterna,
   onCambiarEleccion,
+  subregionSel = null,
+  onSelectSubregion,
 }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
@@ -688,6 +693,13 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
 
     // Comuna abierta: solo sus barrios y veredas
     const verSoloComuna = currentLevel === 'comunas-barrios' && comunaFiltroId;
+    // Vista de subregiones con una elegida: sus municipios resaltados y los demás atenuados
+    const enSubregiones = currentLevel === 'departamental' && antioquiaViewMode === 'subregiones' && !!onSelectSubregion
+      && (!selectedDepartmentName || selectedDepartmentName.toLowerCase() === 'antioquia');
+    const opacidadBase = (f: TerritoryGeoFeature) => {
+      if (!enSubregiones || !subregionSel) return 0.32;
+      return (f.properties as { subregionId?: string }).subregionId === subregionSel ? 0.55 : 0.1;
+    };
     // Clic en una comuna abre sus barrios (solo municipios con nivel de comunas)
     const abreBarrios = (currentLevel === 'municipal' || currentLevel === 'hiperlocal') && activeMuni.nivelComunas && !!onSelectComuna;
 
@@ -792,7 +804,7 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
 
         return {
           fillColor: color,
-          fillOpacity: isSelected ? 0.65 : 0.32,
+          fillOpacity: isSelected ? 0.65 : opacidadBase(feature),
           color: isSelected ? '#ffffff' : color,
           weight: isSelected ? 3 : 1.2,
           dashArray: '',
@@ -842,7 +854,7 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
                 : getFeatureColor(feature);
               l.setStyle({
                 fillColor: color,
-                fillOpacity: isSelected ? 0.65 : 0.32,
+                fillOpacity: isSelected ? 0.65 : opacidadBase(feature),
                 color: isSelected ? '#ffffff' : color,
                 weight: isSelected ? 3 : 1.2,
                 dashArray: ''
@@ -854,6 +866,16 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
             // Comuna: abrir sus barrios (el encuadre lo hace el cambio de escala)
             if (abreBarrios) {
               onSelectComuna!(feature);
+              return;
+            }
+
+            // Vista de subregiones: el primer clic elige la subregión (filtra puestos, ficha y
+            // contenido); un clic en un municipio de la subregión ya elegida lo abre
+            const idSub = (p as { subregionId?: string }).subregionId;
+            if (enSubregiones && idSub && idSub !== subregionSel) {
+              onSelectSubregion!({ id: idSub, nombre: String(p.subregion ?? SubregionAggregationEngine.getSubregionMeta(idSub).name) });
+              const b = SubregionAggregationEngine.getSubregionBounds(idSub);
+              if (b) map.flyToBounds(b, { duration: 1.0, padding: [30, 30] });
               return;
             }
 
@@ -926,7 +948,9 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
             ${asignacion?.porTerritorio[String(feature.id)] ? `<div style="color: #34d399; margin-top: 2px;">Censo en sus puestos: ${asignacion.porTerritorio[String(feature.id)].censo.toLocaleString('es-CO')} · ${asignacion.porTerritorio[String(feature.id)].puestos} puestos</div>` : ''}
             ${abreBarrios
               ? '<div style="color: #34d399; font-size: 9px; margin-top: 3px;">Clic para ver sus barrios</div>'
-              : (p.isInteractiveTarget || currentLevel === 'nacional') ? '<div style="color: #34d399; font-size: 9px; margin-top: 3px;">✨ Clic para hacer zoom</div>' : ''}
+              : enSubregiones
+                ? `<div style="color: #34d399; font-size: 9px; margin-top: 3px;">${(p as { subregionId?: string }).subregionId === subregionSel ? 'Clic para abrir el municipio' : `Clic para elegir la subregión ${escapeHtml(String(p.subregion ?? ''))}`}</div>`
+                : (p.isInteractiveTarget || currentLevel === 'nacional') ? '<div style="color: #34d399; font-size: 9px; margin-top: 3px;">✨ Clic para hacer zoom</div>' : ''}
           </div>`,
           { sticky: true, className: 'leaflet-glass-tooltip' }
         );
@@ -957,7 +981,7 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
       }
     }
 
-  }, [currentLevel, activeLayer, searchQuery, selectedFeature, antioquiaViewMode, selectedDepartmentName, customDeptDataset, usesCustomMuni, customMuniDataset, asignacion, economiaLista, eleccionCapa, indiceGanadores, ganadorTerritorio, comunaFiltroId, onSelectComuna, divisionesMuni, escalaCapa, metricaActiva, demografiaLista]);
+  }, [currentLevel, activeLayer, searchQuery, selectedFeature, antioquiaViewMode, selectedDepartmentName, customDeptDataset, usesCustomMuni, customMuniDataset, asignacion, economiaLista, eleccionCapa, indiceGanadores, ganadorTerritorio, comunaFiltroId, onSelectComuna, divisionesMuni, escalaCapa, metricaActiva, demografiaLista, subregionSel, onSelectSubregion]);
 
   // Leyenda honesta: cuántos territorios de la escala actual no tienen dato de partido
   // (se pintan con el color de su agrupación territorial, no con un color de partido)
@@ -1027,7 +1051,7 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
           {(!selectedDepartmentName || selectedDepartmentName.toLowerCase() === 'antioquia') ? (
             <>
               <button
-                onClick={() => setAntioquiaViewMode('subregiones')}
+                onClick={() => { setAntioquiaViewMode('subregiones'); onSelectSubregion?.(null); }}
                 className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${
                   antioquiaViewMode === 'subregiones'
                     ? 'bg-sky-500/35 text-white border border-sky-400/60 shadow-[0_0_12px_rgba(56,189,248,0.4)]'
@@ -1038,7 +1062,7 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
                 9 Subregiones Agregadas
               </button>
               <button
-                onClick={() => setAntioquiaViewMode('municipios')}
+                onClick={() => { setAntioquiaViewMode('municipios'); onSelectSubregion?.(null); }}
                 className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${
                   antioquiaViewMode === 'municipios'
                     ? 'bg-emerald-500/35 text-emerald-200 border border-emerald-400/60 shadow-[0_0_12px_rgba(52,211,153,0.4)]'

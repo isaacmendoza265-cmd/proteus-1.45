@@ -76,6 +76,8 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
   const [selectedMunicipalityId, setSelectedMunicipalityId] = useState<string>('medellin');
   // Comuna abierta: el nivel de barrios muestra solo los suyos
   const [comunaAbierta, setComunaAbierta] = useState<{ id: string; name: string } | null>(null);
+  // Subregión elegida en la vista de subregiones de Antioquia (filtra puestos y contenido)
+  const [subregionSel, setSubregionSel] = useState<{ id: string; nombre: string } | null>(null);
   const handleSelectComuna = useCallback((feature: TerritoryGeoFeature) => {
     setComunaAbierta({ id: String(feature.id), name: feature.properties.name });
     setSelectedFeature(feature);
@@ -111,11 +113,11 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
   // Generador de contenido: territorio elegido en el mapa ("General" si no hay) y los puestos de la ficha
   const seleccionContenido = useMemo(() => {
     const isMunicipal = currentLevel === 'municipal' || currentLevel === 'hiperlocal' || currentLevel === 'comunas-barrios';
-    if (!selectedFeature && !isMunicipal) return SELECCION_GENERAL;
+    if (!selectedFeature && !isMunicipal) return subregionSel ? { ...SELECCION_GENERAL, subregion: subregionSel.nombre } : SELECCION_GENERAL;
     const id = selectedFeature ? String(selectedFeature.id) : null;
     const dane = selectedFeature ? ((selectedFeature.properties as { daneCode?: string }).daneCode ?? /(\d{5})$/.exec(id!)?.[1] ?? null) : null;
     return seleccionDesdeMapa({ featureId: id, featureName: selectedFeature?.properties.name, muniId: isMunicipal ? selectedMunicipalityId : null, dane });
-  }, [selectedFeature, currentLevel, selectedMunicipalityId]);
+  }, [selectedFeature, currentLevel, selectedMunicipalityId, subregionSel]);
   const puestosDeFicha = useMemo(
     () => (fichaTerritorio ? { territorioId: fichaTerritorio.id, codigosResultados: codigosResultadosFicha, codigos2026: puestosFicha.map((p) => p.codPuesto) } : null),
     [fichaTerritorio, codigosResultadosFicha, puestosFicha],
@@ -163,6 +165,7 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
     }
     setCurrentLevel(targetLevel);
     setComunaAbierta(null);
+    if (targetLevel !== 'departamental') setSubregionSel(null);
     setSearchQuery(''); // el filtro de un nivel no aplica al siguiente (ocultaría sus barrios)
     // Find target feature if exists in new dataset
     const nextDataset = GEOJSON_LAYERS_BY_ZOOM[targetLevel];
@@ -176,6 +179,7 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
   const handleSelectLevel = (level: ZoomLevelId) => {
     // Volver a "Barrios" desde la misma escala conserva la comuna abierta
     if (level !== currentLevel) setComunaAbierta(null);
+    if (level !== 'departamental') setSubregionSel(null);
     setCurrentLevel(level);
     setSelectedFeature(null);
   };
@@ -183,6 +187,7 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
   // Reset to National view
   const handleResetToNational = () => {
     setComunaAbierta(null);
+    setSubregionSel(null);
     setCurrentLevel('nacional');
     setSelectedFeature(null);
     setSelectedDepartmentName('Antioquia');
@@ -243,7 +248,7 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
       <MapBreadcrumb
         currentLevel={currentLevel}
         onSelectLevel={handleSelectLevel}
-        selectedFeatureName={selectedFeature ? selectedFeature.properties.name : null}
+        selectedFeatureName={selectedFeature ? selectedFeature.properties.name : currentLevel === 'departamental' && subregionSel ? `Subregión ${subregionSel.nombre}` : null}
         selectedDepartmentName={selectedDepartmentName}
         selectedMunicipalityName={MUNICIPAL_DIVISIONS_REGISTRY[selectedMunicipalityId]?.name}
         selectedComunaName={currentLevel === 'comunas-barrios' ? comunaAbierta?.name : undefined}
@@ -282,6 +287,8 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
             onSelectComuna={handleSelectComuna}
             eleccion={eleccion}
             onCambiarEleccion={setEleccion}
+            subregionSel={subregionSel?.id ?? null}
+            onSelectSubregion={setSubregionSel}
           />
         </div>
 
@@ -330,6 +337,9 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
         currentLevel={currentLevel}
         selectedDepartmentName={selectedDepartmentName}
         selectedMunicipalityId={selectedMunicipalityId}
+        selectedFeature={selectedFeature}
+        comunaAbiertaId={currentLevel === 'comunas-barrios' ? comunaAbierta?.id ?? null : null}
+        subregion={currentLevel === 'departamental' ? subregionSel : null}
       />
 
       {/* 4.5. Fast Campaign Bridge Banner (Conexión Directa con Generador de Contenido y Segmentación) */}
