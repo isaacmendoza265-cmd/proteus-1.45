@@ -70,3 +70,6 @@ pnpm-lock.yaml
 muestras_diseno/
 # Archivos que la app de Claude guarda al enviar resultados al chat
 Claude outputs/
+
+# Paquetes git (se aplican con git fetch, no se suben)
+*.bundle
