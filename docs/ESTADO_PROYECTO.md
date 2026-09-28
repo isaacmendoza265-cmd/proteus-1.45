@@ -29,9 +29,21 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
   suprimido) en `public/modulos/voto-correlaciones/`. Vista Electorado › Encuestas 2026 con la estética cívica
   (tema claro/oscuro) y, debajo del mapa, "Encuestas y urnas": acumulado de la fase previa a cada elección
   (Senado, 1.ª y 2.ª vuelta) frente al resultado oficial del municipio o de Antioquia, con IC 95 %.
+- **Identidad del candidato** (28-sep, rama `claude/identidad`): Ajustes › Identidad del candidato reescrita en
+  nueve bloques (ficha, posicionamiento, voz y oratoria, imagen, límites, canales, equipo, referentes, privacidad),
+  guardado automático, completitud por bloque y vista de "lo que Proteus le dice a la IA". El generador de contenido
+  ya usa la identidad completa (`identidadParaIA`); los campos viejos del perfil se sincronizan (`sincronizarLegado`).
+  Dentro de la misma ventana: **Análisis de piezas** (imagen, video, audio, texto, YouTube) con capa *Medido* en el
+  navegador (paleta k-means en CIELAB, ΔE2000 contra la paleta de marca, WCAG, temperatura, tercios, cortes por
+  histograma) y capa *Estimado* con Gemini 3.8 vía `/api/piezas/analizar` y `/api/piezas/subir` (Files API), y el
+  **Libro de reglas v1.0** (`src/data/analisisPiezas/libroDeReglas.ts`): 11 principios, escala 1-5, 8 dimensiones y
+  36 criterios anclados, esquema JSON de respuesta; el puntaje global lo calcula Proteus.
 - Verificación al último commit (`f0b3769`): tsc limpio en `src/`, 211 pruebas, build OK.
 
 ## 2. Decisiones de Isaac (respetarlas)
+- 28-sep: el análisis de video, oratoria, composición y colorimetría con Gemini 3.8 **no es un módulo independiente**:
+  depende de Ajustes › Identidad del candidato. Libertad para definir las características personalizables, el libro de
+  reglas de Gemini y otros bloques de personalización.
 - Seguridad y etapa 2 (social listening, encuestas propias): aplazados.
 - 27-sep: integrar el módulo de encuestas CNE 2026 (`voto-correlaciones`, de la aplicación modular de encuestas)
   "de forma orgánica y útil" (libertad de diseño). Encuestas CNE a municipio o departamento, nunca a barrio (reglamento v1.2).
@@ -65,6 +77,12 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
   el lienzo "Proteus — página de inicio" de claude.ai. Siempre oscura, con figuras 3D de mapas reales.
 
 ## 3. Pendientes (en orden sugerido)
+0000. **Análisis de piezas con Gemini**: listo pero sin probar con Gemini real (la clave del servidor sigue en 403).
+   Al arreglarla, validar con 3-4 piezas reales (una imagen, un video propio, uno de YouTube, un texto) y ajustar el
+   libro. Cuando Isaac cargue la Capa 3 del marco (retórica y creación), integrar sus reglas al libro (sube la versión).
+   Deuda: `CandidateProfileManager`/`CandidateVideoAnalyzer`/`CandidateProfileModal` aún llaman a Gemini desde el
+   navegador con la clave incrustada por Vite (`process.env.GEMINI_API_KEY`); ya no se usan desde Ajustes, pero la
+   clave sigue en el bundle mientras `vite.config.ts` la defina. Migrar lo que falte al servidor y quitar el `define`.
 000. **Marco metodológico, bloques siguientes**: Isaac los subirá por partes. Capa 1: dossiers de las familias
    1 (temporal), 2 (mismo ciclo) y 3 (ecológica); capas 2, 3 y 4 vacías. Ingesta: `scripts/ingestar_marco.mjs`.
    Reglas del reglamento v1.2 que la app aún no cumple del todo (a revisar con Isaac): regla 5 (los puestos con
@@ -104,6 +122,11 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
   `territoryProfileService.ts`; ficha: `src/components/territorio/`.
 
 ## 5. Bitácora (agregar arriba lo más reciente)
+- 28-sep (Claude Opus, `claude/identidad`): Identidad del candidato (9 bloques) + Análisis de piezas + Libro de reglas v1.0.
+  Archivos: `src/services/identidad/identidad.ts`, `src/services/analisisPiezas/{medicion,pieza,analisis}.ts`,
+  `src/data/analisisPiezas/libroDeReglas.ts`, `src/modules/identidad/*`, rutas `/api/piezas/*` en `server.ts`.
+  Probado en navegador con imagen y video de prueba (cortes detectados en 00:03 y 00:06) y con una respuesta de
+  Gemini simulada para la vista interpretada. 253 pruebas (ΔE2000 contra los pares de Sharma et al.), build OK.
 - 28-sep (Claude Opus, rama `claude/inicio`): nueva página de Inicio "noche cívica" en forma de esquema (fuentes →
   proceso → organización → qué ofrece), con dos figuras 3D de geometría real: Antioquia con una columna por municipio
   (altura = censo 2026) y las capas del territorio apiladas. `src/modules/inicio/InicioView.tsx`; figuras con

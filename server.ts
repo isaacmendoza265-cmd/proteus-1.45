@@ -3,6 +3,8 @@ import path from 'path';
 import { createServer as createViteServer } from 'vite';
 import { GoogleGenAI } from '@google/genai';
 import dotenv from 'dotenv';
+import fs from 'fs';
+import os from 'os';
 
 dotenv.config();
 
@@ -275,6 +277,99 @@ async function startServer() {
             ? 'Se agotó la cuota de Gemini. Intenta más tarde.'
             : 'No se pudo generar el contenido.';
       res.status(status).json({ error: `${motivo} (${status}${detalle ? `: ${detalle}` : ''})` });
+    }
+  });
+
+  // Análisis de piezas (Ajustes › Identidad del candidato › Análisis de piezas). El cliente manda el libro de
+  // reglas (sistema), la instrucción con la identidad y las mediciones, el esquema JSON y la pieza: un enlace
+  // público de YouTube, un archivo pequeño en base64 o un archivo ya subido con /api/piezas/subir.
+  const MODELO_PIEZAS = 'gemini-3.8-flash';
+  const errorGemini = (err: any, contexto: string) => {
+    let status = Number(err?.status) || 500;
+    let detalle = String(err?.message || '');
+    try {
+      const g = JSON.parse(detalle)?.error;
+      if (g) { status = Number(g.code) || status; detalle = `${g.status ?? ''} ${g.message ?? ''}`.trim(); }
+    } catch { /* el mensaje no era JSON */ }
+    const motivo =
+      status === 401 || status === 403
+        ? 'Google rechazó la clave de Gemini del servidor (sin permiso). Revisa GEMINI_API_KEY en .env y que el proyecto de Google AI Studio tenga acceso a la API.'
+        : status === 429 ? 'Se agotó la cuota de Gemini. Intenta más tarde.' : contexto;
+    return { status, error: `${motivo} (${status}${detalle ? `: ${detalle}` : ''})` };
+  };
+
+  // Archivos grandes (video): se reciben en binario y se suben a la Files API de Gemini
+  app.post('/api/piezas/subir', express.raw({ type: 'application/octet-stream', limit: '2gb' }), async (req, res) => {
+    const mimeType = String(req.headers['x-mime-type'] || '');
+    if (!/^(video|audio|image)\//.test(mimeType) || !Buffer.isBuffer(req.body) || !req.body.length) {
+      res.status(400).json({ error: 'Falta el archivo o su tipo (video, audio o imagen).' });
+      return;
+    }
+    const tmp = path.join(os.tmpdir(), `proteus-pieza-${Date.now()}`);
+    try {
+      fs.writeFileSync(tmp, req.body);
+      const ai = getGenAI(req.headers['x-gemini-api-key'] as string | undefined);
+      let f = await ai.files.upload({ file: tmp, config: { mimeType } });
+      // Gemini procesa el video antes de poder usarlo
+      for (let i = 0; i < 90 && f.state === 'PROCESSING' && f.name; i++) {
+        await new Promise((r) => setTimeout(r, 2000));
+        f = await ai.files.get({ name: f.name });
+      }
+      if (f.state !== 'ACTIVE') throw Object.assign(new Error(`El archivo quedó en estado ${f.state}.`), { status: 502 });
+      res.json({ uri: f.uri, mimeType: f.mimeType ?? mimeType, nombre: f.name });
+    } catch (err: any) {
+      console.error('Error en /api/piezas/subir:', err);
+      const e = errorGemini(err, 'No se pudo subir el archivo a Gemini.');
+      res.status(e.status).json({ error: e.error });
+    } finally {
+      fs.rm(tmp, { force: true }, () => undefined);
+    }
+  });
+
+  app.post('/api/piezas/analizar', async (req, res) => {
+    try {
+      const { sistema, instruccion, esquema, youtubeUrl, archivo, subido } = req.body ?? {};
+      if (typeof sistema !== 'string' || typeof instruccion !== 'string' || !esquema || typeof esquema !== 'object') {
+        res.status(400).json({ error: 'Faltan el libro de reglas, la instrucción o el esquema.' });
+        return;
+      }
+      if (sistema.length > 40_000 || instruccion.length > 20_000) {
+        res.status(400).json({ error: 'La instrucción es demasiado larga.' });
+        return;
+      }
+      const partes: any[] = [];
+      if (typeof youtubeUrl === 'string' && youtubeUrl.trim()) {
+        if (!/^https:\/\/(www\.|m\.)?(youtube\.com\/(watch\?v=|shorts\/)|youtu\.be\/)[\w-]{6,}/.test(youtubeUrl.trim())) {
+          res.status(400).json({ error: 'El enlace debe ser un video público de YouTube.' });
+          return;
+        }
+        partes.push({ fileData: { fileUri: youtubeUrl.trim(), mimeType: 'video/*' } });
+      } else if (subido && typeof subido.uri === 'string') {
+        partes.push({ fileData: { fileUri: subido.uri, mimeType: String(subido.mimeType || 'video/mp4') } });
+      } else if (archivo && typeof archivo.base64 === 'string' && /^(image|video|audio)\//.test(String(archivo.mimeType))) {
+        partes.push({ inlineData: { data: archivo.base64, mimeType: archivo.mimeType } });
+      } else if (!instruccion.includes('TEXTO DE LA PIEZA')) {
+        res.status(400).json({ error: 'Falta la pieza: enlace de YouTube, archivo o texto.' });
+        return;
+      }
+      partes.push({ text: instruccion });
+      const ai = getGenAI(req.headers['x-gemini-api-key'] as string | undefined);
+      const r = await ai.models.generateContent({
+        model: MODELO_PIEZAS,
+        contents: [{ role: 'user', parts: partes }],
+        config: { systemInstruction: sistema, responseMimeType: 'application/json', responseJsonSchema: esquema, temperature: 0.2 },
+      });
+      const texto = r.text ?? '';
+      let analisis: unknown;
+      try { analisis = JSON.parse(texto); } catch {
+        res.status(502).json({ error: 'Gemini no devolvió un JSON válido.', texto });
+        return;
+      }
+      res.json({ analisis, modelo: MODELO_PIEZAS, uso: r.usageMetadata ?? null });
+    } catch (err: any) {
+      console.error('Error en /api/piezas/analizar:', err);
+      const e = errorGemini(err, 'No se pudo analizar la pieza.');
+      res.status(e.status).json({ error: e.error });
     }
   });
 

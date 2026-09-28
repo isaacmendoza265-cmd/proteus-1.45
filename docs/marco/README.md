@@ -36,3 +36,8 @@ El marco se organiza en **4 capas** (diagrama en `src/data/marco/capa0/diagrama-
 | `dossier-familia-4-arrastre` | 1 | Dossier Proteus Capa 1 — Familia 4 Arrastre.docx | 15 fichas de fuentes, enunciados portables y locales, debates y vacíos |
 
 Capas 2, 3 y 4: listas para recibir bloques, sin contenido todavía.
+
+**Relación con el libro de reglas del análisis de piezas** (`src/data/analisisPiezas/libroDeReglas.ts`, v1.0): es la
+versión provisional de Proteus para la retórica y la creación (lo que corresponde a la Capa 3). Recibe las reglas del
+piso 3 del reglamento vigente y declara que el reglamento prevalece. Cuando se cargue la Capa 3, sus reglas se integran
+al libro y sube su versión.

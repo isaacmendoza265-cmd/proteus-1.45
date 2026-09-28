@@ -91,6 +91,8 @@ export interface CandidateProfile {
   photosBase64?: string[];
   uploadedFileName?: string;
   videoAnalysisData?: VideoAnalysisResult;
+  /** Identidad completa (Ajustes › Identidad del candidato); los campos de arriba se sincronizan desde ella */
+  identidad?: import('../services/identidad/identidad').IdentidadCandidato;
   updatedAt?: string;
 }
 

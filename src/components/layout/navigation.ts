@@ -68,10 +68,10 @@ export const MODULES: ModuleDef[] = [
   },
   { id: 'diae', label: 'Día E', descripcion: 'Auditoría de actas E-14 y E-24 y reclamaciones.', icon: ShieldCheck, vistas: [{ id: 'electoral-audit-forensics', label: 'Auditoría E-14 / E-24' }] },
   {
-    id: 'ajustes', label: 'Ajustes', descripcion: 'Perfil del candidato, identidad visual, marco metodológico y herramientas técnicas.', icon: SlidersHorizontal,
+    id: 'ajustes', label: 'Ajustes', descripcion: 'La identidad del candidato, a la que se ajusta todo Proteus, con el análisis de piezas y su libro de reglas; el marco metodológico y las herramientas técnicas.', icon: SlidersHorizontal,
     vistas: [
-      { id: 'national-candidates', label: 'Perfil del candidato' },
-      { id: 'brand-manual', label: 'Identidad visual' },
+      { id: 'national-candidates', label: 'Identidad del candidato' },
+      { id: 'brand-manual', label: 'Marca Proteus' },
       { id: 'marco-metodologico', label: 'Marco metodológico' },
       { id: 'antigravity-console', label: 'Consola técnica' },
     ],

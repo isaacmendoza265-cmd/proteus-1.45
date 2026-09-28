@@ -13,7 +13,7 @@ const InicioView = lazy(() => import('./modules/inicio/InicioView').then((m) => 
 
 // National Views
 const NationalDashboardView = lazy(() => import('./modules/national/NationalDashboardView').then((m) => ({ default: m.NationalDashboardView })));
-import { CandidateProfilesView } from './modules/national/CandidateProfilesView';
+const IdentidadCandidatoView = lazy(() => import('./modules/identidad/IdentidadCandidatoView').then((m) => ({ default: m.IdentidadCandidatoView })));
 const Encuestas2026View = lazy(() => import('./modules/electorado/Encuestas2026View').then((m) => ({ default: m.Encuestas2026View })));
 const CampaignToolsView = lazy(() => import('./modules/national/CampaignToolsView').then((m) => ({ default: m.CampaignToolsView })));
 
@@ -45,7 +45,6 @@ import {
   CandidateProfile, 
   DEFAULT_ISAAC_MENDOZA_PROFILE 
 } from './components/CandidateProfileManager';
-import { CandidateProfileModal } from './components/CandidateProfileModal';
 
 // Google Drive Service
 import { googleDriveService } from './services/googleDriveService';
@@ -54,7 +53,6 @@ const STORAGE_PROFILE_KEY = "cmt_proteus_active_profile";
 
 export default function App() {
   const [currentView, setCurrentView] = useState<NavViewId>('inicio');
-  const [candidateModalOpen, setCandidateModalOpen] = useState(false);
   // Encuestas 2026 abiertas desde el mapa, ya situadas en un territorio
   const [seleccionEncuestas, setSeleccionEncuestas] = useState<SeleccionEncuestas | null>(null);
   
@@ -98,7 +96,7 @@ export default function App() {
       currentView={currentView} 
       onSelectView={setCurrentView}
       candidateName={candidateProfile.nombre}
-      onOpenCandidateModal={() => setCandidateModalOpen(true)}
+      onOpenCandidateModal={() => setCurrentView('national-candidates')}
     >
       {/* Cada módulo se descarga solo cuando se abre (carga diferida) */}
       <ErrorBoundary resetKey={currentView}>
@@ -111,11 +109,7 @@ export default function App() {
       )}
 
       {currentView === 'national-candidates' && (
-        <CandidateProfilesView
-          candidateProfile={candidateProfile}
-          onSaveProfile={handleSaveProfile}
-          onNavigateToView={(view) => setCurrentView(view)}
-        />
+        <IdentidadCandidatoView candidateProfile={candidateProfile} onSaveProfile={handleSaveProfile} />
       )}
 
       {currentView === 'encuestas-2026' && (
@@ -228,15 +222,6 @@ export default function App() {
         <MarcoMetodologicoView />
       )}
 
-      {/* Global Candidate Customization Modal */}
-      {candidateModalOpen && (
-        <CandidateProfileModal
-          isOpen={candidateModalOpen}
-          candidateProfile={candidateProfile}
-          onSaveProfile={handleSaveProfile}
-          onClose={() => setCandidateModalOpen(false)}
-        />
-      )}
       </Suspense>
       </ErrorBoundary>
     </AppShell>

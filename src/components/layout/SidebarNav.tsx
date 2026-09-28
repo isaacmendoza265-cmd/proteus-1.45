@@ -61,7 +61,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({ currentView, onSelectVie
         {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
         {!collapsed && <span>Contraer</span>}
       </button>
-      <button onClick={onOpenCandidateModal} className={`flex items-center gap-2.5 pt-3 mt-1 border-t border-[var(--c-border)] text-left ${collapsed ? 'justify-center' : 'px-2'}`} title="Perfil del candidato">
+      <button onClick={onOpenCandidateModal} className={`flex items-center gap-2.5 pt-3 mt-1 border-t border-[var(--c-border)] text-left ${collapsed ? 'justify-center' : 'px-2'}`} title="Identidad del candidato">
         <span className="w-8 h-8 shrink-0 rounded-full bg-[var(--c-accent-soft)] text-[var(--c-accent-text)] flex items-center justify-center text-xs font-bold">{iniciales(candidateName)}</span>
         {!collapsed && (
           <span className="flex flex-col min-w-0">

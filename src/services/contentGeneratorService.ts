@@ -26,6 +26,7 @@ import {
 } from './territoryProfileService';
 import { valorDemografico } from './mapColorService';
 import { reglasPiso3 } from './marcoService';
+import { identidadParaIA, type IdentidadCandidato } from './identidad/identidad';
 
 // --- Medios y tipos de pieza ------------------------------------------------------------------
 
@@ -265,6 +266,8 @@ export interface PerfilCandidato {
   estiloComunicacion?: string;
   ejeTematicoComodo?: string;
   quEvitar?: string;
+  /** Identidad completa: si está, reemplaza los campos sueltos de arriba */
+  identidad?: IdentidadCandidato;
 }
 
 export const SISTEMA_CONTENIDO = [
@@ -292,7 +295,7 @@ export function armarInstruccion(args: {
     `PIEZA: ${args.tipo.nombre} para ${args.medio.nombre}.`,
     `FORMATO: ${args.tipo.formato}`,
     `TERRITORIO: ${nombreSeleccion(args.sel)}.`,
-    c ? `CANDIDATO: ${c.nombre}${c.afiliacionPartidista ? ` (${c.afiliacionPartidista})` : ''}.${c.tonoNarrativo ? ` Tono: ${c.tonoNarrativo}.` : ''}${c.estiloComunicacion ? ` Estilo: ${c.estiloComunicacion}.` : ''}${c.ejeTematicoComodo ? ` Temas fuertes: ${c.ejeTematicoComodo}.` : ''}${c.quEvitar ? ` Evitar: ${c.quEvitar}.` : ''}` : 'CANDIDATO: sin perfil cargado; escribe en primera persona del plural ("proponemos").',
+    c?.identidad ? `IDENTIDAD DEL CANDIDATO (ajusta la voz, el léxico y los límites a esto):\n${identidadParaIA(c.identidad)}` : c ? `CANDIDATO: ${c.nombre}${c.afiliacionPartidista ? ` (${c.afiliacionPartidista})` : ''}.${c.tonoNarrativo ? ` Tono: ${c.tonoNarrativo}.` : ''}${c.estiloComunicacion ? ` Estilo: ${c.estiloComunicacion}.` : ''}${c.ejeTematicoComodo ? ` Temas fuertes: ${c.ejeTematicoComodo}.` : ''}${c.quEvitar ? ` Evitar: ${c.quEvitar}.` : ''}` : 'CANDIDATO: sin perfil cargado; escribe en primera persona del plural ("proponemos").',
     `TEMA O MENSAJE: ${args.tema.trim() || 'libre: elige el más pertinente para este territorio según los datos.'}`,
     'DATOS (con su fuente):',
     ...args.datos.map((d) => `- ${d}`),
