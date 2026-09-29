@@ -1,0 +1,14 @@
+node_modules
+dist
+.git
+.env
+.env.*
+!.env.example
+_originales
+_archivo
+SUBIR_A_GITHUB
+muestras_diseno
+temp_*
+*.zip
+*.pdf
+*.bundle
