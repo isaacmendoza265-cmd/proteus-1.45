@@ -966,10 +966,10 @@ Diseña un BRIEF ESTRATÉGICO DE ALTO IMPACTO estructurado exactamente en los si
                     <button
                       onClick={handleSaveDrive}
                       className="min-h-8 px-2 rounded-lg border border-[var(--c-border)] bg-[var(--c-surface)] text-[var(--c-muted)] hover:text-[var(--c-ink)] transition flex items-center gap-1 text-xs"
-                      title="Guardar en Google Drive"
+                      title="Guardar en Archivos guardados"
                     >
                       <Save className="w-3.5 h-3.5" />
-                      <span className="hidden sm:inline">{savedSuccess ? 'Guardado' : 'Drive'}</span>
+                      <span className="hidden sm:inline">{savedSuccess ? 'Guardado' : 'Guardar'}</span>
                     </button>
                   )}
                 </div>

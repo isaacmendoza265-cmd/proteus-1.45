@@ -5,7 +5,10 @@ import { GoogleGenAI } from '@google/genai';
 import dotenv from 'dotenv';
 import fs from 'fs';
 import os from 'os';
-import { exigirAcceso } from './src/server/acceso';
+import { PrismaClient } from '@prisma/client';
+import { asegurarAdmin, crearSesiones } from './src/server/sesion';
+import { rutasUsuarios } from './src/server/usuarios';
+import { rutasDatos } from './src/server/datos';
 import { limitarPeticiones, MODELOS_PERMITIDOS } from './src/server/limite';
 
 dotenv.config();
@@ -14,8 +17,28 @@ async function startServer() {
   const app = express();
   const PORT = Number(process.env.PORT) || 3000;
 
-  const acceso = exigirAcceso(process.env.PROTEUS_USUARIO, process.env.PROTEUS_CLAVE);
-  if (acceso) app.use(acceso);
+  const produccion = process.env.NODE_ENV === 'production';
+  if (!process.env.DATABASE_URL || !process.env.JWT_SECRET) {
+    throw new Error('Faltan DATABASE_URL y/o JWT_SECRET en las variables de entorno (ver .env.example).');
+  }
+  const prisma = new PrismaClient();
+  await asegurarAdmin(prisma, process.env.ADMIN_EMAIL, process.env.ADMIN_CLAVE);
+  const sesiones = crearSesiones(prisma, process.env.JWT_SECRET, { cookiesSeguras: produccion });
+
+  // Detrás de Cloudflare: quien entra por http:// se manda a https:// (la cookie de sesión es Secure)
+  app.use((req, res, next) => {
+    if (produccion && String(req.headers['cf-visitor'] ?? '').includes('"http"')) {
+      res.redirect(301, `https://${req.headers.host}${req.originalUrl}`);
+      return;
+    }
+    next();
+  });
+
+  // Todo exige sesión salvo /api/health, /api/health/ready y el login
+  app.use(sesiones.exigirSesion);
+  app.use('/api/auth', sesiones.router);
+  app.use('/api/usuarios', rutasUsuarios(prisma));
+  app.use('/api/datos', rutasDatos(prisma));
 
   app.use(express.json({ limit: '15mb' }));
   // Cada llamada a estas rutas gasta cuota de Gemini: 20 por minuto por cliente
@@ -82,9 +105,17 @@ async function startServer() {
     }
   }
 
-  // Health check
+  // Health check: /api/health = el proceso vive (lo usa Coolify); /api/health/ready = además llega a la base
   app.get('/api/health', (_req, res) => {
     res.json({ status: 'ok', timestamp: new Date().toISOString() });
+  });
+  app.get('/api/health/ready', async (_req, res) => {
+    try {
+      await prisma.$queryRaw`SELECT 1`;
+      res.json({ status: 'ok', db: 'ok' });
+    } catch (err: any) {
+      res.status(503).json({ status: 'error', db: String(err?.message ?? err).slice(0, 200) });
+    }
   });
 
   // ==========================================
@@ -449,4 +480,7 @@ async function startServer() {
   });
 }
 
-startServer();
+startServer().catch((err) => {
+  console.error("No se pudo arrancar el servidor:", err);
+  process.exit(1);
+});

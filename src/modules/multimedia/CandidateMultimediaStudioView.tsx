@@ -229,7 +229,7 @@ Realiza una AUDITORÍA INTEGRAL DE IMAGEN POLÍTICA Y COLORIMETRÍA para este ca
                     onClick={() => onSaveToDrive(`Colorimetria_${candidateProfile.nombre}`, { report: imageAnalysisResult })}
                     className="min-h-8 px-3 rounded-md border border-[var(--c-border)] bg-[var(--c-surface)] font-semibold text-xs"
                   >
-                    Guardar en Drive
+                    Guardar
                   </button>
                 )}
               </div>

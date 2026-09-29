@@ -1,0 +1,80 @@
+// Base de datos de Proteus: solo lo que produce el equipo (usuarios, perfil del candidato, piezas y
+// archivos guardados). Los datos electorales y geográficos siguen siendo archivos del repo, generados
+// por scripts/ (ver docs/ESTADO_PROYECTO.md).
+// Migraciones: `npx prisma migrate dev --name <cambio>` en local; en producción el contenedor aplica
+// `prisma migrate deploy` al arrancar (Dockerfile).
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Rol {
+  ADMIN // gestiona usuarios
+  EQUIPO
+}
+
+model Usuario {
+  id               String    @id @default(uuid())
+  email            String    @unique
+  nombre           String
+  claveHash        String
+  rol              Rol       @default(EQUIPO)
+  activo           Boolean   @default(true)
+  intentosFallidos Int       @default(0)
+  bloqueadoHasta   DateTime?
+  ultimoIngreso    DateTime?
+  creadoEn         DateTime  @default(now())
+
+  sesiones Sesion[]
+}
+
+// Refresh tokens: se guarda solo su hash y se rotan en cada uso
+model Sesion {
+  id        String   @id @default(uuid())
+  usuarioId String
+  usuario   Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  tokenHash String   @unique
+  expira    DateTime
+  // Al rotar, la vieja queda 30 s en gracia para las peticiones que ya iban en paralelo
+  reemplazada Boolean @default(false)
+  creadoEn  DateTime @default(now())
+
+  @@index([usuarioId])
+}
+
+// Perfil del candidato activo (incluye su identidad). Una fila por clave; hoy solo 'activo'.
+model PerfilCandidato {
+  clave          String   @id
+  datos          Json
+  actualizadoEn  DateTime @updatedAt
+  actualizadoPor String?
+}
+
+// Análisis de piezas (Ajustes › Identidad del candidato › Análisis de piezas)
+model PiezaAnalizada {
+  id        String   @id
+  datos     Json
+  creadoEn  DateTime @default(now())
+  creadoPor String?
+
+  @@index([creadoEn])
+}
+
+// Briefs, análisis y reportes que los módulos guardan con "Guardar"
+model ArchivoGuardado {
+  id        String   @id @default(uuid())
+  nombre    String
+  categoria String
+  candidato String
+  contenido String
+  creadoEn  DateTime @default(now())
+  creadoPor String?
+
+  @@index([creadoEn])
+}

@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
-import { MapPin, Search, Moon, Sun, HardDrive } from 'lucide-react';
+import React from 'react';
+import { MapPin, Search, Moon, Sun, FolderOpen } from 'lucide-react';
 import { useActiveTerritory } from '../../services/activeTerritoryContextService';
-import { googleDriveService } from '../../services/googleDriveService';
 
 interface TopStatusBarProps {
-  onOpenDriveModal?: () => void;
+  onOpenArchivos?: () => void;
   onGoTerritorio?: () => void;
   onOpenSearch?: () => void;
   tema: 'claro' | 'oscuro';
@@ -12,9 +11,8 @@ interface TopStatusBarProps {
 }
 
 /** Barra superior: el territorio activo (común a todos los módulos), búsqueda global y tema */
-export const TopStatusBar: React.FC<TopStatusBarProps> = ({ onOpenDriveModal, onGoTerritorio, onOpenSearch, tema, onToggleTema }) => {
+export const TopStatusBar: React.FC<TopStatusBarProps> = ({ onOpenArchivos, onGoTerritorio, onOpenSearch, tema, onToggleTema }) => {
   const { activeTerritory: territory } = useActiveTerritory();
-  const [drive] = useState(() => googleDriveService.getAccount());
   return (
     <header className="proteus-civico h-16 shrink-0 px-6 md:px-8 flex items-center gap-3 border-b border-[var(--c-border)] bg-[var(--c-surface)] z-30">
       <span className="hidden md:inline text-xs font-semibold text-[var(--c-muted)]">Territorio activo</span>
@@ -29,9 +27,9 @@ export const TopStatusBar: React.FC<TopStatusBarProps> = ({ onOpenDriveModal, on
         <span className="grow text-left">Buscar módulo o vista</span>
         <kbd className="font-mono text-xs px-1.5 py-0.5 border border-[var(--c-border)] rounded">Ctrl K</kbd>
       </button>
-      {onOpenDriveModal && (
-        <button onClick={onOpenDriveModal} className="w-10 h-10 rounded-lg border border-[var(--c-border)] bg-[var(--c-bg)] flex items-center justify-center" aria-label={drive.isConnected ? 'Google Drive conectado' : 'Conectar Google Drive'} title={drive.isConnected ? 'Google Drive conectado' : 'Google Drive: sin conectar'}>
-          <HardDrive className={`w-4 h-4 ${drive.isConnected ? 'text-[var(--c-ok)]' : ''}`} strokeWidth={1.7} />
+      {onOpenArchivos && (
+        <button onClick={onOpenArchivos} className="w-10 h-10 rounded-lg border border-[var(--c-border)] bg-[var(--c-bg)] flex items-center justify-center" aria-label="Archivos guardados" title="Archivos guardados">
+          <FolderOpen className="w-4 h-4" strokeWidth={1.7} />
         </button>
       )}
       <button onClick={onToggleTema} className="w-10 h-10 rounded-lg border border-[var(--c-border)] bg-[var(--c-bg)] flex items-center justify-center" aria-label={tema === 'claro' ? 'Cambiar a tema oscuro' : 'Cambiar a tema claro'}>

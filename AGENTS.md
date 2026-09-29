@@ -18,6 +18,8 @@ Foco actual: **terminar Antioquia** (125 municipios). Resto del país (fases D y
 ## Reglas de datos (no negociables)
 - Honestidad: todo dato es Oficial, Estimado (con método) o Sin información. Nunca inventar ni simular
   cifras presentadas como reales. Nada de predicción de votos por dinero; nada de Ley de Benford.
+- Base de datos (PostgreSQL) solo para lo que produce el equipo (usuarios, perfil, piezas, archivos). Los datos
+  electorales y geográficos siguen siendo archivos generados por `scripts/`.
 - No guardar cédulas ni datos personales. No redistribuir crudos: van en `_originales/` (en .gitignore).
 - Cada dato derivado se genera con un script en `scripts/` (reproducible, con docstring de fuente y uso).
 - Descargas: antes de cada lote, pedir permiso a Isaac con archivo, fuente y tamaño.
@@ -31,6 +33,15 @@ Foco actual: **terminar Antioquia** (125 municipios). Resto del país (fases D y
 - Marco metodológico: todo análisis o pieza sigue el reglamento de interpretación vigente
   (`src/data/marco/capa1/reglamento-*.md`); si algo lo contradice, prevalece el reglamento. Los bloques nuevos
   se ingestan con `scripts/ingestar_marco.mjs` (ver `docs/marco/README.md`).
+
+## Producción (Coolify en Guarne)
+<!-- guarne-deploy -->
+- **https://polimetrics.app** — Coolify del data center de Network IA Solutions (`https://coolify-guarne.networksols.com.co`),
+  proyecto EMPRESA, app `proteus` (`d4y08fa3m5uhwvpmba5le0h3`), build pack Dockerfile, puerto 3000.
+- PostgreSQL 18 (recurso de Coolify). Las migraciones de `prisma/` se aplican al arrancar el contenedor.
+- Publicado por Cloudflare Tunnel (cuenta personal de Jose, túnel `guarne-personal`). Guía: `docs/DESPLIEGUE_COOLIFY.md`.
+- No hay Railway ni Cloud Run: si un documento antiguo lo dice, es histórico.
+<!-- /guarne-deploy -->
 
 ## Estilo
 - Interfaz y textos en español. Estética "sobrio cívico" (tokens `--c-*` en `src/index.css`).

@@ -856,7 +856,7 @@ Elabora un DIAGNÓSTICO PSICOGRÁFICO Y GUÍA DE ACCIÓN DE MICRO-TARGETING en 4
                 className="px-3.5 py-2 rounded-2xl bg-white/05 hover:bg-white/10 border border-white/15 text-slate-300 hover:text-white text-xs font-bold transition flex items-center gap-1.5"
               >
                 <Save className="w-3.5 h-3.5 text-sky-400" />
-                <span>Guardar en Drive</span>
+                <span>Guardar</span>
               </button>
             )}
 

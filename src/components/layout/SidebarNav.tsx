@@ -1,5 +1,6 @@
 import React from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, LogOut } from 'lucide-react';
+import { cerrarSesion, type UsuarioSesion } from '../../services/sesionCliente';
 import { MODULES, moduloDeVista, type NavViewId } from './navigation';
 
 export type { NavViewId } from './navigation';
@@ -11,11 +12,12 @@ interface SidebarNavProps {
   onToggleCollapse: () => void;
   candidateName?: string;
   onOpenCandidateModal?: () => void;
+  usuario?: UsuarioSesion | null;
 }
 
 const iniciales = (n: string) => n.split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]?.toUpperCase()).join('');
 
-export const SidebarNav: React.FC<SidebarNavProps> = ({ currentView, onSelectView, collapsed, onToggleCollapse, candidateName = 'Isaac Mendoza', onOpenCandidateModal }) => {
+export const SidebarNav: React.FC<SidebarNavProps> = ({ currentView, onSelectView, collapsed, onToggleCollapse, candidateName = 'Isaac Mendoza', onOpenCandidateModal, usuario }) => {
   const actual = moduloDeVista(currentView).id;
   const principales = MODULES.filter((m) => m.id !== 'ajustes');
   const ajustes = MODULES.find((m) => m.id === 'ajustes')!;
@@ -60,6 +62,10 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({ currentView, onSelectVie
       <button onClick={onToggleCollapse} className="flex items-center gap-3 min-h-10 px-3 rounded-lg text-sm text-[var(--c-muted)] hover:text-[var(--c-ink)]" aria-label={collapsed ? 'Expandir menú' : 'Contraer menú'}>
         {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
         {!collapsed && <span>Contraer</span>}
+      </button>
+      <button onClick={cerrarSesion} className="flex items-center gap-3 min-h-10 px-3 rounded-lg text-sm text-[var(--c-muted)] hover:text-[var(--c-ink)] text-left" title={usuario ? `Sesión de ${usuario.email}` : undefined} aria-label="Cerrar sesión">
+        <LogOut className="w-4 h-4 shrink-0" />
+        {!collapsed && <span className="min-w-0 truncate">Cerrar sesión{usuario ? ` · ${usuario.nombre}` : ''}</span>}
       </button>
       <button onClick={onOpenCandidateModal} className={`flex items-center gap-2.5 pt-3 mt-1 border-t border-[var(--c-border)] text-left ${collapsed ? 'justify-center' : 'px-2'}`} title="Identidad del candidato">
         <span className="w-8 h-8 shrink-0 rounded-full bg-[var(--c-accent-soft)] text-[var(--c-accent-text)] flex items-center justify-center text-xs font-bold">{iniciales(candidateName)}</span>

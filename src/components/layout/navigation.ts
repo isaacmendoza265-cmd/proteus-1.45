@@ -25,7 +25,8 @@ export type NavViewId =
   | 'antioquia-municipios'
   | 'antigravity-console'
   | 'brand-manual'
-  | 'marco-metodologico';
+  | 'marco-metodologico'
+  | 'usuarios';
 
 export type ModuleId = 'inicio' | 'territorio' | 'electorado' | 'contenido' | 'diae' | 'ajustes';
 
@@ -74,6 +75,7 @@ export const MODULES: ModuleDef[] = [
       { id: 'brand-manual', label: 'Marca Proteus' },
       { id: 'marco-metodologico', label: 'Marco metodológico' },
       { id: 'antigravity-console', label: 'Consola técnica' },
+      { id: 'usuarios', label: 'Usuarios y acceso' },
     ],
   },
 ];
