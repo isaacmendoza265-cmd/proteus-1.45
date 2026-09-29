@@ -77,6 +77,42 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
   el lienzo "Proteus — página de inicio" de claude.ai. Siempre oscura, con figuras 3D de mapas reales.
 
 ## 3. Pendientes (en orden sugerido)
+
+### Pendientes de Jose (Network IA Solutions) — anotados el 29-sep-2026
+1. **Login con landing page**, similar a la de Casa Korea (`Casa Korea/CasaKoreaProject/apps/web/src/pages/InicioPage.tsx`),
+   usando el prompt maestro `D:\Network IA Solutions\Clientes\dexprolaw\docs\PROMPT-MAESTRO-INICIO-PAGINA.md`
+   (pide un spec y un plan para una página "de 10.000 dólares", con animaciones de calidad cine; adaptarlo de
+   abogados a inteligencia electoral) y la skill `construyendo-landings-premium`.
+   Hoy el login es una página mínima servida por `src/server/sesion.ts` (`PAGINA_LOGIN`).
+2. **Rediseño con la skill `redisenando-interfaces-en-produccion`** (`D:\Notas super importantes\skills\redisenando-interfaces-en-produccion\SKILL.md`).
+   Proteus ya tiene tokens `--c-*` (sobrio cívico), pero muchos módulos viejos siguen con el estilo oscuro/cristal
+   (p. ej. `CandidateProfileManager`): unificar sin reescribir módulos que funcionan.
+3. **Arquitectura multi-tenant de verdad**: que cada cliente que compre el sistema (o que registremos nosotros) tenga
+   sus propios datos. Hoy la base es de **un solo inquilino**: un perfil `activo` y todos los usuarios ven todo.
+   A decidir en el diseño:
+   - Modelo `Organizacion` (campaña/cliente) y `organizacionId` en `Usuario`, `PerfilCandidato`, `PiezaAnalizada`,
+     `ArchivoGuardado` y en lo que venga (Gobernación, ajustes). Filtrado obligatorio por inquilino en el servidor
+     (desde la sesión, nunca desde el cliente) y pruebas de aislamiento (un usuario de A nunca ve datos de B).
+   - Rol de plataforma (nosotros) para dar de alta organizaciones y su primer admin.
+   - Qué es común y qué es de cada cliente: los datos oficiales (Registraduría, DANE, GeoJSON) son públicos y
+     compartidos, pero hoy están **fijos en el bundle y centrados en Antioquia**. Un cliente de otro departamento
+     o de otra elección necesitaría datos por territorio: evaluar pasarlos a la base o a archivos por territorio.
+   - "Que todo quede guardado en BD": inventariar lo que aún vive en el navegador (territorio activo, tema y
+     paneles pueden seguir locales) y en el PC de Isaac (Gobernación, SQLite).
+   - Decisión de negocio con Isaac: el producto es suyo (dueño del repo).
+
+### Pendientes técnicos (Claude, 29-sep-2026)
+- **Verificar el 30-sep** que `proteus-db` aparece en la copia diaria del T40 (`/tank/copias-bd/<fecha>/`).
+- **Auto-deploy**: el webhook lo debe crear Isaac (admin del repo). Verificar la primera entrega (que el cuerpo no
+  diga `Invalid signature`). Mientras tanto, desplegar a mano en Coolify.
+- **`GEMINI_API_KEY` válida** en Coolify (la actual da 403): sin ella la IA no funciona en producción.
+- **Cambiar la clave del admin `kali@kali.com`** (es `kali`) desde Ajustes › Usuarios y acceso.
+- **Gobernación → PostgreSQL** (hoy SQLite en el PC de Isaac; en el servidor da un error controlado).
+- Código muerto por limpiar: `HomePageStructure.tsx` y el "Paso 1: Conexión a Google Drive" simulado dentro de
+  `CandidateProfileManager.tsx` (inalcanzable desde que se borró `CandidateProfilesView`).
+- `www.polimetrics.app` redirige a `http://polimetrics.app` y de ahí a https (dos saltos): funciona, se puede pulir.
+- Pruebas más lentas: `electionResultsService` (4,8 s), `municipalDivisions` (3,6 s), `faseB` (3,3 s): cargan los
+  JSON grandes. Postgres no es el cuello (suite completa: HDD 10,7 s vs NVMe 10,1 s).
 0000. **Análisis de piezas con Gemini**: listo pero sin probar con Gemini real (la clave del servidor sigue en 403).
    Al arreglarla, validar con 3-4 piezas reales (una imagen, un video propio, uno de YouTube, un texto) y ajustar el
    libro. Cuando Isaac cargue la Capa 3 del marco (retórica y creación), integrar sus reglas al libro (sube la versión).
@@ -122,6 +158,10 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
   `territoryProfileService.ts`; ficha: `src/components/territorio/`.
 
 ## 5. Bitácora (agregar arriba lo más reciente)
+- 29-sep (Claude Opus, `codex/ci-local-y-pendientes`): **PR #4 publicado en polimetrics.app** (login + Postgres,
+  verificado en navegador; retiradas las variables del acceso provisional). `npm run ci:local`: los pasos de la CI en
+  paralelo y con caché contra el Postgres del NVMe: 81 s en serie (igual que GitHub) → 44 s en frío, 34 s con caché.
+  Pendientes nuevos de Jose anotados en §3 (landing de login, rediseño, multi-tenant).
 - 29-sep (Claude Opus, `codex/postgres-login`): **PostgreSQL + login con roles**, como Casa Korea/Matriarca. Prisma
   (`prisma/schema.prisma`, migraciones al arrancar el contenedor); JWT de acceso 15 min + refresh 7 días rotado en
   cookies httpOnly; claves scrypt, bloqueo tras 5 fallos; roles ADMIN/EQUIPO; Ajustes › Usuarios y acceso. Perfil del

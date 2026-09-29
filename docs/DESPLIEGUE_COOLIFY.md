@@ -68,6 +68,9 @@ npm run dev                 # entra con ADMIN_EMAIL / ADMIN_CLAVE
 Cambiar el esquema: editar `prisma/schema.prisma` y `npx prisma migrate dev --name <cambio>`.
 Pruebas de integración: `TEST_DATABASE_URL=<base desechable> npm test`.
 
+**CI en local** (mismos pasos que GitHub, en paralelo y con caché; ~35-45 s frente a 1,5-2 min):
+`npm run ci:local` (usa `TEST_DATABASE_URL` o el cluster desechable del NVMe, puerto 55433).
+
 ## Limitaciones conocidas en el servidor
 
 - **Gobernación** (`/api/gobernacion/*`): depende de Python y de la SQLite del Proyecto Independencia en
