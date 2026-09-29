@@ -3,7 +3,7 @@
  * Modular Architecture Root
  */
 
-import React, { useState, lazy, Suspense } from 'react';
+import React, { useEffect, useState, lazy, Suspense } from 'react';
 import { AppShell } from './components/layout/AppShell';
 import type { NavViewId } from './components/layout/navigation';
 import { ErrorBoundary } from './components/ui/ErrorBoundary';
@@ -39,6 +39,7 @@ const ElectoralForensicsAuditView = lazy(() => import('./modules/audit/Electoral
 const AntigravityAgentConsole = lazy(() => import('./components/AntigravityAgentConsole').then((m) => ({ default: m.AntigravityAgentConsole })));
 const BrandIdentityView = lazy(() => import('./modules/system/BrandIdentityView').then((m) => ({ default: m.BrandIdentityView })));
 const MarcoMetodologicoView = lazy(() => import('./modules/marco/MarcoMetodologicoView').then((m) => ({ default: m.MarcoMetodologicoView })));
+const UsuariosView = lazy(() => import('./modules/system/UsuariosView').then((m) => ({ default: m.UsuariosView })));
 
 // Candidate Profile Types & Defaults
 import { 
@@ -46,9 +47,10 @@ import {
   DEFAULT_ISAAC_MENDOZA_PROFILE 
 } from './components/CandidateProfileManager';
 
-// Google Drive Service
-import { googleDriveService } from './services/googleDriveService';
+import { api, borrarLocal, leerLocal, obtenerUsuario, type UsuarioSesion } from './services/sesionCliente';
+import { categoriaDeTitulo, guardarArchivo } from './services/archivosService';
 
+// Clave con la que el perfil vivía en el navegador antes de guardarse en la base (se migra una vez)
 const STORAGE_PROFILE_KEY = "cmt_proteus_active_profile";
 
 export default function App() {
@@ -56,39 +58,37 @@ export default function App() {
   // Encuestas 2026 abiertas desde el mapa, ya situadas en un territorio
   const [seleccionEncuestas, setSeleccionEncuestas] = useState<SeleccionEncuestas | null>(null);
   
-  // Manage candidate profile state
-  const [candidateProfile, setCandidateProfile] = useState<CandidateProfile>(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_PROFILE_KEY);
-      if (saved) return JSON.parse(saved);
-    } catch (e) {
-      console.warn("No se pudo cargar el perfil desde localStorage:", e);
-    }
-    return DEFAULT_ISAAC_MENDOZA_PROFILE;
-  });
+  const [usuario, setUsuario] = useState<UsuarioSesion | null>(null);
+  useEffect(() => {
+    obtenerUsuario().then(setUsuario).catch((e) => console.warn('No se pudo leer la sesión:', e));
+  }, []);
+
+  // Perfil del candidato: vive en la base y lo comparte todo el equipo
+  const [candidateProfile, setCandidateProfile] = useState<CandidateProfile>(DEFAULT_ISAAC_MENDOZA_PROFILE);
+  useEffect(() => {
+    api<{ perfil: CandidateProfile | null }>('/api/datos/perfil')
+      .then(async ({ perfil }) => {
+        if (perfil) return setCandidateProfile(perfil);
+        // Base vacía: se sube el perfil que este navegador tenía guardado, si lo hay
+        const local = leerLocal<CandidateProfile>(STORAGE_PROFILE_KEY);
+        if (local) {
+          await api('/api/datos/perfil', { method: 'PUT', json: { perfil: local } });
+          setCandidateProfile(local);
+        }
+        borrarLocal(STORAGE_PROFILE_KEY);
+      })
+      .catch((e) => console.warn('No se pudo cargar el perfil del candidato:', e));
+  }, []);
 
   const handleSaveProfile = (newProfile: CandidateProfile) => {
     setCandidateProfile(newProfile);
-    try {
-      localStorage.setItem(STORAGE_PROFILE_KEY, JSON.stringify(newProfile));
-    } catch (e) {
-      console.warn("No se pudo guardar el perfil en localStorage:", e);
-    }
+    api('/api/datos/perfil', { method: 'PUT', json: { perfil: newProfile } })
+      .catch((e) => window.alert(`No se pudo guardar el perfil: ${e.message}`));
   };
 
   const handleSaveToDrive = (title: string, data: any) => {
-    let category: any = 'analisis_territorial';
-    if (title.toLowerCase().includes('brief')) category = 'brief_contenido';
-    else if (title.toLowerCase().includes('segmento')) category = 'segmentacion_votantes';
-    else if (title.toLowerCase().includes('video') || title.toLowerCase().includes('color')) category = 'multimedia';
-
-    googleDriveService.saveItem({
-      name: title,
-      category,
-      format: 'json',
-      data,
-      candidateName: candidateProfile.nombre
-    });
+    guardarArchivo({ nombre: title, categoria: categoriaDeTitulo(title), candidato: candidateProfile.nombre, datos: data })
+      .catch((e) => window.alert(`No se pudo guardar «${title}»: ${e.message}`));
   };
 
   return (
@@ -97,6 +97,7 @@ export default function App() {
       onSelectView={setCurrentView}
       candidateName={candidateProfile.nombre}
       onOpenCandidateModal={() => setCurrentView('national-candidates')}
+      usuario={usuario}
     >
       {/* Cada módulo se descarga solo cuando se abre (carga diferida) */}
       <ErrorBoundary resetKey={currentView}>
@@ -221,6 +222,8 @@ export default function App() {
       {currentView === 'marco-metodologico' && (
         <MarcoMetodologicoView />
       )}
+
+      {currentView === 'usuarios' && <UsuariosView usuario={usuario} />}
 
       </Suspense>
       </ErrorBoundary>

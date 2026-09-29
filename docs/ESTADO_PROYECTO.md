@@ -122,6 +122,13 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
   `territoryProfileService.ts`; ficha: `src/components/territorio/`.
 
 ## 5. Bitácora (agregar arriba lo más reciente)
+- 29-sep (Claude Opus, `codex/postgres-login`): **PostgreSQL + login con roles**, como Casa Korea/Matriarca. Prisma
+  (`prisma/schema.prisma`, migraciones al arrancar el contenedor); JWT de acceso 15 min + refresh 7 días rotado en
+  cookies httpOnly; claves scrypt, bloqueo tras 5 fallos; roles ADMIN/EQUIPO; Ajustes › Usuarios y acceso. Perfil del
+  candidato (con identidad), piezas analizadas y archivos guardados pasan de `localStorage` a la base (se migran solos
+  la primera vez). El "Google Drive" era **simulado** (enlaces inexistentes): sustituido por «Archivos guardados»
+  reales; borrado `CandidateProfilesView` (código muerto). Pruebas de integración contra Postgres real y CI con
+  servicio postgres. El acceso HTTP Basic de `codex/despliegue-coolify` se retira.
 - 29-sep (Claude Opus, `codex/ci-y-gemini`): publicado en **https://polimetrics.app** (Coolify). CI en GitHub Actions
   (tipos, lint, pruebas, build; commit de `claude/ci`); el módulo importado `voto-correlaciones` sale del lint (no se
   edita a mano). Gemini: 20 peticiones/min por cliente y lista cerrada de modelos y agentes; `/api` inexistente da 404;

@@ -1,12 +1,13 @@
 /**
  * Análisis de una pieza: mide en el navegador (sin IA) y, si se pide, llama a Gemini con el libro de reglas
  * a través del servidor (/api/piezas/*): la clave de Gemini no sale del servidor.
- * Los análisis se guardan en este navegador (localStorage) si la identidad lo permite.
+ * Los análisis se guardan en la base de Proteus (/api/datos/piezas) si la identidad lo permite; los ve todo el equipo.
  */
 import { esquemaRespuesta, instruccionAnalisis, libroEnTexto, puntajeGlobal, type RespuestaAnalisis, type TipoPieza } from '../../data/analisisPiezas/libroDeReglas';
 import type { IdentidadCandidato } from '../identidad/identidad';
 import { medicionesEnTexto, type MedicionPieza } from './pieza';
 import { reglasPiso3 } from '../marcoService';
+import { api, borrarLocal, leerLocal } from '../sesionCliente';
 
 export type FuentePieza =
   | { clase: 'archivo'; archivo: File }
@@ -75,24 +76,32 @@ export async function analizarConGemini(args: {
   return { analisis, modelo: r.modelo, global: puntajeGlobal(analisis), tokens: r.uso?.totalTokenCount ?? null };
 }
 
-// ---------- Archivo local de piezas --------------------------------------------------------------
+// ---------- Archivo de piezas (base de Proteus) ---------------------------------------------------
 
-const CLAVE = 'proteus_piezas_analizadas';
+// Clave con la que las piezas vivían en el navegador antes de guardarse en la base (se migran una vez)
+const CLAVE_LOCAL = 'proteus_piezas_analizadas';
 
-export function leerPiezas(): PiezaAnalizada[] {
-  try { return JSON.parse(localStorage.getItem(CLAVE) || '[]'); } catch { return []; }
+const listar = () => api<{ piezas: PiezaAnalizada[] }>('/api/datos/piezas').then((r) => r.piezas);
+const subir = (p: PiezaAnalizada) => api('/api/datos/piezas', { method: 'POST', json: { pieza: p } });
+
+export async function leerPiezas(): Promise<PiezaAnalizada[]> {
+  const piezas = await listar();
+  const locales = leerLocal<PiezaAnalizada[]>(CLAVE_LOCAL);
+  if (!locales?.length) return piezas;
+  // Primera vez de este navegador: sus piezas locales pasan a la base (de la más vieja a la más nueva)
+  for (const p of [...locales].reverse()) if (!piezas.some((x) => x.id === p.id)) await subir(p);
+  borrarLocal(CLAVE_LOCAL);
+  return listar();
 }
 
-export function guardarPieza(p: PiezaAnalizada): PiezaAnalizada[] {
-  // Solo dos miniaturas por pieza para no llenar el almacenamiento del navegador
+export async function guardarPieza(p: PiezaAnalizada): Promise<PiezaAnalizada[]> {
+  // Solo dos miniaturas por pieza: bastan para el historial y aligeran la base
   const liviana: PiezaAnalizada = p.medicion?.miniaturas ? { ...p, medicion: { ...p.medicion, miniaturas: p.medicion.miniaturas.slice(0, 2) } } : p;
-  const lista = [liviana, ...leerPiezas().filter((x) => x.id !== p.id)].slice(0, 40);
-  try { localStorage.setItem(CLAVE, JSON.stringify(lista)); } catch { /* sin espacio: se queda en memoria */ }
-  return lista;
+  await subir(liviana);
+  return listar();
 }
 
-export function borrarPieza(id: string): PiezaAnalizada[] {
-  const lista = leerPiezas().filter((x) => x.id !== id);
-  try { localStorage.setItem(CLAVE, JSON.stringify(lista)); } catch { /* sin almacenamiento */ }
-  return lista;
+export async function borrarPieza(id: string): Promise<PiezaAnalizada[]> {
+  await api(`/api/datos/piezas/${encodeURIComponent(id)}`, { method: 'DELETE' });
+  return listar();
 }

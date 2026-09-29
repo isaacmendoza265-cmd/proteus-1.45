@@ -3,13 +3,15 @@ import { Search } from 'lucide-react';
 import { TopStatusBar } from './TopStatusBar';
 import { SidebarNav } from './SidebarNav';
 import { MODULES, moduloDeVista, type NavViewId } from './navigation';
-import { GoogleDriveSyncModal } from '../drive/GoogleDriveSyncModal';
+import { ArchivosModal } from '../archivos/ArchivosModal';
+import type { UsuarioSesion } from '../../services/sesionCliente';
 
 interface AppShellProps {
   currentView: NavViewId;
   onSelectView: (view: NavViewId) => void;
   candidateName?: string;
   onOpenCandidateModal?: () => void;
+  usuario?: UsuarioSesion | null;
   children: React.ReactNode;
 }
 
@@ -28,9 +30,9 @@ function leerTema(): Tema {
  * Estructura común: menú de 5 módulos + Ajustes, barra con el territorio activo y, dentro de cada
  * módulo, pestañas para sus vistas. Estilo "sobrio cívico" (claro u oscuro).
  */
-export const AppShell: React.FC<AppShellProps> = ({ currentView, onSelectView, candidateName, onOpenCandidateModal, children }) => {
+export const AppShell: React.FC<AppShellProps> = ({ currentView, onSelectView, candidateName, onOpenCandidateModal, usuario, children }) => {
   const [collapsed, setCollapsed] = useState(false);
-  const [driveModalOpen, setDriveModalOpen] = useState(false);
+  const [archivosAbierto, setArchivosAbierto] = useState(false);
   const [tema, setTema] = useState<Tema>(leerTema);
   const [buscador, setBuscador] = useState(false);
   const [q, setQ] = useState('');
@@ -74,10 +76,11 @@ export const AppShell: React.FC<AppShellProps> = ({ currentView, onSelectView, c
         onToggleCollapse={() => setCollapsed(!collapsed)}
         candidateName={candidateName}
         onOpenCandidateModal={onOpenCandidateModal}
+        usuario={usuario}
       />
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         <TopStatusBar
-          onOpenDriveModal={() => setDriveModalOpen(true)}
+          onOpenArchivos={() => setArchivosAbierto(true)}
           onGoTerritorio={() => onSelectView('territorial-zoom')}
           onOpenSearch={() => setBuscador(true)}
           tema={tema}
@@ -136,7 +139,7 @@ export const AppShell: React.FC<AppShellProps> = ({ currentView, onSelectView, c
         </div>
       )}
 
-      <GoogleDriveSyncModal isOpen={driveModalOpen} onClose={() => setDriveModalOpen(false)} />
+      <ArchivosModal isOpen={archivosAbierto} onClose={() => setArchivosAbierto(false)} />
     </div>
   );
 };

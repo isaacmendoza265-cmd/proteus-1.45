@@ -260,7 +260,12 @@ export const AnalisisPiezas: React.FC<{ identidad: IdentidadCandidato; onIrABloq
   const [analizando, setAnalizando] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [actual, setActual] = useState<PiezaAnalizada | null>(null);
-  const [historial, setHistorial] = useState<PiezaAnalizada[]>(() => leerPiezas());
+  const [historial, setHistorial] = useState<PiezaAnalizada[]>([]);
+  useEffect(() => {
+    leerPiezas().then(setHistorial).catch((e) => setError(`No se pudo cargar el historial: ${e.message}`));
+  }, []);
+  const guardarEnHistorial = (p: PiezaAnalizada) =>
+    guardarPieza(p).then(setHistorial).catch((e) => setError(`El análisis no se guardó: ${e.message}`));
   const entrada = useRef<HTMLInputElement>(null);
 
   const marca = paletaDefinida(identidad).map((c) => ({ hex: c.hex, rol: c.rol }));
@@ -301,7 +306,7 @@ export const AnalisisPiezas: React.FC<{ identidad: IdentidadCandidato; onIrABloq
         tipo, canal, propia, origen: fuente.clase === 'archivo' ? fuente.archivo.name : fuente.clase === 'youtube' ? fuente.url : 'texto', medicion, ia,
       };
       setActual(pieza);
-      if (identidad.privacidad.guardarAnalisis) setHistorial(guardarPieza(pieza));
+      if (identidad.privacidad.guardarAnalisis) await guardarEnHistorial(pieza);
     } catch (e) {
       setError(e instanceof Error ? e.message : 'No se pudo analizar.');
     } finally { setAnalizando(false); }
@@ -311,7 +316,7 @@ export const AnalisisPiezas: React.FC<{ identidad: IdentidadCandidato; onIrABloq
     if (!medicion || !archivo || !tipo) return;
     const pieza: PiezaAnalizada = { id: `p${Date.now()}`, fecha: new Date().toISOString(), nombre: archivo.name, tipo, canal, propia, origen: archivo.name, medicion, ia: null };
     setActual(pieza);
-    if (identidad.privacidad.guardarAnalisis) setHistorial(guardarPieza(pieza));
+    if (identidad.privacidad.guardarAnalisis) guardarEnHistorial(pieza);
   };
 
   const modos: { id: Modo; t: string; icono: React.ReactNode }[] = [
@@ -424,7 +429,7 @@ export const AnalisisPiezas: React.FC<{ identidad: IdentidadCandidato; onIrABloq
                     <span className="text-xs text-[var(--c-muted)]">{new Date(p.fecha).toLocaleDateString('es-CO')} · {p.tipo}{p.canal ? ` · ${p.canal}` : ''} · {p.propia ? 'propia' : 'de otro actor'}{p.medicion?.adherencia ? ` · marca ${pct(p.medicion.adherencia.cobertura)}` : ''}{p.ia ? '' : ' · solo medición'}</span>
                   </span>
                 </button>
-                <button type="button" onClick={() => { setHistorial(borrarPieza(p.id)); if (actual?.id === p.id) setActual(null); }} aria-label={`Borrar ${p.nombre}`} className="w-11 h-11 shrink-0 inline-flex items-center justify-center rounded-lg hover:bg-[var(--c-sunken)]"><Trash2 className="w-4 h-4" /></button>
+                <button type="button" onClick={() => { borrarPieza(p.id).then(setHistorial).catch((e) => setError(e.message)); if (actual?.id === p.id) setActual(null); }} aria-label={`Borrar ${p.nombre}`} className="w-11 h-11 shrink-0 inline-flex items-center justify-center rounded-lg hover:bg-[var(--c-sunken)]"><Trash2 className="w-4 h-4" /></button>
               </div>
             ))}
           </div>

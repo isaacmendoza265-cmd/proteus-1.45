@@ -99,20 +99,20 @@ export const PROTEUS_AGENT_TEAM: ProteusAgentDefinition[] = [
   {
     id: 'agent-sync-nexus',
     codeName: 'SYNC-NEXUS',
-    name: 'Agente Sintetizador Gemini Search & Google Drive',
+    name: 'Agente Sintetizador Gemini Search & Archivos',
     category: 'Sincronización & Search',
     avatarColor: 'from-emerald-500 to-teal-700',
     status: 'online',
     version: '1.9',
-    mission: 'Inyectar contexto municipal a Gemini para búsquedas web en tiempo real y coordinar el respaldo estructurado en Google Drive.',
+    mission: 'Inyectar contexto municipal a Gemini para búsquedas web en tiempo real y coordinar el respaldo estructurado en los Archivos guardados de Proteus.',
     responsibilities: [
       'Pre-procesar prompts para que Google Search grounding no cometa alucinaciones territoriales.',
-      'Sincronizar briefs, segmentaciones y análisis en la cuenta de Google Drive enlazada.',
+      'Guardar briefs, segmentaciones y análisis en los Archivos guardados de Proteus (base de datos del equipo).',
       'Organizar el versionamiento cronológico de documentos de campaña.',
       'Mantener la interoperabilidad entre los 4 agentes analíticos del sistema.'
     ],
-    assignedDataDomains: ['Google Search Grounding', 'Google Drive REST API', 'Context Buffer', 'Historial de Análisis'],
-    toolsAndAPIs: ['Google Search API', 'Google Drive Connector', 'Buffer de Contexto Municipal'],
+    assignedDataDomains: ['Google Search Grounding', 'Archivos guardados (API de Proteus)', 'Context Buffer', 'Historial de Análisis'],
+    toolsAndAPIs: ['Google Search API', 'API de archivos de Proteus', 'Buffer de Contexto Municipal'],
     systemPromptSnippet: 'Eres SYNC-NEXUS. Asegura que la IA esté siempre anclada al territorio real y que toda la memoria de campaña esté respaldada.'
   }
 ];
