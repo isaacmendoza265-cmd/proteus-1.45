@@ -122,6 +122,11 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
   `territoryProfileService.ts`; ficha: `src/components/territorio/`.
 
 ## 5. Bitácora (agregar arriba lo más reciente)
+- 29-sep (Claude Opus, `codex/despliegue-coolify`): preparación para publicar en Coolify (data center de Network IA
+  Solutions). `Dockerfile` multi-stage + `.dockerignore`; acceso con usuario y clave opcional
+  (`PROTEUS_USUARIO`/`PROTEUS_CLAVE`, `src/server/acceso.ts`) porque la app no tiene login y publicada sin él dejaba
+  la clave de Gemini abierta a cualquiera. Guía en `docs/DESPLIEGUE_COOLIFY.md`. Pendiente: dominio, clave de Gemini
+  válida (la actual da 403) y webhook de auto-deploy (requiere admin del repo: Isaac).
 - 28-sep (Claude Opus, `claude/identidad`): Identidad del candidato (9 bloques) + Análisis de piezas + Libro de reglas v1.0.
   Archivos: `src/services/identidad/identidad.ts`, `src/services/analisisPiezas/{medicion,pieza,analisis}.ts`,
   `src/data/analisisPiezas/libroDeReglas.ts`, `src/modules/identidad/*`, rutas `/api/piezas/*` en `server.ts`.

@@ -5,12 +5,16 @@ import { GoogleGenAI } from '@google/genai';
 import dotenv from 'dotenv';
 import fs from 'fs';
 import os from 'os';
+import { exigirAcceso } from './src/server/acceso';
 
 dotenv.config();
 
 async function startServer() {
   const app = express();
   const PORT = Number(process.env.PORT) || 3000;
+
+  const acceso = exigirAcceso(process.env.PROTEUS_USUARIO, process.env.PROTEUS_CLAVE);
+  if (acceso) app.use(acceso);
 
   app.use(express.json({ limit: '15mb' }));
 
