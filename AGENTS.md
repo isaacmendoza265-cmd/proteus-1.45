@@ -7,10 +7,12 @@ Foco actual: **terminar Antioquia** (125 municipios). Resto del país (fases D y
 1. Lee `docs/ESTADO_PROYECTO.md` (estado, decisiones de Isaac y pendientes). Es la memoria del proyecto.
 2. Revisa `git status`, `git log --oneline -10`, `git reflog -5` y que no haya `.git/*.lock`.
 3. No hagas `git reset --hard`, `git push --force`, `rebase` ni borres commits o archivos de otros agentes.
-   Trabaja en una rama (`codex/<tema>`) y deja que Isaac haga el merge.
+   Se trabaja directo en `main` (decisión de Jose, 29-sep-2026) con `npm run ci:local` en verde antes de cada
+   push; rama + PR solo para cambios grandes que Isaac deba revisar antes.
 
 ## Al terminar (cada sesión, obligatorio)
-1. Verifica: `npx tsc --noEmit -p .`, `npx vitest run`, `npm run build`. No declares algo hecho sin esto.
+1. Verifica con `npm run ci:local` (tipos, lint, pruebas con PostgreSQL y build, en paralelo; ver `CLAUDE.md`).
+   No declares algo hecho ni hagas push sin esto en verde.
 2. Commit con mensaje en español que diga qué cambió y por qué.
 3. **Actualiza `docs/ESTADO_PROYECTO.md`**: qué hiciste (con hash de commit), qué quedó pendiente,
    decisiones nuevas de Isaac (con fecha). Si no lo actualizas, el progreso se pierde.
