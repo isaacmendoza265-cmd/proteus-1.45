@@ -7,7 +7,9 @@ import reactHooks from 'eslint-plugin-react-hooks';
 import globals from 'globals';
 
 export default tseslint.config(
-  { ignores: ['dist/**', 'node_modules/**', '_archivo/**', '_originales/**', 'SUBIR_A_GITHUB/**', 'temp_*/**', 'scripts/**', 'docs/**'] },
+  { ignores: ['dist/**', 'node_modules/**', '_archivo/**', '_originales/**', 'SUBIR_A_GITHUB/**', 'temp_*/**', 'scripts/**', 'docs/**',
+    // Módulo importado por scripts/importar_voto_correlaciones.py: no se edita a mano (AGENTS.md)
+    'public/modulos/voto-correlaciones/**'] },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
