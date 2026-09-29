@@ -87,6 +87,12 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
 2. **Rediseño con la skill `redisenando-interfaces-en-produccion`** (`D:\Notas super importantes\skills\redisenando-interfaces-en-produccion\SKILL.md`).
    Proteus ya tiene tokens `--c-*` (sobrio cívico), pero muchos módulos viejos siguen con el estilo oscuro/cristal
    (p. ej. `CandidateProfileManager`): unificar sin reescribir módulos que funcionan.
+   **29-sep: auditoría y propuesta hechas** → https://claude.ai/artifact/A3EjhbQh7wooxdSqNQpfog («Cada cifra con su
+   sello»). Medido: 30/79 pantallas en el sistema (el resto vive de la capa de traducción de `index.css`); en un
+   teléfono de 390 px quedan 150 px útiles y las 10 pantallas se desbordan; 75 % del texto de Municipios < 11 px;
+   6 pares de contraste fallan (borde de campo 1,24–1,38:1, foco oscuro 2,29–2,52:1). Segmentos presenta
+   «Votos proyectados» (modelo de pesos fijos) sin sello de Estimado. Plan en 3 fases; esperando las 3 decisiones
+   de la propuesta. El test de contraste está en `docs/rediseno/contraste-tokens.test.ts` (en rojo a propósito; pasa a `src/theme/` en la Fase 0).
 3. **Arquitectura multi-tenant de verdad**: que cada cliente que compre el sistema (o que registremos nosotros) tenga
    sus propios datos. Hoy la base es de **un solo inquilino**: un perfil `activo` y todos los usuarios ven todo.
    A decidir en el diseño:
