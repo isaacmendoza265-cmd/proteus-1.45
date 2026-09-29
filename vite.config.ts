@@ -1,15 +1,14 @@
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
-import {defineConfig, loadEnv} from 'vite';
+import {defineConfig} from 'vite';
 
-export default defineConfig(({mode}) => {
-  const env = loadEnv(mode, '.', '');
+export default defineConfig(() => {
+  // GEMINI_API_KEY ya no se inyecta en el bundle del cliente: todas las llamadas a Gemini pasan por
+  // el proxy del servidor (server.ts), que lee la clave de sus propias variables de entorno. Nunca
+  // definir aquí una clave de API para que no termine visible en el JS servido al navegador.
   return {
     plugins: [react(), tailwindcss()],
-    define: {
-      'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
-    },
     resolve: {
       alias: {
         '@': path.resolve(__dirname, '.'),

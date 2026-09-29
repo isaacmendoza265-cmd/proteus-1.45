@@ -30,7 +30,7 @@ import {
   Sliders,
   Layers
 } from 'lucide-react';
-import { GoogleGenAI } from '@google/genai';
+import { generateContent } from '../services/geminiService';
 import { jsPDF } from 'jspdf';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -302,7 +302,6 @@ export const CandidateVideoAnalyzer: React.FC<CandidateVideoAnalyzerProps> = ({
     setAnalysisStatus('Iniciando calibración y decodificación audiovisual...');
 
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' });
       const platformDetected = detectedPlatform();
 
       setAnalysisStatus('Extrayendo tono comunicacional, métricas orales, coloración y composición con Gemini 3.8...');
@@ -465,7 +464,7 @@ Responde ÚNICAMENTE con un objeto JSON válido con esta estructura exacta (sin 
       parts.push({ text: promptText });
 
       // Use Gemini 3.8 Flash with googleSearch tool to ground facts and public video references
-      const response = await ai.models.generateContent({
+      const response = await generateContent({
         model: 'gemini-3.8-flash',
         contents: [{ role: 'user', parts }],
         config: {

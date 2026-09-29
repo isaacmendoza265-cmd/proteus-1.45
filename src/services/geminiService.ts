@@ -1,14 +1,34 @@
-import { GoogleGenAI } from "@google/genai";
-
-const apiKey = process.env.GEMINI_API_KEY || "";
-export const ai = new GoogleGenAI({ apiKey });
-
+// La clave de Gemini nunca vive en el navegador: toda llamada pasa por /api/gemini/generar
+// (server.ts), que la lee de sus propias variables de entorno.
 export interface GeminiCallOptions {
   promptText: string;
   model?: string;
   systemInstruction?: string;
   useSearch?: boolean;
 }
+
+export interface GenerateContentParams {
+  model?: string;
+  contents: unknown;
+  config?: Record<string, unknown>;
+}
+
+export interface GenerateContentResult {
+  text: string;
+  candidates: any[] | null;
+  usageMetadata: unknown;
+}
+
+export const generateContent = async (params: GenerateContentParams): Promise<GenerateContentResult> => {
+  const r = await fetch('/api/gemini/generar', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(params),
+  });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(j.error || `El servidor respondió ${r.status}.`);
+  return { text: String(j.text ?? ''), candidates: j.candidates ?? null, usageMetadata: j.usageMetadata ?? null };
+};
 
 export const formatAiError = (error: any): string => {
   let errorMessage = "";
@@ -28,8 +48,8 @@ export const formatAiError = (error: any): string => {
 
   const lower = errorMessage.toLowerCase();
   if (
-    lower.includes("429") || 
-    lower.includes("resource_exhausted") || 
+    lower.includes("429") ||
+    lower.includes("resource_exhausted") ||
     lower.includes("quota") ||
     lower.includes("exceeded your current quota") ||
     lower.includes("rate-limits") ||
@@ -43,13 +63,14 @@ export const formatAiError = (error: any): string => {
 
 export const callGeminiApi = async (options: GeminiCallOptions): Promise<string> => {
   const modelName = options.model || "gemini-3.8-flash";
-  
+  const contents = [{ role: 'user', parts: [{ text: options.promptText }] }];
+
   // Try with Google Search grounding tool if requested
   if (options.useSearch) {
     try {
-      const response = await ai.models.generateContent({
+      const response = await generateContent({
         model: modelName,
-        contents: [{ role: 'user', parts: [{ text: options.promptText }] }],
+        contents,
         config: {
           ...(options.systemInstruction ? { systemInstruction: options.systemInstruction } : {}),
           tools: [{ googleSearch: {} }]
@@ -62,11 +83,11 @@ export const callGeminiApi = async (options: GeminiCallOptions): Promise<string>
   }
 
   // Fallback to standard generation
-  const response = await ai.models.generateContent({
+  const response = await generateContent({
     model: modelName,
-    contents: [{ role: 'user', parts: [{ text: options.promptText }] }],
+    contents,
     ...(options.systemInstruction ? { config: { systemInstruction: options.systemInstruction } } : {})
   });
-  
+
   return response.text || "";
 };

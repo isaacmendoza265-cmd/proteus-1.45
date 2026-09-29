@@ -32,7 +32,7 @@ import {
   Video,
   Database
 } from 'lucide-react';
-import { GoogleGenAI } from '@google/genai';
+import { generateContent } from '../services/geminiService';
 import { jsPDF } from 'jspdf';
 import { motion, AnimatePresence } from 'motion/react';
 import { CmtIsotipo, CmtLogotipo } from './CmtProteusLogo';
@@ -556,7 +556,6 @@ export const CandidateProfileManager: React.FC<CandidateProfileManagerProps> = (
     setColorimetryError(null);
 
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "" });
       const promptText = `Actúa como un director de arte, estilista político y experto en colorimetría e identidad visual electoral de élite.
 Te he adjuntado ${photosToAnalyze.length} fotografía(s) REAL(ES) del usuario candidato.
 
@@ -636,7 +635,7 @@ Debes responder ÚNICAMENTE con un bloque JSON plano estructurado con este esque
 
       parts.push({ text: promptText });
 
-      const response = await ai.models.generateContent({
+      const response = await generateContent({
         model: "gemini-3.8-flash",
         contents: [{ role: 'user', parts }]
       });
@@ -710,7 +709,6 @@ Debes responder ÚNICAMENTE con un bloque JSON plano estructurado con este esque
     setSaveSuccessMsg(null);
 
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "" });
       const promptText = `Actúa como un experto consultor de inteligencia política y analista electoral en Colombia.
       Investiga en la web mediante Google Search el perfil público, trayectoria política, publicaciones, posturas y presencia pública de: **${trimmedName}** en Colombia (especialmente en Medellín / Antioquia o ámbito nacional).
       
@@ -728,7 +726,7 @@ Debes responder ÚNICAMENTE con un bloque JSON plano estructurado con este esque
         "resumenEstrategico": "Síntesis estratégica de valor electoral para conectar con los electores"
       }`;
 
-      const response = await ai.models.generateContent({
+      const response = await generateContent({
         model: "gemini-3.8-flash",
         contents: [{ role: 'user', parts: [{ text: promptText }] }],
         config: {
@@ -1232,7 +1230,6 @@ Debes responder ÚNICAMENTE con un bloque JSON plano estructurado con este esque
           const resultStr = reader.result as string;
           const base64Data = resultStr.split(',')[1];
 
-          const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "" });
           const promptText = `Analiza este documento PDF que contiene el perfil, colorimetría e identidad visual de un candidato político.
           Extrae toda la información posible y responde ÚNICAMENTE en formato JSON plano:
           {
@@ -1259,7 +1256,7 @@ Debes responder ÚNICAMENTE con un bloque JSON plano estructurado con este esque
             "resumenEstrategico": "Síntesis estratégica"
           }`;
 
-          const response = await ai.models.generateContent({
+          const response = await generateContent({
             model: "gemini-3.8-flash",
             contents: [
               {

@@ -38,7 +38,7 @@ import {
   Shield
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { GoogleGenAI } from '@google/genai';
+import { generateContent } from '../services/geminiService';
 import { jsPDF } from 'jspdf';
 import { 
   STRATEGIC_MUNICIPALITIES, 
@@ -60,12 +60,6 @@ import {
   UnifiedMunicipalityRecord 
 } from '../data/antioquia125MunicipalitiesMasterData';
 import { activeTerritoryService } from '../services/activeTerritoryContextService';
-
-// Inicialización de la API de Gemini para búsquedas y análisis profundo
-// Se crea al usarla: sin clave de Gemini, el constructor lanzaba un error al importar el módulo
-// y el Directorio de 125 Municipios quedaba en blanco.
-let aiClient: GoogleGenAI | null = null;
-const getAi = () => (aiClient ??= new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' }));
 
 interface CandidateProfileProps {
   nombre?: string;
@@ -380,7 +374,7 @@ export const AntioquiaMunicipiosManager: React.FC<AntioquiaMunicipiosManagerProp
 
       let text = '';
       try {
-        const response = await getAi().models.generateContent({
+        const response = await generateContent({
           model: 'gemini-3.8-flash',
           contents: [{ role: 'user', parts: [{ text: prompt }] }],
           config: {
@@ -390,7 +384,7 @@ export const AntioquiaMunicipiosManager: React.FC<AntioquiaMunicipiosManagerProp
         text = response.text || '';
       } catch (err) {
         // Fallback estándar
-        const fallbackRes = await getAi().models.generateContent({
+        const fallbackRes = await generateContent({
           model: 'gemini-3.8-flash',
           contents: [{ role: 'user', parts: [{ text: prompt }] }]
         });
@@ -484,7 +478,7 @@ Entrega un informe denso, sin texto genérico ni rodeos, con lenguaje de consult
     try {
       let result = '';
       try {
-        const response = await getAi().models.generateContent({
+        const response = await generateContent({
           model: 'gemini-3.8-flash',
           contents: [{ role: 'user', parts: [{ text: promptText }] }],
           config: {
@@ -493,7 +487,7 @@ Entrega un informe denso, sin texto genérico ni rodeos, con lenguaje de consult
         });
         result = response.text || '';
       } catch (e) {
-        const fallbackRes = await getAi().models.generateContent({
+        const fallbackRes = await generateContent({
           model: 'gemini-3.8-flash',
           contents: [{ role: 'user', parts: [{ text: promptText }] }]
         });

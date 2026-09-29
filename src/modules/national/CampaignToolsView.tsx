@@ -14,7 +14,7 @@ import {
   Calculator
 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
-import { ai, formatAiError } from '../../services/geminiService';
+import { generateContent, formatAiError } from '../../services/geminiService';
 import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
@@ -58,7 +58,7 @@ export const CampaignToolsView: React.FC = () => {
           }
         }`;
         
-        const response = await ai.models.generateContent({
+        const response = await generateContent({
           model: "gemini-3.8-flash",
           contents: [{ role: 'user', parts: [{ text: textPrompt }] }]
         });
@@ -93,7 +93,7 @@ export const CampaignToolsView: React.FC = () => {
     };
 
     try {
-      const response = await ai.models.generateContent({
+      const response = await generateContent({
         model: "gemini-3.8-flash",
         contents: [{ role: 'user', parts: [{ text: prompts[type] }] }]
       });

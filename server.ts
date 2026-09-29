@@ -373,6 +373,40 @@ async function startServer() {
     }
   });
 
+  // Generador genérico de Gemini para el cliente (municipios, subregiones, perfiles de candidato,
+  // análisis de video, PDFs, etc.). Sustituye las instanciaciones de GoogleGenAI que antes vivían en
+  // el navegador con la clave incrustada en el bundle: ahora el cliente solo manda model/contents/config
+  // y la clave nunca sale del servidor.
+  const MODELO_GENERICO = 'gemini-3.8-flash';
+  app.post('/api/gemini/generar', async (req, res) => {
+    try {
+      const { model, contents, config } = req.body ?? {};
+      if (!contents) {
+        res.status(400).json({ error: "Falta 'contents'." });
+        return;
+      }
+      if (JSON.stringify(req.body).length > 14_000_000) {
+        res.status(400).json({ error: 'La solicitud es demasiado grande (máx. ~14 MB; para video usa /api/piezas/subir).' });
+        return;
+      }
+      const ai = getGenAI(req.headers['x-gemini-api-key'] as string | undefined);
+      const respuesta = await ai.models.generateContent({
+        model: typeof model === 'string' && model ? model : MODELO_GENERICO,
+        contents,
+        config,
+      });
+      res.json({
+        text: respuesta.text ?? '',
+        candidates: respuesta.candidates ?? null,
+        usageMetadata: respuesta.usageMetadata ?? null,
+      });
+    } catch (err: any) {
+      console.error('Error en /api/gemini/generar:', err);
+      const e = errorGemini(err, 'No se pudo generar contenido con Gemini.');
+      res.status(e.status).json({ error: e.error });
+    }
+  });
+
   // Vite middleware para entorno de desarrollo
   if (process.env.NODE_ENV !== 'production') {
     const vite = await createViteServer({

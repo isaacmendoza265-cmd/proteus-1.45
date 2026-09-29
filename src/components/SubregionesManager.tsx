@@ -40,17 +40,15 @@ import {
 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { jsPDF } from 'jspdf';
-import { GoogleGenAI } from '@google/genai';
+import { generateContent } from '../services/geminiService';
 import { motion, AnimatePresence } from 'motion/react';
 import { CandidateProfile } from './CandidateProfileManager';
 import { SubregionesStrategicDeepening } from './SubregionesStrategicDeepening';
-import { 
-  ANTIOQUIA_SUBREGIONS_DATA, 
-  OFFICES_OF_INTEREST, 
-  SubregionInfo 
+import {
+  ANTIOQUIA_SUBREGIONS_DATA,
+  OFFICES_OF_INTEREST,
+  SubregionInfo
 } from '../data/antioquiaSubregionesData';
-
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' });
 
 export type NationalAlignmentType = 'aliado' | 'independiente' | 'opositor';
 export type LocalAntioquiaAlignmentType = 'aliado' | 'independiente' | 'opositor';
@@ -319,7 +317,7 @@ export const SubregionesManager: React.FC<SubregionesManagerProps> = ({
     try {
       let resultText = '';
       try {
-        const response = await ai.models.generateContent({
+        const response = await generateContent({
           model: 'gemini-3.8-flash',
           contents: [{ role: 'user', parts: [{ text: searchPrompt }] }],
           config: {
@@ -329,7 +327,7 @@ export const SubregionesManager: React.FC<SubregionesManagerProps> = ({
         resultText = response.text || '';
       } catch (innerErr) {
         // Fallback estándar si las herramientas de búsqueda no estuviesen disponibles
-        const fallbackRes = await ai.models.generateContent({
+        const fallbackRes = await generateContent({
           model: 'gemini-3.8-flash',
           contents: [{ role: 'user', parts: [{ text: searchPrompt }] }]
         });
@@ -712,14 +710,14 @@ Entrega un informe denso, con lenguaje de consultoría política de primer nivel
     try {
       let result = '';
       try {
-        const response = await ai.models.generateContent({
+        const response = await generateContent({
           model: 'gemini-3.8-flash',
           contents: [{ role: 'user', parts: [{ text: promptText }] }],
         });
         result = response.text || '';
       } catch (innerErr) {
         // Segundo intento con gemini-3.8-flash standard
-        const fallbackRes = await ai.models.generateContent({
+        const fallbackRes = await generateContent({
           model: 'gemini-3.8-flash',
           contents: [{ role: 'user', parts: [{ text: promptText }] }]
         });

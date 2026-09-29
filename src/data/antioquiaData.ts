@@ -1,5 +1,3 @@
-import { GoogleGenAI } from "@google/genai";
-
 export const PALOMA_BIO = `El programa de articulación de Personas Estratégicas y Análisis Electoral está diseñado para identificar liderazgos clave, perfilar sus habilidades y maximizar el impacto de las campañas y visiones de gobierno en las regiones. A través de la evaluación cuantitativa y cualitativa de datos de votación, indicadores socioeconómicos NBI y análisis del perfil psicológico-político, se determinan las mejores estrategias de comunicación y propuestas puntuales para alcaldías, concejos y gobernaciones. El enfoque se centra en capacitar y alinear liderazgos regionales de alto impacto bajo principios de libertad individual, eficiencia de mercado, orden y libre empresa.
 Contempla la consistencia en el apoyo a los sectores agropecuario, industrial y tecnológico regionales, así como la defensa del derecho de los ciudadanos a la libre iniciativa privada.`;
 

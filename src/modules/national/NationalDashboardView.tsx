@@ -23,7 +23,7 @@ import {
   NATIONAL_MUNICIPALITIES 
 } from '../../data/antioquiaData';
 import { DEPARTMENT_NBI_SUMMARY, MUNICIPALITY_NBI_DATA, MunicipalityNBI } from '../../data/nbiDetailedData';
-import { ai, formatAiError } from '../../services/geminiService';
+import { generateContent, formatAiError } from '../../services/geminiService';
 import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
@@ -122,7 +122,7 @@ ESTRUCTURA:
 3. **Focos Críticos de Seguridad y Orden Público**.
 4. **3 Propuestas Estratégicas Clave para la Campaña**.`;
 
-      const response = await ai.models.generateContent({
+      const response = await generateContent({
         model: "gemini-3.8-flash",
         contents: [{ role: 'user', parts: [{ text: prompt }] }],
         config: { tools: [{ googleSearch: {} }] }
@@ -162,7 +162,7 @@ ESTRUCTURA REQUERIDA:
 
 Utiliza la búsqueda web para incorporar los acontecimientos más recientes.`;
 
-      const response = await ai.models.generateContent({
+      const response = await generateContent({
         model: "gemini-3.8-flash",
         contents: [{ role: 'user', parts: [{ text: prompt }] }],
         config: { tools: [{ googleSearch: {} }] }

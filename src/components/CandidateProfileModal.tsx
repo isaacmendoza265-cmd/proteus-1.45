@@ -20,7 +20,7 @@ import {
   RotateCcw
 } from 'lucide-react';
 import { CandidateProfile, DEFAULT_ISAAC_MENDOZA_PROFILE } from './CandidateProfileManager';
-import { ai, callGeminiApi, formatAiError } from '../services/geminiService';
+import { generateContent, callGeminiApi, formatAiError } from '../services/geminiService';
 
 export type { CandidateProfile };
 
@@ -90,7 +90,7 @@ Debes responder ÚNICAMENTE en formato JSON plano con los siguientes campos exac
 
       let rawResponse = "";
       try {
-        const geminiRes = await ai.models.generateContent({
+        const geminiRes = await generateContent({
           model: "gemini-3.8-flash",
           contents: [{ role: 'user', parts: [{ text: promptText }] }],
           config: {
@@ -173,7 +173,7 @@ Extrae la información estratégica y responde estrictamente en formato JSON pla
   "resumenEstrategico": "Síntesis del perfil de campaña"
 }`;
 
-          const response = await ai.models.generateContent({
+          const response = await generateContent({
             model: "gemini-3.8-flash",
             contents: [
               {

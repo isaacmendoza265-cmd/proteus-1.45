@@ -47,12 +47,11 @@ import {
 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { jsPDF } from 'jspdf';
-import { GoogleGenAI } from '@google/genai';
+import { generateContent } from '../services/geminiService';
 import { SubregionInfo } from '../data/antioquiaSubregionesData';
 import { CandidateProfile } from './CandidateProfileManager';
 import { ProvisionalCandidateProfile } from './SubregionesManager';
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' });
 let cachedProteusLogoDataUrl: string | null = null;
 
 // Tipos y funciones auxiliares separados en ./subregionesDeepening/ (antes todo estaba en este archivo)
@@ -236,7 +235,7 @@ Devuelve ÚNICAMENTE un array JSON válido con entre 5 y 8 objetos con esta estr
   }
 ]`;
 
-      const response = await ai.models.generateContent({
+      const response = await generateContent({
         model: 'gemini-3.8-flash',
         contents: [{ role: 'user', parts: [{ text: promptText }] }],
         config: {
@@ -386,7 +385,7 @@ ENLACE: [URL continua y sin espacios entre letras, directamente extraída de la 
 ---FIN_NOTICIA---`;
 
     try {
-      const response = await ai.models.generateContent({
+      const response = await generateContent({
         model: 'gemini-3.8-flash',
         contents: [{ role: 'user', parts: [{ text: promptText }] }],
         config: {
@@ -612,7 +611,7 @@ Debes redactar los siguientes formatos adaptados rigurosamente al NIVEL ${active
 - Copy completo de alta provocación y engagement con llamado a la acción y hashtags virales (#Antioquia #${candidateName.replace(/\s+/g, '')} #AbelardoDeLaEspriella).`;
 
     try {
-      const response = await ai.models.generateContent({
+      const response = await generateContent({
         model: 'gemini-3.8-flash',
         contents: [{ role: 'user', parts: [{ text: promptText }] }]
       });

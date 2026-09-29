@@ -34,13 +34,13 @@ import {
   Activity,
   Radio
 } from 'lucide-react';
-import { GoogleGenAI } from '@google/genai';
+import { generateContent } from '../services/geminiService';
 import { jsPDF } from 'jspdf';
 import { CandidateProfile } from './CandidateProfileManager';
-import { 
-  ProvisionalCandidateProfile, 
-  NationalAlignmentType, 
-  LocalAntioquiaAlignmentType 
+import {
+  ProvisionalCandidateProfile,
+  NationalAlignmentType,
+  LocalAntioquiaAlignmentType
 } from './SubregionesManager';
 import {
   getGobernacionStatus,
@@ -48,9 +48,6 @@ import {
   runGobernacionCycle,
   GobernacionStatus
 } from '../services/gobernacionService';
-
-// Inicialización de Google GenAI con API Key del entorno
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' });
 
 // Interfaces para la matriz jerarquizada y termómetro del PDF
 export interface HierarchyMatrixItem {
@@ -674,7 +671,7 @@ Devuelve OBLIGATORIAMENTE un objeto JSON estrictamente válido con este esquema:
 
 Responde ÚNICAMENTE con el objeto JSON puro sin bloques de markdown extraños.`;
 
-      const response = await ai.models.generateContent({
+      const response = await generateContent({
         model: 'gemini-3.8-flash',
         contents: [
           {
@@ -777,7 +774,7 @@ Asegúrate de basar los datos en los hallazgos fácticos de Google Search.`;
       let queriesExecuted: string[] = [];
 
       try {
-        const response = await ai.models.generateContent({
+        const response = await generateContent({
           model: 'gemini-3.8-flash',
           contents: [{ role: 'user', parts: [{ text: searchPrompt }] }],
           config: {
@@ -791,7 +788,7 @@ Asegúrate de basar los datos en los hallazgos fácticos de Google Search.`;
       } catch (innerErr) {
         // Fallback estándar si las herramientas de búsqueda no estuviesen disponibles
         console.warn('Fallback sin googleSearch tool:', innerErr);
-        const fallbackRes = await ai.models.generateContent({
+        const fallbackRes = await generateContent({
           model: 'gemini-3.8-flash',
           contents: [{ role: 'user', parts: [{ text: searchPrompt }] }]
         });
@@ -1146,7 +1143,7 @@ Devuelve OBLIGATORIAMENTE un arreglo JSON con esta estructura exacta:
 
 Responde ÚNICAMENTE con el arreglo JSON sin texto adicional ni preámbulos.`;
 
-      const response = await ai.models.generateContent({
+      const response = await generateContent({
         model: 'gemini-3.8-flash',
         contents: [{ role: 'user', parts: [{ text: promptScripts }] }]
       });
