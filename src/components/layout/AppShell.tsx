@@ -86,7 +86,10 @@ export const AppShell: React.FC<AppShellProps> = ({ currentView, onSelectView, c
           tema={tema}
           onToggleTema={() => setTema(tema === 'claro' ? 'oscuro' : 'claro')}
         />
-        <main className="flex-1 overflow-y-auto px-4 md:px-8 pt-6 pb-24 lg:pb-6">
+        {/* relative: sin él, los elementos absolutos de dentro (p. ej. los sr-only de las tablas) se posicionan respecto
+            a la página, la estiran (Territorio medía 2.412 px en una ventana de 950) y la rueda desplazaba la app
+            entera, menú y barra incluidos. */}
+        <main className="relative flex-1 overflow-y-auto px-4 md:px-8 pt-6 pb-24 lg:pb-6">
           <div className="max-w-[1440px] mx-auto w-full flex flex-col gap-5">
             {modulo.id !== 'inicio' && (
               <div className="proteus-civico flex flex-col gap-3">

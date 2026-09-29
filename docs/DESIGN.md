@@ -28,6 +28,11 @@ seis módulos pasan a una barra abajo (`BarraModulos` en `SidebarNav.tsx`). Con 
 No recortar desbordes con `overflow-x: hidden`: se corrige la causa (una tira ancha va en su propio contenedor
 desplazable, como las pestañas).
 
+**Solo `main` se desplaza, nunca la página (29-sep-2026).** `main` es `relative` para que todo elemento absoluto de
+dentro quede contenido en él. Sin eso, un `<span class="sr-only">` de una tabla de Territorio se posicionaba respecto
+a la página, la estiraba a 2.412 px en una ventana de 950 y la rueda sobre el menú desplazaba la app entera (menú y
+barra superior fuera de la vista). No quitar el `relative`.
+
 **Herramientas de desarrollador solo para administradores (decisión de Jose, 29-sep-2026).** "Ingestar datos" y
 "Copiar contexto Gemini" (Territorio › Municipios) se quedan en su pantalla porque actúan sobre el municipio que
 se está viendo, pero solo las ve el rol `ADMIN`.
