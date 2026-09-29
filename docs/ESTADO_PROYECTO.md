@@ -122,6 +122,10 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
   `territoryProfileService.ts`; ficha: `src/components/territorio/`.
 
 ## 5. Bitácora (agregar arriba lo más reciente)
+- 29-sep (Claude Opus, `codex/ci-y-gemini`): publicado en **https://polimetrics.app** (Coolify). CI en GitHub Actions
+  (tipos, lint, pruebas, build; commit de `claude/ci`); el módulo importado `voto-correlaciones` sale del lint (no se
+  edita a mano). Gemini: 20 peticiones/min por cliente y lista cerrada de modelos y agentes; `/api` inexistente da 404;
+  el servidor escucha en IPv4 e IPv6.
 - 29-sep (Claude Opus, `codex/despliegue-coolify`): preparación para publicar en Coolify (data center de Network IA
   Solutions). `Dockerfile` multi-stage + `.dockerignore`; acceso con usuario y clave opcional
   (`PROTEUS_USUARIO`/`PROTEUS_CLAVE`, `src/server/acceso.ts`) porque la app no tiene login y publicada sin él dejaba

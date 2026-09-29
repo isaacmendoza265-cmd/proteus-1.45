@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 import fs from 'fs';
 import os from 'os';
 import { exigirAcceso } from './src/server/acceso';
+import { limitarPeticiones, MODELOS_PERMITIDOS } from './src/server/limite';
 
 dotenv.config();
 
@@ -17,6 +18,8 @@ async function startServer() {
   if (acceso) app.use(acceso);
 
   app.use(express.json({ limit: '15mb' }));
+  // Cada llamada a estas rutas gasta cuota de Gemini: 20 por minuto por cliente
+  app.use(['/api/gemini', '/api/contenido', '/api/piezas', '/api/antigravity/interactions'], limitarPeticiones(20, 60_000));
 
   // Helper para inicialización perezosa de GoogleGenAI
   let cachedAi: GoogleGenAI | null = null;
@@ -155,6 +158,10 @@ async function startServer() {
 
       if (!input || typeof input !== 'string' || !input.trim()) {
         res.status(400).json({ error: "El campo 'input' es obligatorio." });
+        return;
+      }
+      if (!['antigravity-preview-05-2026', 'deep-research-preview-04-2026'].includes(agent)) {
+        res.status(400).json({ error: `Agente no permitido: ${agent}` });
         return;
       }
 
@@ -393,9 +400,13 @@ async function startServer() {
         res.status(400).json({ error: 'La solicitud es demasiado grande (máx. ~14 MB; para video usa /api/piezas/subir).' });
         return;
       }
+      if (model !== undefined && !MODELOS_PERMITIDOS.has(model)) {
+        res.status(400).json({ error: `Modelo no permitido: ${model}. Permitidos: ${[...MODELOS_PERMITIDOS].join(', ')}.` });
+        return;
+      }
       const ai = getGenAI(req.headers['x-gemini-api-key'] as string | undefined);
       const respuesta = await ai.models.generateContent({
-        model: typeof model === 'string' && model ? model : MODELO_GENERICO,
+        model: model ?? MODELO_GENERICO,
         contents,
         config,
       });
@@ -409,6 +420,11 @@ async function startServer() {
       const e = errorGemini(err, 'No se pudo generar contenido con Gemini.');
       res.status(e.status).json({ error: e.error });
     }
+  });
+
+  // Una ruta /api inexistente es un 404, no el index.html de la SPA
+  app.use('/api', (_req, res) => {
+    res.status(404).json({ error: 'Ruta de API no encontrada.' });
   });
 
   // Vite middleware para entorno de desarrollo
@@ -426,8 +442,10 @@ async function startServer() {
     });
   }
 
-  app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Server running on http://0.0.0.0:${PORT}`);
+  // Sin host: escucha en IPv4 e IPv6. Con '0.0.0.0' el healthcheck de Coolify por localhost (que en
+  // Alpine resuelve a ::1) daba "Connection refused" con la app sana.
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
   });
 }
 

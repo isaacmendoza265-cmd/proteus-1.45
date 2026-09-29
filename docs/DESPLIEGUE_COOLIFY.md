@@ -28,6 +28,19 @@ cambia nada. La lógica está en `src/server/acceso.ts` con sus pruebas.
 
 No hacen falta `PORT` ni `NODE_ENV`: el `Dockerfile` los fija (3000 y `production`).
 
+## Protección del gasto en Gemini
+
+- Las rutas de IA (`/api/gemini`, `/api/contenido`, `/api/piezas`, `/api/antigravity/interactions`)
+  admiten **20 peticiones por minuto por cliente** (`src/server/limite.ts`); después responden `429`.
+- El servidor solo acepta los modelos de `MODELOS_PERMITIDOS` (hoy `gemini-3.8-flash`) y los dos
+  agentes de Antigravity: el navegador no puede pedir un modelo más caro.
+
+## Publicado
+
+- **https://polimetrics.app** (app `proteus` en Coolify, proyecto EMPRESA, desde el 2026-09-29).
+- Healthcheck de Coolify con host `127.0.0.1`: en Alpine `localhost` resuelve a IPv6. Desde este cambio
+  el servidor escucha también en IPv6, así que `localhost` funciona igual.
+
 ## Limitaciones conocidas en el servidor
 
 - **Gobernación** (`/api/gobernacion/*`): depende de Python y de la carpeta local del Proyecto
