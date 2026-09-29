@@ -133,7 +133,7 @@ export default function App() {
 
       {/* 2. TRIPLE PROPÓSITO & ANALÍTICA INTEGRADA */}
       {currentView === 'municipal-repository' && (
-        <MunicipalRepositoryExplorerView />
+        <MunicipalRepositoryExplorerView esAdmin={usuario?.rol === 'ADMIN'} />
       )}
 
       {currentView === 'voter-segmentation' && (

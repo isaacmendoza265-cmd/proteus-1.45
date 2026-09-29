@@ -47,6 +47,11 @@ if (resultados[0].codigo === 0) {
 }
 
 const fallos = resultados.filter((r) => r.codigo !== 0);
-for (const f of fallos) console.log(`\n──── ${f.nombre} ────\n${f.salida.trim().split('\n').slice(-40).join('\n')}`);
+for (const f of fallos) {
+  const lineas = f.salida.replace(/\x1b\[[0-9;]*m/g, '').trim().split('\n');
+  // Primero las líneas que dicen QUÉ falló (en una salida larga suelen quedar lejos del final), luego la cola
+  const claves = lineas.filter((l) => /FAIL|×|✗|Error|error TS|timed out|Timeout|AssertionError|expected/.test(l)).slice(0, 40);
+  console.log(`\n──── ${f.nombre} ────\n${claves.length ? `${claves.join('\n')}\n…\n` : ''}${lineas.slice(-25).join('\n')}`);
+}
 console.log(`\n${fallos.length ? `✗ ${fallos.length} paso(s) fallaron` : '✓ CI local en verde'} · ${((Date.now() - inicio) / 1000).toFixed(1)} s en total`);
 process.exit(fallos.length ? 1 : 0);

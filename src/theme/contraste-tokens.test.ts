@@ -1,7 +1,4 @@
 /**
- * PENDIENTE DE LA FASE 0 DEL REDISEÑO: mover a src/theme/ (y volver la ruta a '../index.css') junto con los tokens
- * corregidos. Hoy falla a propósito en 6 pares: es el diagnóstico medido.
- *
  * Contraste WCAG de los tokens --c-* de Proteus, leído del CSS real (src/index.css).
  *
  * Parsea el CSS en vez de copiar los hex: una copia seguiría en verde después de cambiar un token, que es
@@ -10,13 +7,15 @@
  * Umbrales, distintos a propósito:
  *   - 4.5:1  texto normal sobre su fondo (WCAG 1.4.3 AA).
  *   - 3:1    contorno de algo accionable: un campo, un botón outline, el anillo de foco (WCAG 1.4.11).
- * Los divisores decorativos (--c-border entre filas) NO llevan umbral: exigirles 3:1 los vuelve rayas.
+ * Los divisores decorativos (--c-border entre filas) NO llevan umbral: exigirles 3:1 los vuelve rayas. Por eso los campos
+ * tienen su propio token, --c-border-campo. Con un solo token para los dos trabajos, los campos daban 1,24-1,38:1
+ * (auditoría del 29-sep-2026, docs/ESTADO_PROYECTO.md).
  */
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
-const css = readFileSync(join(__dirname, '../../src/index.css'), 'utf8');
+const css = readFileSync(join(__dirname, '../index.css'), 'utf8');
 
 const TEMAS: [string, string][] = [
   ['claro', ':root {'],
@@ -49,11 +48,13 @@ const PARES: [string, string, number, string][] = [
   ['--c-info', '--c-surface', 4.5, 'información como texto'],
   ['--c-info', '--c-info-soft', 4.5, 'información sobre su fondo'],
 
-  // Contornos de controles: 3:1 (inputs/selects usan --c-border como borde en index.css)
-  ['--c-border', '--c-surface', 3, 'borde de campo sobre tarjeta'],
-  ['--c-border', '--c-bg', 3, 'borde de campo sobre el lienzo'],
-  ['--c-accent', '--c-bg', 3, 'anillo de foco / borde activo sobre el lienzo'],
-  ['--c-accent', '--c-surface', 3, 'anillo de foco / borde activo sobre tarjeta'],
+  // Contornos de controles: 3:1 (inputs, selects y textareas usan --c-border-campo en index.css)
+  ['--c-border-campo', '--c-surface', 3, 'borde de campo sobre tarjeta'],
+  ['--c-border-campo', '--c-bg', 3, 'borde de campo sobre el lienzo'],
+  ['--c-border-campo', '--c-sunken', 3, 'borde de campo sobre fila hundida'],
+  ['--c-border-campo', '--c-side', 3, 'borde de campo en el menú lateral'],
+  ['--c-foco', '--c-bg', 3, 'anillo de foco sobre el lienzo'],
+  ['--c-foco', '--c-surface', 3, 'anillo de foco sobre tarjeta'],
 ];
 
 /** Extrae los `--token: #hex;` del bloque de un selector. */

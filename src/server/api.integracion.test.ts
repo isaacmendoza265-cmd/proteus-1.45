@@ -15,9 +15,12 @@ const URL_BD = process.env.TEST_DATABASE_URL;
 describe.skipIf(!URL_BD)('API con PostgreSQL', () => {
   let prisma: PrismaClient;
 
-  beforeAll(() => {
+  beforeAll(async () => {
     execSync('npx prisma migrate deploy', { env: { ...process.env, DATABASE_URL: URL_BD }, stdio: 'ignore' });
     prisma = new PrismaClient({ datasourceUrl: URL_BD });
+    // Conectar aquí (60 s) y no de forma perezosa en el primer beforeEach (10 s): con `npm run ci:local` la máquina
+    // corre tipos, lint y build a la vez, y el arranque del motor de Prisma llegó a pasar de 10 s (29-sep-2026).
+    await prisma.$connect();
   }, 60_000);
   afterAll(async () => prisma?.$disconnect());
   beforeEach(async () => {

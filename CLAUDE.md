@@ -137,7 +137,7 @@ del "piso 3" van en el sistema del generador de contenido y del análisis de pie
 **Gobernación** (`/api/gobernacion/*`): lanza `scripts/gobernacion_bridge.py` contra una SQLite en el PC de
 Isaac (`GOBERNACION_DIR`). En el servidor no hay Python: responde un error claro y el resto sigue.
 
-**Estilo**: "sobrio cívico", tokens `--c-*` en `src/index.css` (claro/oscuro con `data-tema`). Varios módulos
+**Estilo**: "sobrio cívico", tokens `--c-*` en `src/index.css` (claro/oscuro con `data-tema`). **Las decisiones de diseño y su porqué están en `docs/DESIGN.md`** (dos tokens de borde, foco, mínimo 12 px, barra inferior en teléfono, sello de procedencia); `src/theme/contraste-tokens.test.ts` mide el contraste leyendo el CSS real. Varios módulos
 viejos conservan el estilo oscuro/cristal anterior; no reescribirlos, unificarlos poco a poco.
 
 **Código muerto conocido** (no imitarlo): `HomePageStructure.tsx`, y en `CandidateProfileManager.tsx` el paso

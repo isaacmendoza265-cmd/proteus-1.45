@@ -164,6 +164,12 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
   `territoryProfileService.ts`; ficha: `src/components/territorio/`.
 
 ## 5. Bitácora (agregar arriba lo más reciente)
+- 29-sep (Claude Opus, `main`): **Fase 0 del rediseño** (decisiones de Jose: sello como firma, granate único acento,
+  herramientas de desarrollador solo para admin). Tokens `--c-border-campo` y `--c-foco` (test de contraste en verde:
+  42 pares, 2 temas); `:focus-visible` global; mínimo de 12 px; barra inferior de módulos por debajo de 1.024 px;
+  "Cerrar sesión" en Mi cuenta. Medido con un usuario EQUIPO: 0 desbordes a 390 px (antes las 10 pantallas) y 0
+  textos < 11,5 px (Municipios tenía 533/708). Decisiones y porqué en `docs/DESIGN.md`. Arregladas dos intermitencias
+  de `ci:local` bajo carga: la prueba de integración conecta a Prisma en `beforeAll` y `testTimeout` sube a 20 s.
 - 29-sep (Claude Opus, `codex/ci-local-y-pendientes`): **PR #4 publicado en polimetrics.app** (login + Postgres,
   verificado en navegador; retiradas las variables del acceso provisional). `npm run ci:local`: los pasos de la CI en
   paralelo y con caché contra el Postgres del NVMe: 81 s en serie (igual que GitHub) → 44 s en frío, 34 s con caché.

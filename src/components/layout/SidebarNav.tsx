@@ -41,7 +41,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({ currentView, onSelectVie
   };
 
   return (
-    <aside className={`proteus-civico shrink-0 flex flex-col gap-1 border-r border-[var(--c-border)] bg-[var(--c-side)] transition-[width] duration-200 ${collapsed ? 'w-16 px-2' : 'w-60 px-3.5'} py-4`} aria-label="Módulos">
+    <aside className={`proteus-civico shrink-0 hidden lg:flex flex-col gap-1 border-r border-[var(--c-border)] bg-[var(--c-side)] transition-[width] duration-200 ${collapsed ? 'w-16 px-2' : 'w-60 px-3.5'} py-4`} aria-label="Módulos">
       <div className={`flex items-center gap-2.5 pb-5 ${collapsed ? 'justify-center' : 'px-2'}`}>
         <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true" className="shrink-0">
           <rect width="30" height="30" rx="7" fill="#85172C" />
@@ -77,5 +77,28 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({ currentView, onSelectVie
         )}
       </button>
     </aside>
+  );
+};
+
+/**
+ * En teléfono y tableta (< 1024 px) el menú lateral se oculta y los módulos pasan a una barra inferior, al alcance del
+ * pulgar. Con el menú lateral, un teléfono de 390 px dejaba 150 px para el contenido (auditoría 29-sep-2026).
+ */
+export const BarraModulos: React.FC<{ currentView: NavViewId; onSelectView: (view: NavViewId) => void }> = ({ currentView, onSelectView }) => {
+  const actual = moduloDeVista(currentView).id;
+  return (
+    <nav aria-label="Módulos" className="proteus-civico lg:hidden fixed inset-x-0 bottom-0 z-40 grid grid-cols-6 border-t border-[var(--c-border)] bg-[var(--c-surface)] px-0.5 pt-1 pb-[calc(0.25rem+env(safe-area-inset-bottom,0px))]">
+      {MODULES.map((m) => {
+        const on = actual === m.id;
+        const Icon = m.icon;
+        return (
+          <button key={m.id} onClick={() => onSelectView(m.vistas[0].id)} aria-current={on ? 'page' : undefined}
+            className={`min-h-14 flex flex-col items-center justify-center gap-1 rounded-lg text-xs font-semibold tracking-tight ${on ? 'text-[var(--c-accent-text)] bg-[var(--c-accent-soft)]' : 'text-[var(--c-muted)]'}`}>
+            <Icon className="w-5 h-5" strokeWidth={1.7} aria-hidden="true" />
+            <span className="max-w-full truncate">{m.label}</span>
+          </button>
+        );
+      })}
+    </nav>
   );
 };

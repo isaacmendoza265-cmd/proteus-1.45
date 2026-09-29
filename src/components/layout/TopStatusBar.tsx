@@ -14,7 +14,7 @@ interface TopStatusBarProps {
 export const TopStatusBar: React.FC<TopStatusBarProps> = ({ onOpenArchivos, onGoTerritorio, onOpenSearch, tema, onToggleTema }) => {
   const { activeTerritory: territory } = useActiveTerritory();
   return (
-    <header className="proteus-civico h-16 shrink-0 px-6 md:px-8 flex items-center gap-3 border-b border-[var(--c-border)] bg-[var(--c-surface)] z-30">
+    <header className="proteus-civico h-16 shrink-0 px-4 md:px-8 flex items-center gap-3 border-b border-[var(--c-border)] bg-[var(--c-surface)] z-30">
       <span className="hidden md:inline text-xs font-semibold text-[var(--c-muted)]">Territorio activo</span>
       <button onClick={onGoTerritorio} className="flex items-center gap-2 min-h-9 px-3 rounded-lg border border-[var(--c-border)] bg-[var(--c-bg)] text-sm font-semibold max-w-[320px]" title="Cambiar el territorio activo en el mapa">
         <MapPin className="w-4 h-4 shrink-0" strokeWidth={1.7} />

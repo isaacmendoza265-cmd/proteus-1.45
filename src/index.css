@@ -20,7 +20,9 @@
   --c-sunken: #F1EEE8;
   --c-ink: #17191C;
   --c-muted: #50565C;
-  --c-border: #E0DBD1;
+  --c-border: #E0DBD1;        /* divisor decorativo: sin umbral de contraste */
+  --c-border-campo: #857E72;  /* contorno de campos y controles: ≥ 3:1 (WCAG 1.4.11) */
+  --c-foco: #85172C;          /* anillo de foco: ≥ 3:1 sobre lienzo y tarjeta */
   --c-accent: #85172C;
   --c-accent-soft: #F3E4E7;
   --c-accent-text: #85172C;
@@ -54,6 +56,8 @@ html[data-tema="oscuro"] {
   --c-ink: #ECE9E3;
   --c-muted: #A9AFB5;
   --c-border: #2B2F34;
+  --c-border-campo: #737A82;
+  --c-foco: #F08A9A;
   --c-accent: #A3243A;
   --c-accent-soft: #3A1E24;
   --c-accent-text: #F08A9A;
@@ -81,16 +85,23 @@ html, body {
 input, select, textarea {
   background-color: var(--c-surface) !important;
   color: var(--c-ink) !important;
-  border: 1px solid var(--c-border) !important;
+  border: 1px solid var(--c-border-campo) !important;
   border-radius: 0.5rem !important;
   backdrop-filter: none !important;
 }
 input::placeholder, textarea::placeholder { color: var(--c-muted) !important; }
 input:focus, select:focus, textarea:focus {
-  border-color: var(--c-accent) !important;
+  border-color: var(--c-foco) !important;
   box-shadow: 0 0 0 3px var(--c-accent-soft) !important;
   outline: none !important;
 }
+
+/* Foco visible con teclado en todo control (el de los campos va arriba) */
+:focus-visible { outline: 2px solid var(--c-foco); outline-offset: 2px; }
+
+/* Tamaño mínimo de lectura: 12 px. Las vistas anteriores usan 8-11 px en ~1.175 sitios (auditoría 29-sep-2026);
+   se suben aquí mientras se migran. Ver docs/rediseno/. */
+.text-\[8px\], .text-\[9px\], .text-\[10px\], .text-\[11px\] { font-size: 12px !important; }
 
 ::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-track { background: transparent; }

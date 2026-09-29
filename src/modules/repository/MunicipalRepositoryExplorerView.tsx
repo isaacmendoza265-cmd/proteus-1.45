@@ -24,7 +24,9 @@ import {
 } from 'lucide-react';
 import { municipalRepository, UnifiedMunicipalityRecord } from '../../services/municipalRepositoryService';
 
-export const MunicipalRepositoryExplorerView: React.FC = () => {
+// Las herramientas de desarrollador (ingesta de JSON en memoria y copia del contexto de Gemini) solo las ve un
+// administrador (decisión de Jose, 29-sep-2026).
+export const MunicipalRepositoryExplorerView: React.FC<{ esAdmin?: boolean }> = ({ esAdmin = false }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedSubregion, setSelectedSubregion] = useState('all');
   const [selectedMuni, setSelectedMuni] = useState<UnifiedMunicipalityRecord | null>(null);
@@ -125,13 +127,13 @@ export const MunicipalRepositoryExplorerView: React.FC = () => {
             </p>
           </div>
 
-          <button
+          {esAdmin && <button
             onClick={() => setShowDeveloperModal(true)}
             className="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-emerald-500/30 to-sky-500/30 hover:from-emerald-500/40 hover:to-sky-500/40 border border-emerald-400/50 text-emerald-200 text-xs font-bold transition flex items-center gap-2 shadow-[0_0_15px_rgba(52,211,153,0.3)] shrink-0"
           >
             <PlusCircle className="w-4 h-4 text-emerald-400" />
             <span>Ingestar Datos (Desarrollador)</span>
-          </button>
+          </button>}
         </div>
       </div>
 
@@ -233,7 +235,7 @@ export const MunicipalRepositoryExplorerView: React.FC = () => {
                   </p>
                 </div>
 
-                <div className="flex items-center gap-2">
+                {esAdmin && <div className="flex items-center gap-2">
                   <button
                     onClick={handleCopyGeminiContext}
                     className="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold text-xs flex items-center gap-1.5 transition"
@@ -242,7 +244,7 @@ export const MunicipalRepositoryExplorerView: React.FC = () => {
                     {copiedContext ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5 text-sky-400" />}
                     <span>{copiedContext ? 'Contexto Copiado' : 'Copiar Contexto Gemini'}</span>
                   </button>
-                </div>
+                </div>}
               </div>
 
               {/* Core KPIs */}

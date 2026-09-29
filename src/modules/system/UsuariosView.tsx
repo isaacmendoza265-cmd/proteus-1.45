@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-  cambiarMiClave, crearUsuario, editarUsuario, listarUsuarios,
+  cambiarMiClave, cerrarSesion, crearUsuario, editarUsuario, listarUsuarios,
   type Rol, type UsuarioAdmin, type UsuarioSesion,
 } from '../../services/sesionCliente';
 
@@ -41,10 +41,16 @@ const MiCuenta: React.FC<{ usuario: UsuarioSesion }> = ({ usuario }) => {
 
   return (
     <section className={tarjeta} aria-labelledby="mi-cuenta">
-      <h2 id="mi-cuenta" className="m-0 font-titulo text-2xl font-medium">Mi cuenta</h2>
-      <p className="mt-1 mb-4 text-sm text-[var(--c-muted)]">
-        {usuario.nombre} · {usuario.email} · {usuario.rol === 'ADMIN' ? 'Administrador' : 'Equipo'}
-      </p>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h2 id="mi-cuenta" className="m-0 font-titulo text-2xl font-medium">Mi cuenta</h2>
+          <p className="mt-1 mb-4 text-sm text-[var(--c-muted)]">
+            {usuario.nombre} · {usuario.email} · {usuario.rol === 'ADMIN' ? 'Administrador' : 'Equipo'}
+          </p>
+        </div>
+        {/* En el teléfono no hay menú lateral: aquí está la salida */}
+        <button type="button" onClick={cerrarSesion} className={`${boton} border border-[var(--c-border-campo)]`}>Cerrar sesión</button>
+      </div>
       <form onSubmit={enviar} className="grid gap-3 sm:grid-cols-[1fr_1fr_auto] items-end">
         <label className="text-sm font-semibold">Clave actual
           <input type="password" autoComplete="current-password" required value={actual} onChange={(e) => setActual(e.target.value)} className={`${campo} mt-1.5`} />
