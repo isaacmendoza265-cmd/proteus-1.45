@@ -1,6 +1,6 @@
 # Proteus — estado del proyecto (memoria compartida entre agentes)
 
-Última actualización: 29-sep-2026 (Claude Opus: Concejo 2023 por candidato, `fbfad26`). **Todo agente debe actualizar este archivo al terminar.**
+Última actualización: 29-sep-2026 (Claude Opus: Concejo 2019/2015 por candidato en la ficha, `4e4241a`). **Todo agente debe actualizar este archivo al terminar.**
 Repositorio local: `C:\Users\isaac\OneDrive\Documentos\Proyecto Proteus`. Remoto: github.com/isaacmendoza265-cmd/proteus-1.45.
 Ramas `codex/navegacion-mapa`, `claude/inicio` y `claude/encuestas-2026` ya fusionadas en `main` (28-sep). No subir bundles a GitHub por la web: se aplican con `git fetch <bundle>`.
 Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en el PATH de los agentes
@@ -169,6 +169,13 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
   `territoryProfileService.ts`; ficha: `src/components/territorio/`.
 
 ## 5. Bitácora (agregar arriba lo más reciente)
+- 29-sep (Claude Opus, `main`) `4e4241a`: **Concejo 2019 y 2015 por candidato en la ficha**. Los datos ya estaban (MMV
+  por puesto, 125 municipios); la ficha solo mostraba 8 candidatos. Ahora usan la vista del Concejo 2023 (listas
+  desplegables, voto solo por lista, buscador), en el municipio y en comuna/barrio (suma de sus puestos). Ojo: por
+  puesto, `build_resultados_historicos.py` guarda solo los candidatos que suman el 97 % del voto preferente (hasta
+  25): en comuna/barrio los candidatos son mínimos y no se calcula el voto solo por lista (se avisa). Para tenerlos
+  completos por puesto habría que regenerar la serie sin ese recorte (crudos MMV en `_originales/`). Sin curules de
+  2019/2015. ci:local en verde (314 pruebas, 2 nuevas).
 - 29-sep (Claude Opus, `main`) `fbfad26`: **Concejo 2023 por partido y candidato** en los 125 municipios, desde el libro
   "Concejo 2023 — Todos los resultados" que entregó el equipo (escrutinio E-24/E-26 CON en 13; preconteo oficial con
   ≥ 98 % de mesas en 86). El crudo va en `_originales/registraduria/` (no está en el repo: hay que copiarlo ahí para
