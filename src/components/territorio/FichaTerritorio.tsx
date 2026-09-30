@@ -12,6 +12,9 @@ import { cargarElecciones, sumarEleccion, tipoEleccion, ELECCIONES_PENDIENTES, t
 import type { PuestoVotacion } from '../../services/pollingStationsService';
 
 const Concejo2023Candidatos = React.lazy(() => import('./Concejo2023Candidatos'));
+const ConcejoHistoricoCandidatos = React.lazy(() => import('./Concejo2023Candidatos').then((m) => ({ default: m.ConcejoHistoricoCandidatos })));
+/** Concejos cuyo voto por candidato se muestra en su propio bloque (lista desplegable completa) */
+const CONCEJOS_HISTORICOS = ['concejo-2019', 'concejo-2015'];
 
 export type Seccion = 'politica' | 'demografia' | 'censo' | 'grupos';
 const SECCIONES: [Seccion, string][] = [
@@ -258,7 +261,7 @@ export const FichaTerritorio: React.FC<FichaTerritorioProps> = ({
                     <span className="w-14 text-right tabular-nums">{pct(c.pct)}</span>
                   </div>
                 ))}
-                {resultado.candidatos.length > 0 && (<>
+                {resultado.candidatos.length > 0 && !CONCEJOS_HISTORICOS.includes(eleccionSel.id) && (<>
                   <span className="text-xs font-bold text-[var(--c-muted)] mt-1">Candidatos con más voto preferente</span>
                   {resultado.candidatos.slice(0, 8).map((c) => (
                     <div key={c.nombre + c.partido} className="flex items-center gap-2 text-sm">
@@ -283,6 +286,11 @@ export const FichaTerritorio: React.FC<FichaTerritorioProps> = ({
           ) : (
             <Aviso>El voto por candidato del Concejo 2023 solo se publica por municipio: está en la ficha de {t.municipio}.</Aviso>
           ))}
+          {eleccionSel && resultado && CONCEJOS_HISTORICOS.includes(eleccionSel.id) && (
+            <React.Suspense fallback={<Aviso>Cargando el {eleccionSel.nombre} por candidato…</Aviso>}>
+              <ConcejoHistoricoCandidatos eleccion={eleccionSel} codigos={codigosDe(eleccionSel)} municipio={t.municipio} territorio={t.nombre} />
+            </React.Suspense>
+          )}
           {comparacion.length > 1 && (
             <div className="flex flex-col gap-1 px-3 py-2.5 rounded-xl border border-[var(--c-border)]">
               <Cabecera titulo="La misma elección en otros años" estado="oficial" fuente="Registraduría: escrutinio mesa a mesa (2015-2022, Presidencia 2026) y preconteo (2023, Congreso 2026)" />

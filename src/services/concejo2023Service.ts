@@ -12,6 +12,7 @@
  */
 import rawIndice from '../data/electoral/resultadosPuesto/indice.json';
 import { getResultado2023 } from './electoralResults2023Service';
+import { sumarEleccion, type EleccionPuestos } from './electionResultsService';
 
 export type EstadoConcejo2023 = 'solido' | 'incompleto' | 'sin-datos';
 
@@ -71,6 +72,9 @@ export interface Concejo2023 {
   partidos: PartidoConcejo2023[];
   totalCurules: number | null;
   nota: string | null;
+  /** true cuando se suman puestos: cada puesto guarda solo los candidatos que suman el 97 % del voto
+   *  preferente (hasta 25), así que el voto por candidato es un mínimo y el voto solo por lista no se calcula */
+  candidatosParciales?: boolean;
 }
 
 type Indice = Record<string, { nombre: string; '2023'?: string }>;
@@ -125,4 +129,46 @@ export async function cargarConcejo2023(daneOrId: string): Promise<Concejo2023 |
   const cargar = slug ? cargadores[`../data/electoral/concejo2023/${slug}.json`] : undefined;
   if (!cargar) return null;
   return armarConcejo2023((await cargar()).default);
+}
+
+/** Concejos que ya vienen por candidato en el escrutinio mesa a mesa (MMV) por puesto */
+export const CONCEJOS_POR_PUESTO = ['concejo-2019', 'concejo-2015'];
+
+/**
+ * Concejo por partido y candidato a partir de una elección por puesto (escrutinio MMV 2019 y 2015),
+ * sumando los puestos dados ('todos' = total del municipio). El total de cada lista incluye el voto
+ * preferente de sus candidatos: el voto solo por la lista es la diferencia. No trae curules.
+ * El total municipal trae a todos los candidatos; cada puesto, solo los que suman el 97 % del voto
+ * preferente (hasta 25, scripts/build_resultados_historicos.py): al sumar puestos, el voto por candidato
+ * queda como mínimo y el voto solo por la lista no se calcula (se deja en 0 y `candidatosParciales`).
+ */
+export function concejoDesdeEleccion(e: EleccionPuestos, codigos: string[] | 'todos', municipio: string): Concejo2023 | null {
+  const r = sumarEleccion(e, codigos);
+  if (!r) return null;
+  const porPartido = new Map<string, { nombre: string; votos: number }[]>();
+  for (const c of r.candidatos) {
+    const l = porPartido.get(c.partido) ?? [];
+    l.push({ nombre: c.nombre, votos: c.votos });
+    porPartido.set(c.partido, l);
+  }
+  const parciales = codigos !== 'todos';
+  const votosPartidos = r.partidos.reduce((s, p) => s + p.votos, 0);
+  const validos = votosPartidos + r.blanco;
+  const partidos: PartidoConcejo2023[] = r.partidos.map((p) => {
+    const cands = (porPartido.get(p.nombre) ?? []).sort((a, b) => b.votos - a.votos);
+    const suma = cands.reduce((s, c) => s + c.votos, 0);
+    return {
+      nombre: p.nombre,
+      total: p.votos,
+      pctValidos: validos ? r1((100 * p.votos) / validos) : 0,
+      soloLista: parciales ? 0 : Math.max(0, p.votos - suma),
+      candidatos: cands.map((c) => ({ codigo: '', nombre: c.nombre, votos: c.votos, pctLista: p.votos ? r1((100 * c.votos) / p.votos) : 0 })),
+      curules: null,
+    };
+  });
+  return {
+    dane: '', municipio, estado: 'solido', pctMesas: 100, habilitados: r.habilitados || null,
+    tipo: 'escrutinio', fuente: e.fuente, votosPartidos, blanco: r.blanco, nulos: r.nulos, noMarcados: r.noMarcados,
+    validos, partidos, totalCurules: null, nota: null, candidatosParciales: parciales,
+  };
 }

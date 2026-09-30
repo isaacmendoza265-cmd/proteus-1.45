@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { cargarConcejo2023, normPartido } from '../concejo2023Service';
+import { cargarConcejo2023, concejoDesdeEleccion, normPartido, CONCEJOS_POR_PUESTO } from '../concejo2023Service';
 import { MUNICIPIOS_CON_RESULTADOS, cargarElecciones, sumarEleccion } from '../electionResultsService';
 
 const ANTIOQUIA = MUNICIPIOS_CON_RESULTADOS.filter((d) => d.startsWith('05'));
@@ -58,4 +58,39 @@ describe('Concejo 2023 por candidato', () => {
     expect(c.estado).toBe('incompleto');
     expect(c.nota).toMatch(/repitió la elección/);
   });
+
+  it('Concejo 2019 y 2015 por candidato desde el escrutinio por puesto: 125 municipios, listas cuadran', async () => {
+    for (const d of ANTIOQUIA) {
+      const elecciones = await cargarElecciones(d);
+      for (const id of CONCEJOS_POR_PUESTO) {
+        const e = elecciones.find((x) => x.id === id)!;
+        expect(e, `${d} ${id}`).toBeTruthy();
+        const c = concejoDesdeEleccion(e, 'todos', d)!;
+        expect(c.partidos.length).toBeGreaterThan(0);
+        for (const p of c.partidos) {
+          const pref = p.candidatos.reduce((s, x) => s + x.votos, 0);
+          expect(pref, `${d} ${id} ${p.nombre}`).toBeLessThanOrEqual(p.total);
+          expect(p.soloLista + pref).toBe(p.total);
+        }
+        expect(c.totalCurules).toBeNull();
+        expect(c.candidatosParciales).toBe(false);
+      }
+    }
+  });
+
+  it('Girardota 2019 por puestos: listas exactas, candidatos como mínimo y sin voto solo por lista', async () => {
+    const e = (await cargarElecciones('05308')).find((x) => x.id === 'concejo-2019')!;
+    const total = concejoDesdeEleccion(e, 'todos', 'Girardota')!;
+    const puestos = concejoDesdeEleccion(e, Object.keys(e.puestos), 'Girardota')!;
+    expect(puestos.candidatosParciales).toBe(true);
+    expect(puestos.votosPartidos).toBe(total.votosPartidos);
+    expect(puestos.partidos.map((p) => p.total)).toEqual(total.partidos.map((p) => p.total));
+    const exacto = new Map(total.partidos.flatMap((p) => p.candidatos.map((c) => [`${p.nombre}|${c.nombre}`, c.votos] as const)));
+    for (const p of puestos.partidos) {
+      expect(p.soloLista).toBe(0);
+      for (const c of p.candidatos) expect(c.votos).toBeLessThanOrEqual(exacto.get(`${p.nombre}|${c.nombre}`)!);
+    }
+    expect(concejoDesdeEleccion(e, [], 'Girardota')).toBeNull();
+  });
 });
+
