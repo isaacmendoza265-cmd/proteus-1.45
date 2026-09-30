@@ -1,6 +1,6 @@
 # Proteus — estado del proyecto (memoria compartida entre agentes)
 
-Última actualización: 29-sep-2026 (Claude Opus: Concejo 2019/2015 por candidato en la ficha, `4e4241a`). **Todo agente debe actualizar este archivo al terminar.**
+Última actualización: 29-sep-2026 (Claude Opus: presupuesto, categoría y curules, `027de41`). **Todo agente debe actualizar este archivo al terminar.**
 Repositorio local: `C:\Users\isaac\OneDrive\Documentos\Proyecto Proteus`. Remoto: github.com/isaacmendoza265-cmd/proteus-1.45.
 Ramas `codex/navegacion-mapa`, `claude/inicio` y `claude/encuestas-2026` ya fusionadas en `main` (28-sep). No subir bundles a GitHub por la web: se aplican con `git fetch <bundle>`.
 Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en el PATH de los agentes
@@ -161,6 +161,8 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
 - Cartografía: `build_cartografia_fase_b.py`, `completar_bello_ovejas.py`, `agregar_manzanas.py`.
 - Puestos: `build_puestos_20k.py` (nacional, > 20.000), `build_puestos_fase_c_antioquia.py` (79 pequeños),
   `geocodificar_puestos_osm_antioquia.py` (OSM; crudos en `_originales/osm/`).
+- Municipio (alcaldía): `build_presupuesto_municipal.py`, `build_categoria_municipal.py`, `build_curules_concejo.py`
+  → `src/data/municipal/`, servicio `perfilMunicipalService.ts`.
 - Resultados: `build_concejo_2023_candidatos.py` (Concejo 2023 por candidato; crudo
   `_originales/registraduria/Concejo_Antioquia_2023_Todos_los_resultados.xlsx`), `build_resultados_puesto_2023.py`, `build_resultados_historicos.py <2015|2018|2019|2022>`,
   `build_presidencial_2026.py`, `indice_resultados_puesto.py`, `indice_ganadores.py`, `build_e24_medellin_zonas.py`.
@@ -169,6 +171,21 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
   `territoryProfileService.ts`; ficha: `src/components/territorio/`.
 
 ## 5. Bitácora (agregar arriba lo más reciente)
+- 29-sep (Claude Opus, `main`) `027de41`: **Presupuesto, categoría y curules del concejo** de los 125 municipios (lotes
+  1, 2 y 4 aprobados por el equipo; el 3, curules por lista 2019 y 2015 de la Registraduría, va después). Ficha del
+  municipio › Demografía › "La alcaldía en cifras"; la vista del Concejo 2023 dice las curules a proveer.
+  - Curules 2023: PDF de la Registraduría (19-jul-2023) → `build_curules_concejo.py`. En 88 municipios es una más
+    que las repartidas a listas (lo habitual: Estatuto de la Oposición); no se verificó uno por uno.
+  - Presupuesto: CUIPO de la Contraloría General de la República (API de datos.gov.co) →
+    `build_presupuesto_municipal.py [--descargar]`. 2025 cierre y 2026 a jun-2026. Solo la alcaldía. Medellín 2025:
+    11,64 billones. **Reemplaza la idea del valor agregado DANE** (decisión pendiente de Isaac del 27-sep).
+  - Categoría: historial de la Contaduría (`HISTORICOS.xlsx`, vigencias 2003-2026) → `build_categoria_municipal.py`.
+  - Hallazgo: las curules siguen la población (Ley 136, art. 22), no la categoría ni el presupuesto (Sabaneta, de
+    primera y con 593 mil millones, tiene 13 curules como Abejorral, de sexta). Con la población DANE 2026, 89 de
+    125 caen en el rango de la ley; los otros 36 tienen el rango de abajo porque la Registraduría usa la población
+    certificada para la elección.
+  - Crudos (fuera del repo): el PDF y `HISTORICOS.xlsx` se bajaron desde un navegador (Cloudflare y la Contaduría
+    cortan las descargas desde la nube); CUIPO se consulta por API.
 - 29-sep (Claude Opus, `main`) `4e4241a`: **Concejo 2019 y 2015 por candidato en la ficha**. Los datos ya estaban (MMV
   por puesto, 125 municipios); la ficha solo mostraba 8 candidatos. Ahora usan la vista del Concejo 2023 (listas
   desplegables, voto solo por lista, buscador), en el municipio y en comuna/barrio (suma de sus puestos). Ojo: por
