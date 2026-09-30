@@ -11,6 +11,8 @@ import {
 import { cargarElecciones, sumarEleccion, tipoEleccion, ELECCIONES_PENDIENTES, type EleccionPuestos } from '../../services/electionResultsService';
 import type { PuestoVotacion } from '../../services/pollingStationsService';
 
+const Concejo2023Candidatos = React.lazy(() => import('./Concejo2023Candidatos'));
+
 export type Seccion = 'politica' | 'demografia' | 'censo' | 'grupos';
 const SECCIONES: [Seccion, string][] = [
   ['politica', 'Política'],
@@ -273,6 +275,13 @@ export const FichaTerritorio: React.FC<FichaTerritorioProps> = ({
             </div>
           ) : (
             <Aviso>No hay puestos de votación de esta elección dentro del territorio: sus residentes votan en puestos vecinos. No se reparte ni se estima.</Aviso>
+          ))}
+          {eleccion === 'concejo-2023' && (t.tipo === 'municipio' ? (
+            <React.Suspense fallback={<Aviso>Cargando el Concejo 2023 por candidato…</Aviso>}>
+              <Concejo2023Candidatos dane={t.dane} municipio={t.municipio} />
+            </React.Suspense>
+          ) : (
+            <Aviso>El voto por candidato del Concejo 2023 solo se publica por municipio: está en la ficha de {t.municipio}.</Aviso>
           ))}
           {comparacion.length > 1 && (
             <div className="flex flex-col gap-1 px-3 py-2.5 rounded-xl border border-[var(--c-border)]">
