@@ -1,6 +1,6 @@
 # Proteus — estado del proyecto (memoria compartida entre agentes)
 
-Última actualización: 28-sep-2026 (Claude Opus: `main` = Inicio nuevo + encuestas 2026 fusionadas). **Todo agente debe actualizar este archivo al terminar.**
+Última actualización: 29-sep-2026 (Claude Opus: Concejo 2023 por candidato, `fbfad26`). **Todo agente debe actualizar este archivo al terminar.**
 Repositorio local: `C:\Users\isaac\OneDrive\Documentos\Proyecto Proteus`. Remoto: github.com/isaacmendoza265-cmd/proteus-1.45.
 Ramas `codex/navegacion-mapa`, `claude/inicio` y `claude/encuestas-2026` ya fusionadas en `main` (28-sep). No subir bundles a GitHub por la web: se aplican con `git fetch <bundle>`.
 Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en el PATH de los agentes
@@ -16,6 +16,10 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
   Concejo, Gobernación, Asamblea; 2022 Senado, Cámara, Presidencia; 2019 y 2015 territoriales; 2018 Presidencia.
   Fuente: escrutinio mesa a mesa (MMV) de la Registraduría. Congreso 2018 no existe mesa a mesa.
   Ubicación de puestos históricos: 2015 90 %, 2018 85 %, 2019 93 %, 2022 95 %.
+- **Concejo 2023 por candidato** (29-sep, `fbfad26`): voto preferente y voto solo por la lista de cada candidato,
+  por municipio, en la ficha del municipio (Política › 2023 › Concejo). 13 municipios de escrutinio E-24/E-26, 86 de
+  preconteo con ≥ 98 % de mesas, 26 "Sin información" (sin cifras), Pueblorrico "Oficial · incompleto" (jornada
+  repetida). `src/data/electoral/concejo2023/`, `concejo2023Service.ts`, `Concejo2023Candidatos.tsx`.
 - **Puestos 2026**: 1.280 en Antioquia; 57 sin ubicar (22 en los grandes, 35 rurales en los pequeños).
   Coordenadas: Divipole 2023 → dirección → lugar → OpenStreetMap (validado: urbano mediana 40 m) →
   cabecera/centro poblado/vereda (aproximada).
@@ -157,13 +161,29 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
 - Cartografía: `build_cartografia_fase_b.py`, `completar_bello_ovejas.py`, `agregar_manzanas.py`.
 - Puestos: `build_puestos_20k.py` (nacional, > 20.000), `build_puestos_fase_c_antioquia.py` (79 pequeños),
   `geocodificar_puestos_osm_antioquia.py` (OSM; crudos en `_originales/osm/`).
-- Resultados: `build_resultados_puesto_2023.py`, `build_resultados_historicos.py <2015|2018|2019|2022>`,
+- Resultados: `build_concejo_2023_candidatos.py` (Concejo 2023 por candidato; crudo
+  `_originales/registraduria/Concejo_Antioquia_2023_Todos_los_resultados.xlsx`), `build_resultados_puesto_2023.py`, `build_resultados_historicos.py <2015|2018|2019|2022>`,
   `build_presidencial_2026.py`, `indice_resultados_puesto.py`, `indice_ganadores.py`, `build_e24_medellin_zonas.py`.
 - Demografía: `build_censo_electoral.mjs`, `build_proyeccion_sexo_edad.py`.
 - Servicios clave: `src/services/pollingStationsService.ts`, `electionResultsService.ts`, `winnersService.ts`,
   `territoryProfileService.ts`; ficha: `src/components/territorio/`.
 
 ## 5. Bitácora (agregar arriba lo más reciente)
+- 29-sep (Claude Opus, `main`) `fbfad26`: **Concejo 2023 por partido y candidato** en los 125 municipios, desde el libro
+  "Concejo 2023 — Todos los resultados" que entregó el equipo (escrutinio E-24/E-26 CON en 13; preconteo oficial con
+  ≥ 98 % de mesas en 86). El crudo va en `_originales/registraduria/` (no está en el repo: hay que copiarlo ahí para
+  regenerar). Controles del script: lista + candidatos = total del partido; suma de partidos = votos por partidos.
+  Cruces: en los 86 de preconteo, los 913 totales por partido coinciden exacto con el preconteo por puesto ya
+  cargado; las curules por lista del escrutinio municipal cuadran en los 99 (la sigla entre comillas, p. ej. "AICO",
+  se ignora al cruzar nombres). 26 municipios sin datos sólidos (preconteo < 98 %): "Sin información", sin cifras.
+  **Pueblorrico**: el E-26 del 06-nov-2023 solo tiene 103 votos de 7.532 habilitados y la Registraduría repitió la
+  elección del Concejo: se muestra con aviso ("Oficial · incompleto"); falta el resultado de la repetición.
+  En la ficha: listas desplegables, % de lista sobre válidos y de candidato sobre su lista, buscador. No se marca
+  quién quedó electo. ci:local en verde (312 pruebas, 6 nuevas); probado en el navegador (Medellín, Pueblorrico y,
+  aislado, Abejorral, Turbo y Envigado).
+  **Pendiente**: resultado de la repetición del Concejo de Pueblorrico; escrutinio E-24 de los 26 municipios sin
+  datos sólidos (Turbo, Caucasia, Copacabana, La Ceja, La Estrella, Chigorodó…). Ojo: para esos 26 la ficha sigue
+  mostrando arriba los votos por partido del preconteo por puesto (< 98 % de mesas), con su sello de preconteo.
 - 29-sep (Claude Opus, `main`): **Fase 0 del rediseño** (decisiones de Jose: sello como firma, granate único acento,
   herramientas de desarrollador solo para admin). Tokens `--c-border-campo` y `--c-foco` (test de contraste en verde:
   42 pares, 2 temas); `:focus-visible` global; mínimo de 12 px; barra inferior de módulos por debajo de 1.024 px;
