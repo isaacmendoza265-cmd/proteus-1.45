@@ -1,6 +1,6 @@
 # Proteus — estado del proyecto (memoria compartida entre agentes)
 
-Última actualización: 29-sep-2026 (Claude Opus: presupuesto, categoría y curules, `027de41`). **Todo agente debe actualizar este archivo al terminar.**
+Última actualización: 29-sep-2026 (Claude Opus: texto plano en el generador, `328c3e2`). **Todo agente debe actualizar este archivo al terminar.**
 Repositorio local: `C:\Users\isaac\OneDrive\Documentos\Proyecto Proteus`. Remoto: github.com/isaacmendoza265-cmd/proteus-1.45.
 Ramas `codex/navegacion-mapa`, `claude/inicio` y `claude/encuestas-2026` ya fusionadas en `main` (28-sep). No subir bundles a GitHub por la web: se aplican con `git fetch <bundle>`.
 Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en el PATH de los agentes
@@ -171,6 +171,13 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
   `territoryProfileService.ts`; ficha: `src/components/territorio/`.
 
 ## 5. Bitácora (agregar arriba lo más reciente)
+- 29-sep (Claude Opus, `main`) `328c3e2`: **informe de Google AI Studio** (29-sep). Aplicado solo el punto 6: el generador de
+  contenido pide texto plano y limpia el Markdown de la respuesta (`limpiarMarkdown`, con pruebas). Puntos 1-4 no se
+  aplicaron porque ya estaban en `main` (AI Studio trabajó sobre una copia incompleta: reportó 17 suites y 255 pruebas).
+  **Pendiente de decisión de Isaac/Jose — punto 5, respaldo de modelos** (si Gemini da 503, pasar a
+  `gemini-3.1-flash-lite` y luego `gemini-flash-latest`): hoy `MODELOS_PERMITIDOS` admite solo `gemini-3.8-flash`.
+  Implicaciones anotadas en la conversación: calidad distinta y sin aviso, `-latest` cambia de modelo sin aviso, más
+  llamadas contra la misma cuota, las reglas del reglamento y el libro de reglas se probaron con 3.8.
 - 29-sep (Claude Opus, `main`) `027de41`: **Presupuesto, categoría y curules del concejo** de los 125 municipios (lotes
   1, 2 y 4 aprobados por el equipo; el 3, curules por lista 2019 y 2015 de la Registraduría, va después). Ficha del
   municipio › Demografía › "La alcaldía en cifras"; la vista del Concejo 2023 dice las curules a proveer.
