@@ -11,6 +11,8 @@ import {
 import { cargarElecciones, sumarEleccion, tipoEleccion, ELECCIONES_PENDIENTES, type EleccionPuestos } from '../../services/electionResultsService';
 import type { PuestoVotacion } from '../../services/pollingStationsService';
 
+import { AlcaldiaMunicipio } from './AlcaldiaMunicipio';
+
 const Concejo2023Candidatos = React.lazy(() => import('./Concejo2023Candidatos'));
 const ConcejoHistoricoCandidatos = React.lazy(() => import('./Concejo2023Candidatos').then((m) => ({ default: m.ConcejoHistoricoCandidatos })));
 /** Concejos cuyo voto por candidato se muestra en su propio bloque (lista desplegable completa) */
@@ -457,6 +459,7 @@ export const FichaTerritorio: React.FC<FichaTerritorioProps> = ({
               <span className="text-xs text-[var(--c-muted)]">{eco.nota}</span>
             </div>
           )}
+          {t.tipo === 'municipio' && <AlcaldiaMunicipio dane={t.dane} />}
           {pir && (() => {
             const max = Math.max(1, ...pir.hombres, ...pir.mujeres);
             const alcance = pir.alcance === 'municipio' ? 'todo el municipio' : pir.alcance === 'cabecera' ? 'la cabecera municipal' : 'el resto rural (centros poblados y rural disperso)';

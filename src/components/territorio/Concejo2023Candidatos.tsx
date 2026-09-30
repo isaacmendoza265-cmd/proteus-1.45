@@ -8,6 +8,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { cargarConcejo2023, concejoDesdeEleccion, type Concejo2023 } from '../../services/concejo2023Service';
 import type { EleccionPuestos } from '../../services/electionResultsService';
+import { curulesConcejo } from '../../services/perfilMunicipalService';
 import { ETIQUETA_ESTADO, type EstadoDato, fmt, pct } from '../../services/territoryProfileService';
 
 const ESTILO: Record<EstadoDato, string> = {
@@ -44,10 +45,12 @@ interface VistaProps {
   sinCurules: string;
   pie: string;
   aviso?: React.ReactNode;
+  /** Curules a proveer según la Registraduría (incluye la del Estatuto de la Oposición) */
+  curulesAProveer?: number;
 }
 
 /** Vista común: listas desplegables con su voto solo por la lista y cada candidato */
-export const VistaConcejo: React.FC<VistaProps> = ({ datos, titulo, fuente, sinCurules, pie, aviso }) => {
+export const VistaConcejo: React.FC<VistaProps> = ({ datos, titulo, fuente, sinCurules, pie, aviso, curulesAProveer }) => {
   const [busqueda, setBusqueda] = useState('');
   const q = sinTildes(busqueda.trim());
   const partidos = useMemo(() => {
@@ -84,7 +87,8 @@ export const VistaConcejo: React.FC<VistaProps> = ({ datos, titulo, fuente, sinC
       </div>
       <span className="text-xs text-[var(--c-muted)]">
         {fmt(datos.partidos.length)} listas y {fmt(nCandidatos)} candidatos
-        {datos.totalCurules != null ? ` · ${fmt(datos.totalCurules)} curules para listas (escrutinio)` : ` · ${sinCurules}`}.
+        {curulesAProveer != null && ` · ${fmt(curulesAProveer)} curules a proveer (Registraduría)`}
+        {datos.totalCurules != null ? ` · ${fmt(datos.totalCurules)} repartidas a listas (escrutinio)` : curulesAProveer == null ? ` · ${sinCurules}` : ''}.
         Porcentajes de lista sobre votos válidos (listas + blanco); de candidato, sobre el total de su lista.
       </span>
       {nCandidatos > 40 && (
@@ -166,7 +170,7 @@ export const Concejo2023Candidatos: React.FC<{ dane: string; municipio: string }
     );
   }
   return (
-    <VistaConcejo key={dane} datos={datos} titulo="Concejo 2023 por candidato" fuente={fuenteTexto(datos)} sinCurules="curules sin publicar"
+    <VistaConcejo key={dane} datos={datos} titulo="Concejo 2023 por candidato" curulesAProveer={curulesConcejo(dane, '2023')?.curules} fuente={fuenteTexto(datos)} sinCurules="curules sin publicar"
       pie={`${datos.tipo === 'preconteo'
         ? 'El preconteo al 100 % difiere del escrutinio en 1 a 3 votos por candidato en promedio; el total municipal puede variar hasta ±5 % porque el escrutinio reclasifica votos.'
         : 'Escrutinio: votos por candidato y por lista del formulario oficial de la comisión escrutadora.'} Las curules salen del escrutinio municipal; aquí no se marca quién resultó electo.`} />
