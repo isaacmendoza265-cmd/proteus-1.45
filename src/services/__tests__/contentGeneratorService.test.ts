@@ -8,6 +8,7 @@ import {
   barriosDe,
   comunasDe,
   contextoTerritorio,
+  limpiarMarkdown,
   municipiosDe,
   nombreSeleccion,
   seleccionDesdeMapa,
@@ -63,3 +64,39 @@ describe('generador de contenido', () => {
     expect(SISTEMA_CONTENIDO).toContain('habitantes habilitados');
   });
 });
+
+describe('limpiarMarkdown: la pieza queda en texto plano', () => {
+  it('quita negritas, títulos, separadores, viñetas con asterisco, código y enlaces', () => {
+    const md = [
+      '## Propuesta para Bello',
+      '',
+      '**Seguridad** primero: *juntos* lo logramos.',
+      '---',
+      '* Más luz en los parques',
+      '* 3.200 jóvenes con empleo',
+      '',
+      '',
+      '',
+      'Más en [nuestra página](https://ejemplo.co/plan) y `#Bello`.',
+    ].join('\n');
+    expect(limpiarMarkdown(md)).toBe([
+      'Propuesta para Bello',
+      '',
+      'Seguridad primero: juntos lo logramos.',
+      '• Más luz en los parques',
+      '• 3.200 jóvenes con empleo',
+      '',
+      'Más en nuestra página (https://ejemplo.co/plan) y #Bello.',
+    ].join('\n'));
+  });
+
+  it('conserva hashtags, usuarios con guion bajo, guiones de lista, cifras y multiplicaciones', () => {
+    const plano = '#Antioquia #Bello2027\n- Primera idea\n- Segunda idea\nEscríbenos a @juan_perez_oficial.\nSon 2*3 = 6 barrios y el 45,3 % del censo.';
+    expect(limpiarMarkdown(plano)).toBe(plano);
+  });
+
+  it('el sistema del generador pide texto plano', () => {
+    expect(SISTEMA_CONTENIDO).toMatch(/sin Markdown/);
+  });
+});
+

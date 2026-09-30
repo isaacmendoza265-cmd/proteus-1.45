@@ -278,6 +278,7 @@ export const SISTEMA_CONTENIDO = [
   '- Respeta las normas de publicidad política de Colombia (Ley 130 de 1994, Ley 1475 de 2011 y reglas del CNE): en piezas pagadas indica que es publicidad política pagada y deja un espacio para el responsable.',
   '- No prometas lo que un cargo no puede hacer. Habla de propuestas, no de dádivas.',
   '- Entrega solo la pieza pedida, lista para usar, en el formato indicado. Al final, en una línea, di qué datos de la sección DATOS usaste.',
+  '- Escribe en texto plano, listo para pegar en la red o el medio: sin Markdown (nada de **negritas**, # títulos, --- separadores ni viñetas con *). Para listas usa guiones o números y saltos de línea.',
   // Reglamento de interpretación vigente (marco metodológico, Capa 1): reglas del piso 3
   reglasPiso3(),
 ].filter(Boolean).join('\n');
@@ -302,6 +303,32 @@ export function armarInstruccion(args: {
   ].join('\n');
 }
 
+/**
+ * Quita el formato Markdown que a veces devuelve el modelo, para que la pieza quede en texto plano (así se ve y
+ * así se copia). Conserva la prosa, los saltos de línea, las cifras, los guiones de lista, los hashtags
+ * (#Antioquia, sin espacio) y los nombres de usuario con guion bajo (@juan_perez).
+ */
+export function limpiarMarkdown(texto: string): string {
+  return texto
+    .replace(/\r\n?/g, '\n')
+    .split('\n')
+    .filter((l) => !/^\s*([-*_])(\s*\1){2,}\s*$/.test(l)) // separadores --- *** ___
+    .map((l) => l
+      .replace(/^(\s{0,3})#{1,6}\s+/, '$1') // títulos "## Título"
+      .replace(/^(\s*)[*+]\s+/, '$1• ') // viñetas "* " o "+ " (los "- " se dejan)
+      .replace(/^(\s*)>\s?/, '$1') // citas "> "
+      .replace(/\s+#+\s*$/, '')) // cierre de título "## Título ##"
+    .join('\n')
+    .replace(/\*\*\*([^*\n]+)\*\*\*/g, '$1') // ***negrita cursiva***
+    .replace(/\*\*([^*\n]+)\*\*/g, '$1') // **negrita**
+    .replace(/__([^_\n]+)__/g, '$1') // __negrita__
+    .replace(/(^|[^\w*])\*(?!\s)([^*\n]+?)(?<!\s)\*(?![\w*])/g, '$1$2') // *cursiva* (no toca 2*3)
+    .replace(/`{1,3}([^`]*)`{1,3}/g, '$1') // `código`
+    .replace(/\[([^\]\n]+)\]\((https?:\/\/[^)\s]+)\)/g, '$1 ($2)') // [texto](enlace)
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+}
+
 export async function generarContenido(sistema: string, instruccion: string): Promise<string> {
   const r = await fetch('/api/contenido/generar', {
     method: 'POST',
@@ -310,5 +337,5 @@ export async function generarContenido(sistema: string, instruccion: string): Pr
   });
   const j = await r.json().catch(() => ({}));
   if (!r.ok) throw new Error(j.error || `El servidor respondió ${r.status}.`);
-  return String(j.texto ?? '');
+  return limpiarMarkdown(String(j.texto ?? ''));
 }
