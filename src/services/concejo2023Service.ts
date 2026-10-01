@@ -134,6 +134,11 @@ export async function cargarConcejo2023(daneOrId: string): Promise<Concejo2023 |
 /** Concejos que ya vienen por candidato en el escrutinio mesa a mesa (MMV) por puesto */
 export const CONCEJOS_POR_PUESTO = ['concejo-2019', 'concejo-2015'];
 
+/** Corporaciones con voto preferente que Proteus tiene por candidato y por puesto, para la vista por listas:
+ *  Concejo y Asamblea 2019 y 2015 (escrutinio MMV), Cámara 2022 (escrutinio MMV) y 2026 (preconteo).
+ *  El Concejo 2023 tiene su propia fuente (concejo2023/); la Asamblea 2023 solo trae votos por partido. */
+export const LISTAS_POR_CANDIDATO = ['concejo-2019', 'concejo-2015', 'asamblea-2019', 'asamblea-2015', 'camara-2026', 'camara-2022'];
+
 /**
  * Concejo por partido y candidato a partir de una elección por puesto (escrutinio MMV 2019 y 2015),
  * sumando los puestos dados ('todos' = total del municipio). El total de cada lista incluye el voto
@@ -167,8 +172,8 @@ export function concejoDesdeEleccion(e: EleccionPuestos, codigos: string[] | 'to
     };
   });
   return {
-    dane: '', municipio, estado: 'solido', pctMesas: 100, habilitados: r.habilitados || null,
-    tipo: 'escrutinio', fuente: e.fuente, votosPartidos, blanco: r.blanco, nulos: r.nulos, noMarcados: r.noMarcados,
+    dane: '', municipio, estado: 'solido', pctMesas: null, habilitados: r.habilitados || null,
+    tipo: e.tipo, fuente: e.fuente, votosPartidos, blanco: r.blanco, nulos: r.nulos, noMarcados: r.noMarcados,
     validos, partidos, totalCurules: null, nota: null, candidatosParciales: parciales,
   };
 }

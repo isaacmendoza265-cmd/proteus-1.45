@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { cargarConcejo2023, concejoDesdeEleccion, normPartido, CONCEJOS_POR_PUESTO } from '../concejo2023Service';
+import { cargarConcejo2023, concejoDesdeEleccion, normPartido, CONCEJOS_POR_PUESTO, LISTAS_POR_CANDIDATO } from '../concejo2023Service';
 import { MUNICIPIOS_CON_RESULTADOS, cargarElecciones, sumarEleccion } from '../electionResultsService';
 
 const ANTIOQUIA = MUNICIPIOS_CON_RESULTADOS.filter((d) => d.startsWith('05'));
@@ -91,6 +91,20 @@ describe('Concejo 2023 por candidato', () => {
       for (const c of p.candidatos) expect(c.votos).toBeLessThanOrEqual(exacto.get(`${p.nombre}|${c.nombre}`)!);
     }
     expect(concejoDesdeEleccion(e, [], 'Girardota')).toBeNull();
+  });
+
+  it('Asamblea 2019 y 2015 y Cámara 2022 y 2026 por candidato: 125 municipios, listas cuadran, tipo de fuente', async () => {
+    for (const d of ANTIOQUIA) {
+      const elecciones = await cargarElecciones(d);
+      for (const id of LISTAS_POR_CANDIDATO.filter((x) => !x.startsWith('concejo'))) {
+        const e = elecciones.find((x) => x.id === id)!;
+        expect(e, `${d} ${id}`).toBeTruthy();
+        const c = concejoDesdeEleccion(e, 'todos', d)!;
+        expect(c.partidos.some((p) => p.candidatos.length > 0), `${d} ${id}`).toBe(true);
+        for (const p of c.partidos) expect(p.soloLista + p.candidatos.reduce((s, x) => s + x.votos, 0)).toBe(p.total);
+        expect(c.tipo).toBe(id === 'camara-2026' ? 'preconteo' : 'escrutinio');
+      }
+    }
   });
 });
 

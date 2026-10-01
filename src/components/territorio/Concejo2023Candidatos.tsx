@@ -177,20 +177,26 @@ export const Concejo2023Candidatos: React.FC<{ dane: string; municipio: string }
   );
 };
 
-/** Concejo 2019 o 2015 por candidato: suma del escrutinio mesa a mesa (municipio o puestos del territorio) */
+/** Corporación con voto preferente por candidato (Concejo y Asamblea 2019-2015, Cámara 2026-2022): suma del
+ *  municipio o de los puestos que quedan dentro del territorio */
 export const ConcejoHistoricoCandidatos: React.FC<{ eleccion: EleccionPuestos; codigos: string[] | 'todos'; municipio: string; territorio?: string }> = ({ eleccion, codigos, municipio, territorio }) => {
   // Clave estable: la ficha crea la lista de códigos en cada render
   const clave = `${eleccion.id}|${codigos === 'todos' ? 'todos' : codigos.join(',')}`;
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const datos = useMemo(() => concejoDesdeEleccion(eleccion, codigos, municipio), [eleccion, clave, municipio]);
-  if (!datos) return null;
+  if (!datos || !datos.partidos.some((p) => p.candidatos.length)) return null;
   const enPuestos = codigos !== 'todos';
+  const departamental = /^(asamblea|camara)-/.test(eleccion.id);
+  const corporacion = eleccion.id.startsWith('asamblea') ? 'la Asamblea' : 'la Cámara';
+  const fuente = eleccion.tipo === 'preconteo'
+    ? `Registraduría, preconteo del ${eleccion.fecha} · puede diferir del escrutinio`
+    : `Registraduría, escrutinio oficial mesa a mesa (MMV) del ${eleccion.fecha}`;
   return (
     <VistaConcejo key={clave} datos={datos}
-      titulo={`${eleccion.nombre} por candidato${enPuestos ? ` en los puestos de ${territorio ?? 'este territorio'}` : ''}`}
-      fuente={`Registraduría, escrutinio oficial mesa a mesa (MMV) del ${eleccion.fecha}${enPuestos ? ` · ${fmt(codigos.length)} puesto(s)` : ''}`}
-      sinCurules="Proteus todavía no tiene las curules de ese año"
-      pie={`${enPuestos
+      titulo={`${eleccion.nombre} por candidato${enPuestos ? ` en los puestos de ${territorio ?? 'este territorio'}` : ` en ${municipio}`}`}
+      fuente={`${fuente}${enPuestos ? ` · ${fmt(codigos.length)} puesto(s)` : ''}`}
+      sinCurules={departamental ? `las curules de ${corporacion} se reparten con los votos de todo Antioquia, no por municipio` : 'Proteus todavía no tiene las curules de ese año'}
+      pie={`${departamental ? `Votos depositados en este territorio; ${corporacion} se elige en todo Antioquia. ` : ''}${enPuestos
         ? 'Suma de los puestos que ese año quedaban dentro del territorio (ubicados por su nombre); los que no se pudieron ubicar cuentan solo en el municipio. '
         : ''}El voto solo por la lista es el total de la lista menos el voto preferente de sus candidatos. Aquí no se marca quién resultó electo.`} />
   );

@@ -12,11 +12,12 @@ import { cargarElecciones, sumarEleccion, tipoEleccion, ELECCIONES_PENDIENTES, t
 import type { PuestoVotacion } from '../../services/pollingStationsService';
 
 import { AlcaldiaMunicipio } from './AlcaldiaMunicipio';
+import { LISTAS_POR_CANDIDATO } from '../../services/concejo2023Service';
 
 const Concejo2023Candidatos = React.lazy(() => import('./Concejo2023Candidatos'));
 const ConcejoHistoricoCandidatos = React.lazy(() => import('./Concejo2023Candidatos').then((m) => ({ default: m.ConcejoHistoricoCandidatos })));
-/** Concejos cuyo voto por candidato se muestra en su propio bloque (lista desplegable completa) */
-const CONCEJOS_HISTORICOS = ['concejo-2019', 'concejo-2015'];
+/** Corporaciones cuyo voto por candidato se muestra en su propio bloque (listas desplegables completas) */
+const CONCEJOS_HISTORICOS = LISTAS_POR_CANDIDATO;
 
 export type Seccion = 'politica' | 'demografia' | 'censo' | 'grupos';
 const SECCIONES: [Seccion, string][] = [
