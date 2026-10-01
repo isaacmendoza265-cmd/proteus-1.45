@@ -1,6 +1,6 @@
 # Proteus — estado del proyecto (memoria compartida entre agentes)
 
-Última actualización: 1-oct-2026 (Claude Opus: Concejo y Asamblea 2023 por candidato en el Valle de Aburrá `27f007b`, estratificación oficial de Sabaneta `58b8b5f`, serie del censo electoral `9fba5cb`). **Todo agente debe actualizar este archivo al terminar.**
+Última actualización: 1-oct-2026 (Claude Opus: Concejo y Asamblea 2023 por candidato en el Valle de Aburrá `27f007b`, estratificación oficial de Sabaneta `58b8b5f`, serie del censo electoral `9fba5cb` y por puesto `b8b15c8`). **Todo agente debe actualizar este archivo al terminar.**
 Repositorio local: `C:\Users\isaac\OneDrive\Documentos\Proyecto Proteus`. Remoto: github.com/isaacmendoza265-cmd/proteus-1.45.
 Ramas `codex/navegacion-mapa`, `claude/inicio` y `claude/encuestas-2026` ya fusionadas en `main` (28-sep). No subir bundles a GitHub por la web: se aplican con `git fetch <bundle>`.
 Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en el PATH de los agentes
@@ -36,6 +36,12 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
   Electorales). Las elecciones mesa a mesa 2018-2022 ya muestran participación municipal; ficha › Censo electoral
   muestra la serie. 2015 y la 2.ª vuelta no están en la fuente. `scripts/build_censo_historico.py` →
   `src/data/electoral/censoHistorico.json`, `censoHistoricoService.ts`.
+- **Censo por puesto 2018-2022, Valle de Aburrá** (1-oct, `b8b15c8`): habilitados de cada puesto por jornada (misma fuente,
+  códigos de ese año; validado contra el preconteo 2023 puesto a puesto). Participación por comuna/barrio en esos años
+  y serie del censo de los puestos del territorio en la ficha. Faltan 4 puestos de 900+ (Medellín Senado y Presidencia
+  2022, Itagüí Senado 2022, La Estrella 2019): esos territorios no muestran participación ese año.
+  `scripts/build_censo_puesto_historico.py` → `src/data/electoral/censoPuestoHistorico/`. Extender a los otros 114
+  municipios: extractores en `_originales/censo_electoral/` (~10 min por municipio grande; el sitio es lento).
 - **Puestos 2026**: 1.280 en Antioquia; 57 sin ubicar (22 en los grandes, 35 rurales en los pequeños).
   Coordenadas: Divipole 2023 → dirección → lugar → OpenStreetMap (validado: urbano mediana 40 m) →
   cabecera/centro poblado/vereda (aproximada).
@@ -192,9 +198,8 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
 ## 5. Bitácora (agregar arriba lo más reciente)
 - 1-oct (Claude Opus, `main`) `27f007b`, `58b8b5f`, `9fba5cb`: Concejo y Asamblea 2023 por candidato y puesto en el Valle
   de Aburrá (MMV), estratificación oficial de Sabaneta y serie del censo electoral por municipio. Investigado y anotado:
-  censo por PUESTO 2018-2023 existe en la misma consulta de la Registraduría (sin descarga; se lee con las peticiones
-  de la página, ~400 KB por consulta); los códigos de puesto cambian y se parten entre años, así que es comparable por
-  municipio o comuna y por puesto solo en los estables.
+  los códigos de puesto cambian y se parten entre años: el censo es comparable por municipio o comuna, y por puesto solo
+  en los estables. Luego `b8b15c8`: censo por puesto 2018-2022 del Valle de Aburrá.
 - 1-oct (Claude Opus, `main`) `6adecd9`: **Senado 2022 y 2026 por candidato** en la ficha (misma vista por listas).
   Propuesto y pendiente de aprobación: MMV 2023 de Antioquia del Observatorio de la Registraduría
   (`comprimidos/MMV_TERRITORIALES2023_ANTIOQUIA.zip`, 29,4 MB, escrutinio mesa a mesa) para Concejo y Asamblea 2023
