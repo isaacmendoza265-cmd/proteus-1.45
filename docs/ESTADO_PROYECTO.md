@@ -1,6 +1,6 @@
 # Proteus — estado del proyecto (memoria compartida entre agentes)
 
-Última actualización: 1-oct-2026 (Claude Opus: capa institucional del mapa, `53cd8e5`). **Todo agente debe actualizar este archivo al terminar.**
+Última actualización: 1-oct-2026 (Claude Opus: Asamblea y Cámara por candidato, `b4b5fac`). **Todo agente debe actualizar este archivo al terminar.**
 Repositorio local: `C:\Users\isaac\OneDrive\Documentos\Proyecto Proteus`. Remoto: github.com/isaacmendoza265-cmd/proteus-1.45.
 Ramas `codex/navegacion-mapa`, `claude/inicio` y `claude/encuestas-2026` ya fusionadas en `main` (28-sep). No subir bundles a GitHub por la web: se aplican con `git fetch <bundle>`.
 Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en el PATH de los agentes
@@ -171,6 +171,9 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
   `territoryProfileService.ts`; ficha: `src/components/territorio/`.
 
 ## 5. Bitácora (agregar arriba lo más reciente)
+- 1-oct (Claude Opus, `main`) `b4b5fac`: **Asamblea 2019-2015 y Cámara 2022-2026 por candidato** en la ficha, con la vista
+  por listas del Concejo (`LISTAS_POR_CANDIDATO`). Pendiente: Asamblea 2023 por candidato (solo hay votos por partido;
+  necesita fuente nueva y aprobación), Senado con la misma vista (si se pide) y Cámara 2018 (no hay mesa a mesa).
 - 1-oct (Claude Opus, `main`) `53cd8e5`: **capa institucional del mapa** (aprobada por el equipo): presupuesto 2025 por
   habitante, categoría 2026 y curules del Concejo 2023, por municipio (`valorInstitucional` en `mapColorService.ts`).
   Dentro de un municipio no aplica (la leyenda lo dice). Plan de acción del proyecto en Claude Docs ("Proteus — plan
