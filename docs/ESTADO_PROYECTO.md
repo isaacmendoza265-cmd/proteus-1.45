@@ -1,6 +1,6 @@
 # Proteus — estado del proyecto (memoria compartida entre agentes)
 
-Última actualización: 1-oct-2026 (Claude Opus: Asamblea y Cámara por candidato, `b4b5fac`). **Todo agente debe actualizar este archivo al terminar.**
+Última actualización: 1-oct-2026 (Claude Opus: Senado por candidato, `6adecd9`). **Todo agente debe actualizar este archivo al terminar.**
 Repositorio local: `C:\Users\isaac\OneDrive\Documentos\Proyecto Proteus`. Remoto: github.com/isaacmendoza265-cmd/proteus-1.45.
 Ramas `codex/navegacion-mapa`, `claude/inicio` y `claude/encuestas-2026` ya fusionadas en `main` (28-sep). No subir bundles a GitHub por la web: se aplican con `git fetch <bundle>`.
 Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en el PATH de los agentes
@@ -171,6 +171,10 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
   `territoryProfileService.ts`; ficha: `src/components/territorio/`.
 
 ## 5. Bitácora (agregar arriba lo más reciente)
+- 1-oct (Claude Opus, `main`) `6adecd9`: **Senado 2022 y 2026 por candidato** en la ficha (misma vista por listas).
+  Propuesto y pendiente de aprobación: MMV 2023 de Antioquia del Observatorio de la Registraduría
+  (`comprimidos/MMV_TERRITORIALES2023_ANTIOQUIA.zip`, 29,4 MB, escrutinio mesa a mesa) para Concejo y Asamblea 2023
+  por candidato y por mesa, empezando por el Valle de Aburrá.
 - 1-oct (Claude Opus, `main`) `b4b5fac`: **Asamblea 2019-2015 y Cámara 2022-2026 por candidato** en la ficha, con la vista
   por listas del Concejo (`LISTAS_POR_CANDIDATO`). Pendiente: Asamblea 2023 por candidato (solo hay votos por partido;
   necesita fuente nueva y aprobación), Senado con la misma vista (si se pide) y Cámara 2018 (no hay mesa a mesa).
