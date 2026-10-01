@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { censoDeEleccion, serieCenso } from '../censoHistoricoService';
-import { MUNICIPIOS_CON_RESULTADOS, cargarElecciones } from '../electionResultsService';
+import { MUNICIPIOS_CON_RESULTADOS, cargarElecciones, sumarEleccion } from '../electionResultsService';
 
 const ANTIOQUIA = MUNICIPIOS_CON_RESULTADOS.filter((d) => d.startsWith('05'));
 
@@ -44,5 +44,27 @@ describe('serie del censo electoral por municipio', () => {
 describe('orden de la serie', () => {
   it('cronológico: Congreso 2022 (marzo) antes que Presidencia 2022 (mayo)', () => {
     expect(serieCenso('05001').map((p) => p.jornada)).toEqual(['presidente-1v-2018', 'alcaldia-2019', 'senado-2022', 'presidente-1v-2022', 'alcaldia-2023', 'censo-2026']);
+  });
+});
+
+describe('censo por puesto 2018-2022 (Valle de Aburrá)', () => {
+  it('Medellín: los puestos de 2019 traen habilitados de la fuente; los que faltan quedan en 0 y se cuentan', async () => {
+    const al19 = (await cargarElecciones('05001')).find((e) => e.id === 'alcaldia-2019')!;
+    const filas = Object.values(al19.puestos);
+    const con = filas.filter((f) => f.habilitados > 0);
+    expect(con.length).toBeGreaterThan(0.9 * filas.length);
+    // Ningún puesto con más votantes que habilitados (cruce de códigos correcto)
+    for (const f of con) expect(f.votantes).toBeLessThanOrEqual(f.habilitados);
+    const todos = sumarEleccion(al19, Object.keys(al19.puestos))!;
+    expect(todos.sinHabilitados).toBe(filas.length - con.length);
+    // El total municipal no depende de los puestos: es el censo de la jornada
+    expect(sumarEleccion(al19, 'todos')!.sinHabilitados).toBe(0);
+  });
+
+  it('Senado y Cámara 2022 comparten el censo por puesto de la jornada de Congreso', async () => {
+    const els = await cargarElecciones('05001');
+    const se = els.find((e) => e.id === 'senado-2022')!, ca = els.find((e) => e.id === 'camara-2022')!;
+    const c = Object.keys(se.puestos).find((k) => se.puestos[k].habilitados > 0)!;
+    expect(ca.puestos[c].habilitados).toBe(se.puestos[c].habilitados);
   });
 });

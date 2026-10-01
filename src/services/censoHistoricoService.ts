@@ -21,6 +21,9 @@ const JORNADA_DE = new Map(Object.entries(A.meta.elecciones).flatMap(([j, ids]) 
 /** Orden cronológico de las jornadas (Congreso en marzo, Presidencia en mayo) */
 const ORDEN = ['presidente-1v-2018', 'alcaldia-2019', 'senado-2022', 'presidente-1v-2022', 'alcaldia-2023', 'censo-2026'];
 
+/** Jornada de la fuente de una elección de Proteus ('camara-2022' → 'senado-2022'); undefined si no tiene censo */
+export const jornadaDe = (eleccionId: string) => JORNADA_DE.get(eleccionId);
+
 const daneDe = (daneOrId: string) => /(\d{5})$/.exec(daneOrId)?.[1];
 
 /** Habilitados del municipio en la jornada de esa elección; null si la fuente no la tiene (2015, 2.ª vuelta) */

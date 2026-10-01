@@ -21,7 +21,7 @@
  * 2023 y Congreso son preconteo de la Registraduría: pueden diferir levemente del escrutinio.
  */
 import rawIndice from '../data/electoral/resultadosPuesto/indice.json';
-import { censoDeEleccion } from './censoHistoricoService';
+import { censoDeEleccion, jornadaDe } from './censoHistoricoService';
 
 export interface FilaEleccion {
   habilitados: number;
@@ -67,6 +67,8 @@ export interface ResultadoEleccion {
   fuente: string;
   puestos: number;
   habilitados: number;
+  /** Puestos sumados que no tienen habilitados: si hay alguno, la participación del territorio no se calcula */
+  sinHabilitados: number;
   votantes: number;
   blanco: number;
   nulos: number;
@@ -126,6 +128,9 @@ const cargadores2023 = import.meta.glob<{ default: Archivo2023 }>('../data/elect
 const cargadores2026 = import.meta.glob<{ default: Archivo2026 }>('../data/electoral/resultadosPuesto2026/*.json');
 const cargadoresPres = import.meta.glob<{ default: ArchivoPres }>('../data/electoral/resultadosPuestoPresidencial2026/*.json');
 const cargadoresHist = import.meta.glob<{ default: ArchivoHistorico }>('../data/electoral/resultadosPuestoHistorico/*/*.json');
+/** Habilitados por puesto de 2018-2022 (scripts/build_censo_puesto_historico.py): {jornada: {código: habilitados}} */
+interface ArchivoCensoPuesto { meta: { fuente: string }; jornadas: Record<string, Record<string, number>> }
+const cargadoresCensoPuesto = import.meta.glob<{ default: ArchivoCensoPuesto }>('../data/electoral/censoPuestoHistorico/*.json');
 const cargadores2023Esc = import.meta.glob<{ default: ArchivoHistorico }>('../data/electoral/resultadosPuesto2023Escrutinio/*.json');
 const cache = new Map<string, Promise<EleccionPuestos[]>>();
 
@@ -174,14 +179,21 @@ function convertir2026(a: Archivo2026 | ArchivoPres, tipo: 'preconteo' | 'escrut
   }));
 }
 
-/** El MMV no trae habilitados: el total municipal toma el censo de la misma jornada (censoHistorico.json) */
-function convertirHistorico(a: ArchivoHistorico, dane: string): EleccionPuestos[] {
-  return Object.entries(a.elecciones).map(([id, e]) => ({
+/** El MMV no trae habilitados: el total municipal toma el censo de la misma jornada (censoHistorico.json) y cada
+ *  puesto, el de censoPuestoHistorico/ donde ya se extrajo (hoy, Valle de Aburrá) */
+function convertirHistorico(a: ArchivoHistorico, dane: string, censoPuesto?: ArchivoCensoPuesto): EleccionPuestos[] {
+  return Object.entries(a.elecciones).map(([id, e]) => {
+    const cp = censoPuesto?.jornadas[jornadaDe(id) ?? ''];
+    const puestos = cp
+      ? Object.fromEntries(Object.entries(e.puestos).map(([c, f]) => [c, f.habilitados || !cp[c] ? f : { ...f, habilitados: cp[c] }]))
+      : e.puestos;
+    return {
     id, nombre: e.nombre, fecha: e.fecha, fuente: a.meta.fuente, nota: a.meta.nota, tipo: 'escrutinio' as const, porCandidato: e.porCandidato,
-    codigos: a.meta.codigos, anio: Number(a.meta.codigos), partidos: e.partidos, candidatos: e.candidatos, puestos: e.puestos,
+    codigos: a.meta.codigos, anio: Number(a.meta.codigos), partidos: e.partidos, candidatos: e.candidatos, puestos,
     municipio: e.municipio.habilitados ? e.municipio : { ...e.municipio, habilitados: censoDeEleccion(dane, id) ?? 0 },
     nombres: a.nombres, ubicaciones: a.ubicaciones, candidatosCompletos: a.meta.candidatosCompletos,
-  }));
+    };
+  });
 }
 
 /** Tipo de elección sin el año ("alcaldia", "presidente-1"...), para comparar entre años */
@@ -197,6 +209,8 @@ export function cargarElecciones(dane: string): Promise<EleccionPuestos[]> {
     const slug = e?.['2023'];
     const lHist = slug ? ANIOS_HISTORICOS.map((y) => cargadoresHist[`../data/electoral/resultadosPuestoHistorico/${y}/${slug}.json`]).filter(Boolean) : [];
     const lEsc = slug ? cargadores2023Esc[`../data/electoral/resultadosPuesto2023Escrutinio/${slug}.json`] : undefined;
+    const lCp = slug ? cargadoresCensoPuesto[`../data/electoral/censoPuestoHistorico/${slug}.json`] : undefined;
+    const censoPuesto = lCp ? lCp().then((m) => m.default) : Promise.resolve(undefined);
     cache.set(dane, Promise.all([
       l26 ? l26().then((m) => convertir2026(m.default, 'preconteo', false)) : [],
       lPr ? lPr().then((m) => convertir2026(m.default, 'escrutinio', true)) : [],
@@ -208,7 +222,7 @@ export function cargarElecciones(dane: string): Promise<EleccionPuestos[]> {
         const ids = new Set(pre.map((p) => p.id));
         return [...pre.map((p) => esc.find((x) => x.id === p.id) ?? p), ...esc.filter((x) => !ids.has(x.id))];
       }),
-      ...lHist.map((l) => l().then((m) => convertirHistorico(m.default, dane))),
+      ...lHist.map((l) => Promise.all([l(), censoPuesto]).then(([m, cp]) => convertirHistorico(m.default, dane, cp))),
     ]).then((ls) => ls.flat()));
   }
   return cache.get(dane)!;
@@ -223,9 +237,10 @@ export function sumarEleccion(e: EleccionPuestos, codigos: string[] | 'todos'): 
   if (!filas.length) return null;
   const par = new Map<number, number>();
   const can = new Map<number, number>();
-  let habilitados = 0, votantes = 0, blanco = 0, nulos = 0, noMarcados = 0;
+  let habilitados = 0, sinHabilitados = 0, votantes = 0, blanco = 0, nulos = 0, noMarcados = 0;
   for (const f of filas) {
-    habilitados += f.habilitados; votantes += f.votantes; blanco += f.blanco; nulos += f.nulos; noMarcados += f.noMarcados;
+    habilitados += f.habilitados;
+    if (!f.habilitados) sinHabilitados += 1; votantes += f.votantes; blanco += f.blanco; nulos += f.nulos; noMarcados += f.noMarcados;
     for (const [i, v] of f.partidos ?? []) par.set(i, (par.get(i) ?? 0) + v);
     for (const [i, v] of f.candidatos ?? []) can.set(i, (can.get(i) ?? 0) + v);
   }
@@ -233,7 +248,7 @@ export function sumarEleccion(e: EleccionPuestos, codigos: string[] | 'todos'): 
   return {
     id: e.id, nombre: e.nombre, fecha: e.fecha, fuente: e.fuente,
     puestos: codigos === 'todos' ? Object.keys(e.puestos).length : filas.length,
-    habilitados, votantes, blanco, nulos, noMarcados,
+    habilitados, sinHabilitados, votantes, blanco, nulos, noMarcados,
     partidos: [...par.entries()].sort((a, b) => b[1] - a[1]).map(([i, v]) => ({ nombre: e.partidos[i], votos: v, pct: validos ? (100 * v) / validos : 0 })),
     candidatos: [...can.entries()].sort((a, b) => b[1] - a[1]).map(([i, v]) => ({
       nombre: e.candidatos[i].n, partido: e.partidos[e.candidatos[i].p], votos: v, pct: validos ? (100 * v) / validos : 0,

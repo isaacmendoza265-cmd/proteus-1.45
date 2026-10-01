@@ -98,9 +98,11 @@ describe('resultados por puesto', () => {
     expect(q.total.candidatos[0].votos).toBe(304034);
     expect(q.suma.votantes).toBe(q.total.votantes);
     expect(q.e.tipo).toBe('escrutinio');
-    // El MMV no trae habilitados: el total municipal toma el censo de la jornada (censoHistorico.json); los puestos no
+    // El MMV no trae habilitados: el total municipal toma el censo de la jornada (censoHistorico.json) y los puestos, el
+    // de censoPuestoHistorico/: en Medellín 2019 están los 211 y su suma da exactamente el censo de la jornada
     expect(q.total.habilitados).toBe(1_662_854);
-    expect(q.suma.habilitados).toBe(0);
+    expect(q.suma.habilitados).toBe(q.total.habilitados);
+    expect(q.suma.sinHabilitados).toBe(0);
     const f = await total('05001', 'alcaldia-2015');
     expect(f.total.candidatos[0].nombre).toMatch(/Gutierrez/);
     const d = await total('05001', 'presidente-2018-2');
