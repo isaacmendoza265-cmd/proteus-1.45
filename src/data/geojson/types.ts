@@ -8,7 +8,7 @@ export type ZoomLevelId =
 
 /** Capas del mapa (27-sep-2026): electoral, demográfica y económica. NBI pasó a la económica; la
  *  capa "Riesgo" se quitó porque su campo riskLevel no tenía fuente. */
-export type ThematicMetricLayer = 'electoral' | 'demografico' | 'economico';
+export type ThematicMetricLayer = 'electoral' | 'demografico' | 'economico' | 'institucional';
 
 export interface GeoJsonPolygonGeometry {
   type: 'Polygon' | 'MultiPolygon';

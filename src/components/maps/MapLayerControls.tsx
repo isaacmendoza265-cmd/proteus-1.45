@@ -1,5 +1,5 @@
 import React from 'react';
-import { Vote, Users, TrendingUp, Sparkles, Filter } from 'lucide-react';
+import { Vote, Users, TrendingUp, Sparkles, Filter, Landmark } from 'lucide-react';
 import { ThematicMetricLayer } from '../../data/geojson';
 
 interface MapLayerControlsProps {
@@ -44,6 +44,13 @@ export const MapLayerControls: React.FC<MapLayerControlsProps> = ({
       icon: <TrendingUp className="w-3.5 h-3.5" />,
       color: 'from-amber-500/30 to-orange-600/40 border-amber-400/60 text-amber-200',
       description: 'Estrato, pobreza multidimensional (IPM) y educación por manzana; NBI por municipio'
+    },
+    {
+      id: 'institucional',
+      label: 'Institucional',
+      icon: <Landmark className="w-3.5 h-3.5" />,
+      color: 'from-violet-500/30 to-purple-600/40 border-violet-400/60 text-violet-200',
+      description: 'Por municipio: presupuesto de la alcaldía por habitante, categoría y curules del concejo'
     }
   ];
 

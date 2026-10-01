@@ -88,3 +88,33 @@ describe('color del mapa por capa', () => {
     expect(pts.some((p) => p.ganador)).toBe(true);
   });
 });
+
+describe('capa institucional (por municipio)', () => {
+  it('Medellín: presupuesto por habitante, categoría especial y 21 curules', async () => {
+    const { valorInstitucional } = await import('../mapColorService');
+    const p = valorInstitucional('05001', 'presupuestoHab');
+    expect(p.valor).toBeGreaterThan(4_000_000);
+    expect(p.texto).toMatch(/por habitante \(2025\)/);
+    expect(valorInstitucional('05001', 'categoria')).toMatchObject({ valor: 0, texto: 'Categoría especial (2026)' });
+    expect(valorInstitucional('05001', 'curules').valor).toBe(21);
+  });
+
+  it('colores por clase: especial a sexta y curules de la Ley 136; lo desconocido queda sin dato', async () => {
+    const { colorInstitucional, leyendaInstitucional, COLORES_CATEGORIA, COLORES_CURULES, COLOR_SIN_DATO } = await import('../mapColorService');
+    expect(colorInstitucional('categoria', 6)).toBe(COLORES_CATEGORIA.at(6));
+    expect(colorInstitucional('curules', 13)).toBe(COLORES_CURULES.at(3));
+    expect(colorInstitucional('curules', 12)).toBe(COLOR_SIN_DATO);
+    expect(colorInstitucional('categoria', null)).toBe(COLOR_SIN_DATO);
+    expect(leyendaInstitucional('categoria').map((x) => x.texto)).toEqual(['Especial', 'Primera', 'Segunda', 'Tercera', 'Cuarta', 'Quinta', 'Sexta']);
+    expect(leyendaInstitucional('curules')).toHaveLength(8);
+  });
+
+  it('la leyenda del presupuesto usa pesos, no porcentajes', async () => {
+    const { rangosLeyenda, PALETA_INSTITUCIONAL } = await import('../mapColorService');
+    const { pesos } = await import('../perfilMunicipalService');
+    const r = rangosLeyenda([1_700_000, 2_400_000, 7_200_000], [1_700_000, 2_400_000, 7_200_000], PALETA_INSTITUCIONAL, pesos);
+    expect(r[0].texto).toBe('1,7 millones – 1,7 millones');
+    expect(r[2].texto).not.toMatch(/%/);
+    expect(rangosLeyenda([10, 20], [10, 20], PALETA_INSTITUCIONAL)[1].texto).toBe('10,0 – 20,0 %');
+  });
+});

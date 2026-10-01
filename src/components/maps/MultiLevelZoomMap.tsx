@@ -46,12 +46,19 @@ import {
   eleccionDelAnio,
   puntosEleccion,
   rangosLeyenda,
+  METRICAS_INSTITUCIONALES,
+  PALETA_INSTITUCIONAL,
+  valorInstitucional,
+  colorInstitucional,
+  leyendaInstitucional,
+  type MetricaInstitucional,
   valorMunicipio,
   valorSubdivision,
   type MetricaDemografica,
   type MetricaEconomica,
   type ValorTerritorio,
 } from '../../services/mapColorService';
+import { pesos } from '../../services/perfilMunicipalService';
 
 // Puestos sin dato para la capa (otros departamentos, o mientras cargan los resultados)
 const COLOR_PUESTO_NEUTRO = '#e2e8f0';
@@ -268,25 +275,33 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
   // municipal; a escala de municipios, el NBI.
   const [metricaDem, setMetricaDem] = useState<MetricaDemografica>('mujeres');
   const [metricaEco, setMetricaEco] = useState<MetricaEconomica>('estrato');
+  // Capa institucional (categoría, presupuesto, curules): solo por municipio
+  const [metricaInst, setMetricaInst] = useState<MetricaInstitucional>('presupuestoHab');
+  const esInstitucional = activeLayer === 'institucional';
   const metricasEcoEscala = METRICAS_ECONOMICAS.filter((m) => m.escala === (isMunicipalScale ? 'municipal' : 'departamental'));
   const metricaEcoEfectiva: MetricaEconomica = metricasEcoEscala.some((m) => m.id === metricaEco) ? metricaEco : metricasEcoEscala[0].id;
-  const metricaActiva = activeLayer === 'demografico' ? metricaDem : metricaEcoEfectiva;
+  const metricaActiva = activeLayer === 'demografico' ? metricaDem : esInstitucional ? metricaInst : metricaEcoEfectiva;
+  const metricaDemEco = (activeLayer === 'demografico' ? metricaDem : metricaEcoEfectiva) as MetricaDemografica | MetricaEconomica;
   const nombreMetrica = activeLayer === 'demografico'
     ? METRICAS_DEMOGRAFICAS.find((m) => m.id === metricaDem)!.nombre
+    : esInstitucional ? METRICAS_INSTITUCIONALES.find((m) => m.id === metricaInst)!.nombre
     : METRICAS_ECONOMICAS.find((m) => m.id === metricaEcoEfectiva)!.nombre;
-  const esCategorica = activeLayer === 'economico' && metricaEcoEfectiva === 'estrato';
-  const paletaCapa = activeLayer === 'demografico' ? PALETA_DEMOGRAFICA : PALETA_ECONOMICA;
+  const esCategorica = (activeLayer === 'economico' && metricaEcoEfectiva === 'estrato') || (esInstitucional && metricaInst !== 'presupuestoHab');
+  const paletaCapa = activeLayer === 'demografico' ? PALETA_DEMOGRAFICA : esInstitucional ? PALETA_INSTITUCIONAL : PALETA_ECONOMICA;
 
   /** Dato demográfico o económico de un territorio visible (o "Sin información") */
   const valorDe = (feature: TerritoryGeoFeature): ValorTerritorio => {
     if (activeLayer === 'electoral') return { valor: null, texto: '', fuente: '' };
-    if (isMunicipalScale) return valorSubdivision(String(feature.id), activeLayer, metricaActiva);
+    if (isMunicipalScale && esInstitucional) return { valor: null, texto: 'Dato por municipio: vuelve a la vista de Antioquia', fuente: '' };
+    if (isMunicipalScale) return valorSubdivision(String(feature.id), activeLayer as 'demografico' | 'economico', metricaDemEco);
     const dane = daneDeFeature(feature);
     return dane ? valorDeMunicipio(dane) : { valor: null, texto: 'Sin información', fuente: '' };
   };
   /** Dato de un municipio por su código DANE (proyección 2026 o NBI) */
   const valorDeMunicipio = (dane: string): ValorTerritorio =>
-    activeLayer === 'electoral' ? { valor: null, texto: '', fuente: '' } : valorMunicipio(dane, NBI_POR_DANE.get(dane), activeLayer, metricaActiva);
+    activeLayer === 'electoral' ? { valor: null, texto: '', fuente: '' }
+      : esInstitucional ? valorInstitucional(dane, metricaInst)
+      : valorMunicipio(dane, NBI_POR_DANE.get(dane), activeLayer, metricaDemEco);
 
   /** Capa de polígonos de la escala actual (antes de la búsqueda) */
   const datasetActual = (): TerritoryFeatureCollection | null => {
@@ -312,7 +327,7 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeLayer, esCategorica, metricaActiva, currentLevel, antioquiaViewMode, selectedDepartmentName, customDeptDataset, usesCustomMuni, customMuniDataset, comunaFiltroId, economiaLista, demografiaLista]);
 
-  const colorDeValor = (v: number | null) => (esCategorica ? colorEstrato(v) : colorPorCortes(v, escalaCapa?.cortes ?? [], paletaCapa));
+  const colorDeValor = (v: number | null) => (esCategorica ? (esInstitucional ? colorInstitucional(metricaInst, v) : colorEstrato(v)) : colorPorCortes(v, escalaCapa?.cortes ?? [], paletaCapa));
 
   // Color de cada territorio según la capa
   const getFeatureColor = (feature: TerritoryGeoFeature): string => {
@@ -1196,7 +1211,7 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
         <div className="flex items-center justify-between gap-2 mb-2 pb-1 border-b border-white/10">
           <span className="font-bold text-white uppercase text-[10px] tracking-wider flex items-center gap-1.5">
             <Layers className="w-3.5 h-3.5 text-sky-400" />
-            Capa {activeLayer === 'electoral' ? 'electoral' : activeLayer === 'demografico' ? 'demográfica' : 'económica'}
+            Capa {activeLayer === 'electoral' ? 'electoral' : activeLayer === 'demografico' ? 'demográfica' : esInstitucional ? 'institucional' : 'económica'}
           </span>
           <span className="text-[10px] font-mono text-sky-300">
             {isMunicipalScale ? activeMuni.name : (ZOOM_LEVELS_CONFIG[currentLevel]?.shortLabel || 'Nivel ' + currentLevel)}
@@ -1273,14 +1288,23 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
                 <span className="text-[10px] text-slate-400">Indicador</span>
                 <select
                   value={metricaActiva}
-                  onChange={(e) => (activeLayer === 'demografico' ? setMetricaDem(e.target.value as MetricaDemografica) : setMetricaEco(e.target.value as MetricaEconomica))}
+                  onChange={(e) => (activeLayer === 'demografico' ? setMetricaDem(e.target.value as MetricaDemografica) : esInstitucional ? setMetricaInst(e.target.value as MetricaInstitucional) : setMetricaEco(e.target.value as MetricaEconomica))}
                   className="text-xs rounded px-1 py-0.5"
                 >
-                  {(activeLayer === 'demografico' ? METRICAS_DEMOGRAFICAS : metricasEcoEscala).map((m) => <option key={m.id} value={m.id}>{m.nombre}</option>)}
+                  {(activeLayer === 'demografico' ? METRICAS_DEMOGRAFICAS : esInstitucional ? METRICAS_INSTITUCIONALES : metricasEcoEscala).map((m) => <option key={m.id} value={m.id}>{m.nombre}</option>)}
                 </select>
               </label>
               {currentLevel === 'departamental' && antioquiaViewMode === 'subregiones' ? (
                 <div className="text-[10px] text-slate-400 leading-snug">Las subregiones se pintan con su color propio. Cambia a "125 Municipios" para ver este indicador.</div>
+              ) : isMunicipalScale && esInstitucional ? (
+                <div className="text-[10px] text-slate-400 leading-snug">Esta capa existe por municipio. Vuelve a la vista de Antioquia (125 municipios) para verla.</div>
+              ) : esCategorica && esInstitucional ? (
+                leyendaInstitucional(metricaInst as 'categoria' | 'curules').map((r) => (
+                  <div key={r.texto} className="flex items-center gap-2">
+                    <span className="w-3 h-3 rounded-full inline-block" style={{ background: r.color }} />
+                    <span>{r.texto}</span>
+                  </div>
+                ))
               ) : esCategorica ? (
                 COLORES_ESTRATO.map((c, i) => (
                   <div key={i} className="flex items-center gap-2">
@@ -1289,7 +1313,7 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
                   </div>
                 ))
               ) : escalaCapa && escalaCapa.cortes.length ? (
-                rangosLeyenda(escalaCapa.valores, escalaCapa.cortes, paletaCapa).map((r) => (
+                rangosLeyenda(escalaCapa.valores, escalaCapa.cortes, paletaCapa, esInstitucional ? pesos : undefined).map((r) => (
                   <div key={r.texto} className="flex items-center gap-2">
                     <span className="w-3 h-3 rounded-full inline-block" style={{ background: r.color }} />
                     <span className="tabular-nums">{r.texto}</span>
@@ -1303,11 +1327,17 @@ export const MultiLevelZoomMap: React.FC<MultiLevelZoomMapProps> = ({
                 <span>Sin información</span>
               </div>
               <div className="pt-1 mt-1 border-t border-white/10 text-[10px] leading-snug text-slate-400">
-                {isMunicipalScale
+                {esInstitucional
+                  ? (metricaInst === 'presupuestoHab'
+                    ? 'Fuente: Contraloría General de la República, CUIPO: presupuesto definitivo de gastos de la alcaldía 2025 entre la población DANE 2026.'
+                    : metricaInst === 'categoria'
+                      ? 'Fuente: Contaduría General de la Nación, categorización vigencia 2026 (población e ingresos corrientes de libre destinación).'
+                      : 'Fuente: Registraduría, curules para concejo 2023. Dependen de la población (Ley 136 de 1994, art. 22), no de la categoría.')
+                  : isMunicipalScale
                   ? 'Fuente: DANE, Censo 2018 por manzana, sumado por barrio, vereda o comuna.'
                   : activeLayer === 'demografico' ? 'Fuente: DANE, proyección de población municipal 2026 por sexo y edad.' : 'Fuente: DANE, NBI por municipio. El estrato, el IPM y la educación se ven al abrir un municipio.'}
                 {!esCategorica && ' Clases: quintiles de los territorios visibles.'}
-                {esCategorica && ' Estrato de la factura de energía reportado en el Censo 2018, no la estratificación vigente.'}
+                {esCategorica && !esInstitucional && ' Estrato de la factura de energía reportado en el Censo 2018, no la estratificación vigente.'}
               </div>
             </>
           )}

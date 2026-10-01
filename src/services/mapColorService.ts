@@ -1,10 +1,11 @@
 /**
- * COLOR DEL MAPA POR CAPA (electoral, demográfica, económica)
+ * COLOR DEL MAPA POR CAPA (electoral, demográfica, económica, institucional)
  *
  * Cada territorio (barrio, vereda, comuna o municipio) y cada puesto se colorea con un dato de
  * fuente conocida. Si no hay dato, va en gris ("Sin información"); nunca se inventa un valor.
  * - Barrios, veredas y comunas: DANE, CNPV 2018 por manzana (demografía y economía).
- * - Municipios: proyección DANE 2026 por sexo y edad; NBI del DANE.
+ * - Municipios: proyección DANE 2026 por sexo y edad; NBI del DANE; capa institucional (solo por municipio):
+ *   presupuesto por habitante (Contraloría, CUIPO), categoría (Contaduría) y curules del concejo (Registraduría).
  * - Puestos: su propio resultado electoral o su censo 2026 (sexo). Para los demás indicadores el
  *   puesto no tiene dato propio y toma el color del barrio o vereda donde está (se dice en la leyenda).
  * Las clases de las escalas continuas son quintiles de los valores visibles.
@@ -19,6 +20,7 @@ import {
   type Demografia,
 } from './territoryProfileService';
 import { sumarEleccion, tipoEleccion, type EleccionPuestos } from './electionResultsService';
+import { CATEGORIA_TEXTO, categoriaMunicipio, curulesConcejo, pesos, presupuestoMunicipio } from './perfilMunicipalService';
 import { tieneCoordenadas, type PuestoVotacion } from './pollingStationsService';
 
 export type MetricaDemografica = 'mujeres' | 'jovenes' | 'mayores';
@@ -38,10 +40,25 @@ export const METRICAS_ECONOMICAS: { id: MetricaEconomica; nombre: string; escala
   { id: 'nbi', nombre: 'Necesidades básicas insatisfechas (NBI)', escala: 'departamental' },
 ];
 
+export type MetricaInstitucional = 'presupuestoHab' | 'categoria' | 'curules';
+
+/** Capa institucional: solo existe por municipio (escala departamental) */
+export const METRICAS_INSTITUCIONALES: { id: MetricaInstitucional; nombre: string }[] = [
+  { id: 'presupuestoHab', nombre: 'Presupuesto 2025 por habitante' },
+  { id: 'categoria', nombre: 'Categoría del municipio (2026)' },
+  { id: 'curules', nombre: 'Curules del Concejo 2023' },
+];
+
 export const PALETA_DEMOGRAFICA = ['#e6e3f5', '#b9b1e3', '#8a7fcf', '#5f53b0', '#3a2f86'];
 export const PALETA_ECONOMICA = ['#fde7c8', '#f6b27a', '#e97c4c', '#c9502e', '#8f2d1f'];
 /** Estratos 1 a 6 (misma paleta que ya usaba el mapa) */
 export const COLORES_ESTRATO = ['#9B2C2C', '#C05621', '#B7791F', '#2F855A', '#2B6CB0', '#553C9A'];
+export const PALETA_INSTITUCIONAL = ['#dcebf0', '#a6ccd9', '#6ea6bd', '#3f7f9c', '#1f5670'];
+/** Categoría: especial (0) y primera a sexta (1-6), de oscuro a claro */
+export const COLORES_CATEGORIA = ['#2e1747', '#4b2470', '#6a3592', '#8a52ad', '#a370c0', '#bd93d2', '#d6b8e4'];
+/** Curules posibles por la Ley 136 de 1994, art. 22 */
+export const CURULES_LEY_136 = [7, 9, 11, 13, 15, 17, 19, 21];
+export const COLORES_CURULES = ['#efe7d8', '#dccaa9', '#c6aa7c', '#ad8a55', '#916d3a', '#735227', '#553b19', '#3a270e'];
 export { COLOR_SIN_DATO };
 
 // --- Valores por territorio -------------------------------------------------------------------
@@ -111,6 +128,35 @@ export function valorMunicipio(dane: string, nbi: number | undefined, capa: 'dem
   return v === null ? SIN_INFO : { valor: v, texto: `${fmtPct(v)} (2026)`, fuente: 'DANE, proyección 2026' };
 }
 
+/** Capa institucional de un municipio. Presupuesto: definitivo 2025 / población DANE 2026 */
+export function valorInstitucional(dane: string, metrica: MetricaInstitucional): ValorTerritorio {
+  if (metrica === 'presupuestoHab') {
+    const a = presupuestoMunicipio(dane)?.anios.find((x) => x.anio === '2025')?.datos;
+    return a ? { valor: a.porHabitante, texto: `${pesos(a.porHabitante)} por habitante (2025)`, fuente: 'Contraloría, CUIPO' } : SIN_INFO;
+  }
+  if (metrica === 'categoria') {
+    const c = categoriaMunicipio(dane)?.lista[0];
+    if (!c) return SIN_INFO;
+    return { valor: c.categoria === 'E' ? 0 : Number(c.categoria), texto: `Categoría ${(CATEGORIA_TEXTO[c.categoria] ?? c.categoria).toLowerCase()} (${c.vigencia})`, fuente: 'Contaduría General de la Nación' };
+  }
+  const k = curulesConcejo(dane, '2023');
+  return k ? { valor: k.curules, texto: `${k.curules} curules en el Concejo 2023`, fuente: 'Registraduría' } : SIN_INFO;
+}
+
+/** Color de las métricas institucionales por clase (categoría y curules) */
+export function colorInstitucional(metrica: MetricaInstitucional, valor: number | null): string {
+  if (valor === null) return COLOR_SIN_DATO;
+  if (metrica === 'categoria') return COLORES_CATEGORIA.at(valor) ?? COLOR_SIN_DATO;
+  const i = CURULES_LEY_136.indexOf(valor);
+  return i === -1 ? COLOR_SIN_DATO : COLORES_CURULES.at(i) ?? COLOR_SIN_DATO;
+}
+
+/** Leyenda de las métricas institucionales por clase */
+export function leyendaInstitucional(metrica: 'categoria' | 'curules'): { color: string; texto: string }[] {
+  if (metrica === 'categoria') return ['E', '1', '2', '3', '4', '5', '6'].map((c, i) => ({ color: COLORES_CATEGORIA.at(i)!, texto: CATEGORIA_TEXTO[c] }));
+  return CURULES_LEY_136.map((n, i) => ({ color: COLORES_CURULES.at(i)!, texto: `${n} curules` }));
+}
+
 // --- Escalas ----------------------------------------------------------------------------------
 
 /** Cortes superiores de 5 clases por quintiles (sin repetir); el último es el máximo */
@@ -134,12 +180,15 @@ export function colorEstrato(estrato: number | null): string {
   return estrato ? COLORES_ESTRATO[estrato - 1] : COLOR_SIN_DATO;
 }
 
-/** Rangos de la leyenda: "18,2 – 24,0 %" */
-export function rangosLeyenda(valores: number[], cortes: number[], paleta: string[]): { color: string; texto: string }[] {
+const fmtPctCorto = (v: number) => `${v.toFixed(1).replace('.', ',')} %`;
+
+/** Rangos de la leyenda: "18,2 – 24,0 %" (o con el formato que se pase, p. ej. pesos) */
+export function rangosLeyenda(valores: number[], cortes: number[], paleta: string[], formato: (v: number) => string = fmtPctCorto): { color: string; texto: string }[] {
   const min = Math.min(...valores.filter((x) => Number.isFinite(x)));
+  const f = (v: number) => formato(v).replace(/ %$/, '');
   return cortes.map((c, i) => ({
     color: colorPorCortes(c, cortes, paleta),
-    texto: `${(i === 0 ? min : cortes[i - 1]).toFixed(1).replace('.', ',')} – ${c.toFixed(1).replace('.', ',')} %`,
+    texto: formato === fmtPctCorto ? `${f(i === 0 ? min : cortes[i - 1])} – ${f(c)} %` : `${formato(i === 0 ? min : cortes[i - 1])} – ${formato(c)}`,
   }));
 }
 
