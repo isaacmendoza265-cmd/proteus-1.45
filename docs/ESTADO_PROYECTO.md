@@ -1,6 +1,6 @@
 # Proteus — estado del proyecto (memoria compartida entre agentes)
 
-Última actualización: 1-oct-2026 (Claude Opus: Senado por candidato, `6adecd9`). **Todo agente debe actualizar este archivo al terminar.**
+Última actualización: 1-oct-2026 (Claude Opus: Concejo y Asamblea 2023 por candidato en el Valle de Aburrá `27f007b`, estratificación oficial de Sabaneta `58b8b5f`, serie del censo electoral `9fba5cb`). **Todo agente debe actualizar este archivo al terminar.**
 Repositorio local: `C:\Users\isaac\OneDrive\Documentos\Proyecto Proteus`. Remoto: github.com/isaacmendoza265-cmd/proteus-1.45.
 Ramas `codex/navegacion-mapa`, `claude/inicio` y `claude/encuestas-2026` ya fusionadas en `main` (28-sep). No subir bundles a GitHub por la web: se aplican con `git fetch <bundle>`.
 Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en el PATH de los agentes
@@ -20,6 +20,22 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
   por municipio, en la ficha del municipio (Política › 2023 › Concejo). 13 municipios de escrutinio E-24/E-26, 86 de
   preconteo con ≥ 98 % de mesas, 26 "Sin información" (sin cifras), Pueblorrico "Oficial · incompleto" (jornada
   repetida). `src/data/electoral/concejo2023/`, `concejo2023Service.ts`, `Concejo2023Candidatos.tsx`.
+- **Concejo y Asamblea 2023 por candidato y por puesto, Valle de Aburrá** (1-oct, `27f007b`): escrutinio mesa a mesa
+  (MMV) de la Registraduría sumado por puesto, con TODOS los candidatos en cada puesto (sumas por comuna o barrio
+  exactas). Reemplaza al preconteo de esas dos elecciones en los 10 municipios; en el municipio, el Concejo trae las
+  curules por lista del escrutinio. `scripts/build_resultados_2023_mmv.py [--todos]` →
+  `src/data/electoral/resultadosPuesto2023Escrutinio/`. Crudo: `_originales/registraduria/historico/comprimidos/
+  MMV_TERRITORIALES2023_ANTIOQUIA.zip` (trae los 125: con `--todos` se extiende a todo Antioquia, ~2 MB más).
+- **Estratificación oficial de Sabaneta** (1-oct, `58b8b5f`): capa de la alcaldía (42.210 predios residenciales,
+  30-ene-2023) por barrio y vereda, en Demografía. `scripts/build_estratificacion_oficial.py` →
+  `src/data/estratificacion/`. Los otros 9 municipios del Valle de Aburrá no publican la suya descargable; Medellín sí
+  (MapServer `VC_Catastro_VCT/10`, 32.384 manzanas, CC BY-SA) pero su servidor responde 403 a descargas automáticas:
+  bajarla desde un navegador y dejarla en `_originales/estratificacion/medellin/`. Fuentes: `_originales/estratificacion/_FUENTES.md`.
+- **Serie del censo electoral por municipio** (1-oct, `9fba5cb`): habilitados de cada jornada 2018, 2019, 2022 (Congreso
+  y Presidencia por separado), 2023 y 2026 para los 125 municipios (Registraduría, Consulta Histórico de Resultados
+  Electorales). Las elecciones mesa a mesa 2018-2022 ya muestran participación municipal; ficha › Censo electoral
+  muestra la serie. 2015 y la 2.ª vuelta no están en la fuente. `scripts/build_censo_historico.py` →
+  `src/data/electoral/censoHistorico.json`, `censoHistoricoService.ts`.
 - **Puestos 2026**: 1.280 en Antioquia; 57 sin ubicar (22 en los grandes, 35 rurales en los pequeños).
   Coordenadas: Divipole 2023 → dirección → lugar → OpenStreetMap (validado: urbano mediana 40 m) →
   cabecera/centro poblado/vereda (aproximada).
@@ -144,8 +160,9 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
 1. **P4 — Presupuesto de alcaldía** (lo más rápido): CUIPO en datos.gov.co, API Socrata:
    "OVCF - CUIPO - Programación de Gastos" (`d9mu-h6ar`) y "Ejecución de Gastos" (`4f7r-epif`).
    Filtrar Antioquia, vigencia 2025/2026; mostrar total y por habitante. Pendiente de aprobación de Isaac.
-2. **P4 — Estratificación vigente**: proxy = suscriptores residenciales de energía por estrato y municipio (SUI,
-   Superservicios). Por barrio solo con el decreto/capa de cada alcaldía.
+2. **P4 — Estratificación vigente**: Sabaneta cargada (capa oficial). Medellín: bajar en navegador la capa oficial
+   (ver sección 1). Los otros 8 del Valle de Aburrá: pedir la capa a cada oficina de estratificación (no hay
+   pública). El "estrato predominante por manzana 2018" de Esri Colombia es el mismo CNPV 2018 que ya está: no se agrega.
 3. **P4 — Casas políticas**: base curada "sin verificar". Cruzar ganadores 2015-2023 con Cuentas Claras (CNE);
    cada vínculo necesita fuente citada y revisión humana. Protocolo PA-009.
 4. **57 puestos sin ubicar**: probar capa de sedes educativas georreferenciadas (Gobernación/MEN), con permiso.
@@ -161,9 +178,11 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
 - Cartografía: `build_cartografia_fase_b.py`, `completar_bello_ovejas.py`, `agregar_manzanas.py`.
 - Puestos: `build_puestos_20k.py` (nacional, > 20.000), `build_puestos_fase_c_antioquia.py` (79 pequeños),
   `geocodificar_puestos_osm_antioquia.py` (OSM; crudos en `_originales/osm/`).
+- Estratificación oficial: `build_estratificacion_oficial.py` → `src/data/estratificacion/`, `estratificacionService.ts`.
 - Municipio (alcaldía): `build_presupuesto_municipal.py`, `build_categoria_municipal.py`, `build_curules_concejo.py`
   → `src/data/municipal/`, servicio `perfilMunicipalService.ts`.
-- Resultados: `build_concejo_2023_candidatos.py` (Concejo 2023 por candidato; crudo
+- Resultados: `build_resultados_2023_mmv.py` (Concejo y Asamblea 2023 por candidato, MMV), `build_censo_historico.py`
+  (habilitados por jornada), `build_concejo_2023_candidatos.py` (Concejo 2023 por candidato; crudo
   `_originales/registraduria/Concejo_Antioquia_2023_Todos_los_resultados.xlsx`), `build_resultados_puesto_2023.py`, `build_resultados_historicos.py <2015|2018|2019|2022>`,
   `build_presidencial_2026.py`, `indice_resultados_puesto.py`, `indice_ganadores.py`, `build_e24_medellin_zonas.py`.
 - Demografía: `build_censo_electoral.mjs`, `build_proyeccion_sexo_edad.py`.
@@ -171,6 +190,11 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
   `territoryProfileService.ts`; ficha: `src/components/territorio/`.
 
 ## 5. Bitácora (agregar arriba lo más reciente)
+- 1-oct (Claude Opus, `main`) `27f007b`, `58b8b5f`, `9fba5cb`: Concejo y Asamblea 2023 por candidato y puesto en el Valle
+  de Aburrá (MMV), estratificación oficial de Sabaneta y serie del censo electoral por municipio. Investigado y anotado:
+  censo por PUESTO 2018-2023 existe en la misma consulta de la Registraduría (sin descarga; se lee con las peticiones
+  de la página, ~400 KB por consulta); los códigos de puesto cambian y se parten entre años, así que es comparable por
+  municipio o comuna y por puesto solo en los estables.
 - 1-oct (Claude Opus, `main`) `6adecd9`: **Senado 2022 y 2026 por candidato** en la ficha (misma vista por listas).
   Propuesto y pendiente de aprobación: MMV 2023 de Antioquia del Observatorio de la Registraduría
   (`comprimidos/MMV_TERRITORIALES2023_ANTIOQUIA.zip`, 29,4 MB, escrutinio mesa a mesa) para Concejo y Asamblea 2023
