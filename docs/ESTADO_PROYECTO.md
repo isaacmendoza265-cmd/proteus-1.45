@@ -1,6 +1,6 @@
 # Proteus — estado del proyecto (memoria compartida entre agentes)
 
-Última actualización: 29-sep-2026 (Claude Opus: texto plano en el generador, `328c3e2`). **Todo agente debe actualizar este archivo al terminar.**
+Última actualización: 1-oct-2026 (Claude Opus: capa institucional del mapa, `53cd8e5`). **Todo agente debe actualizar este archivo al terminar.**
 Repositorio local: `C:\Users\isaac\OneDrive\Documentos\Proyecto Proteus`. Remoto: github.com/isaacmendoza265-cmd/proteus-1.45.
 Ramas `codex/navegacion-mapa`, `claude/inicio` y `claude/encuestas-2026` ya fusionadas en `main` (28-sep). No subir bundles a GitHub por la web: se aplican con `git fetch <bundle>`.
 Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en el PATH de los agentes
@@ -171,6 +171,10 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
   `territoryProfileService.ts`; ficha: `src/components/territorio/`.
 
 ## 5. Bitácora (agregar arriba lo más reciente)
+- 1-oct (Claude Opus, `main`) `53cd8e5`: **capa institucional del mapa** (aprobada por el equipo): presupuesto 2025 por
+  habitante, categoría 2026 y curules del Concejo 2023, por municipio (`valorInstitucional` en `mapColorService.ts`).
+  Dentro de un municipio no aplica (la leyenda lo dice). Plan de acción del proyecto en Claude Docs ("Proteus — plan
+  de acción", 1-oct) y mapa mental en un artifact ("Mapa de Proteus").
 - 29-sep (Claude Opus, `main`) `328c3e2`: **informe de Google AI Studio** (29-sep). Aplicado solo el punto 6: el generador de
   contenido pide texto plano y limpia el Markdown de la respuesta (`limpiarMarkdown`, con pruebas). Puntos 1-4 no se
   aplicaron porque ya estaban en `main` (AI Studio trabajó sobre una copia incompleta: reportó 17 suites y 255 pruebas).
