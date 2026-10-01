@@ -135,9 +135,9 @@ export async function cargarConcejo2023(daneOrId: string): Promise<Concejo2023 |
 export const CONCEJOS_POR_PUESTO = ['concejo-2019', 'concejo-2015'];
 
 /** Corporaciones con voto preferente que Proteus tiene por candidato y por puesto, para la vista por listas:
- *  Concejo y Asamblea 2019 y 2015 (escrutinio MMV), Cámara 2022 (escrutinio MMV) y 2026 (preconteo).
+ *  Concejo y Asamblea 2019 y 2015 (escrutinio MMV), Cámara y Senado 2022 (escrutinio MMV) y 2026 (preconteo).
  *  El Concejo 2023 tiene su propia fuente (concejo2023/); la Asamblea 2023 solo trae votos por partido. */
-export const LISTAS_POR_CANDIDATO = ['concejo-2019', 'concejo-2015', 'asamblea-2019', 'asamblea-2015', 'camara-2026', 'camara-2022'];
+export const LISTAS_POR_CANDIDATO = ['concejo-2019', 'concejo-2015', 'asamblea-2019', 'asamblea-2015', 'camara-2026', 'camara-2022', 'senado-2026', 'senado-2022'];
 
 /**
  * Concejo por partido y candidato a partir de una elección por puesto (escrutinio MMV 2019 y 2015),

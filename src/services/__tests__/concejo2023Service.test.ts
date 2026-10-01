@@ -93,7 +93,7 @@ describe('Concejo 2023 por candidato', () => {
     expect(concejoDesdeEleccion(e, [], 'Girardota')).toBeNull();
   });
 
-  it('Asamblea 2019 y 2015 y Cámara 2022 y 2026 por candidato: 125 municipios, listas cuadran, tipo de fuente', async () => {
+  it('Asamblea 2019 y 2015, Cámara y Senado 2022 y 2026 por candidato: 125 municipios, listas cuadran, tipo de fuente', async () => {
     for (const d of ANTIOQUIA) {
       const elecciones = await cargarElecciones(d);
       for (const id of LISTAS_POR_CANDIDATO.filter((x) => !x.startsWith('concejo'))) {
@@ -102,7 +102,7 @@ describe('Concejo 2023 por candidato', () => {
         const c = concejoDesdeEleccion(e, 'todos', d)!;
         expect(c.partidos.some((p) => p.candidatos.length > 0), `${d} ${id}`).toBe(true);
         for (const p of c.partidos) expect(p.soloLista + p.candidatos.reduce((s, x) => s + x.votos, 0)).toBe(p.total);
-        expect(c.tipo).toBe(id === 'camara-2026' ? 'preconteo' : 'escrutinio');
+        expect(c.tipo).toBe(id.endsWith('-2026') ? 'preconteo' : 'escrutinio');
       }
     }
   });
