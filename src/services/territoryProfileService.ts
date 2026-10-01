@@ -158,7 +158,7 @@ export interface SeccionDemografia {
   proyeccion: { estado: EstadoDato; valor: number | null; texto: string };
 }
 
-function idsBarrios(t: TerritorioFicha): string[] {
+export function idsBarrios(t: TerritorioFicha): string[] {
   const subs = indiceDe(t).subdivisiones;
   if (t.tipo === 'subdivision') return [t.id];
   if (t.tipo === 'division') return Object.keys(subs).filter((k) => subs[k].padre === t.id);

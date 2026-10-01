@@ -7,7 +7,8 @@ import React, { useEffect, useMemo, useState } from 'react';
 import {
   type TerritorioFicha, type EstadoDato, ETIQUETA_ESTADO,
   demografia, censoElectoral, grupos, politica, fmt, pct,
-  cargarDemografia, cargarEconomia, economia, piramide2026 } from '../../services/territoryProfileService';
+  cargarDemografia, cargarEconomia, economia, piramide2026, municipioFichaPorDane } from '../../services/territoryProfileService';
+import { estratificacionOficial } from '../../services/estratificacionService';
 import { cargarElecciones, sumarEleccion, tipoEleccion, ELECCIONES_PENDIENTES, type EleccionPuestos } from '../../services/electionResultsService';
 import type { PuestoVotacion } from '../../services/pollingStationsService';
 
@@ -161,6 +162,7 @@ export const FichaTerritorio: React.FC<FichaTerritorioProps> = ({
   const dem = useMemo(() => demografia(t), [t, demLista]);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const eco = useMemo(() => economia(t), [t, demLista]);
+  const estOf = useMemo(() => estratificacionOficial(t, municipioFichaPorDane(t.dane)), [t]);
   const pir = useMemo(() => piramide2026(t), [t]);
   const cen = useMemo(() => censoElectoral(t, puestosDentro, sinUbicar), [t, puestosDentro, sinUbicar]);
   const gru = useMemo(() => grupos(dem, cen), [dem, cen]);
@@ -421,6 +423,22 @@ export const FichaTerritorio: React.FC<FichaTerritorioProps> = ({
             <Aviso>
               <strong className="text-[var(--c-ink)]">Población: sin información por sexo y edad.</strong> {dem.motivo}
             </Aviso>
+          )}
+          {estOf && (
+            <div className="flex flex-col gap-2 px-3 py-2.5 rounded-xl bg-[var(--c-sunken)]">
+              <Cabecera titulo={`Estratificación oficial (${estOf.corte.slice(0, 4)})`} estado="oficial" fuente={estOf.fuente} />
+              <div className="grid grid-cols-2 gap-1.5">
+                <Cifra label="Estrato más común" value={String(estOf.estratoModa)} />
+                <Cifra label={estOf.unidad[0].toUpperCase() + estOf.unidad.slice(1)} value={fmt(estOf.total)} />
+              </div>
+              <div className="flex h-5 rounded overflow-hidden text-[11px] font-bold text-white">
+                {estOf.estratos.map((v, i) => {
+                  const w = (100 * v) / estOf.total;
+                  return w > 0 ? <div key={i} title={`Estrato ${i + 1}: ${fmt(v)} ${estOf.unidad}`} className="flex items-center justify-center" style={{ width: `${w}%`, background: ['#9B2C2C', '#C05621', '#B7791F', '#2F855A', '#2B6CB0', '#553C9A'][i] }}>{w >= 7 ? `E${i + 1} ${Math.round(w)} %` : ''}</div> : null;
+                })}
+              </div>
+              <span className="text-xs text-[var(--c-muted)]">La que adopta la alcaldía, predio por predio (la que se usa en servicios públicos e impuestos). El bloque de condiciones económicas es lo que declararon los hogares en el censo 2018.{t.tipo === 'municipio' ? '' : ` ${estOf.nota}`}</span>
+            </div>
           )}
           {eco && eco.estado === 'oficial' && (
             <div className="flex flex-col gap-2 px-3 py-2.5 rounded-xl bg-[var(--c-sunken)]">
