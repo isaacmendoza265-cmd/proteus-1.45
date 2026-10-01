@@ -14,6 +14,10 @@
  *    src/data/electoral/resultadosPuestoHistorico/<año>/<municipio>.json, años 2015, 2018, 2019 y
  *    2022 (scripts/build_resultados_historicos.py). Claves: códigos de puesto de ESE año; cada puesto
  *    trae su ubicación (por nombre) para asignarlo a un territorio, como 2023.
+ *  - Concejo y Asamblea 2023 por candidato (escrutinio MMV, Valle de Aburrá):
+ *    src/data/electoral/resultadosPuesto2023Escrutinio/<municipio>.json (scripts/build_resultados_2023_mmv.py),
+ *    mismo formato que la serie histórica y mismos códigos de puesto que el preconteo 2023. Donde existe,
+ *    REEMPLAZA al preconteo de esas dos elecciones; cada puesto trae a todos sus candidatos.
  * 2023 y Congreso son preconteo de la Registraduría: pueden diferir levemente del escrutinio.
  */
 import rawIndice from '../data/electoral/resultadosPuesto/indice.json';
@@ -51,6 +55,8 @@ export interface EleccionPuestos {
   nombres: Record<string, string>;
   /** Años distintos de 2026: ubicación de cada puesto ("a": aproximada, en cabecera o vereda) */
   ubicaciones?: Record<string, { lat: number; lon: number; a?: number }>;
+  /** true: cada puesto trae a todos los candidatos (si no, solo los que suman el 97 % del voto preferente) */
+  candidatosCompletos?: boolean;
 }
 
 export interface ResultadoEleccion {
@@ -107,7 +113,7 @@ interface Archivo2026 {
 }
 interface ArchivoPres { meta: { tipo: 'escrutinio'; nota: string; fuente?: string }; elecciones: Archivo2026['elecciones'] }
 interface ArchivoHistorico {
-  meta: { fuente: string; nota: string; codigos: string };
+  meta: { fuente: string; nota: string; codigos: string; candidatosCompletos?: boolean };
   nombres: Record<string, string>;
   ubicaciones: Record<string, { lat: number; lon: number; a?: number }>;
   elecciones: Record<string, { nombre: string; fecha: string; porCandidato: boolean; partidos: string[]; candidatos: { n: string; p: number }[]; municipio: FilaEleccion; puestos: Record<string, FilaEleccion> }>;
@@ -119,6 +125,7 @@ const cargadores2023 = import.meta.glob<{ default: Archivo2023 }>('../data/elect
 const cargadores2026 = import.meta.glob<{ default: Archivo2026 }>('../data/electoral/resultadosPuesto2026/*.json');
 const cargadoresPres = import.meta.glob<{ default: ArchivoPres }>('../data/electoral/resultadosPuestoPresidencial2026/*.json');
 const cargadoresHist = import.meta.glob<{ default: ArchivoHistorico }>('../data/electoral/resultadosPuestoHistorico/*/*.json');
+const cargadores2023Esc = import.meta.glob<{ default: ArchivoHistorico }>('../data/electoral/resultadosPuesto2023Escrutinio/*.json');
 const cache = new Map<string, Promise<EleccionPuestos[]>>();
 
 function convertir2023(a: Archivo2023): EleccionPuestos[] {
@@ -170,7 +177,7 @@ function convertirHistorico(a: ArchivoHistorico): EleccionPuestos[] {
   return Object.entries(a.elecciones).map(([id, e]) => ({
     id, nombre: e.nombre, fecha: e.fecha, fuente: a.meta.fuente, nota: a.meta.nota, tipo: 'escrutinio' as const, porCandidato: e.porCandidato,
     codigos: a.meta.codigos, anio: Number(a.meta.codigos), partidos: e.partidos, candidatos: e.candidatos, municipio: e.municipio, puestos: e.puestos,
-    nombres: a.nombres, ubicaciones: a.ubicaciones,
+    nombres: a.nombres, ubicaciones: a.ubicaciones, candidatosCompletos: a.meta.candidatosCompletos,
   }));
 }
 
@@ -186,10 +193,18 @@ export function cargarElecciones(dane: string): Promise<EleccionPuestos[]> {
     const lPr = e?.pres2026 ? cargadoresPres[`../data/electoral/resultadosPuestoPresidencial2026/${e.pres2026}.json`] : undefined;
     const slug = e?.['2023'];
     const lHist = slug ? ANIOS_HISTORICOS.map((y) => cargadoresHist[`../data/electoral/resultadosPuestoHistorico/${y}/${slug}.json`]).filter(Boolean) : [];
+    const lEsc = slug ? cargadores2023Esc[`../data/electoral/resultadosPuesto2023Escrutinio/${slug}.json`] : undefined;
     cache.set(dane, Promise.all([
       l26 ? l26().then((m) => convertir2026(m.default, 'preconteo', false)) : [],
       lPr ? lPr().then((m) => convertir2026(m.default, 'escrutinio', true)) : [],
-      l23 ? l23().then((m) => convertir2023(m.default)) : [],
+      Promise.all([
+        l23 ? l23().then((m) => convertir2023(m.default)) : [],
+        lEsc ? lEsc().then((m) => convertirHistorico(m.default)) : [],
+      ]).then(([pre, esc]) => {
+        // El escrutinio por candidato reemplaza al preconteo de la misma elección (Concejo y Asamblea 2023)
+        const ids = new Set(pre.map((p) => p.id));
+        return [...pre.map((p) => esc.find((x) => x.id === p.id) ?? p), ...esc.filter((x) => !ids.has(x.id))];
+      }),
       ...lHist.map((l) => l().then((m) => convertirHistorico(m.default))),
     ]).then((ls) => ls.flat()));
   }

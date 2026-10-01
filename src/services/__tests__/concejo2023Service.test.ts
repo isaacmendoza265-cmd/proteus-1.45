@@ -45,10 +45,11 @@ describe('Concejo 2023 por candidato', () => {
     }
   });
 
-  it('el preconteo del libro coincide con el preconteo por puesto de Proteus (Medellín)', async () => {
-    const c = (await cargarConcejo2023('05001'))!;
+  it('el preconteo del libro coincide con el preconteo por puesto de Proteus (Rionegro)', async () => {
+    const c = (await cargarConcejo2023('05615'))!;
     expect(c.tipo).toBe('preconteo');
-    const e = (await cargarElecciones('05001')).find((x) => x.id === 'concejo-2023')!;
+    const e = (await cargarElecciones('05615')).find((x) => x.id === 'concejo-2023')!;
+    expect(e.tipo).toBe('preconteo');
     const porPuesto = new Map(sumarEleccion(e, 'todos')!.partidos.map((p) => [normPartido(p.nombre), p.votos]));
     for (const p of c.partidos) expect(porPuesto.get(normPartido(p.nombre)), p.nombre).toBe(p.total);
   });
@@ -96,7 +97,7 @@ describe('Concejo 2023 por candidato', () => {
   it('Asamblea 2019 y 2015, Cámara y Senado 2022 y 2026 por candidato: 125 municipios, listas cuadran, tipo de fuente', async () => {
     for (const d of ANTIOQUIA) {
       const elecciones = await cargarElecciones(d);
-      for (const id of LISTAS_POR_CANDIDATO.filter((x) => !x.startsWith('concejo'))) {
+      for (const id of LISTAS_POR_CANDIDATO.filter((x) => !x.startsWith('concejo') && !x.endsWith('-2023'))) {
         const e = elecciones.find((x) => x.id === id)!;
         expect(e, `${d} ${id}`).toBeTruthy();
         const c = concejoDesdeEleccion(e, 'todos', d)!;
@@ -106,5 +107,51 @@ describe('Concejo 2023 por candidato', () => {
       }
     }
   });
-});
 
+  it('Concejo y Asamblea 2023 del Valle de Aburrá: escrutinio MMV con todos los candidatos en cada puesto', async () => {
+    const AMVA = ['05001', '05079', '05088', '05129', '05212', '05266', '05308', '05360', '05380', '05631'];
+    expect(LISTAS_POR_CANDIDATO).toEqual(expect.arrayContaining(['concejo-2023', 'asamblea-2023']));
+    for (const d of AMVA) {
+      const els = await cargarElecciones(d);
+      for (const id of ['concejo-2023', 'asamblea-2023']) {
+        const e = els.filter((x) => x.id === id);
+        expect(e.length, `${d} ${id}`).toBe(1); // reemplaza al preconteo, no se duplica
+        expect(e[0].tipo).toBe('escrutinio');
+        expect(e[0].candidatosCompletos).toBe(true);
+        // La suma de TODOS los puestos da exactamente el total municipal, candidato por candidato
+        const mun = sumarEleccion(e[0], 'todos')!;
+        const puestos = sumarEleccion(e[0], Object.keys(e[0].puestos))!;
+        expect(puestos.votantes).toBe(mun.votantes);
+        expect(new Map(puestos.candidatos.map((c) => [c.nombre + c.partido, c.votos]))).toEqual(new Map(mun.candidatos.map((c) => [c.nombre + c.partido, c.votos])));
+        // Por puestos no queda parcial: hay voto solo por lista y las listas cuadran
+        const c = concejoDesdeEleccion(e[0], Object.keys(e[0].puestos), 'x')!;
+        expect(c.candidatosParciales).toBe(false);
+        for (const p of c.partidos) expect(p.soloLista + p.candidatos.reduce((s, x) => s + x.votos, 0), p.nombre).toBe(p.total);
+      }
+      // Alcaldía y Gobernación siguen siendo del preconteo
+      expect(els.find((x) => x.id === 'alcaldia-2023')!.tipo).toBe('preconteo');
+    }
+  });
+
+  it('Concejo 2023 de Medellín (escrutinio MMV): curules por lista del escrutinio municipal, 21 a proveer', async () => {
+    const e = (await cargarElecciones('05001')).find((x) => x.id === 'concejo-2023')!;
+    const c = concejoDesdeEleccion(e, 'todos', 'Medellín', '05001')!;
+    expect(c.totalCurules).not.toBeNull();
+    expect(c.partidos.reduce((s, p) => s + (p.curules ?? 0), 0)).toBe(c.totalCurules);
+    expect(c.totalCurules).toBeGreaterThanOrEqual(20);
+    // Escrutinio y preconteo del libro difieren poco por lista grande (Pacto Histórico: +6,6 % en el escrutinio)
+    const libro = (await cargarConcejo2023('05001'))!;
+    for (const p of libro.partidos.filter((x) => x.total > 20000)) {
+      const esc = c.partidos.find((x) => normPartido(x.nombre) === normPartido(p.nombre));
+      expect(esc, p.nombre).toBeTruthy();
+      expect(Math.abs(esc!.total - p.total) / p.total, p.nombre).toBeLessThan(0.08);
+    }
+  });
+
+  it('fuera del Valle de Aburrá la Asamblea 2023 sigue por partido (sin vista por candidato)', async () => {
+    const e = (await cargarElecciones('05002')).find((x) => x.id === 'asamblea-2023')!;
+    expect(e.tipo).toBe('preconteo');
+    expect(e.candidatosCompletos).toBeFalsy();
+    expect(sumarEleccion(e, 'todos')!.candidatos.length).toBe(0);
+  });
+});

@@ -277,12 +277,12 @@ export const FichaTerritorio: React.FC<FichaTerritorioProps> = ({
               {t.tipo === 'municipio' && eleccionSel.id === 'alcaldia-2023' && pol.resultados.alcaldia && (
                 <span className="text-xs text-[var(--c-muted)]">Escrutinio oficial: ganó {pol.resultados.alcaldia.candidatos[0]?.nombre} con {pct(pol.resultados.alcaldia.candidatos[0]?.pctValidos)}; participación {pct(pol.resultados.alcaldia.participacion)}.</span>
               )}
-              <span className="text-xs text-[var(--c-muted)]">{t.tipo === 'municipio' ? (eleccionSel.tipo === 'escrutinio' ? 'Total municipal del escrutinio (suma de sus mesas). Habilitados: censo electoral 2026 de los puestos.' : 'Total municipal del preconteo.') : pol.resultados.texto}{eleccionSel.codigos === '2026' && !eleccionSel.porCandidato && t.tipo !== 'municipio' && resultado.candidatos.length ? ' En cada puesto se guardan los candidatos que suman el 97 % del voto preferente, así que sus cifras aquí son aproximadas por abajo.' : ''}</span>
+              <span className="text-xs text-[var(--c-muted)]">{t.tipo === 'municipio' ? (eleccionSel.tipo === 'escrutinio' ? `Total municipal del escrutinio (suma de sus mesas). ${eleccionSel.codigos === '2026' ? 'Habilitados: censo electoral 2026 de los puestos.' : eleccionSel.codigos === '2023' ? 'Habilitados: los del preconteo 2023 en los mismos puestos.' : 'El archivo mesa a mesa no trae habilitados.'}` : 'Total municipal del preconteo.') : pol.resultados.texto}{eleccionSel.codigos === '2026' && !eleccionSel.porCandidato && t.tipo !== 'municipio' && resultado.candidatos.length ? ' En cada puesto se guardan los candidatos que suman el 97 % del voto preferente, así que sus cifras aquí son aproximadas por abajo.' : ''}</span>
             </div>
           ) : (
             <Aviso>No hay puestos de votación de esta elección dentro del territorio: sus residentes votan en puestos vecinos. No se reparte ni se estima.</Aviso>
           ))}
-          {eleccion === 'concejo-2023' && (t.tipo === 'municipio' ? (
+          {eleccion === 'concejo-2023' && !eleccionSel?.candidatosCompletos && (t.tipo === 'municipio' ? (
             <React.Suspense fallback={<Aviso>Cargando el Concejo 2023 por candidato…</Aviso>}>
               <Concejo2023Candidatos dane={t.dane} municipio={t.municipio} />
             </React.Suspense>
@@ -291,12 +291,12 @@ export const FichaTerritorio: React.FC<FichaTerritorioProps> = ({
           ))}
           {eleccionSel && resultado && CONCEJOS_HISTORICOS.includes(eleccionSel.id) && (
             <React.Suspense fallback={<Aviso>Cargando el {eleccionSel.nombre} por candidato…</Aviso>}>
-              <ConcejoHistoricoCandidatos eleccion={eleccionSel} codigos={codigosDe(eleccionSel)} municipio={t.municipio} territorio={t.nombre} />
+              <ConcejoHistoricoCandidatos eleccion={eleccionSel} codigos={codigosDe(eleccionSel)} municipio={t.municipio} territorio={t.nombre} dane={t.dane} />
             </React.Suspense>
           )}
           {comparacion.length > 1 && (
             <div className="flex flex-col gap-1 px-3 py-2.5 rounded-xl border border-[var(--c-border)]">
-              <Cabecera titulo="La misma elección en otros años" estado="oficial" fuente="Registraduría: escrutinio mesa a mesa (2015-2022, Presidencia 2026) y preconteo (2023, Congreso 2026)" />
+              <Cabecera titulo="La misma elección en otros años" estado="oficial" fuente="Registraduría: escrutinio mesa a mesa (2015-2022, Presidencia 2026; Concejo y Asamblea 2023 en el Valle de Aburrá) y preconteo (resto de 2023, Congreso 2026)" />
               <div className="grid grid-cols-[3rem_1fr_auto] gap-x-2 gap-y-1 text-sm">
                 {comparacion.map((c) => (
                   <React.Fragment key={c.id}>

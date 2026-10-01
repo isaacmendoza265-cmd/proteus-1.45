@@ -136,8 +136,9 @@ export const CONCEJOS_POR_PUESTO = ['concejo-2019', 'concejo-2015'];
 
 /** Corporaciones con voto preferente que Proteus tiene por candidato y por puesto, para la vista por listas:
  *  Concejo y Asamblea 2019 y 2015 (escrutinio MMV), Cámara y Senado 2022 (escrutinio MMV) y 2026 (preconteo).
- *  El Concejo 2023 tiene su propia fuente (concejo2023/); la Asamblea 2023 solo trae votos por partido. */
-export const LISTAS_POR_CANDIDATO = ['concejo-2019', 'concejo-2015', 'asamblea-2019', 'asamblea-2015', 'camara-2026', 'camara-2022', 'senado-2026', 'senado-2022'];
+ *  Concejo y Asamblea 2023: escrutinio MMV por candidato en el Valle de Aburrá (resultadosPuesto2023Escrutinio/);
+ *  en los demás municipios el preconteo solo trae partidos (la vista no aparece) y el Concejo 2023 sale de concejo2023/. */
+export const LISTAS_POR_CANDIDATO = ['concejo-2023', 'asamblea-2023', 'concejo-2019', 'concejo-2015', 'asamblea-2019', 'asamblea-2015', 'camara-2026', 'camara-2022', 'senado-2026', 'senado-2022'];
 
 /**
  * Concejo por partido y candidato a partir de una elección por puesto (escrutinio MMV 2019 y 2015),
@@ -146,8 +147,11 @@ export const LISTAS_POR_CANDIDATO = ['concejo-2019', 'concejo-2015', 'asamblea-2
  * El total municipal trae a todos los candidatos; cada puesto, solo los que suman el 97 % del voto
  * preferente (hasta 25, scripts/build_resultados_historicos.py): al sumar puestos, el voto por candidato
  * queda como mínimo y el voto solo por la lista no se calcula (se deja en 0 y `candidatosParciales`).
+ * Si la elección trae todos los candidatos en cada puesto (`candidatosCompletos`, escrutinio 2023 del Valle de
+ * Aburrá), la suma de puestos es exacta. Con `dane`, el total municipal del Concejo 2023 trae las curules por lista
+ * del escrutinio municipal.
  */
-export function concejoDesdeEleccion(e: EleccionPuestos, codigos: string[] | 'todos', municipio: string): Concejo2023 | null {
+export function concejoDesdeEleccion(e: EleccionPuestos, codigos: string[] | 'todos', municipio: string, dane?: string): Concejo2023 | null {
   const r = sumarEleccion(e, codigos);
   if (!r) return null;
   const porPartido = new Map<string, { nombre: string; votos: number }[]>();
@@ -156,7 +160,9 @@ export function concejoDesdeEleccion(e: EleccionPuestos, codigos: string[] | 'to
     l.push({ nombre: c.nombre, votos: c.votos });
     porPartido.set(c.partido, l);
   }
-  const parciales = codigos !== 'todos';
+  const parciales = codigos !== 'todos' && !e.candidatosCompletos;
+  const ofic = e.id === 'concejo-2023' && codigos === 'todos' && dane ? getResultado2023(dane)?.concejo : undefined;
+  const curulesPor = new Map((ofic?.curulesPorLista ?? []).map((c) => [normPartido(c.partido), c.curules]));
   const votosPartidos = r.partidos.reduce((s, p) => s + p.votos, 0);
   const validos = votosPartidos + r.blanco;
   const partidos: PartidoConcejo2023[] = r.partidos.map((p) => {
@@ -168,12 +174,12 @@ export function concejoDesdeEleccion(e: EleccionPuestos, codigos: string[] | 'to
       pctValidos: validos ? r1((100 * p.votos) / validos) : 0,
       soloLista: parciales ? 0 : Math.max(0, p.votos - suma),
       candidatos: cands.map((c) => ({ codigo: '', nombre: c.nombre, votos: c.votos, pctLista: p.votos ? r1((100 * c.votos) / p.votos) : 0 })),
-      curules: null,
+      curules: ofic ? (curulesPor.get(normPartido(p.nombre)) ?? 0) : null,
     };
   });
   return {
     dane: '', municipio, estado: 'solido', pctMesas: null, habilitados: r.habilitados || null,
     tipo: e.tipo, fuente: e.fuente, votosPartidos, blanco: r.blanco, nulos: r.nulos, noMarcados: r.noMarcados,
-    validos, partidos, totalCurules: null, nota: null, candidatosParciales: parciales,
+    validos, partidos, totalCurules: ofic ? ofic.totalCurulesListas : null, nota: null, candidatosParciales: parciales,
   };
 }

@@ -179,28 +179,30 @@ export const Concejo2023Candidatos: React.FC<{ dane: string; municipio: string }
 
 /** Corporación con voto preferente por candidato (Concejo y Asamblea 2019-2015, Cámara y Senado 2026-2022): suma del
  *  municipio o de los puestos que quedan dentro del territorio */
-export const ConcejoHistoricoCandidatos: React.FC<{ eleccion: EleccionPuestos; codigos: string[] | 'todos'; municipio: string; territorio?: string }> = ({ eleccion, codigos, municipio, territorio }) => {
+export const ConcejoHistoricoCandidatos: React.FC<{ eleccion: EleccionPuestos; codigos: string[] | 'todos'; municipio: string; territorio?: string; dane?: string }> = ({ eleccion, codigos, municipio, territorio, dane }) => {
   // Clave estable: la ficha crea la lista de códigos en cada render
   const clave = `${eleccion.id}|${codigos === 'todos' ? 'todos' : codigos.join(',')}`;
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const datos = useMemo(() => concejoDesdeEleccion(eleccion, codigos, municipio), [eleccion, clave, municipio]);
+  const datos = useMemo(() => concejoDesdeEleccion(eleccion, codigos, municipio, dane), [eleccion, clave, municipio, dane]);
   if (!datos || !datos.partidos.some((p) => p.candidatos.length)) return null;
   const enPuestos = codigos !== 'todos';
   const departamental = /^(asamblea|camara|senado)-/.test(eleccion.id);
   const corporacion = eleccion.id.startsWith('asamblea') ? 'la Asamblea' : eleccion.id.startsWith('senado') ? 'el Senado' : 'la Cámara';
   const circunscripcion = eleccion.id.startsWith('senado') ? 'todo el país' : 'todo Antioquia';
   const deCorporacion = eleccion.id.startsWith('senado') ? 'del Senado' : `de ${corporacion}`;
+  const anio = /^concejo-(\d{4})$/.exec(eleccion.id)?.[1];
+  const curulesAProveer = anio && dane && !enPuestos ? curulesConcejo(dane, anio)?.curules : undefined;
   const fuente = eleccion.tipo === 'preconteo'
     ? `Registraduría, preconteo del ${eleccion.fecha} · puede diferir del escrutinio`
     : `Registraduría, escrutinio oficial mesa a mesa (MMV) del ${eleccion.fecha}`;
   return (
-    <VistaConcejo key={clave} datos={datos}
+    <VistaConcejo key={clave} datos={datos} curulesAProveer={curulesAProveer}
       titulo={`${eleccion.nombre} por candidato${enPuestos ? ` en los puestos de ${territorio ?? 'este territorio'}` : ` en ${municipio}`}`}
       fuente={`${fuente}${enPuestos ? ` · ${fmt(codigos.length)} puesto(s)` : ''}`}
-      sinCurules={departamental ? `las curules ${deCorporacion} se reparten con los votos de ${circunscripcion}, no por municipio` : 'Proteus todavía no tiene las curules de ese año'}
+      sinCurules={departamental ? `las curules ${deCorporacion} se reparten con los votos de ${circunscripcion}, no por municipio` : enPuestos ? 'las curules se reparten con el total del municipio' : 'Proteus todavía no tiene las curules de ese año'}
       pie={`${departamental ? `Votos depositados en este territorio; ${corporacion} se elige en ${circunscripcion}. ` : ''}${enPuestos
-        ? 'Suma de los puestos que ese año quedaban dentro del territorio (ubicados por su nombre); los que no se pudieron ubicar cuentan solo en el municipio. '
-        : ''}El voto solo por la lista es el total de la lista menos el voto preferente de sus candidatos. Aquí no se marca quién resultó electo.`} />
+        ? `Suma de los puestos que ese año quedaban dentro del territorio (ubicados por su nombre); los que no se pudieron ubicar cuentan solo en el municipio.${eleccion.candidatosCompletos ? ' Cada puesto trae a todos sus candidatos, así que la suma es exacta.' : ''} `
+        : ''}${datos.totalCurules != null ? 'Curules por lista: escrutinio municipal. ' : ''}El voto solo por la lista es el total de la lista menos el voto preferente de sus candidatos. Aquí no se marca quién resultó electo.`} />
   );
 };
 
