@@ -21,6 +21,7 @@
  * 2023 y Congreso son preconteo de la Registraduría: pueden diferir levemente del escrutinio.
  */
 import rawIndice from '../data/electoral/resultadosPuesto/indice.json';
+import { censoDeEleccion } from './censoHistoricoService';
 
 export interface FilaEleccion {
   habilitados: number;
@@ -173,10 +174,12 @@ function convertir2026(a: Archivo2026 | ArchivoPres, tipo: 'preconteo' | 'escrut
   }));
 }
 
-function convertirHistorico(a: ArchivoHistorico): EleccionPuestos[] {
+/** El MMV no trae habilitados: el total municipal toma el censo de la misma jornada (censoHistorico.json) */
+function convertirHistorico(a: ArchivoHistorico, dane: string): EleccionPuestos[] {
   return Object.entries(a.elecciones).map(([id, e]) => ({
     id, nombre: e.nombre, fecha: e.fecha, fuente: a.meta.fuente, nota: a.meta.nota, tipo: 'escrutinio' as const, porCandidato: e.porCandidato,
-    codigos: a.meta.codigos, anio: Number(a.meta.codigos), partidos: e.partidos, candidatos: e.candidatos, municipio: e.municipio, puestos: e.puestos,
+    codigos: a.meta.codigos, anio: Number(a.meta.codigos), partidos: e.partidos, candidatos: e.candidatos, puestos: e.puestos,
+    municipio: e.municipio.habilitados ? e.municipio : { ...e.municipio, habilitados: censoDeEleccion(dane, id) ?? 0 },
     nombres: a.nombres, ubicaciones: a.ubicaciones, candidatosCompletos: a.meta.candidatosCompletos,
   }));
 }
@@ -199,13 +202,13 @@ export function cargarElecciones(dane: string): Promise<EleccionPuestos[]> {
       lPr ? lPr().then((m) => convertir2026(m.default, 'escrutinio', true)) : [],
       Promise.all([
         l23 ? l23().then((m) => convertir2023(m.default)) : [],
-        lEsc ? lEsc().then((m) => convertirHistorico(m.default)) : [],
+        lEsc ? lEsc().then((m) => convertirHistorico(m.default, dane)) : [],
       ]).then(([pre, esc]) => {
         // El escrutinio por candidato reemplaza al preconteo de la misma elección (Concejo y Asamblea 2023)
         const ids = new Set(pre.map((p) => p.id));
         return [...pre.map((p) => esc.find((x) => x.id === p.id) ?? p), ...esc.filter((x) => !ids.has(x.id))];
       }),
-      ...lHist.map((l) => l().then((m) => convertirHistorico(m.default))),
+      ...lHist.map((l) => l().then((m) => convertirHistorico(m.default, dane))),
     ]).then((ls) => ls.flat()));
   }
   return cache.get(dane)!;

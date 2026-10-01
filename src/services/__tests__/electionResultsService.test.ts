@@ -92,13 +92,15 @@ describe('resultados por puesto', () => {
     expect(t.candidatos[0].votos).toBe(819802);
     expect(JSON.stringify(v2)).not.toMatch(/CANCEDULA|cedula/i);
   });
-  it('serie histórica: Medellín 2019 y 2015, Antioquia 2018; sin habilitados ni cédulas', async () => {
+  it('serie histórica: Medellín 2019 y 2015, Antioquia 2018; habilitados del censo de la jornada, sin cédulas', async () => {
     const q = await total('05001', 'alcaldia-2019');
     expect(q.total.candidatos[0].nombre).toMatch(/Quintero/);
     expect(q.total.candidatos[0].votos).toBe(304034);
     expect(q.suma.votantes).toBe(q.total.votantes);
     expect(q.e.tipo).toBe('escrutinio');
-    expect(q.total.habilitados).toBe(0);
+    // El MMV no trae habilitados: el total municipal toma el censo de la jornada (censoHistorico.json); los puestos no
+    expect(q.total.habilitados).toBe(1_662_854);
+    expect(q.suma.habilitados).toBe(0);
     const f = await total('05001', 'alcaldia-2015');
     expect(f.total.candidatos[0].nombre).toMatch(/Gutierrez/);
     const d = await total('05001', 'presidente-2018-2');

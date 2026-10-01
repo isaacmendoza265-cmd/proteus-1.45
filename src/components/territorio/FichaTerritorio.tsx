@@ -9,6 +9,7 @@ import {
   demografia, censoElectoral, grupos, politica, fmt, pct,
   cargarDemografia, cargarEconomia, economia, piramide2026, municipioFichaPorDane } from '../../services/territoryProfileService';
 import { estratificacionOficial } from '../../services/estratificacionService';
+import { serieCenso, FUENTE_CENSO_HISTORICO, NOTA_CENSO_HISTORICO } from '../../services/censoHistoricoService';
 import { cargarElecciones, sumarEleccion, tipoEleccion, ELECCIONES_PENDIENTES, type EleccionPuestos } from '../../services/electionResultsService';
 import type { PuestoVotacion } from '../../services/pollingStationsService';
 
@@ -127,7 +128,7 @@ export const FichaTerritorio: React.FC<FichaTerritorioProps> = ({
       .map((e) => {
         const r = sumarEleccion(e, codigosDe(e));
         const lider = r ? (e.porCandidato ? r.candidatos[0] : r.partidos[0]) : undefined;
-        return { id: e.id, anio: e.anio, votantes: r?.votantes ?? 0, puestos: r?.puestos ?? 0, lider: lider?.nombre, detalle: lider && 'partido' in lider ? String(lider.partido) : undefined, pct: lider?.pct ?? 0 };
+        return { id: e.id, anio: e.anio, votantes: r?.votantes ?? 0, habilitados: r?.habilitados ?? 0, puestos: r?.puestos ?? 0, lider: lider?.nombre, detalle: lider && 'partido' in lider ? String(lider.partido) : undefined, pct: lider?.pct ?? 0 };
       })
       .sort((a, b) => b.anio - a.anio);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -162,6 +163,7 @@ export const FichaTerritorio: React.FC<FichaTerritorioProps> = ({
   const dem = useMemo(() => demografia(t), [t, demLista]);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const eco = useMemo(() => economia(t), [t, demLista]);
+  const serie = useMemo(() => serieCenso(t.dane), [t.dane]);
   const estOf = useMemo(() => estratificacionOficial(t, municipioFichaPorDane(t.dane)), [t]);
   const pir = useMemo(() => piramide2026(t), [t]);
   const cen = useMemo(() => censoElectoral(t, puestosDentro, sinUbicar), [t, puestosDentro, sinUbicar]);
@@ -279,7 +281,7 @@ export const FichaTerritorio: React.FC<FichaTerritorioProps> = ({
               {t.tipo === 'municipio' && eleccionSel.id === 'alcaldia-2023' && pol.resultados.alcaldia && (
                 <span className="text-xs text-[var(--c-muted)]">Escrutinio oficial: ganó {pol.resultados.alcaldia.candidatos[0]?.nombre} con {pct(pol.resultados.alcaldia.candidatos[0]?.pctValidos)}; participación {pct(pol.resultados.alcaldia.participacion)}.</span>
               )}
-              <span className="text-xs text-[var(--c-muted)]">{t.tipo === 'municipio' ? (eleccionSel.tipo === 'escrutinio' ? `Total municipal del escrutinio (suma de sus mesas). ${eleccionSel.codigos === '2026' ? 'Habilitados: censo electoral 2026 de los puestos.' : eleccionSel.codigos === '2023' ? 'Habilitados: los del preconteo 2023 en los mismos puestos.' : 'El archivo mesa a mesa no trae habilitados.'}` : 'Total municipal del preconteo.') : pol.resultados.texto}{eleccionSel.codigos === '2026' && !eleccionSel.porCandidato && t.tipo !== 'municipio' && resultado.candidatos.length ? ' En cada puesto se guardan los candidatos que suman el 97 % del voto preferente, así que sus cifras aquí son aproximadas por abajo.' : ''}</span>
+              <span className="text-xs text-[var(--c-muted)]">{t.tipo === 'municipio' ? (eleccionSel.tipo === 'escrutinio' ? `Total municipal del escrutinio (suma de sus mesas). ${eleccionSel.codigos === '2026' ? 'Habilitados: censo electoral 2026 de los puestos.' : eleccionSel.codigos === '2023' ? 'Habilitados: los del preconteo 2023 en los mismos puestos.' : resultado.habilitados > 0 ? 'Habilitados: censo electoral de esa jornada (Registraduría, histórico de resultados); el archivo mesa a mesa no los trae.' : 'El archivo mesa a mesa no trae habilitados.'}` : 'Total municipal del preconteo.') : pol.resultados.texto}{eleccionSel.codigos === '2026' && !eleccionSel.porCandidato && t.tipo !== 'municipio' && resultado.candidatos.length ? ' En cada puesto se guardan los candidatos que suman el 97 % del voto preferente, así que sus cifras aquí son aproximadas por abajo.' : ''}</span>
             </div>
           ) : (
             <Aviso>No hay puestos de votación de esta elección dentro del territorio: sus residentes votan en puestos vecinos. No se reparte ni se estima.</Aviso>
@@ -304,7 +306,7 @@ export const FichaTerritorio: React.FC<FichaTerritorioProps> = ({
                   <React.Fragment key={c.id}>
                     <button onClick={() => { setEleccion(c.id); setPuestoAbierto(null); }} className={`text-left tabular-nums font-bold ${c.id === eleccionSel?.id ? 'text-[var(--c-accent)]' : ''}`}>{c.anio}</button>
                     <span className="min-w-0 flex flex-col"><span className="truncate font-semibold">{c.lider ?? 'Sin puestos en el territorio'}</span>{c.detalle && <span className="text-xs text-[var(--c-muted)] truncate">{c.detalle}</span>}</span>
-                    <span className="text-right tabular-nums">{c.lider ? pct(c.pct) : '—'}<span className="block text-xs text-[var(--c-muted)]">{fmt(c.votantes)} votos</span></span>
+                    <span className="text-right tabular-nums">{c.lider ? pct(c.pct) : '—'}<span className="block text-xs text-[var(--c-muted)]">{fmt(c.votantes)} votos{c.habilitados > 0 ? ` · ${pct((100 * c.votantes) / c.habilitados)} particip.` : ''}</span></span>
                   </React.Fragment>
                 ))}
               </div>
@@ -537,6 +539,21 @@ export const FichaTerritorio: React.FC<FichaTerritorioProps> = ({
             </details>
           )}
           <span className="text-xs text-[var(--c-muted)]">{cen.nota}</span>
+          {serie.length > 1 && (
+            <div className="flex flex-col gap-1 px-3 py-2.5 rounded-xl border border-[var(--c-border)]">
+              <Cabecera titulo={`Censo electoral de ${t.municipio}, 2018-2026`} estado="oficial" fuente={FUENTE_CENSO_HISTORICO} />
+              <div className="grid grid-cols-[1fr_auto_auto] gap-x-3 gap-y-1 text-sm">
+                {serie.map((p, i) => (
+                  <React.Fragment key={p.jornada}>
+                    <span className="min-w-0 truncate">{p.etiqueta}</span>
+                    <span className="text-right tabular-nums font-semibold">{fmt(p.censo)}</span>
+                    <span className="w-16 text-right tabular-nums text-xs text-[var(--c-muted)]">{i ? `${p.censo >= serie[i - 1].censo ? '+' : ''}${pct((100 * (p.censo - serie[i - 1].censo)) / serie[i - 1].censo)}` : ''}</span>
+                  </React.Fragment>
+                ))}
+              </div>
+              <span className="text-xs text-[var(--c-muted)]">Habilitados de cada jornada en todo el municipio{t.tipo !== 'municipio' ? ' (la fuente no los publica por comuna o barrio de forma comparable: los puestos cambian de código y se parten entre elecciones)' : ''}. {NOTA_CENSO_HISTORICO} Con este censo, la participación de 2018-2022 se puede comparar con la de 2023 y 2026.</span>
+            </div>
+          )}
         </div>
       )}
 
