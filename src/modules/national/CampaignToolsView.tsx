@@ -58,9 +58,12 @@ export const CampaignToolsView: React.FC = () => {
           }
         }`;
         
+        // Extracción literal de un texto que pega el usuario: sin macrofuentes, para que no mezcle datos del territorio
+        // con las cifras de la encuesta (regla de la tubería: extraer no es analizar).
         const response = await generateContent({
           model: "gemini-3.8-flash",
-          contents: [{ role: 'user', parts: [{ text: textPrompt }] }]
+          contents: [{ role: 'user', parts: [{ text: `${textPrompt}\n\nCopia solo lo que dice el texto; si un campo no aparece, escribe "no aparece".` }] }],
+          proteus: { sinMacrofuentes: true },
         });
         
         try {
@@ -87,15 +90,18 @@ export const CampaignToolsView: React.FC = () => {
     setComparisonAnalysis(null);
 
     const prompts = {
-      politico: "Realiza una búsqueda profunda en la web sobre el contexto político actual de Colombia en 2025-2026. Identifica vientos electorales, coaliciones emergentes y temas de debate nacional. Presenta un reporte estratégico.",
+      politico: "Realiza una búsqueda profunda en la web sobre el contexto político actual de Colombia. Identifica vientos electorales, coaliciones emergentes y temas de debate nacional. Presenta un reporte estratégico.",
       regional: "Realiza una búsqueda detallada y actualizada sobre el clima político y social en las principales regiones y departamentos de Colombia. Identifica preocupaciones locales, líderes barriales y tendencias de voto.",
       dinamico: `Basado en los resultados de las encuestas procesadas: ${JSON.stringify(multiSurveyResults)}, realiza un análisis DAFO (SWOT) dinámico. Identifica puntos débiles y fuertes de cada opción y recomienda ajustes discursivos.`
     };
 
     try {
+      // Las dos primeras piden la web: van con búsqueda (antes no la tenían y Gemini respondía de memoria)
       const response = await generateContent({
         model: "gemini-3.8-flash",
-        contents: [{ role: 'user', parts: [{ text: prompts[type] }] }]
+        contents: [{ role: 'user', parts: [{ text: prompts[type] }] }],
+        ...(type === 'dinamico' ? {} : { config: { tools: [{ googleSearch: {} }] } }),
+        proteus: { tarea: type === 'dinamico' ? 'analizar' : 'investigar' },
       });
 
       setComparisonAnalysis({

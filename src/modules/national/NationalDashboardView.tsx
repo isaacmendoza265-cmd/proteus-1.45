@@ -24,6 +24,8 @@ import {
 } from '../../data/antioquiaData';
 import { DEPARTMENT_NBI_SUMMARY, MUNICIPALITY_NBI_DATA, MunicipalityNBI } from '../../data/nbiDetailedData';
 import { generateContent, formatAiError } from '../../services/geminiService';
+import { seleccionDeDane } from '../../services/ia/macrofuentes';
+import { getMunicipalCensus } from '../../services/electoralCensusService';
 import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
@@ -101,6 +103,8 @@ export const NationalDashboardView: React.FC = () => {
     return deptData ? deptData[selectedSubregion] : null;
   }, [activeDepartment, selectedSubregion]);
 
+  const esAntioquia = !!activeDepartment && /antioquia/i.test(activeDepartment.name);
+
   // Generate Department Report
   const handleGenerateDeptReport = async () => {
     if (isGeneratingDeptReport || !activeDepartment) return;
@@ -112,9 +116,11 @@ export const NationalDashboardView: React.FC = () => {
 Genera un informe estratégico para el departamento de ${activeDepartment.name}.
 
 DATOS BASE:
-- NBI Departamental: ${JSON.stringify(deptNbi || "Consultar en fuentes oficiales")}
-- Actividades económicas: ${activeDepartment.generalData?.actividadesEconomicas || "Diversas"}
-- Contexto político: ${activeDepartment.generalData?.contextoPolitico || "Heterogéneo"}
+DATOS AUXILIARES DE LA FICHA NACIONAL (tablas internas sin verificar; si contradicen la macrofuente A, prevalece A):
+- NBI departamental: ${deptNbi ? JSON.stringify(deptNbi) : 'Sin información'}
+- Actividades económicas: ${activeDepartment.generalData?.actividadesEconomicas || 'Sin información'}
+- Contexto político: ${activeDepartment.generalData?.contextoPolitico || 'Sin información'}
+${esAntioquia ? '' : 'Proteus no tiene cargados datos oficiales de este departamento: lo que uses de la web va como hallazgo externo con su fuente.'}
 
 ESTRUCTURA:
 1. **Resumen Ejecutivo y Clima Político 2026**.
@@ -125,7 +131,9 @@ ESTRUCTURA:
       const response = await generateContent({
         model: "gemini-3.8-flash",
         contents: [{ role: 'user', parts: [{ text: prompt }] }],
-        config: { tools: [{ googleSearch: {} }] }
+        config: { tools: [{ googleSearch: {} }] },
+        // Antioquia: los datos del departamento; otro departamento: Proteus no tiene sus datos (no se mandan los del territorio activo)
+        proteus: esAntioquia ? { tarea: 'investigar', seleccion: { subregion: null, muniId: null, comunaId: null, barrioId: null } } : { tarea: 'investigar', incluirDatos: false },
       });
 
       setDeptReport({
@@ -150,22 +158,26 @@ ESTRUCTURA:
 Realiza un diagnóstico estratégico del municipio de ${municipio} (Departamento de ${activeDepartment.name}).
 
 DATOS LOCALES DISPONIBLES:
-- NBI Municipio: ${JSON.stringify(selectedMuniNbi?.total || "Consultar DANE")}
-- Subregión: ${selectedSubregion || "Departamental"}
-- Contexto Departamental: ${activeDepartment.generalData?.contextoPolitico || ""}
+DATOS AUXILIARES DE LA FICHA NACIONAL (sin verificar; si contradicen la macrofuente A, prevalece A):
+- NBI del municipio: ${selectedMuniNbi?.total != null ? JSON.stringify(selectedMuniNbi.total) : 'Sin información'}
+- Subregión: ${selectedSubregion || 'Sin información'}
+- Contexto departamental: ${activeDepartment.generalData?.contextoPolitico || 'Sin información'}
+${esAntioquia ? '' : 'Proteus no tiene cargados datos oficiales de este departamento: lo que uses de la web va como hallazgo externo con su fuente.'}
 
 ESTRUCTURA REQUERIDA:
-1. **Radiografía Municipal**: Población estimada, vocación económica y posición estratégica en el departamento.
+1. **Radiografía Municipal**: Población (la de los datos; si no hay, dilo), vocación económica y posición estratégica en el departamento.
 2. **Brechas y Necesidades Críticas**: Situación de acueducto, vías terciarias, conectividad y NBI.
 3. **Coyuntura Política Local**: Fuerzas predominantes, alianzas de cara a elecciones 2026 y temas de conversación comunitaria.
 4. **Mensajes Clave y Discurso**: 2 propuestas de alto impacto que un candidato debe enfatizar en este municipio.
 
 Utiliza la búsqueda web para incorporar los acontecimientos más recientes.`;
 
+      const dane = esAntioquia ? getMunicipalCensus(municipio)?.dane : null;
       const response = await generateContent({
         model: "gemini-3.8-flash",
         contents: [{ role: 'user', parts: [{ text: prompt }] }],
-        config: { tools: [{ googleSearch: {} }] }
+        config: { tools: [{ googleSearch: {} }] },
+        proteus: dane ? { tarea: 'investigar', seleccion: seleccionDeDane(dane) } : { tarea: 'investigar', incluirDatos: false },
       });
 
       setMuniReport({

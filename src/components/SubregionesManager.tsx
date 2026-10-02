@@ -40,7 +40,13 @@ import {
 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { jsPDF } from 'jspdf';
-import { generateContent } from '../services/geminiService';
+import { formatAiError, generateContent } from '../services/geminiService';
+import { seleccionDeSubregion } from '../services/ia/macrofuentes';
+import { normalizarIdentidad } from '../services/identidad/identidad';
+import { getDaneMunicipio } from '../services/daneMunicipalService';
+import { getMunicipalCensus } from '../services/electoralCensusService';
+import { segmentacionComoTexto, segmentarTerritorio } from '../services/voterDemographicsService';
+import { ANTIOQUIA_125_MUNICIPIOS_GEOJSON } from '../data/geojson';
 import { motion, AnimatePresence } from 'motion/react';
 import { CandidateProfile } from './CandidateProfileManager';
 import { SubregionesStrategicDeepening } from './SubregionesStrategicDeepening';
@@ -239,6 +245,13 @@ export const SubregionesManager: React.FC<SubregionesManagerProps> = ({
   }, [candidateSourceMode, provisionalProfile, candidateProfile, customCandidateName]);
 
   // Cercanía efectiva con el Gobierno Actual de Antioquia (Gobernación)
+  // Posturas del perfil: salen de la identidad (Posicionamiento › Postura política). Antes se leían campos que no existen
+  // (posturaGobiernoNacional…) y siempre caía en 'opositor' (nacional) y 'aliado' (departamental).
+  const identidadPerfil = useMemo(() => (candidateProfile ? normalizarIdentidad(candidateProfile.identidad, candidateProfile.nombre) : null), [candidateProfile]);
+  const posturaPerfilNacional = identidadPerfil?.posicionamiento.posturaNacional || '';
+  const posturaPerfilDepartamental = identidadPerfil?.posicionamiento.posturaDepartamental || '';
+  const SIN_POSTURA = 'Postura sin definir en la identidad del candidato: se usa el tratamiento independiente hasta que el equipo la defina.';
+
   const effectiveCandidateLocalAlignment: LocalAntioquiaAlignmentType = useMemo(() => {
     if (candidateSourceMode === 'provisional' && provisionalProfile?.localAlignment) {
       return provisionalProfile.localAlignment;
@@ -246,24 +259,20 @@ export const SubregionesManager: React.FC<SubregionesManagerProps> = ({
     if (candidateSourceMode === 'bio') {
       const bioName = (candidateProfile?.nombre || '').toLowerCase();
       if (bioName.includes('gallón') || bioName.includes('gallon')) return 'aliado';
-      return ((candidateProfile as any)?.posturaGobiernoLocal as LocalAntioquiaAlignmentType) || 'aliado';
+      return (posturaPerfilDepartamental || 'independiente') as LocalAntioquiaAlignmentType;
     }
     return customCandidateLocalAlignment;
-  }, [candidateSourceMode, provisionalProfile, candidateProfile, customCandidateLocalAlignment]);
+  }, [candidateSourceMode, provisionalProfile, candidateProfile, customCandidateLocalAlignment, posturaPerfilDepartamental]);
 
   const effectiveCandidateLocalAlignmentRationale: string = useMemo(() => {
     if (candidateSourceMode === 'provisional' && provisionalProfile?.localAlignmentRationale) {
       return provisionalProfile.localAlignmentRationale;
     }
     if (candidateSourceMode === 'bio') {
-      return ((candidateProfile as any)?.posturaGobiernoLocalDetalle as string) || (
-        effectiveCandidateLocalAlignment === 'aliado'
-          ? 'Aliado del gobierno actual de Antioquia (Gobernación de Andrés Julián Rendón), con enfoque constructivo y articulación territorial.'
-          : 'Independiente frente a la administración departamental de Antioquia.'
-      );
+      return identidadPerfil?.posicionamiento.posturaJustificacion?.trim() || (posturaPerfilDepartamental ? `Postura definida en la identidad: ${posturaPerfilDepartamental}.` : SIN_POSTURA);
     }
     return customCandidateLocalAlignmentRationale;
-  }, [candidateSourceMode, provisionalProfile, candidateProfile, effectiveCandidateLocalAlignment, customCandidateLocalAlignmentRationale]);
+  }, [candidateSourceMode, provisionalProfile, identidadPerfil, posturaPerfilDepartamental, customCandidateLocalAlignmentRationale]);
 
   // Tono narrativo efectivo: SI ES ALIADO DEL GOBIERNO LOCAL, EL TONO NARRATIVO DEBE SER CONSTRUCTIVO
   const effectiveCandidateTone = useMemo(() => {
@@ -315,24 +324,15 @@ export const SubregionesManager: React.FC<SubregionesManagerProps> = ({
     Asegúrate de basar los datos en los hallazgos fácticos de Google Search.`;
 
     try {
-      let resultText = '';
-      try {
-        const response = await generateContent({
-          model: 'gemini-3.8-flash',
-          contents: [{ role: 'user', parts: [{ text: searchPrompt }] }],
-          config: {
-            tools: [{ googleSearch: {} }]
-          }
-        });
-        resultText = response.text || '';
-      } catch (innerErr) {
-        // Fallback estándar si las herramientas de búsqueda no estuviesen disponibles
-        const fallbackRes = await generateContent({
-          model: 'gemini-3.8-flash',
-          contents: [{ role: 'user', parts: [{ text: searchPrompt }] }]
-        });
-        resultText = fallbackRes.text || '';
-      }
+      // Solo con búsqueda: sin ella Gemini respondería de memoria sobre una persona real. La persona investigada puede no ser
+      // el candidato del perfil (macrofuente B); los datos van sin el dossier de un territorio.
+      const response = await generateContent({
+        model: 'gemini-3.8-flash',
+        contents: [{ role: 'user', parts: [{ text: `${searchPrompt}\n\nLa persona investigada puede no ser el candidato del perfil de Proteus: no mezcles sus datos. Si la búsqueda no da un campo, escribe "Sin dato".` }] }],
+        config: { tools: [{ googleSearch: {} }] },
+        proteus: { tarea: 'investigar', incluirDatos: false },
+      });
+      const resultText = response.text || '';
 
       if (resultText && resultText.trim().length > 30) {
         const nameMatch = resultText.match(/NOMBRE:\s*(.+)/i);
@@ -345,11 +345,11 @@ export const SubregionesManager: React.FC<SubregionesManagerProps> = ({
         const subregMatch = resultText.match(/POSTURA_SUBREGIONAL:\s*([\s\S]+)/i);
 
         const extractedName = nameMatch ? nameMatch[1].trim() : query;
-        const extractedParty = partyMatch ? partyMatch[1].trim() : 'Coalición / Movimiento Regional';
-        let extractedTone = toneMatch ? toneMatch[1].trim() : 'Constructivo, propositivo y territorial';
-        const extractedAxes = axesMatch ? axesMatch[1].trim() : 'Seguridad, conectividad vial, desarrollo productivo y salud';
+        const extractedParty = partyMatch ? partyMatch[1].trim() : 'Sin dato';
+        let extractedTone = toneMatch ? toneMatch[1].trim() : 'Sin dato';
+        const extractedAxes = axesMatch ? axesMatch[1].trim() : 'Sin dato';
         const extractedResume = resumeMatch ? resumeMatch[1].trim() : resultText;
-        const extractedSubreg = subregMatch ? subregMatch[1].trim() : 'Enfoque en desarrollo regional articulado.';
+        const extractedSubreg = subregMatch ? subregMatch[1].trim() : 'Sin dato';
 
         // Determinar postura nacional
         let parsedAlignment: NationalAlignmentType = 'independiente';
@@ -367,22 +367,13 @@ export const SubregionesManager: React.FC<SubregionesManagerProps> = ({
             parsedAlignment = 'independiente';
           }
         } else {
-          const combinedContext = (extractedParty + ' ' + extractedResume).toLowerCase();
-          if (combinedContext.includes('uribe') || combinedContext.includes('centro democrático') || combinedContext.includes('andrés julián') || combinedContext.includes('creemos') || combinedContext.includes('oposición')) {
-            parsedAlignment = 'opositor';
-            parsedRationale = 'Opositor al gobierno nacional: Cercanía al uribismo y defensa del modelo de orden y autonomía de Antioquia.';
-          } else if (combinedContext.includes('pacto histórico') || combinedContext.includes('gobierno nacional')) {
-            parsedAlignment = 'aliado';
-            parsedRationale = 'Aliado del gobierno nacional: Afín a las líneas estratégicas del gobierno central.';
-          } else {
-            parsedAlignment = 'independiente';
-            parsedRationale = 'Independiente: Sin subordinación a bloques nacionales partidistas.';
-          }
+          parsedAlignment = 'independiente';
+          parsedRationale = 'La búsqueda no clasificó la postura frente al Gobierno Nacional: se trata como independiente hasta confirmarla.';
         }
 
         // Determinar cercanía con el gobierno actual de Antioquia (Gobernación)
         const isGallon = query.toLowerCase().includes('gallón') || query.toLowerCase().includes('gallon') || extractedName.toLowerCase().includes('gallón') || extractedName.toLowerCase().includes('gallon');
-        let parsedLocalAlignment: LocalAntioquiaAlignmentType = 'aliado';
+        let parsedLocalAlignment: LocalAntioquiaAlignmentType = 'independiente';
         let parsedLocalRationale = '';
 
         if (isGallon) {
@@ -400,17 +391,8 @@ export const SubregionesManager: React.FC<SubregionesManagerProps> = ({
             parsedLocalAlignment = 'independiente';
           }
         } else {
-          const combinedContext = (extractedParty + ' ' + extractedResume + ' ' + extractedAxes).toLowerCase();
-          if (combinedContext.includes('andrés julián') || combinedContext.includes('rendón') || combinedContext.includes('gobernación de antioquia') || combinedContext.includes('secretario') || combinedContext.includes('conservador') || combinedContext.includes('creemos') || combinedContext.includes('centro democrático')) {
-            parsedLocalAlignment = 'aliado';
-            parsedLocalRationale = 'Aliado del gobierno actual de Antioquia: Integración a la coalición departamental y respaldo a la gestión institucional.';
-          } else if (combinedContext.includes('oposición a la gobernación') || combinedContext.includes('pacto histórico')) {
-            parsedLocalAlignment = 'opositor';
-            parsedLocalRationale = 'Opositor al gobierno departamental: Postura crítica frente a la Gobernación de Antioquia.';
-          } else {
-            parsedLocalAlignment = 'independiente';
-            parsedLocalRationale = 'Independiente: Autonomía frente a la administración departamental de Antioquia.';
-          }
+          parsedLocalAlignment = 'independiente';
+          parsedLocalRationale = 'La búsqueda no clasificó la postura frente a la Gobernación: se trata como independiente hasta confirmarla.';
         }
 
         // MANDATO DE TONO CONSTRUCTIVO: Cuando el candidato sea aliado del gobierno local, el tono narrativo DEBE ser constructivo
@@ -449,65 +431,39 @@ export const SubregionesManager: React.FC<SubregionesManagerProps> = ({
       }
     } catch (err: any) {
       console.warn('Error investigando candidato con Google Search:', err);
-      // Fallback deductivo estructurado
-      const queryLower = query.toLowerCase();
-      const isLikelyGallon = queryLower.includes('gallón') || queryLower.includes('gallon');
-      const isLikelyOpposition = isLikelyGallon || queryLower.includes('uribe') || queryLower.includes('rendón') || queryLower.includes('gutierrez');
-      
-      const fallbackProfile: ProvisionalCandidateProfile = {
-        name: query,
-        party: isLikelyGallon 
-          ? 'Partido Conservador Colombiano / Coalición Departamental' 
-          : (isLikelyOpposition ? 'Coalición Centro Democrático / Movimiento Regional' : 'Coalición Regional Independiente'),
-        tone: isLikelyGallon 
-          ? 'Constructivo, gerencial y de articulación territorial' 
-          : 'Constructivo, propositivo y territorial',
-        focusAreas: isLikelyGallon
-          ? 'Integración regional, vías terciarias, autonomía fiscal y desarrollo agropecuario'
-          : 'Seguridad subregional, reactivación del empleo y vías terciarias',
-        experienceBio: isLikelyGallon
-          ? `Luis Horacio Gallón Arango, excongresista de la República y exsecretario de Integración Regional y Desarrollo Territorial de la Gobernación de Antioquia (administración de Andrés Julián Rendón). Líder político de amplia trayectoria en las subregiones de Antioquia.`
-          : `Perfil político de ${query}, activo en los escenarios de liderazgo público y electoral con incidencia en Antioquia.`,
-        subregionalStance: 'Enfoque de descentralización y fortalecimiento de las cabeceras municipales y corregimientos.',
-        nationalAlignment: isLikelyOpposition ? 'opositor' : 'independiente',
-        nationalAlignmentRationale: isLikelyGallon
-          ? 'Opositor al gobierno nacional: Firme defensa de la autonomía de Antioquia frente al centralismo de Bogotá.'
-          : (isLikelyOpposition 
-            ? 'Opositor al gobierno nacional: Línea crítica con defensa de la autonomía departamental y sintonía con Álvaro Uribe.'
-            : 'Independiente: Autonomía frente a los bloques de poder nacional, enfoque 100% municipalista.'),
-        localAlignment: isLikelyGallon ? 'aliado' : 'aliado',
-        localAlignmentRationale: isLikelyGallon
-          ? 'Aliado directo del actual gobierno de Antioquia: Integró el gabinete de Andrés Julián Rendón como Secretario de Integración Regional y Desarrollo Territorial.'
-          : 'Aliado institucional de la Gobernación de Antioquia con enfoque constructivo y gestión territorial.',
-        source: 'google-search',
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-      };
-      setProvisionalProfile(fallbackProfile);
-      setCandidateSourceMode('provisional');
-      setCustomCandidateName(query);
-      setCustomCandidateTone(fallbackProfile.tone);
-      setCustomCandidateAlignment(fallbackProfile.nationalAlignment);
-      setCustomCandidateAlignmentRationale(fallbackProfile.nationalAlignmentRationale);
-      setCustomCandidateLocalAlignment(fallbackProfile.localAlignment || 'aliado');
-      setCustomCandidateLocalAlignmentRationale(fallbackProfile.localAlignmentRationale || '');
-      setShowProvisionalDetails(true);
+      // Antes se inventaba un perfil "deductivo" (partido, trayectoria y posturas) a partir del nombre. Ahora se avisa.
+      setSearchError(`No se pudo investigar a "${query}": ${err instanceof Error && /búsqueda web/.test(err.message) ? err.message : formatAiError(err)}. No se arma un perfil provisional sin fuentes.`);
     } finally {
       setIsSearchingCandidateWeb(false);
     }
   };
 
   // Cálculo cuantitativo de la población objetivo según parámetros demográficos
+  // Población oficial (DANE 2026) y censo electoral (Registraduría) de los municipios de la subregión según la capa de
+  // municipios. Antes: la población de la ficha escrita a mano (Oriente y Occidente mal sumadas) y "votantes en urnas"
+  // = población × 0,58 o × 0,54, sin fuente.
+  const subregionOficial = useMemo(() => {
+    const sel = seleccionDeSubregion(currentSubregion.name);
+    const danes = ANTIOQUIA_125_MUNICIPIOS_GEOJSON.features
+      .filter((f) => sel.subregion && String(f.properties.subregion ?? '') === sel.subregion)
+      .map((f) => String((f.properties as { daneCode?: string }).daneCode));
+    return {
+      seleccion: sel,
+      poblacion: danes.reduce((a, d) => a + (getDaneMunicipio(d)?.poblacion ?? 0), 0) || null,
+      censo: danes.reduce((a, d) => a + (getMunicipalCensus(d)?.total ?? 0), 0) || null,
+    };
+  }, [currentSubregion.name]);
+
   const demographicEstimation = useMemo(() => {
-    const totalPop = currentSubregion.demographics.totalPopulation;
+    const totalPop = subregionOficial.poblacion ?? currentSubregion.demographics.totalPopulation;
     
     if (isGeneralDemographic) {
-      const estimatedVoters = Math.round(totalPop * 0.58); // Participación media en Antioquia
       return {
         isGeneral: true,
         label: 'Población General de la Subregión',
         totalCount: totalPop,
         percentageOfSubregion: 100,
-        estimatedVoterTurnout: estimatedVoters,
+        censoElectoral: subregionOficial.censo,
         description: 'Análisis global transversal que abarca la totalidad de municipios, familias y sectores productivos de la subregión sin sesgo de microsegmentación.'
       };
     }
@@ -536,7 +492,6 @@ export const SubregionesManager: React.FC<SubregionesManagerProps> = ({
 
     const combinedMultiplier = Math.max(0.01, genderFactor * ageFactor * stratumFactor * eduFactor);
     const finalEstimatedCount = Math.round(totalPop * combinedMultiplier);
-    const estimatedVoters = Math.round(finalEstimatedCount * 0.54);
 
     const labels: string[] = [];
     if (selectedGender !== 'general') labels.push(selectedGender === 'mujeres' ? 'Mujeres' : 'Hombres');
@@ -572,10 +527,11 @@ export const SubregionesManager: React.FC<SubregionesManagerProps> = ({
       label: labels.length > 0 ? labels.join(' · ') : 'Segmento Mixto Seleccionado',
       totalCount: finalEstimatedCount,
       percentageOfSubregion: parseFloat(((finalEstimatedCount / totalPop) * 100).toFixed(1)),
-      estimatedVoterTurnout: estimatedVoters,
-      description: 'Microsegmentación cruzada con ponderación de probabilidades censales extraídas de la base de conocimiento subregional.'
+      // El censo electoral no trae sexo cruzado con edad, estrato ni educación: no hay censo por segmento
+      censoElectoral: null as number | null,
+      description: 'Estimado: población DANE 2026 de la subregión por los porcentajes de la ficha subregional AUXILIAR (sin verificar). Para cruces con datos del DANE, ver Electorado › Segmentos.'
     };
-  }, [currentSubregion, isGeneralDemographic, selectedGender, selectedAge, selectedStratum, selectedEducation]);
+  }, [currentSubregion, subregionOficial, isGeneralDemographic, selectedGender, selectedAge, selectedStratum, selectedEducation]);
 
   // Generador de informe del Analista Subregional (con enfoque transversal y los 6 puntos)
   const handleRunSubregionalAnalyst = async () => {
@@ -606,11 +562,11 @@ export const SubregionesManager: React.FC<SubregionesManagerProps> = ({
       candidateContext = `
       - ORIGEN DE DATOS DEL CANDIDATO: BIOGRAFÍA CALIBRADA EN SISTEMA
       - Nombre del candidato: ${candidateProfile.nombre}
-      - Partido / Afiliación: ${candidateProfile.afiliacionPartidista || 'Independiente / Coalición Departamental'}
-      - Tono narrativo calibrado en Biografía: ${candidateProfile.tonoNarrativo || 'Firme, pragmático y empático'}
-      - Estilo de comunicación: ${candidateProfile.estiloComunicacion || 'Cercano, institucional y resolutivo'}
-      - Ejes temáticos cómodos: ${candidateProfile.ejeTematicoComodo || 'Seguridad, infraestructura, salud y productividad'}
-      - Resumen de perfil: ${candidateProfile.resumenEstrategico || candidateProfile.experienciaPrevia || 'Liderazgo con experiencia de gestión en Antioquia'}
+      - Partido / Afiliación: ${candidateProfile.afiliacionPartidista || 'Sin definir en el perfil'}
+      - Tono narrativo calibrado en Biografía: ${candidateProfile.tonoNarrativo || 'Sin definir en el perfil'}
+      - Estilo de comunicación: ${candidateProfile.estiloComunicacion || 'Sin definir en el perfil'}
+      - Ejes temáticos cómodos: ${candidateProfile.ejeTematicoComodo || 'Sin definir en el perfil'}
+      - Resumen de perfil: ${candidateProfile.resumenEstrategico || candidateProfile.experienciaPrevia || 'Sin definir en el perfil'}
       `;
     } else {
       candidateContext = `
@@ -623,9 +579,13 @@ export const SubregionesManager: React.FC<SubregionesManagerProps> = ({
     }
 
     // Preparar la composición demográfica formalmente extraída de la base de conocimientos
+    const segOficial = await segmentarTerritorio(subregionOficial.seleccion).catch(() => null);
     const demographicKnowledgeBase = `
-    COMPOSICIÓN DEMOGRÁFICA OFICIAL DE LA SUBREGIÓN (${currentSubregion.name}):
-    - Población total: ${currentSubregion.demographics.totalPopulation.toLocaleString()} habitantes.
+    DATOS DEL DANE DE LA SUBREGIÓN (oficial; prevalecen):
+    ${segOficial ? segmentacionComoTexto(segOficial) : 'Sin información.'}
+
+    FICHA SUBREGIONAL AUXILIAR de ${currentSubregion.name} (tabla interna sin verificar: no la cites como dato oficial; si contradice los datos del DANE o la macrofuente A, prevalecen ellos):
+    - Población total (DANE 2026, suma de municipios): ${subregionOficial.poblacion?.toLocaleString('es-CO') ?? 'Sin información'} habitantes.
     - Distribución por sexo: Mujeres ${currentSubregion.demographics.gender.female}% | Hombres ${currentSubregion.demographics.gender.male}%.
     - Distribución por grupos etarios:
       * Jóvenes (18-28 años): ${currentSubregion.demographics.ageGroups.jovenes18_28}%
@@ -656,11 +616,11 @@ export const SubregionesManager: React.FC<SubregionesManagerProps> = ({
 
     // Grupo demográfico seleccionado
     const demographicSelectionText = isGeneralDemographic
-      ? `GRUPO DEMOGRÁFICO: POBLACIÓN GENERAL DE LA SUBREGIÓN (Total de ${demographicEstimation.totalCount.toLocaleString()} habitantes; ~${demographicEstimation.estimatedVoterTurnout.toLocaleString()} votantes potenciales). El informe debe abarcar transversalmente a todas las familias y sectores de la subregión sin atomización excluyente.`
+      ? `GRUPO DEMOGRÁFICO: POBLACIÓN GENERAL DE LA SUBREGIÓN (${demographicEstimation.totalCount.toLocaleString('es-CO')} habitantes, DANE 2026; censo electoral ${demographicEstimation.censoElectoral?.toLocaleString('es-CO') ?? 'sin información'}, Registraduría). El informe debe abarcar transversalmente a todas las familias y sectores de la subregión sin atomización excluyente.`
       : `GRUPO DEMOGRÁFICO: MICROSEGMENTO ESPECÍFICO
       - Grupo demográfico: ${demographicEstimation.label}
-      - Población estimada en la subregión: ${demographicEstimation.totalCount.toLocaleString()} personas (~${demographicEstimation.percentageOfSubregion}% de la subregión).
-      - Potencial electoral efectivo estimado en urnas: ${demographicEstimation.estimatedVoterTurnout.toLocaleString()} votos.`;
+      - Población estimada en la subregión: ${demographicEstimation.totalCount.toLocaleString('es-CO')} personas (~${demographicEstimation.percentageOfSubregion}% de la subregión). ESTIMADO con porcentajes auxiliares sin verificar.
+      - No hay censo electoral ni votos por segmento: no los estimes.`;
 
     const promptText = `Eres el Analista Estratégico Senior de Campañas Electorales y Comunicación Política de CMT PROTEUS.
 Tu misión es diseñar un INFORME ESTRATÉGICO DE PUBLICIDAD Y COMUNICACIÓN POLÍTICA para la subregión de ${currentSubregion.name}, Antioquia.
@@ -705,24 +665,15 @@ ESTRUCTURA OBLIGATORIA DEL INFORME (RESPETA RIGUROSAMENTE ESTOS 6 PUNTOS EXACTOS
 - Pieza 2: Mensaje territorial para impreso o micro-conversación de plaza / líderes en los municipios de la subregión.
 - Pieza 3: Activación en territorio orientada a este grupo poblacional recorriendo simultáneamente los municipios de ${currentSubregion.name}).
 
-Entrega un informe denso, con lenguaje de consultoría política de primer nivel, citando los municipios y los datos demográficos reales de la subregión.`;
+Entrega un informe denso, citando los municipios y solo las cifras de los datos (con su rótulo: oficial, estimado o auxiliar). Lo psicológico y emocional del punto 2 son hipótesis: márcalas como tales.`;
 
     try {
-      let result = '';
-      try {
-        const response = await generateContent({
-          model: 'gemini-3.8-flash',
-          contents: [{ role: 'user', parts: [{ text: promptText }] }],
-        });
-        result = response.text || '';
-      } catch (innerErr) {
-        // Segundo intento con gemini-3.8-flash standard
-        const fallbackRes = await generateContent({
-          model: 'gemini-3.8-flash',
-          contents: [{ role: 'user', parts: [{ text: promptText }] }]
-        });
-        result = fallbackRes.text || '';
-      }
+      const response = await generateContent({
+        model: 'gemini-3.8-flash',
+        contents: [{ role: 'user', parts: [{ text: promptText }] }],
+        proteus: { tarea: 'brief', seleccion: subregionOficial.seleccion },
+      });
+      const result = response.text || '';
 
       if (result && result.trim().length > 100) {
         setAnalysisReport(result);
@@ -730,22 +681,9 @@ Entrega un informe denso, con lenguaje de consultoría política de primer nivel
         throw new Error('Respuesta vacía o insuficiente');
       }
     } catch (err: any) {
-      console.warn('Fallo llamada Gemini, generando informe determinístico de alta profundidad:', err);
-      // Fallback precalculado robusto condicionado al perfil
-      const fallbackReport = generateSubregionalFallbackReport(
-        currentSubregion,
-        isGeneralDemographic,
-        demographicEstimation,
-        currentOffice,
-        effectiveCandidateName,
-        candidateSourceMode === 'provisional'
-          ? (provisionalProfile?.tone || 'Firme y territorial')
-          : candidateSourceMode === 'bio'
-            ? (candidateProfile?.tonoNarrativo || 'Firme y cercano')
-            : customCandidateTone,
-        candidateSourceMode === 'provisional' ? provisionalProfile : null
-      );
-      setAnalysisReport(fallbackReport);
+      console.warn('Fallo llamada Gemini:', err);
+      // Antes se mostraba un informe "determinístico" de texto fijo como si fuera el análisis. Ahora se avisa.
+      setAnalysisReport(`**No se pudo generar el informe con Gemini.** ${formatAiError(err)}\n\nProteus no muestra un informe de respaldo con texto fijo: vuelve a intentarlo.`);
     } finally {
       setIsGeneratingAnalysis(false);
       setTimeout(() => {
@@ -960,12 +898,12 @@ Entrega un informe denso, con lenguaje de consultoría política de primer nivel
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
                 <div>
                   <div className="text-[10px] uppercase tracking-wider font-extrabold text-blue-400">
-                    Base de Conocimientos · DANE / Gobernación
+                    Ficha subregional (textos auxiliares) · población DANE 2026
                   </div>
                   <div className="text-base font-black text-white flex items-center gap-2">
                     {currentSubregion.name}
                     <span className="text-xs font-normal text-slate-300">
-                      (~{currentSubregion.demographics.totalPopulation.toLocaleString()} habitantes)
+                      ({subregionOficial.poblacion?.toLocaleString('es-CO') ?? 'sin dato'} habitantes, DANE 2026)
                     </span>
                   </div>
                 </div>
@@ -1261,8 +1199,8 @@ Entrega un informe denso, con lenguaje de consultoría política de primer nivel
                 <strong className="text-indigo-950 font-bold">~{demographicEstimation.totalCount.toLocaleString()} hab.</strong>
               </div>
               <div className="flex items-center justify-between text-xs text-slate-300">
-                <span>Potencial electoral en urnas:</span>
-                <strong className="text-emerald-700 font-bold">~{demographicEstimation.estimatedVoterTurnout.toLocaleString()} votos</strong>
+                <span>Censo electoral:</span>
+                <strong className="text-emerald-700 font-bold">{demographicEstimation.censoElectoral != null ? `${demographicEstimation.censoElectoral.toLocaleString('es-CO')} (Registraduría)` : 'no hay censo por segmento'}</strong>
               </div>
             </div>
           </div>
@@ -2182,7 +2120,7 @@ Entrega un informe denso, con lenguaje de consultoría política de primer nivel
                 CMT PROTEUS Territorial Intelligence · Generado con enfoque transversal sobre {currentSubregion.totalMunicipalities} municipios de {currentSubregion.name}
               </div>
               <div className="font-semibold text-slate-400">
-                Padrón Electoral Base: ~{demographicEstimation.estimatedVoterTurnout.toLocaleString()} votos potenciales
+                Censo electoral de la subregión: {subregionOficial.censo?.toLocaleString('es-CO') ?? 'sin dato'} (Registraduría)
               </div>
             </div>
           </motion.div>
@@ -2207,16 +2145,16 @@ Entrega un informe denso, con lenguaje de consultoría política de primer nivel
         provisionalProfile={provisionalProfile}
         candidateNationalAlignment={
           candidateSourceMode === 'provisional'
-            ? (provisionalProfile?.nationalAlignment || 'opositor')
+            ? (provisionalProfile?.nationalAlignment || 'independiente')
             : candidateSourceMode === 'bio'
-              ? ((candidateProfile as any)?.posturaGobiernoNacional || 'opositor')
+              ? (posturaPerfilNacional || 'independiente')
               : customCandidateAlignment
         }
         candidateNationalAlignmentRationale={
           candidateSourceMode === 'provisional'
             ? (provisionalProfile?.nationalAlignmentRationale || '')
             : candidateSourceMode === 'bio'
-              ? ((candidateProfile as any)?.posturaGobiernoNacionalDetalle || '')
+              ? (identidadPerfil?.posicionamiento.posturaJustificacion?.trim() || (posturaPerfilNacional ? '' : SIN_POSTURA))
               : customCandidateAlignmentRationale
         }
         candidateLocalAlignment={effectiveCandidateLocalAlignment}
@@ -2227,90 +2165,3 @@ Entrega un informe denso, con lenguaje de consultoría política de primer nivel
     </div>
   );
 };
-
-// Generador determinístico de alta profundidad en caso de desconexión o fallo de API
-function generateSubregionalFallbackReport(
-  subregion: SubregionInfo,
-  isGeneral: boolean,
-  demographics: { label: string; totalCount: number; estimatedVoterTurnout: number },
-  office: { label: string; scope: string; nature: string },
-  candidateName: string,
-  candidateTone: string,
-  provisionalProfile?: ProvisionalCandidateProfile | null
-): string {
-  const muniNames = subregion.municipalities.map(m => m.name);
-  const sampleMunis = muniNames.slice(0, 6).join(', ');
-
-  const partyTag = provisionalProfile ? ` (${provisionalProfile.party})` : '';
-  const searchNote = provisionalProfile 
-    ? `\n> **⚠️ Condicionamiento Estratégico:** Informe condicionado al **Perfil Provisional investigado en Google Search** para **${candidateName}** (${provisionalProfile.party}). Banderas analizadas: *${provisionalProfile.focusAreas}*.\n`
-    : '';
-
-  return `## INFORME ESTRATÉGICO DE PUBLICIDAD Y COMUNICACIÓN POLÍTICA
-**Subregión:** ${subregion.name} (${subregion.totalMunicipalities} municipios: ${sampleMunis}, entre otros)  
-**Cargo en Disputa:** ${office.label} (${office.scope})  
-**Candidato:** ${candidateName}${partyTag}  
-**Grupo Demográfico Seleccionado:** ${demographics.label} (~${demographics.totalCount.toLocaleString()} habitantes)  
-**Enfoque:** Transversal (Dolores y desafíos comunes intermunicipales)
-${searchNote}
----
-
-### 1. Perfil general.
-La subregión de **${subregion.name}** congrega una población de **${subregion.demographics.totalPopulation.toLocaleString()} habitantes** distribuida en **${subregion.totalMunicipalities} municipios**. El segmento analizado (**${demographics.label}**) representa un caudal decisivo de **~${demographics.estimatedVoterTurnout.toLocaleString()} votantes potenciales en urnas**, cuya dinámica electoral no responde a lógicas aisladas de cabecera sino a redes de dependencia mutua entre municipios contiguos. 
-
-Desde la óptica del cargo de **${office.label}**, este electorado demanda un liderazgo que comprenda que los problemas no terminan en la frontera municipal: la saturación de los corredores viales comunes (${subregion.transversalPains.connectivityAndMobility.slice(0, 90)}...), la amenaza de estructuras criminales trans-municipales y el clamor por hospitales resolutivos y empleo digno. ${
-    provisionalProfile
-      ? `La candidatura de **${candidateName}**, con su afiliación a **${provisionalProfile.party}** y trayectoria identificada en internet (${provisionalProfile.experienceBio.slice(0, 160)}...), se posiciona con un perfil enfocado en *${provisionalProfile.focusAreas}*, logrando una interlocución fáctica con las demandas de integración de la subregión.`
-      : `La candidatura de **${candidateName}** se posiciona con ventaja estratégica al plantear soluciones articuladas a escala de provincia o subregión, superando el desgaste de promesas parroquiales que la ciudadanía percibe como ineficaces.`
-  }
-
----
-
-### 2. Descripción psicológica del votante seleccionado.
-* **Motivaciones profundas:** Búsqueda imperiosa de estabilidad económica para la familia campesina o trabajadora; anhelo de arraigo que evite que sus hijos tengan que migrar forzosamente al Valle de Aburrá en busca de empleo o educación superior.
-* **Miedos cotidianos:** La pérdida recurrente de bancada en las vías secundarias y terciarias que deja incomunicados los municipios; la extorsión silenciosa o abierta que encarece el transporte y el comercio; y la angustia ante una urgencia médica en hospitales de primer nivel sin capacidad quirúrgica.
-* **Fuentes de desconfianza:** Escepticismo ante candidatos que únicamente visitan las plazas en campaña con promesas de obras faraónicas individuales, ignorando los cuellos de botella que hermanan a toda la subregión.
-* **Detonantes emocionales de voto:** Sentimiento de orgullo por la identidad montañera y la laboriosidad de ${subregion.name}; indignación justificada por la brecha de inversión frente a Medellín; receptividad ante discursos de autoridad con empatía y cercanía real en el territorio.
-
----
-
-### 3. Líneas discursivas estratégicas.
-* **Eje 1: Conectividad y Red Terciaria de Integración Subregional**  
-  *Propuesta realista:* Plan de choque de placa huellas continuas y mantenimiento mecanizado permanente en los ramales viales intermunicipales que unen las cuencas productivas de la subregión, optimizando el transporte de cosechas y mercancías bajo competencias de ${office.label}.
-* **Eje 2: Seguridad Territorial Articulada y Bloqueo a la Extorsión**  
-  *Propuesta realista:* Creación de un circuito de monitoreo y patrullaje unificado intermunicipal coordinado con la Policía Departamental y el Ejército, desarticulando los corredores de microtráfico y extorsión en los límites municipales.
-* **Eje 3: Red de Salud de Segundo Nivel y Oportunidad Productiva Local**  
-  *Propuesta realista:* Fortalecimiento resolutivo del hospital cabecera subregional con especialistas itinerantes y dotación de ambulancias medicalizadas para frenar remisiones fatales, junto a incentivos tributarios para la agregación de valor agroindustrial o minero formal en la subregión.
-* **Frases-fuerza / Eslóganes:**  
-  1. *"La fuerza de ${subregion.name} no se divide: un solo territorio, un solo futuro con ${candidateName}."*  
-  2. *"Vías para sacar lo nuestro, seguridad para vivir tranquilos: hechos por ${subregion.name}."*
-
----
-
-### 4. Tono narrativo prioritario.
-El tono predominante debe ser **${candidateTone.toUpperCase()}**.  
-* **Justificación psicológica:** El habitante de ${subregion.name} rechaza el lenguaje tecnocrático abstracto y la retórica populista vacía. Requiere un líder con carácter y aplomo para enfrentar la ilegalidad, pero con la sencillez y el respeto propio de la cultura antioqueña para sentarse a escuchar a los productores, madres cabeza de familia y transportadores en las ferias y plazas de mercado.
-
----
-
-### 5. Medios prioritarios.
-* **Canales Digitales Prioritarios:**
-  * **Video corto en Facebook e Instagram Reels (Geolocalizado por subregión):** Formato vertical de 45 segundos donde el candidato recorre puntos críticos comunes (un puente colapsado, un puesto de salud, una cooperativa campesina) hablando claro y sin libreto prefabricado.
-  * **Cadenas de micro-redes y estados de WhatsApp:** Difusión de infografías de alto contraste y audios directos del candidato dirigidos a asociaciones de transportadores, juntas de acción comunal y comités gremiales de la subregión.
-* **Medios Tradicionales y Despliegue en Territorio:**
-  * **Emisoras comunitarias y radio subregional:** Entrevistas matutinas simultáneas en los noticieros radiales de mayor sintonía campesina (6:00 a.m. a 7:30 a.m.), donde el campesino escucha la radio mientras ordeña o alista la jornada.
-  * **Caravanas intermunicipales y tomas de plaza de mercado:** Recorridos en días de mercado (sábados y domingos) conectando cabeceras sucesivas, con volanteo mano a mano y perifoneo enérgico que transmita fuerza territorial masiva.
-
----
-
-### 6. Brief general de contenidos.
-* **Pieza 1: Video Corto Digital (Pauta en Redes Sociales)**  
-  * **Gancho (0-3 seg):** Primer plano del candidato en una vía destapada intermunicipal: *"¿Hasta cuándo vamos a perder las cosechas y la tranquilidad en ${subregion.name}?"*  
-  * **Desarrollo (4-35 seg):** Imágenes rápidas de familias campesinas y transportadores trabajando. ${candidateName} explica el compromiso puntual de conectividad y seguridad articulada ajustado a ${office.label}.  
-  * **Llamado a la acción (36-45 seg):** *"Este es el momento de unir a ${subregion.name}. Soy ${candidateName}, y juntos vamos a poner la casa en orden."*
-* **Pieza 2: Mensaje Territorial Impreso (Volante y Periódico de Mano)**  
-  * **Titular:** *"El Plan de Rescate para los Municipios de ${subregion.name}"*  
-  * **Cuerpo:** 3 propuestas puntuales con mapa esquemático de los corredores intermunicipales beneficiados. Lenguaje directo, letra legible para adultos mayores y foto cercana del candidato con vestuario neutro de trabajo de campo.
-* **Pieza 3: Activación en Territorio (La Vuelta a ${subregion.name})**  
-  * **Formato:** Jornada maratónica de 48 horas recorriendo los principales nodos de la subregión, sosteniendo diálogos abiertos en plazas centrales con voceros comunales de cada municipio, consolidando la percepción de un candidato presente, valiente y transversal.`;
-}

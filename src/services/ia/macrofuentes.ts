@@ -25,6 +25,7 @@ import { inventarioMarco, semillaPosturas, textoMarcoCompleto } from '../marcoSe
 import { libroParaMarco } from '../../data/analisisPiezas/libroDeReglas';
 import { activeTerritoryService, seleccionDeEstado } from '../activeTerritoryContextService';
 import { municipioFichaPorDane, territorioFicha } from '../territoryProfileService';
+import { ANTIOQUIA_125_MUNICIPIOS_GEOJSON } from '../../data/geojson';
 import { perfilRegistrado, registrarPerfil, versionPerfil } from './registroPerfil';
 import { historialCandidato } from './motor/historialCandidato';
 import { versionFuentes, type CoberturaFuente } from './motor/registro';
@@ -143,6 +144,15 @@ const TAREAS: Record<TareaIA, string> = {
 /** Une el bloque de macrofuentes con la instrucción propia de la herramienta */
 export const sistemaConMacrofuentes = (m: Macrofuentes, propio?: string, tarea: TareaIA = 'general') =>
   `${m.texto}\n\n=== INSTRUCCIONES DE ESTA HERRAMIENTA (se aplican dentro de la jerarquía anterior) ===\n${TAREAS[tarea]}\n${propio?.trim() || 'Responde a la petición del usuario.'}`;
+
+const normSub = (x: string) => x.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\s+antioquen[oa]s?$/, '').trim();
+/** Unidad de una subregión por su nombre ('Oriente Antioqueño', 'Urabá'…), con el nombre de la capa de municipios */
+export function seleccionDeSubregion(nombre: string): SeleccionDossier {
+  const nombres = [...new Set(ANTIOQUIA_125_MUNICIPIOS_GEOJSON.features.map((f) => String(f.properties.subregion ?? '')))].filter(Boolean);
+  const n = normSub(nombre);
+  const sub = nombres.find((x) => normSub(x) === n) ?? nombres.find((x) => n.includes(normSub(x))) ?? null;
+  return { subregion: sub, muniId: null, comunaId: null, barrioId: null };
+}
 
 /** Unidad del territorio (id de municipio del índice) a partir de un código DANE, para las herramientas */
 export const seleccionDeDane = (dane: string): SeleccionDossier => ({ subregion: null, muniId: municipioFichaPorDane(dane), comunaId: null, barrioId: null });

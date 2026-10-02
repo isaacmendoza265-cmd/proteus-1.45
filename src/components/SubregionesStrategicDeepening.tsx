@@ -48,6 +48,8 @@ import {
 import ReactMarkdown from 'react-markdown';
 import { jsPDF } from 'jspdf';
 import { generateContent } from '../services/geminiService';
+import { seleccionDeSubregion } from '../services/ia/macrofuentes';
+import { normalizarIdentidad } from '../services/identidad/identidad';
 import { SubregionInfo } from '../data/antioquiaSubregionesData';
 import { CandidateProfile } from './CandidateProfileManager';
 import { ProvisionalCandidateProfile } from './SubregionesManager';
@@ -58,7 +60,7 @@ let cachedProteusLogoDataUrl: string | null = null;
 export * from './subregionesDeepening/types';
 import { ThematicAxisType, StrategicNewsItem, StrategicThemeOption, ScriptComplexityOption, SCRIPT_COMPLEXITY_OPTIONS } from './subregionesDeepening/types';
 export { sanitizeNewsUrl } from './subregionesDeepening/helpers';
-import { generateExecutiveSynthesis, getDeterministicThemesFromReport, parseNewsFromResponse, sanitizeNewsUrl, cleanMediaName, getMediaDomain, getMediaBadgeStyle, getAxisBadgeStyle, getFallbackNewsForTheme, generateFallbackScriptsWithComplexity } from './subregionesDeepening/helpers';
+import { generateExecutiveSynthesis, getDeterministicThemesFromReport, parseNewsFromResponse, sanitizeNewsUrl, cleanMediaName, getMediaDomain, getMediaBadgeStyle, getAxisBadgeStyle } from './subregionesDeepening/helpers';
 
 interface SubregionesStrategicDeepeningProps {
   analysisReport: string;
@@ -73,7 +75,7 @@ interface SubregionesStrategicDeepeningProps {
   candidateNationalAlignmentRationale?: string;
   candidateLocalAlignment?: 'aliado' | 'independiente' | 'opositor';
   candidateLocalAlignmentRationale?: string;
-  demographics: { label: string; totalCount: number; estimatedVoterTurnout: number };
+  demographics: { label: string; totalCount: number; censoElectoral: number | null };
   isGeneralDemographic: boolean;
 }
 
@@ -97,13 +99,13 @@ export const SubregionesStrategicDeepening: React.FC<SubregionesStrategicDeepeni
   const activeNationalAlignment: 'aliado' | 'independiente' | 'opositor' =
     candidateNationalAlignment ||
     provisionalProfile?.nationalAlignment ||
-    ((candidateProfile as any)?.posturaGobiernoNacional as any) ||
-    'opositor';
+    (normalizarIdentidad(candidateProfile?.identidad, candidateProfile?.nombre ?? '').posicionamiento.posturaNacional || null) ||
+    'independiente';
 
   const activeNationalRationale: string =
     candidateNationalAlignmentRationale ||
     provisionalProfile?.nationalAlignmentRationale ||
-    ((candidateProfile as any)?.posturaGobiernoNacionalDetalle as string) ||
+    normalizarIdentidad(candidateProfile?.identidad, candidateProfile?.nombre ?? '').posicionamiento.posturaJustificacion.trim() ||
     (activeNationalAlignment === 'opositor'
       ? 'Opositor al gobierno nacional: Línea crítica con defensa de la autonomía departamental y sintonía con líderes como Álvaro Uribe.'
       : activeNationalAlignment === 'aliado'
@@ -115,13 +117,13 @@ export const SubregionesStrategicDeepening: React.FC<SubregionesStrategicDeepeni
   const activeLocalAlignment: 'aliado' | 'independiente' | 'opositor' =
     candidateLocalAlignment ||
     provisionalProfile?.localAlignment ||
-    ((candidateProfile as any)?.posturaGobiernoLocal as any) ||
-    (isCandidateGallon ? 'aliado' : 'aliado');
+    (normalizarIdentidad(candidateProfile?.identidad, candidateProfile?.nombre ?? '').posicionamiento.posturaDepartamental || null) ||
+    (isCandidateGallon ? 'aliado' : 'independiente');
 
   const activeLocalRationale: string =
     candidateLocalAlignmentRationale ||
     provisionalProfile?.localAlignmentRationale ||
-    ((candidateProfile as any)?.posturaGobiernoLocalDetalle as string) ||
+    normalizarIdentidad(candidateProfile?.identidad, candidateProfile?.nombre ?? '').posicionamiento.posturaJustificacion.trim() ||
     (isCandidateGallon
       ? 'Aliado de primera línea del actual gobierno de Antioquia (Gobernación de Andrés Julián Rendón), exsecretario de Integración Regional y Desarrollo Territorial de Antioquia. Articulación institucional plena y trabajo constructivo.'
       : activeLocalAlignment === 'aliado'
@@ -240,7 +242,9 @@ Devuelve ÚNICAMENTE un array JSON válido con entre 5 y 8 objetos con esta estr
         contents: [{ role: 'user', parts: [{ text: promptText }] }],
         config: {
           responseMimeType: 'application/json'
-        }
+        },
+        // Extracción fiel de temas de un informe ya generado (con las macrofuentes): no se le vuelven a pasar
+        proteus: { sinMacrofuentes: true },
       });
 
       const jsonStr = response.text || '';
@@ -271,7 +275,8 @@ Devuelve ÚNICAMENTE un array JSON válido con entre 5 y 8 objetos con esta estr
     }
 
     // Fallback determinístico de alta precisión temática estructurado en los 4 ejes
-    const fallbackThemes = getDeterministicThemesFromReport(reportText, currentSub);
+    // Temas de referencia fijos (no salen del informe): se rotulan así para no atribuírselos
+    const fallbackThemes = getDeterministicThemesFromReport(reportText, currentSub).map((t) => ({ ...t, sourceContext: 'Tema de referencia fijo (la IA no pudo extraer los temas del informe)' }));
     setExtractedThemes(fallbackThemes);
     if (!selectedThemeId && fallbackThemes.length > 0) {
       setSelectedThemeId(fallbackThemes[0].id);
@@ -390,7 +395,8 @@ ENLACE: [URL continua y sin espacios entre letras, directamente extraída de la 
         contents: [{ role: 'user', parts: [{ text: promptText }] }],
         config: {
           tools: [{ googleSearch: {} }]
-        }
+        },
+        proteus: { tarea: 'investigar', seleccion: seleccionDeSubregion(subregion.name) },
       });
 
       const responseText = response.text || '';
@@ -420,10 +426,11 @@ ENLACE: [URL continua y sin espacios entre letras, directamente extraída de la 
         throw new Error('No se detectaron noticias con la estructura requerida.');
       }
     } catch (err: any) {
-      console.warn('Error en búsqueda con Google Search, cargando fuentes verificadas del último mes:', err);
-      const fallbackNews = getFallbackNewsForTheme(subregion, currentSelectedTheme);
-      setIdentifiedNews(fallbackNews);
-      setActiveMediaFilter('todos');
+      console.warn('Error en búsqueda con Google Search:', err);
+      // Antes se cargaban "noticias" escritas a mano y atribuidas a medios reales (El Colombiano, Teleantioquia…) con
+      // fechas inventadas. Ahora se avisa y no se muestra nada que no venga de la búsqueda.
+      setIdentifiedNews([]);
+      setSearchNewsError(`No se encontraron noticias verificables: ${err instanceof Error ? err.message : String(err)}. Intenta de nuevo o cambia el tema.`);
     } finally {
       setIsSearchingNews(false);
     }
@@ -582,7 +589,7 @@ Despliegue de gran producción: múltiples locaciones en ${subregion.name}, toma
 - PARTIDO / COALICIÓN: ${candidateParty}
 - TONO NARRATIVO EFECTIVO DE LOS VIDEOS: ${effectiveVideoTone}
 - CERCANÍA GOBIERNO DE ANTIOQUIA: ${activeLocalAlignment.toUpperCase()} (${activeLocalAlignment === 'aliado' ? 'Aliado · Tono Constructivo Obligatorio' : activeLocalAlignment})
-- GRUPO DEMOGRÁFICO: ${demographics.label} (~${demographics.totalCount.toLocaleString()} habs.)
+- GRUPO DEMOGRÁFICO: ${demographics.label} (${demographics.totalCount.toLocaleString('es-CO')} habitantes; estimado con la ficha subregional auxiliar si es un segmento)
 ${provisionalProfile ? `- PERFIL PROVISIONAL INVESTIGADO: ${provisionalProfile.focusAreas}. Trayectoria: ${provisionalProfile.experienceBio}` : ''}
 
 *** EVIDENCIA DE PRENSA SELECCIONADA POR EL USUARIO (${selectedNewsItems.length} NOTICIAS) ***
@@ -613,7 +620,8 @@ Debes redactar los siguientes formatos adaptados rigurosamente al NIVEL ${active
     try {
       const response = await generateContent({
         model: 'gemini-3.8-flash',
-        contents: [{ role: 'user', parts: [{ text: promptText }] }]
+        contents: [{ role: 'user', parts: [{ text: promptText }] }],
+        proteus: { tarea: 'redactar', seleccion: seleccionDeSubregion(subregion.name) },
       });
 
       const text = response.text || '';
@@ -623,22 +631,9 @@ Debes redactar los siguientes formatos adaptados rigurosamente al NIVEL ${active
         throw new Error('Guion demasiado corto.');
       }
     } catch (err: any) {
-      console.warn('Error en llamada IA de guiones, usando generador adaptativo de respaldo:', err);
-      const fallback = generateFallbackScriptsWithComplexity(
-        subregion,
-        office,
-        candidateName,
-        effectiveVideoTone,
-        candidateParty,
-        currentSelectedTheme,
-        selectedNewsItems,
-        activeComplexity,
-        activeNationalAlignment,
-        activeNationalRationale,
-        activeLocalAlignment,
-        activeLocalRationale
-      );
-      setScriptsContent(fallback);
+      console.warn('Error en llamada IA de guiones:', err);
+      // Antes se mostraban guiones de plantilla como si los hubiera escrito la IA. Ahora se avisa.
+      setScriptsError(`No se pudieron generar los guiones con Gemini: ${err instanceof Error ? err.message : String(err)}. Vuelve a intentarlo.`);
     } finally {
       setIsGeneratingScripts(false);
     }
