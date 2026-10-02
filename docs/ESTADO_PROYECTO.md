@@ -1,6 +1,6 @@
 # Proteus — estado del proyecto (memoria compartida entre agentes)
 
-Última actualización: 2-oct-2026 (Claude Opus: estratificación de Medellín y valor del suelo AMVA `e9a59bc`, analista territorial y dossier `b0ec6ae`/`ba9ed7c`, evaluación del director de contenidos). **Todo agente debe actualizar este archivo al terminar.**
+Última actualización: 2-oct-2026 (Claude Opus: motor de análisis con tres macrofuentes en toda llamada a IA `c06bfb5`…`61402e6`, auditoría de datos escritos a mano y retiro de cédulas `4e893ef`; antes: estratificación `e9a59bc`, analista y dossier `b0ec6ae`/`ba9ed7c`). **Todo agente debe actualizar este archivo al terminar.**
 Repositorio local: `C:\Users\isaac\OneDrive\Documentos\Proyecto Proteus`. Remoto: github.com/isaacmendoza265-cmd/proteus-1.45.
 Ramas `codex/navegacion-mapa`, `claude/inicio` y `claude/encuestas-2026` ya fusionadas en `main` (28-sep). No subir bundles a GitHub por la web: se aplican con `git fetch <bundle>`.
 Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en el PATH de los agentes
@@ -112,6 +112,19 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
 - 28-sep: Inicio = página de presentación en esquema (fuentes, proceso, organización, salidas), diseño aprobado en
   el lienzo "Proteus — página de inicio" de claude.ai. Siempre oscura, con figuras 3D de mapas reales.
 
+- 2-oct: **todo análisis con IA parte de tres macrofuentes, completas y siempre**:
+  - datos de todos los tipos, niveles y categorías de la unidad territorial;
+  - naturaleza, historial y perfil del candidato;
+  - todo lo integrado al marco.
+
+  Exige un motor que se actualice solo, porque los datos, el marco y el perfil siguen cambiando (`docs/MOTOR_DE_ANALISIS.md`).
+- 2-oct: **las posturas políticas básicas se mantienen**, como semilla del marco (`src/data/marco/semilla/`).
+  Cada herramienta lee la postura de la identidad.
+- 2-oct: **Multimedia y el Analista de video no se retiran**: se evaluaron y corrigieron (`docs/EVALUACION_MULTIMEDIA.md`).
+- 2-oct: **los archivos escritos a mano sirven al principio como auxiliares o subsidiarios** para llenar vacíos.
+  - Entran rotulados AUXILIAR; lo oficial prevalece.
+  - La auditoría está en `docs/AUDITORIA_DATOS_AUXILIARES.md`; el contenido completo se entregó en `.xlsx` y `.zip`, fuera del repo.
+
 ## 3. Pendientes (en orden sugerido)
 
 ### Pendientes de Jose (Network IA Solutions) — anotados el 29-sep-2026
@@ -206,6 +219,23 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
   `territoryProfileService.ts`; ficha: `src/components/territorio/`.
 
 ## 5. Bitácora (agregar arriba lo más reciente)
+- 2-oct (Claude Opus, `main`): **motor de análisis y corrección de todo lo que alimentaba a Gemini con datos inventados.**
+  - **Base** (`c06bfb5`, `7437f1e`): toda llamada a Gemini antepone las tres macrofuentes (`src/services/ia/`).
+    - **Datos:** el dossier más las fuentes registradas y los JSON de `src/data/motor/`.
+    - **Perfil:** identidad, postura e historial del candidato en los datos.
+    - **Marco:** capas 0-4, semilla de posturas, libro de reglas e inventario.
+    - **Cada herramienta** declara su tarea y su unidad.
+  - **Auditoría** (`4e893ef`): 49 archivos y 4 tablas internas cruzados con DANE y Registraduría; 337 cédulas retiradas
+    (siguen en el historial de git: decide Isaac).
+  - **Herramientas corregidas:**
+    - Segmentos con datos del DANE, sin votos por cohorte (`b9c8140`).
+    - Colorimetría con foto medida y video enviado completo (`e4eed69`).
+    - Subregiones, tablero nacional, Municipios de Antioquia y perfil (`fa1e232`, `a32a9df`, `73e5b4b`).
+    - Herramientas heredadas (`8cf1458`).
+  - **Retirado:** respaldos que inventaban (noticias atribuidas a medios reales, informes y guiones de plantilla,
+    perfiles "deductivos" de personas reales, votos = censo × porcentaje fijo).
+  - **Panel y guardia** (`61402e6`): panel "Motor de análisis" bajo el analista y prueba `tuberiaIA.test.ts`.
+  - **Pendiente:** reglas copiadas en `municipioNarrativeService`, bundle del perfil y batería de calidad con la clave de Gemini.
 - 2-oct (Claude Opus, `main`) `e9a59bc`, `b0ec6ae`, `ba9ed7c`: estratificación de Medellín, valor del suelo AMVA, analista
   territorial con dossier completo; el generador lee el dossier. Evaluación en `docs/EVALUACION_DIRECTOR_CONTENIDOS.md`:
   22 de 25 prompts alcanzables no reciben identidad ni marco y 10 archivos a mano alimentan a Gemini; propone una sola
