@@ -125,6 +125,18 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
   - Entran rotulados AUXILIAR; lo oficial prevalece.
   - La auditoría está en `docs/AUDITORIA_DATOS_AUXILIARES.md`; el contenido completo se entregó en `.xlsx` y `.zip`, fuera del repo.
 
+- 2-oct, respuestas a las preguntas abiertas:
+  - **Datos de ejemplo en pantalla** (actas del Día E, informe de ejemplo de Guiones): se mantienen y siguen diciendo que son de ejemplo.
+  - **26 municipios sin datos sólidos del Concejo 2023**: los votos por partido del preconteo por puesto **se mantienen** (no se ocultan).
+  - **Respaldo de modelos ante saturación de Gemini**: por definir; una opción es DeepSeek.
+  - **Capa 2 del marco**: la recopila Isaac.
+  - **Dossiers de las familias 1, 2 y 3 y Capa 3**: se están produciendo y requieren una investigación rigurosa; se cargan cuando estén.
+  - **Multi-tenant y modelo de negocio**: el diseño multi-tenant es **prioritario**; tarea de Jose.
+  - **Séptimo de los "7 puntos de la app"**: fue un error humano; no hay séptimo punto.
+- 2-oct: **el mapa es la consola de navegación principal.** Elegir una unidad en el mapa la vuelve el territorio activo de
+  toda la app; al lado del mapa hay una columna con todas las herramientas de generación y análisis. Las herramientas con
+  selector propio arrancan en la unidad del mapa y conservan su selector. El menú izquierdo se puede compactar u ocultar.
+
 ## 3. Pendientes (en orden sugerido)
 
 ### Pendientes de Jose (Network IA Solutions) — anotados el 29-sep-2026
@@ -200,7 +212,7 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
 6. Bello: nombre de la comuna 12 (El Pinar); componentes con datos a mano (BelloInteractiveMap.tsx,
    analystOtherMunisData.ts).
 7. Deuda técnica: clave de Gemini en el cliente; Google Drive simulado; JSX monolítico.
-8. Séptimo de "los 7 puntos de la app" (26-sep): Isaac no lo ha aclarado.
+8. ~~Séptimo de "los 7 puntos de la app" (26-sep)~~: cerrado el 2-oct, fue un error humano (no hay séptimo punto).
 9. Después de Antioquia: resto del país (fases D y E).
 
 ## 4. Mapa de scripts (regenerar datos)

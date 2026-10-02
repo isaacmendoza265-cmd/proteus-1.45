@@ -13,7 +13,7 @@
 
 | Veredicto | Qué significa | Archivos |
 |---|---|---|
-| **A. Copia de lo oficial** | El dato ya está en una fuente oficial cargada; el archivo lo repite. Es redundante, pero correcto. | Cifras del maestro de 125 municipios, del archivo metropolitano, de los 7 municipios estratégicos, de las subregiones (7 de 9) y de los resultados de 2023 del observatorio. También los `e24/*`, que ya se construyen desde los resultados por puesto. |
+| **A. Copia de lo oficial** | El dato ya está en una fuente oficial cargada; el archivo lo repite. Es redundante, pero correcto. | Cifras del maestro de 125 municipios, del archivo metropolitano, de los 7 municipios estratégicos, de las subregiones (9 de 9) y de los resultados de 2023 del observatorio. También los `e24/*`, que ya se construyen desde los resultados por puesto. |
 | **B. Fuente identificable, sin verificar** | Coherente con una fuente pública municipal o de prensa; sirve como AUXILIAR para llenar vacíos y, sobre todo, como **serie de tiempo**. | `observatorioComunas/populationData` y `housingData` (proyecciones 2018-2030 por comuna), `ipmData` (IPM por comuna 2010-2025), `criminalityData` (SISC y EAFIT), `rionegroECV2020Data` (ECV 2020 Rionegro), `politicalHousesMasterData` (relaciones con medio citado), `observatorioAntioquia/analyst*` (rotulados "información obtenida de la web" o EAFIT) |
 | **C. Plantilla o supuesto sin fuente** | Valores escritos para llenar la interfaz. | Textos de seguridad, problemas y riesgo del maestro; población por comuna de `metropolitanAndMedellinData`; "% del censo" de `voterAudienceCatalog`; CTR y CPM de `adTargetingModelData`; `TERRITORY_HEATMAP_REGISTRY`; pesos de `voterDemographicsService`; `baseVotes` del simulador; actas de ejemplo de `electoralAuditMasterData` |
 | **D. Mixto** | Parte copia y parte texto o aproximación. | `antioquiaData` (descripciones municipales con poblaciones "~"), `nbiDetailedData`, `antioquiaSubregionesData` (cifras oficiales más textos de diagnóstico sin fuente) |
@@ -42,7 +42,7 @@
 |---|---|---|
 | Maestro 125 (`antioquia125MunicipalitiesMasterData`) | Población, NBI y censo frente a DANE y Registraduría | 125/125 exactos, porque el archivo los sobrescribe con lo oficial al final. Alcalde: 121/125 igual al escrutinio. |
 | Maestro 125: textos | Repetición de textos | Seguridad: "Estadísticas pacíficas." ×28, "Baja letalidad." ×20. Presencia armada: "Sin presencia estructural activa." ×21. Problemas: "Servicios básicos estables." ×11. Riesgo: Bajo 24, Medio 33, Alto 41, Crítico 27, sin método. → **C** |
-| Subregiones | Suma de poblaciones frente al DANE 2026 | 7 de 9 exactas. Oriente da 763.096 frente a 686.369 y Occidente 227.034 frente a 193.069: hay municipios mal asignados o duplicados. |
+| Subregiones | Suma de poblaciones frente al DANE 2026 | 9 de 9 exactas. *Corrección del 2-oct:* la primera versión de esta auditoría decía que Oriente (763.096 frente a 686.369) y Occidente (227.034 frente a 193.069) estaban mal sumadas. Era un error del cruce: 3 municipios de Oriente y 2 de Occidente no casaron por nombre ("Peñol" frente a "El Peñol", por ejemplo) y contaron como 0. Por código DANE, las sumas coinciden. |
 | Metropolitano (10 municipios) | Población, NBI y censo | Exactos. Comunas de Medellín: el censo electoral es oficial (rotulado). La **población por comuna no coincide** ni con el CNPV 2018 ni con la serie del Distrito (Guayabal 99.450 frente a 63.589; El Poblado 134.210 frente a 107.219). → **C** |
 | `populationData` (comunas 2018-2030) | Frente al CNPV 2018 | Comuna 14: 106.805 frente a 107.219; comuna 15: 64.651 frente a 63.589. Coherente con proyecciones sobre el censo. → **B**, valiosa como serie. |
 | `ipmData` (IPM por comuna 2010-2025) | Frente al IPM DANE por manzana (CNPV 2018) | Son **índices distintos**: el archivo trae el IPM de Medellín de la Encuesta de Calidad de Vida (Popular 15,3 en 2025) y el DANE el IPM del censo (Popular 26,3). No se contradicen, pero no se mezclan. → **B** |
@@ -75,6 +75,5 @@ El motor interno (`src/services/ia/motor/`) arma, para cada unidad territorial, 
   2. ECV Medellín (IPM por comuna);
   3. SISC (extorsión).
 - Al conseguir el archivo original, se carga con un script en `scripts/` y pasa a oficial.
-- **Corregir las subregiones** Oriente y Occidente (municipios mal asignados).
 - **Retirar las tablas sin uso** después de que Isaac las revise: están en el `.xlsx` por si sirven.
 - Los prompts ya no reciben ninguna cifra C como dato.
