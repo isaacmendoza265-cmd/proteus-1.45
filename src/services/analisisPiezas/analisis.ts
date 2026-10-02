@@ -58,7 +58,11 @@ export async function analizarConGemini(args: {
   const { identidad, tipo, fuente } = args;
   if (fuente.clase === 'archivo' && tipo === 'imagen' && !identidad.privacidad.enviarFotosAIA) throw new Error('La identidad no permite enviar imágenes a la IA (Privacidad).');
   if (fuente.clase === 'archivo' && (tipo === 'video' || tipo === 'audio') && !identidad.privacidad.enviarVideosAIA) throw new Error('La identidad no permite enviar videos ni audios a la IA (Privacidad).');
-  const sistema = libroEnTexto(tipo, reglasPiso3());
+  // Las tres macrofuentes (datos del territorio activo, perfil y marco completo) y, encima, el libro de reglas del tipo
+  const { armarMacrofuentes, sistemaConMacrofuentes, anotarLlamada } = await import('../ia/macrofuentes');
+  const m = await armarMacrofuentes({ tarea: 'evaluar' });
+  anotarLlamada({ tarea: 'evaluar', territorio: m.territorio, caracteres: m.caracteres, cuando: new Date().toISOString() });
+  const sistema = sistemaConMacrofuentes(m, libroEnTexto(tipo, reglasPiso3()));
   const instruccion = [
     instruccionAnalisis({ identidad, tipo, canal: args.canal, propia: args.propia, contexto: args.contexto, mediciones: args.medicion ? medicionesEnTexto(args.medicion) : [] }),
     ...(fuente.clase === 'texto' ? ['', 'TEXTO DE LA PIEZA:', fuente.texto] : []),

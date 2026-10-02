@@ -18,6 +18,11 @@ import { CRIMINALITY_DATA } from '../data/observatorioComunas/criminalityData';
 import { IPM_DATA } from '../data/observatorioComunas/ipmData';
 import { POPULATION_DATA } from '../data/observatorioComunas/populationData';
 import { getDepartmentCensus, getMunicipalCensus } from './electoralCensusService';
+import { getDaneMunicipio } from './daneMunicipalService';
+import { getResultado2023 } from './electoralResults2023Service';
+import { municipioFichaPorDane, territorioFicha } from './territoryProfileService';
+import { ANTIOQUIA_125_MUNICIPIOS_GEOJSON } from '../data/geojson';
+import type { SeleccionDossier } from './dossierTerritorialService';
 
 export interface ActiveTerritoryState {
   scale: TerritorialScale;
@@ -48,6 +53,10 @@ export interface ActiveTerritoryState {
   };
   source: 'zoom_gis' | 'manual_selector' | 'e24_matrix';
   updatedAt: string;
+  /** Campos que vienen de tablas internas sin verificar (datos AUXILIARES: solo llenan vacíos y se dicen como tales) */
+  auxiliares?: string[];
+  /** De dónde salen las cifras oficiales (DANE, Registraduría) */
+  fuentesOficiales?: string;
 }
 
 const STORAGE_KEY = 'proteus_active_territory_context';
@@ -63,9 +72,10 @@ export const DEFAULT_ACTIVE_TERRITORY: ActiveTerritoryState = {
   comunaId: 'comuna-11',
   barrioId: 'all-comuna',
   featureId: 'mpio-05001',
-  population: 2650000,
+  // Cifras oficiales: las fija oficializar() con el DANE y la Registraduría (antes 2.650.000 habitantes escritos a mano)
+  population: undefined,
   electoralCensus: getMunicipalCensus('05001')?.total,
-  nbiPercentage: 4.2,
+  nbiPercentage: undefined,
   riskLevel: 'Medio',
   predominantStratum: 'Estrato 3 (heterogéneo 1 a 6)',
   electedMayor: 'Federico Andrés Gutiérrez Zuluaga',
@@ -98,6 +108,64 @@ export const DEFAULT_ACTIVE_TERRITORY: ActiveTerritoryState = {
 
 type Listener = (state: ActiveTerritoryState) => void;
 
+/** Texto para lo que no tiene fuente cargada (en vez de "Normal subregional", "Moderado"...) */
+export const SIN_FUENTE = 'Sin información (no hay fuente cargada)';
+
+/** Campos que, cuando tienen valor, vienen de tablas internas escritas a mano (no de una fuente oficial cargada) */
+const CAMPOS_AUXILIARES: (keyof ActiveTerritoryState)[] = ['keyProblems', 'strategicOpportunities', 'economicSectors', 'securityDynamics', 'riskLevel', 'predominantStratum'];
+
+/**
+ * Pone las cifras oficiales donde las hay (DANE 2026 y NBI 2018 por municipio, censo electoral 2026, escrutinio de la
+ * Alcaldía y curules del Concejo 2023) y marca como AUXILIAR lo que viene de tablas internas. Nunca inventa: lo que no
+ * tiene dato queda vacío.
+ */
+export function oficializar(s: ActiveTerritoryState): ActiveTerritoryState {
+  const dane = /(\d{5})$/.exec(s.muniId)?.[1];
+  const out: ActiveTerritoryState = { ...s };
+  const fuentes: string[] = [];
+  if (dane && s.scale === 'municipal') {
+    const d = getDaneMunicipio(dane);
+    if (d) { out.population = d.poblacion; out.nbiPercentage = d.nbi2018; fuentes.push('población DANE 2026 y NBI DANE 2018'); }
+    const c = getMunicipalCensus(dane)?.total;
+    if (c) { out.electoralCensus = c; fuentes.push('censo electoral Registraduría 2026'); }
+    const r = getResultado2023(dane);
+    if (r) {
+      const g = r.alcaldia.candidatos[0];
+      if (g) { out.electedMayor = g.nombre; out.winnerParty = g.partido; }
+      if (r.concejo) out.councilSummary = r.concejo.curulesPorLista.filter((x) => x.curules).sort((a, b) => b.curules - a.curules).map((x) => `${x.partido} (${x.curules})`).join(', ');
+      fuentes.push('escrutinio Alcaldía y Concejo 2023 (Registraduría)');
+    }
+  }
+  const tieneValor = (k: keyof ActiveTerritoryState) => {
+    const v = out[k];
+    if (Array.isArray(v)) return v.length > 0;
+    if (v && typeof v === 'object') return Object.values(v).some((x) => x && x !== SIN_FUENTE);
+    return v != null && v !== '';
+  };
+  out.auxiliares = CAMPOS_AUXILIARES.filter(tieneValor) as string[];
+  out.fuentesOficiales = fuentes.join('; ') || undefined;
+  return out;
+}
+
+/** Unidad del dossier (barrio, comuna, municipio, subregión) que corresponde al territorio activo */
+export function seleccionDeEstado(s: ActiveTerritoryState): SeleccionDossier {
+  const dane = /(\d{5})$/.exec(s.muniId)?.[1];
+  const muni = dane ? municipioFichaPorDane(dane) : null;
+  const subFeat = ANTIOQUIA_125_MUNICIPIOS_GEOJSON.features.find((f) => (f.properties as { daneCode?: string }).daneCode === dane);
+  const nombreSub = (id: string) => {
+    const limpio = id.replace('subreg-', '').replace(/-/g, ' ');
+    const norm = (x: string) => x.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+    return [...new Set(ANTIOQUIA_125_MUNICIPIOS_GEOJSON.features.map((f) => String(f.properties.subregion ?? '')))].find((n) => norm(n) === norm(limpio)) ?? null;
+  };
+  if (s.scale === 'nacional' || s.scale === 'departamental') return { subregion: null, muniId: null, comunaId: null, barrioId: null };
+  if (s.scale === 'subregional') return { subregion: nombreSub(s.subregId), muniId: null, comunaId: null, barrioId: null };
+  if (!muni) return { subregion: nombreSub(s.subregId), muniId: null, comunaId: null, barrioId: null };
+  const subregion = subFeat ? String(subFeat.properties.subregion ?? '') || null : null;
+  const barrio = s.barrioId && s.barrioId !== 'all-comuna' && territorioFicha(s.barrioId)?.dane === dane ? s.barrioId : null;
+  const comuna = s.scale !== 'municipal' && territorioFicha(s.comunaId)?.dane === dane ? s.comunaId : null;
+  return { subregion, muniId: muni, comunaId: barrio ? null : comuna, barrioId: barrio };
+}
+
 class ActiveTerritoryManager {
   private currentState: ActiveTerritoryState;
   private listeners: Set<Listener> = new Set();
@@ -112,13 +180,13 @@ class ActiveTerritoryManager {
       if (saved) {
         const parsed = JSON.parse(saved);
         if (parsed && parsed.scale && parsed.name) {
-          return parsed;
+          return oficializar(parsed);
         }
       }
     } catch (e) {
       console.warn('Error loading active territory state:', e);
     }
-    return DEFAULT_ACTIVE_TERRITORY;
+    return oficializar(DEFAULT_ACTIVE_TERRITORY);
   }
 
   public getState(): ActiveTerritoryState {
@@ -171,22 +239,23 @@ class ActiveTerritoryManager {
     let muniId = 'mpio-05001';
     let comunaId = 'comuna-11';
     let barrioId = 'all-comuna';
-    let population = p.population || 50000;
+    let population: number | undefined = p.population || undefined;
     // Nunca se estima el censo a partir de la población: o hay dato oficial o queda sin dato
     let electoralCensus: number | undefined = p.electoralCensus;
-    let nbiPercentage = p.nbiPercentage || 12.0;
-    let riskLevel = p.riskLevel || 'Medio';
-    let predominantStratum = p.predominantStratum || 'Estrato 2-3';
-    let electedMayor = p.electedMayor || 'Alcaldía Municipal';
-    let winnerParty = p.winnerParty || 'Coalición';
-    let councilSummary = 'Bancadas multipartidistas';
+    // Sin valores por defecto inventados: lo que no tiene dato queda vacío (antes 50.000 hab., NBI 12 %, "Estrato 2-3")
+    let nbiPercentage: number | undefined = p.nbiPercentage || undefined;
+    let riskLevel = p.riskLevel || undefined;
+    let predominantStratum = p.predominantStratum || undefined;
+    let electedMayor = p.electedMayor || undefined;
+    let winnerParty = p.winnerParty || undefined;
+    let councilSummary: string | undefined;
     let keyProblems: string[] = [];
     let strategicOpportunities: string[] = [];
     let economicSectors: string[] = [];
-    let securityDynamics = {
-      homicideRate: 'Normal subregional',
-      extortionRisk: 'Moderado',
-      armedPresence: 'Bajo control institucional'
+    let securityDynamics: ActiveTerritoryState['securityDynamics'] = {
+      homicideRate: SIN_FUENTE,
+      extortionRisk: SIN_FUENTE,
+      armedPresence: SIN_FUENTE
     };
 
     // 1. ESCALA NACIONAL (Departamentos de Colombia)
@@ -253,14 +322,14 @@ class ActiveTerritoryManager {
         winnerParty = muniRec.winnerParty;
         councilSummary = muniRec.councilSeats
           ? muniRec.councilSeats.map(c => `${c.party} (${c.seats})`).join(', ')
-          : 'Bancadas multipartidistas';
+          : undefined;
         keyProblems = muniRec.keyProblems || [];
         strategicOpportunities = muniRec.strategicOpportunities || [];
         economicSectors = muniRec.economicSectors || [];
         securityDynamics = {
-          homicideRate: muniRec.securityDynamics?.homicideRate || 'Normal subregional',
-          extortionRisk: muniRec.securityDynamics?.extortionRisk || 'Moderado',
-          armedPresence: muniRec.securityDynamics?.armedPresence || 'Vigilancia institucional'
+          homicideRate: muniRec.securityDynamics?.homicideRate || SIN_FUENTE,
+          extortionRisk: muniRec.securityDynamics?.extortionRisk || SIN_FUENTE,
+          armedPresence: muniRec.securityDynamics?.armedPresence || SIN_FUENTE
         };
       } else {
         name = p.name;
@@ -306,9 +375,8 @@ class ActiveTerritoryManager {
             armedPresence: crime.bandasDominantes?.join(', ') || 'Combos delincuenciales locales'
           };
         }
-        if (ipmList && ipmList.length > 0) {
-          nbiPercentage = ipmList[ipmList.length - 1].ipmGlobal; // IPM global (no es NBI)
-        }
+        // El IPM de la tabla interna no es NBI: ya no se pasa como NBI (el IPM oficial por manzana está en el dossier)
+        void ipmList;
         strategicOpportunities = [
           `Articulación barrial con líderes comunales y comerciantes de ${name}`,
           `Plan de choque contra la extorsión y plazas de vicio`,
@@ -325,14 +393,13 @@ class ActiveTerritoryManager {
       name = p.name;
       fullName = `Barrio ${p.name} (${p.comunaName || 'Medellín'})`;
       comunaId = p.comunaId || 'comuna-11';
-      population = p.population || 18000;
+      population = p.population || undefined;
       electoralCensus = p.electoralCensus;
-      predominantStratum = p.predominantStratum || 'Estrato 3';
-      nbiPercentage = p.nbiPercentage || 5.0;
+      predominantStratum = p.predominantStratum || undefined;
+      nbiPercentage = p.nbiPercentage || undefined;
       keyProblems = [
-        `Hito territorial: ${p.keyLandmark || 'Sector urbano barrial'}`,
-        `Puestos de votación en barrio: ${p.votingStationsCount || 2} mesas electorales`,
-        `Seguridad en cuadras comerciales y entornos escolares`
+        ...(p.keyLandmark ? [`Hito territorial: ${p.keyLandmark}`] : []),
+        ...(p.votingStationsCount ? [`Puestos de votación en el barrio: ${p.votingStationsCount}`] : []),
       ];
       strategicOpportunities = [
         `Contacto puerta a puerta y red de WhatsApp barrial`,
@@ -355,7 +422,7 @@ class ActiveTerritoryManager {
       population,
       electoralCensus,
       nbiPercentage,
-      riskLevel: riskLevel as any,
+      riskLevel: riskLevel as ActiveTerritoryState['riskLevel'],
       predominantStratum,
       electedMayor,
       winnerParty,
@@ -368,10 +435,10 @@ class ActiveTerritoryManager {
       updatedAt: new Date().toISOString()
     };
 
-    this.currentState = newState;
+    this.currentState = oficializar(newState);
     this.persist();
     this.notify();
-    return newState;
+    return this.currentState;
   }
 }
 

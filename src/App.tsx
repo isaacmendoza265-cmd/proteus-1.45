@@ -3,6 +3,7 @@
  * Modular Architecture Root
  */
 
+import { registrarPerfil } from './services/ia/registroPerfil';
 import React, { useEffect, useState, lazy, Suspense } from 'react';
 import { AppShell } from './components/layout/AppShell';
 import type { NavViewId } from './components/layout/navigation';
@@ -79,6 +80,9 @@ export default function App() {
       })
       .catch((e) => console.warn('No se pudo cargar el perfil del candidato:', e));
   }, []);
+
+  // Macrofuente 2: todas las llamadas a Gemini leen este perfil (src/services/ia/macrofuentes.ts)
+  useEffect(() => { registrarPerfil(candidateProfile); }, [candidateProfile]);
 
   const handleSaveProfile = (newProfile: CandidateProfile) => {
     setCandidateProfile(newProfile);

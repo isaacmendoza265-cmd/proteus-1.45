@@ -82,7 +82,7 @@ export const GeneradorContenido: React.FC<GeneradorContenidoProps> = ({ seleccio
     setCopiado(false);
     try {
       const instruccion = armarInstruccion({ sel, medio, tipo, tema, datos, candidato });
-      setTexto(await generarContenido(SISTEMA_CONTENIDO, instruccion));
+      setTexto(await generarContenido(SISTEMA_CONTENIDO, instruccion, sel));
       setEstado('listo');
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));

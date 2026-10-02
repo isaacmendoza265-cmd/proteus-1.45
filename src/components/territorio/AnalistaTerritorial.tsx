@@ -41,7 +41,7 @@ export const AnalistaTerritorial: React.FC<{ seleccion: SeleccionTerritorio }> =
     const previos = turnos;
     setTurnos([...previos, { rol: 'usuario', texto: limpia }]);
     try {
-      const r = await preguntarAnalista(texto, previos, limpia);
+      const r = await preguntarAnalista(texto, previos, limpia, seleccion);
       setTurnos((t) => [...t, { rol: 'analista', texto: r }]);
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));

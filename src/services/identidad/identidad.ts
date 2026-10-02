@@ -26,6 +26,8 @@ export type Arquetipo = (typeof ARQUETIPOS)[number]['id'];
 export const REDES = ['Instagram', 'TikTok', 'Facebook', 'X', 'YouTube', 'WhatsApp', 'Radio', 'Prensa', 'Televisión', 'Territorio (voz a voz)'] as const;
 export type Red = (typeof REDES)[number];
 
+export const POSTURAS = ['aliado', 'independiente', 'opositor'] as const;
+export type Postura = (typeof POSTURAS)[number] | '';
 export interface EjeProgramatico { tema: string; propuesta: string }
 export interface ColorMarca { rol: 'Primario' | 'Secundario' | 'Acento' | 'Neutro'; hex: string; nombre?: string }
 export interface Integrante { nombre: string; rol: string; aprueba: boolean }
@@ -55,6 +57,10 @@ export interface IdentidadCandidato {
     publicos: string[];
     territoriosPrioritarios: string[];
     contraste: string;
+    /** Postura frente al Gobierno Nacional y a la Gobernación (semilla del marco: src/data/marco/semilla/) */
+    posturaNacional: Postura;
+    posturaDepartamental: Postura;
+    posturaJustificacion: string;
   };
   /** 3. Voz y oratoria: cómo habla (texto, discurso, video) */
   voz: {
@@ -128,7 +134,7 @@ export function identidadVacia(nombre = ''): IdentidadCandidato {
   return {
     version: 1,
     ficha: { nombre, nombreCampana: '', cargo: '', circunscripcion: '', partido: '', numeroTarjeton: '', fechaEleccion: '', rangoEdad: '', lugarResidencia: '', formacion: '', trayectoria: '' },
-    posicionamiento: { propuestaValor: '', arquetipo: '', ejes: [], publicos: [], territoriosPrioritarios: [], contraste: '' },
+    posicionamiento: { propuestaValor: '', arquetipo: '', ejes: [], publicos: [], territoriosPrioritarios: [], contraste: '', posturaNacional: '', posturaDepartamental: '', posturaJustificacion: '' },
     voz: { formalidad: 3, energia: 3, tecnicismo: 2, persona: '', ritmoMin: 130, ritmoMax: 160, humor: '', frasesFirma: [], lexicoPropio: [], palabrasProhibidas: [], muletillas: [], regionalismos: '' },
     imagen: { paleta: PALETA_VACIA.map((c) => ({ ...c })), toleranciaColor: 10, tipografiaTitulos: '', tipografiaTexto: '', estiloFotografico: '', encuadres: '', vestuarioSi: '', vestuarioNo: '', noNegociables: '' },
     limites: { temasVedados: [], lineasRojas: [], exigirFuente: true, marcaPublicidadPagada: true, responsableLegal: '' },
@@ -226,6 +232,7 @@ export function identidadParaIA(i: IdentidadCandidato): string {
     p.publicos.length > 0 && `Públicos prioritarios: ${lista(p.publicos)}`,
     p.territoriosPrioritarios.length > 0 && `Territorios prioritarios: ${lista(p.territoriosPrioritarios)}`,
     !!p.contraste.trim() && `Contraste con los adversarios: ${p.contraste.trim()}`,
+    `Postura frente al Gobierno Nacional: ${p.posturaNacional || 'sin definir (no se asume)'}; frente a la Gobernación de Antioquia: ${p.posturaDepartamental || 'sin definir (no se asume)'}.${p.posturaJustificacion?.trim() ? ` ${p.posturaJustificacion.trim()}` : ''}`,
     `Voz: ${escala(v.formalidad, 'cercana', 'formal')}, ${escala(v.energia, 'serena', 'enérgica')}, ${escala(v.tecnicismo, 'coloquial', 'técnica')}${v.persona ? `; habla en ${v.persona === 'mixta' ? 'primera persona singular y plural' : v.persona === 'yo' ? 'primera persona del singular' : 'primera persona del plural'}` : ''}${v.humor ? `; humor: ${v.humor}` : ''}.`,
     `Ritmo de oratoria objetivo: ${v.ritmoMin} a ${v.ritmoMax} palabras por minuto.`,
     v.frasesFirma.length > 0 && `Frases firma: ${lista(v.frasesFirma)}`,

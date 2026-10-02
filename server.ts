@@ -292,7 +292,7 @@ async function startServer() {
         return;
       }
       // El sistema incluye las reglas del piso 3 del marco; la instrucción, el dossier completo del territorio (~40 mil caracteres)
-      if (instruccion.length > 320_000 || (typeof sistema === 'string' && sistema.length > 20_000)) {
+      if (instruccion.length > 320_000 || (typeof sistema === 'string' && sistema.length > 250_000)) {
         res.status(400).json({ error: 'La instrucción es demasiado larga.' });
         return;
       }
@@ -352,7 +352,7 @@ async function startServer() {
         res.status(400).json({ error: "Faltan la pregunta ('pregunta') o el dossier del territorio ('dossier')." });
         return;
       }
-      if (pregunta.length > 4_000 || dossier.length > 300_000 || (typeof sistema === 'string' && sistema.length > 20_000)
+      if (pregunta.length > 4_000 || dossier.length > 300_000 || (typeof sistema === 'string' && sistema.length > 250_000)
         || turnos.length > 30 || turnos.some((t) => typeof t?.texto !== 'string' || t.texto.length > 20_000)) {
         res.status(400).json({ error: 'La pregunta, el dossier o la conversación son demasiado largos.' });
         return;
@@ -412,7 +412,7 @@ async function startServer() {
         res.status(400).json({ error: 'Faltan el libro de reglas, la instrucción o el esquema.' });
         return;
       }
-      if (sistema.length > 40_000 || instruccion.length > 20_000) {
+      if (sistema.length > 250_000 || instruccion.length > 20_000) {
         res.status(400).json({ error: 'La instrucción es demasiado larga.' });
         return;
       }

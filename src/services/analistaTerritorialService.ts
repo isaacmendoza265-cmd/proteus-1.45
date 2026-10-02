@@ -8,6 +8,7 @@
  */
 import { reglasPiso3 } from './marcoService';
 import { limpiarMarkdown } from './contentGeneratorService';
+import type { SeleccionDossier } from './dossierTerritorialService';
 
 export const SISTEMA_ANALISTA = [
   'Eres el analista territorial de Proteus, una herramienta de inteligencia electoral para campañas en Antioquia (Colombia). Respondes en español de Colombia, con precisión y sin relleno.',
@@ -17,17 +18,22 @@ export const SISTEMA_ANALISTA = [
   '- Los votos se cuentan donde está el puesto, no donde vive el votante: nunca atribuyas votos a los residentes de un barrio como si fueran suyos.',
   '- Distingue lo que el dato muestra (observa), lo que se deduce de él (deduce), lo que es una hipótesis (hipotetiza) y lo que recomiendas (apuesta). Marca cada afirmación importante con uno de esos verbos entre corchetes.',
   '- Los actores políticos del dossier vienen de una base sin verificar: menciónalos como tales.',
-  '- Sé breve por defecto (un párrafo o una lista corta). Si te piden detalle, dalo. Texto plano: sin Markdown (nada de **, # ni tablas); listas con guiones.',
+  '- Extensión: a una pregunta puntual, respuesta puntual; a una pregunta analítica, el mínimo útil del reglamento (sección 7). Texto plano: sin Markdown (nada de **, # ni tablas); listas con guiones.',
+  '- Cuando recomiendes, hazlo para el candidato del PERFIL (su cargo, ejes, públicos y postura política). Si el perfil no define algo, dilo.',
   reglasPiso3(),
 ].filter(Boolean).join('\n');
 
 export interface TurnoAnalista { rol: 'usuario' | 'analista'; texto: string }
 
-export async function preguntarAnalista(dossier: string, historial: TurnoAnalista[], pregunta: string): Promise<string> {
+/** Perfil y marco completo van en el sistema (macrofuentes); el dossier va aparte, como primer turno */
+export async function preguntarAnalista(dossier: string, historial: TurnoAnalista[], pregunta: string, seleccion?: SeleccionDossier): Promise<string> {
+  const { armarMacrofuentes, sistemaConMacrofuentes, anotarLlamada } = await import('./ia/macrofuentes');
+  const m = await armarMacrofuentes({ tarea: 'analizar', seleccion, incluirDatos: false });
+  anotarLlamada({ tarea: 'analizar', territorio: m.territorio, caracteres: { ...m.caracteres, datos: dossier.length }, cuando: new Date().toISOString() });
   const r = await fetch('/api/analista/preguntar', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ sistema: SISTEMA_ANALISTA, dossier, historial: historial.slice(-20), pregunta }),
+    body: JSON.stringify({ sistema: sistemaConMacrofuentes(m, SISTEMA_ANALISTA), dossier, historial: historial.slice(-20), pregunta }),
   });
   const j = await r.json().catch(() => ({}));
   if (!r.ok) throw new Error(j.error || `El servidor respondió ${r.status}.`);

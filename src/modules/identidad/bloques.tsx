@@ -2,8 +2,8 @@
 import React from 'react';
 import { Plus, Trash2 } from 'lucide-react';
 import {
-  ARQUETIPOS, CARGOS, REDES, paletaDefinida,
-  type BloqueId, type IdentidadCandidato, type Red, type Arquetipo, type Integrante, type Referente,
+  ARQUETIPOS, CARGOS, POSTURAS, REDES, paletaDefinida,
+  type BloqueId, type IdentidadCandidato, type Red, type Arquetipo, type Postura, type Integrante, type Referente,
 } from '../../services/identidad/identidad';
 import { contrasteWcag, hexARgb } from '../../services/analisisPiezas/medicion';
 import { SUBREGIONES, municipiosDe } from '../../services/contentGeneratorService';
@@ -73,6 +73,11 @@ function Posicionamiento({ i, set }: P) {
         <Etiquetas titulo="Públicos prioritarios" valores={p.publicos} onChange={u('publicos')} lista="identidad-publicos" placeholder="Escribe y presiona Enter" />
         <Etiquetas titulo="Territorios prioritarios" valores={p.territoriosPrioritarios} onChange={u('territoriosPrioritarios')} lista="identidad-territorios" placeholder="Municipio o subregión" />
         <Area titulo="Contraste con los adversarios" ayuda="Qué lo diferencia, dicho sin atacar personas." valor={p.contraste} onChange={u('contraste')} />
+      </Grupo>
+      <Grupo titulo="Postura política" descripcion="Frente al Gobierno Nacional y a la Gobernación de Antioquia. Todas las herramientas de IA la leen junto con la semilla de posturas del marco; si no se define, no se asume.">
+        <Fichas<Postura> titulo="Frente al Gobierno Nacional" opciones={POSTURAS.map((v) => ({ v, t: v[0].toUpperCase() + v.slice(1) }))} valor={p.posturaNacional ? [p.posturaNacional] : []} onChange={(v) => u('posturaNacional')(v[0] ?? '')} />
+        <Fichas<Postura> titulo="Frente a la Gobernación de Antioquia" opciones={POSTURAS.map((v) => ({ v, t: v[0].toUpperCase() + v.slice(1) }))} valor={p.posturaDepartamental ? [p.posturaDepartamental] : []} onChange={(v) => u('posturaDepartamental')(v[0] ?? '')} />
+        <Area titulo="Justificación" ayuda="Por qué esa postura, en una o dos frases (alianzas, trayectoria)." valor={p.posturaJustificacion ?? ''} onChange={u('posturaJustificacion')} filas={2} />
       </Grupo>
     </>
   );

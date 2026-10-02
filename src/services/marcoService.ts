@@ -28,6 +28,7 @@ export const BLOQUES: BloqueMarco[] = (rawRegistro as { bloques: BloqueMarco[] }
 export { CAPAS };
 
 const TEXTOS = import.meta.glob<string>('../data/marco/capa*/*.md', { query: '?raw', import: 'default', eager: true });
+const SEMILLAS = import.meta.glob<string>('../data/marco/semilla/*.md', { query: '?raw', import: 'default', eager: true });
 
 /** Texto del bloque, sin el comentario de ingesta */
 export function textoBloque(b: BloqueMarco): string {
@@ -190,4 +191,28 @@ export function reglasPiso3(): string {
     '- Frases prohibidas en la pieza:',
     ...r.frasesProhibidas.map((f) => `  · ${f}`),
   ].filter(Boolean).join('\n');
+}
+
+/**
+ * Semilla del marco: posturas políticas básicas (src/data/marco/semilla/). No viene de un .docx ingestado: reúne lo que
+ * antes estaba escrito dentro de varios prompts, para que todas las herramientas lean la misma versión.
+ */
+export function semillaPosturas(): string {
+  return Object.values(SEMILLAS).map((t) => t.replace(/^<!--[\s\S]*?-->\s*/, '').trim()).join('\n\n');
+}
+
+/** Texto completo del reglamento vigente (Capa 1), como lo escribió Isaac */
+export function textoReglamentoVigente(): string {
+  const r = reglamentoVigente();
+  return r ? textoBloque(r.bloque) : '';
+}
+
+/** Dossiers de fuentes de la Capa 1 (literatura; se mandan solo a las tareas de análisis) */
+export function textoDossiersCapa1(): string {
+  return bloquesDeCapa(1).filter((b) => b.id.startsWith('dossier')).map((b) => `### ${b.titulo}\n${textoBloque(b)}`).join('\n\n');
+}
+
+/** Capas 2, 3 y 4 ingestadas (vacías hasta que Isaac las entregue) */
+export function textoCapas234(): string {
+  return BLOQUES.filter((b) => b.capa === 2 || b.capa === 3 || b.capa === 4).map((b) => `### Capa ${b.capa}: ${b.titulo}\n${textoBloque(b)}`).join('\n\n');
 }

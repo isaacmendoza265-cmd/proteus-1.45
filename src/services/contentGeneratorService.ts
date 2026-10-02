@@ -342,11 +342,15 @@ export function limpiarMarkdown(texto: string): string {
     .trim();
 }
 
-export async function generarContenido(sistema: string, instruccion: string): Promise<string> {
+/** El sistema lleva las tres macrofuentes (perfil y marco completo; los datos ya van en la instrucción como DATOS) */
+export async function generarContenido(sistema: string, instruccion: string, seleccion?: SeleccionTerritorio): Promise<string> {
+  const { armarMacrofuentes, sistemaConMacrofuentes, anotarLlamada } = await import('./ia/macrofuentes');
+  const m = await armarMacrofuentes({ tarea: 'redactar', seleccion, incluirDatos: false });
+  anotarLlamada({ tarea: 'redactar', territorio: seleccion ? nombreSeleccion(seleccion) : m.territorio, caracteres: { ...m.caracteres, datos: instruccion.length }, cuando: new Date().toISOString() });
   const r = await fetch('/api/contenido/generar', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ sistema, instruccion }),
+    body: JSON.stringify({ sistema: sistemaConMacrofuentes(m, sistema), instruccion }),
   });
   const j = await r.json().catch(() => ({}));
   if (!r.ok) throw new Error(j.error || `El servidor respondió ${r.status}.`);
