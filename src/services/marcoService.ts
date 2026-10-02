@@ -216,3 +216,12 @@ export function textoDossiersCapa1(): string {
 export function textoCapas234(): string {
   return BLOQUES.filter((b) => b.capa === 2 || b.capa === 3 || b.capa === 4).map((b) => `### Capa ${b.capa}: ${b.titulo}\n${textoBloque(b)}`).join('\n\n');
 }
+
+/** TODO lo integrado al marco: cada bloque ingestado de cada capa (0 a 4), con su versión y estado, en orden */
+export function textoMarcoCompleto(): string {
+  const bloques = [...BLOQUES].sort((a, b) => a.capa - b.capa || a.id.localeCompare(b.id));
+  return bloques.map((b) => `### Capa ${b.capa} · ${b.titulo}${b.version ? ` (v${b.version})` : ''} · ${b.estado}\n${textoBloque(b)}`).join('\n\n');
+}
+
+/** Inventario del marco para el estado del motor */
+export const inventarioMarco = () => BLOQUES.map((b) => ({ id: b.id, capa: b.capa, titulo: b.titulo, version: b.version, estado: b.estado, caracteres: textoBloque(b).length }));

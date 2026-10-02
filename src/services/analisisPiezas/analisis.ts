@@ -62,7 +62,7 @@ export async function analizarConGemini(args: {
   const { armarMacrofuentes, sistemaConMacrofuentes, anotarLlamada } = await import('../ia/macrofuentes');
   const m = await armarMacrofuentes({ tarea: 'evaluar' });
   anotarLlamada({ tarea: 'evaluar', territorio: m.territorio, caracteres: m.caracteres, cuando: new Date().toISOString() });
-  const sistema = sistemaConMacrofuentes(m, libroEnTexto(tipo, reglasPiso3()));
+  const sistema = sistemaConMacrofuentes(m, libroEnTexto(tipo, reglasPiso3()), 'evaluar');
   const instruccion = [
     instruccionAnalisis({ identidad, tipo, canal: args.canal, propia: args.propia, contexto: args.contexto, mediciones: args.medicion ? medicionesEnTexto(args.medicion) : [] }),
     ...(fuente.clase === 'texto' ? ['', 'TEXTO DE LA PIEZA:', fuente.texto] : []),

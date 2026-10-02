@@ -40,7 +40,7 @@ export const TargetedAdvertisingOptimizerView: React.FC<TargetedAdvertisingOptim
   candidateProfile,
   onNavigateToView
 }) => {
-  const candidateName = candidateProfile?.nombre || 'Isaac Mendoza';
+  const candidateName = candidateProfile?.nombre || 'el candidato del perfil';
   const { activeTerritory } = useActiveTerritory();
   const initialTerritory = activeTerritory?.name || 'Itagüí';
 
@@ -72,29 +72,14 @@ export const TargetedAdvertisingOptimizerView: React.FC<TargetedAdvertisingOptim
   }, [selectedTerritory, candidateName]);
 
   // Load / Generate creatives when profile or territory changes
-  useEffect(() => {
-    let isMounted = true;
-    async function loadCreatives() {
-      setLoadingAi(true);
-      try {
-        const result = await AdTargetingOptimizerService.generateCreativesWithAI(
-          currentProfile,
-          candidateName,
-          selectedTerritory
-        );
-        if (isMounted) setCreativeSet(result);
-      } catch (e) {
-        console.warn("Error al cargar creatividades publicitarias:", e);
-      } finally {
-        if (isMounted) setLoadingAi(false);
-      }
-    }
-    loadCreatives();
-    return () => { isMounted = false; };
-  }, [selectedProfileId, candidateName, selectedTerritory]);
+  // Las variantes se generan SOLO al pulsar "Generar" (antes se pedían a Gemini al abrir la vista y en cada cambio).
+  // Al cambiar de arquetipo o de territorio se limpia lo generado para no mostrar piezas de otro segmento.
+  const [errorAi, setErrorAi] = useState<string>('');
+  useEffect(() => { setCreativeSet(null); setErrorAi(''); }, [selectedProfileId, selectedTerritory]);
 
   const handleRegenerate = async () => {
     setLoadingAi(true);
+    setErrorAi('');
     try {
       const result = await AdTargetingOptimizerService.generateCreativesWithAI(
         currentProfile,
@@ -103,7 +88,7 @@ export const TargetedAdvertisingOptimizerView: React.FC<TargetedAdvertisingOptim
       );
       setCreativeSet(result);
     } catch (e) {
-      console.warn("Error al regenerar:", e);
+      setErrorAi(e instanceof Error ? e.message : String(e));
     } finally {
       setLoadingAi(false);
     }
@@ -258,7 +243,7 @@ export const TargetedAdvertisingOptimizerView: React.FC<TargetedAdvertisingOptim
             className="min-h-9 px-3 rounded-lg border border-[var(--c-border)] bg-[var(--c-surface)] text-xs font-semibold flex items-center gap-1.5 disabled:opacity-50"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${loadingAi ? 'animate-spin' : ''}`} />
-            <span>{loadingAi ? 'Generando con IA...' : 'Regenerar Creatividades'}</span>
+            <span>{loadingAi ? 'Generando con IA...' : creativeSet ? 'Generar de nuevo' : 'Generar variantes'}</span>
           </button>
         </div>
 
@@ -270,7 +255,9 @@ export const TargetedAdvertisingOptimizerView: React.FC<TargetedAdvertisingOptim
           />
         ) : (
           <div className="p-12 text-center rounded-2xl border border-[var(--c-border)] bg-[var(--c-sunken)] text-[var(--c-muted)] text-xs">
-            Cargando creatividades publicitarias con Gemini 3.8 Flash...
+            {loadingAi ? 'Generando con Gemini 3.8 Flash a partir de los datos del territorio, el perfil del candidato y el marco…'
+              : errorAi ? <span className="text-[var(--c-warn)]">No se pudo generar: {errorAi}</span>
+                : 'Pulsa "Generar variantes": Gemini lee los datos del territorio, el perfil del candidato y el marco completo antes de escribir.'}
           </div>
         )}
       </div>

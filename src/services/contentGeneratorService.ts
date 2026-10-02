@@ -350,7 +350,7 @@ export async function generarContenido(sistema: string, instruccion: string, sel
   const r = await fetch('/api/contenido/generar', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ sistema: sistemaConMacrofuentes(m, sistema), instruccion }),
+    body: JSON.stringify({ sistema: sistemaConMacrofuentes(m, sistema, 'redactar'), instruccion }),
   });
   const j = await r.json().catch(() => ({}));
   if (!r.ok) throw new Error(j.error || `El servidor respondió ${r.status}.`);

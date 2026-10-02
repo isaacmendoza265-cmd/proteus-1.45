@@ -174,6 +174,7 @@ export const TerritoryIntelligenceBridgeCard: React.FC<TerritoryIntelligenceBrid
               </div>
               <p className="text-xs text-slate-300">
                 {intelligence.budgetSaturationMetrics.reallocationAdvice}
+                <span className="block mt-1 text-[10px] text-amber-300">{intelligence.budgetSaturationMetrics.supuestos}</span>
               </p>
             </div>
 
@@ -253,7 +254,7 @@ export const TerritoryIntelligenceBridgeCard: React.FC<TerritoryIntelligenceBrid
               {onNavigateToView && (
                 <button
                   type="button"
-                  onClick={() => onNavigateToView('observatorio-redes')}
+                  onClick={() => onNavigateToView('territorial-zoom')}
                   className="w-full mt-1 px-2.5 py-1.5 bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/30 rounded-lg text-sky-300 text-[11px] font-bold flex items-center justify-center gap-1.5 transition cursor-pointer"
                 >
                   <Share2 className="w-3 h-3" />
@@ -277,14 +278,14 @@ export const TerritoryIntelligenceBridgeCard: React.FC<TerritoryIntelligenceBrid
               <span>Mapas de Calor & Demografía</span>
             </span>
             <span className="text-[10px] font-mono text-slate-400">
-              Participación: {intelligence.heatmapProfile.voterTurnoutExpected}%
+              Participación Alcaldía 2023: {intelligence.heatmapProfile.voterTurnoutExpected != null ? `${intelligence.heatmapProfile.voterTurnoutExpected}%` : 'sin dato'}
             </span>
           </div>
 
           <div className="space-y-2 text-xs">
             <div>
               <span className="text-[10px] font-mono text-slate-400 uppercase block">
-                Zonas de Alta Densidad Electoral:
+                Puestos con más habilitados (censo 2026):
               </span>
               <ul className="mt-1 space-y-1">
                 {intelligence.heatmapProfile.highDensityZones.map((zone, idx) => (
@@ -299,17 +300,18 @@ export const TerritoryIntelligenceBridgeCard: React.FC<TerritoryIntelligenceBrid
             <div className="pt-1 grid grid-cols-2 gap-2 border-t border-white/5 text-[11px]">
               <div className="bg-slate-900/80 p-2 rounded-lg border border-white/5">
                 <span className="text-[10px] font-mono text-amber-400 block uppercase">Jóvenes Indecisos</span>
-                <strong className="text-white text-sm font-mono">{intelligence.heatmapProfile.undecidedYouthPercentage}%</strong>
+                <strong className="text-white text-sm font-mono">{intelligence.heatmapProfile.undecidedYouthPercentage != null ? `${intelligence.heatmapProfile.undecidedYouthPercentage}%` : 'Sin información'}</strong>
               </div>
               <div className="bg-slate-900/80 p-2 rounded-lg border border-white/5">
                 <span className="text-[10px] font-mono text-emerald-400 block uppercase">Voto Volátil Captable</span>
-                <strong className="text-white text-sm font-mono">{intelligence.heatmapProfile.swingVotersPotential}%</strong>
+                <strong className="text-white text-sm font-mono">{intelligence.heatmapProfile.swingVotersPotential != null ? `${intelligence.heatmapProfile.swingVotersPotential}%` : 'Sin información'}</strong>
               </div>
             </div>
 
             <div className="text-[10px] text-slate-400 italic">
-              Segmento prioritario: {intelligence.heatmapProfile.socioeconomicStrataFocus}
+              {intelligence.heatmapProfile.socioeconomicStrataFocus}
             </div>
+            <div className="text-[10px] text-slate-500">Fuente: {intelligence.heatmapProfile.fuente}</div>
           </div>
         </div>
 

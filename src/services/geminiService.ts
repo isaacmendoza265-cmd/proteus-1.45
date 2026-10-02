@@ -44,8 +44,8 @@ async function conMacrofuentes(params: GenerateContentParams): Promise<Omit<Gene
   const textoPrevio = typeof previo === 'string' ? previo
     : previo && typeof previo === 'object' && Array.isArray((previo as { parts?: { text?: string }[] }).parts)
       ? (previo as { parts: { text?: string }[] }).parts.map((x) => x.text ?? '').join('\n') : '';
-  anotarLlamada({ tarea, territorio: m.territorio, caracteres: m.caracteres, cuando: new Date().toISOString() });
-  return { ...resto, config: { ...(resto.config ?? {}), systemInstruction: sistemaConMacrofuentes(m, textoPrevio) } };
+  anotarLlamada({ tarea, territorio: m.territorio, caracteres: m.caracteres, cobertura: m.cobertura, cuando: new Date().toISOString() });
+  return { ...resto, config: { ...(resto.config ?? {}), systemInstruction: sistemaConMacrofuentes(m, textoPrevio, tarea) } };
 }
 
 export interface GenerateContentResult {

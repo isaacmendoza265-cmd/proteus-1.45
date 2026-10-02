@@ -27,13 +27,19 @@ import { concejoDesdeEleccion, cargarConcejo2023, LISTAS_POR_CANDIDATO } from '.
 import { getResultado2023 } from './electoralResults2023Service';
 import { analizarMunicipio, analizarComunaMedellin, esMunicipioDelAnalisis, ZONAS_MEDELLIN, type AnalisisNarrativo } from './municipioNarrativeService';
 import { cargarPuestosTerritorio, codigosResultadosDe, puestosDe } from '../components/territorio/usePuestosTerritorio';
+import { fuentesRegistradas, versionFuentes, type CoberturaFuente, type CategoriaFuente, type ContextoFuente } from './ia/motor/registro';
+// Fuentes que se registran solas (auxiliares por código y archivos de src/data/motor/)
+import './ia/motor/fuentesAuxiliares';
+import './ia/motor/fuentesDeclarativas';
 
-export interface SeccionDossier { titulo: string; lineas: string[] }
+export interface SeccionDossier { titulo: string; lineas: string[]; nivel?: 'oficial' | 'auxiliar'; categoria?: CategoriaFuente; id?: string }
 export interface DossierTerritorial {
   /** Nombre completo de la unidad ("Comuna 14 - El Poblado, Medellín") */
   territorio: string;
   nivel: 'barrio o vereda' | 'comuna o corregimiento' | 'municipio' | 'subregión' | 'departamento';
   secciones: SeccionDossier[];
+  /** Qué fuentes del motor tuvieron datos para esta unidad (para auditar la cobertura) */
+  cobertura: CoberturaFuente[];
 }
 
 /** Selección en el mapa o el formulario: la más fina que no sea null manda */
@@ -69,6 +75,40 @@ function lineasCandidatos(e: EleccionPuestos, codigos: string[] | 'todos', munic
     `  Candidatos más votados (voto preferente${c.candidatosParciales ? '; en cada puesto solo se guardaron los que suman el 97 %, así que son mínimos' : ''}): ${todos.map((k) => `${k.nombre} (${k.partido}) ${n(k.votos)}`).join('; ')}.`,
     ...(curules ? [`  Curules por lista (escrutinio municipal): ${curules}.`] : []),
   ];
+}
+
+// --- Fuentes registradas en el motor (auxiliares y declarativas) --------------------------------------
+
+/** Categoría de las secciones fijas (todas oficiales salvo actores y lectura de Proteus) */
+const CATEGORIA_FIJA: Record<string, CategoriaFuente> = {
+  'Identificación': 'identificación', 'Población': 'población', 'Condiciones económicas (2018)': 'economía',
+  'Estratificación vigente o valor del suelo': 'estratificación', 'Censo electoral': 'censo electoral',
+  'Resultados electorales (serie 2015-2026)': 'resultados electorales', 'Municipios (DANE, Contaduría, CUIPO, Registraduría)': 'institucional',
+};
+const sinDato = (l: string) => /^(sin |ninguno registrado|sin información)/i.test(l.trim());
+
+async function completarConMotor(secciones: SeccionDossier[], ctx: ContextoFuente): Promise<CoberturaFuente[]> {
+  const cobertura: CoberturaFuente[] = secciones.map((x) => {
+    const auxiliar = /SIN VERIFICAR|hipótesis/i.test(x.titulo);
+    const datos = x.lineas.filter((l) => !sinDato(l)).length;
+    x.nivel = x.nivel ?? (auxiliar ? 'auxiliar' : 'oficial');
+    x.categoria = x.categoria ?? CATEGORIA_FIJA[x.titulo] ?? (/alcaldía/i.test(x.titulo) ? 'institucional' : /actores/i.test(x.titulo) ? 'actores políticos' : /lectura/i.test(x.titulo) ? 'lectura de Proteus' : 'otra');
+    return { id: `fija:${x.titulo}`, titulo: x.titulo, categoria: x.categoria, nivel: x.nivel, estado: datos ? 'con datos' : 'sin datos', datos };
+  });
+  for (const f of fuentesRegistradas()) {
+    if (!f.aplica(ctx)) { cobertura.push({ id: f.id, titulo: f.titulo, categoria: f.categoria, nivel: f.nivel, estado: 'no aplica', datos: 0 }); continue; }
+    let lineas: string[] = [];
+    try { lineas = (await f.lineas(ctx)).filter((l) => l && l.trim()); } catch (e) { console.warn(`Fuente ${f.id} falló:`, e); }
+    cobertura.push({ id: f.id, titulo: f.titulo, categoria: f.categoria, nivel: f.nivel, estado: lineas.length ? 'con datos' : 'sin datos', datos: lineas.length });
+    if (lineas.length) {
+      secciones.push({
+        id: f.id, nivel: f.nivel, categoria: f.categoria,
+        titulo: `${f.nivel === 'auxiliar' ? 'AUXILIAR (sin verificar) · ' : ''}${f.titulo}`,
+        lineas: [`Fuente: ${f.fuente}.`, ...lineas],
+      });
+    }
+  }
+  return cobertura;
 }
 
 // --- Construcción ---------------------------------------------------------------------------------
@@ -204,7 +244,8 @@ async function dossierLocal(t: TerritorioFicha): Promise<DossierTerritorial> {
     const bloques: [string, AnalisisNarrativo['contextoPolitico']][] = [['Contexto político', narr.contextoPolitico], ['Contexto social', narr.contextoSocial], ['Panorama 2027', narr.panorama2027], ['Áreas clave', narr.areasClave], ['Tonos', narr.tonos]];
     secciones.push({ titulo: 'Lectura de Proteus (análisis narrativo con las reglas del marco; hipótesis, no hechos)', lineas: bloques.flatMap(([tit, os]) => os.map((o) => `${tit} · ${o.verbo.toUpperCase()}: ${o.texto}`)) });
   }
-  return { territorio: nombre, nivel, secciones };
+  const cobertura = await completarConMotor(secciones, { t, subregion: String(geo?.properties.subregion ?? '') || null });
+  return { territorio: nombre, nivel, secciones, cobertura };
 }
 
 async function dossierRegional(subregion: string | null): Promise<DossierTerritorial> {
@@ -223,14 +264,12 @@ async function dossierRegional(subregion: string | null): Promise<DossierTerrito
     const gp = indice.ganadores['presidente-2026-2']?.[m.dane] ?? indice.ganadores['presidente-2026-1']?.[m.dane];
     return `${m.nombre}: ${d ? `${n(d.poblacion)} hab. 2026, NBI ${p(d.nbi2018)}` : 'sin DANE'}${c ? `, categoría ${CATEGORIA_TEXTO[c.categoria] ?? c.categoria}` : ''}${pr ? `, presupuesto ${pr.anio} ${pesos(pr.datos.porHabitante)}/hab.` : ''}${ga ? `; Alcaldía 2023: ${ga[0]} (${ga[1]})` : ''}${r ? `, participación ${p(r.alcaldia.participacion)}` : ''}${gp ? `; Presidencia 2026: ganó ${gp[0]}` : ''}.`;
   });
-  return {
-    territorio: subregion ? `Subregión ${subregion}, Antioquia` : 'Antioquia',
-    nivel: subregion ? 'subregión' : 'departamento',
-    secciones: [
-      { titulo: 'Identificación', lineas: [`${subregion ? `Subregión ${subregion}` : 'Antioquia'}: ${munis.length} municipios, ${n(poblacion)} habitantes proyectados 2026 (DANE).`] },
-      { titulo: 'Municipios (DANE, Contaduría, CUIPO, Registraduría)', lineas },
-    ],
-  };
+  const secciones: SeccionDossier[] = [
+    { titulo: 'Identificación', lineas: [`${subregion ? `Subregión ${subregion}` : 'Antioquia'}: ${munis.length} municipios, ${n(poblacion)} habitantes proyectados 2026 (DANE).`] },
+    { titulo: 'Municipios (DANE, Contaduría, CUIPO, Registraduría)', lineas },
+  ];
+  const cobertura = await completarConMotor(secciones, { t: null, subregion });
+  return { territorio: subregion ? `Subregión ${subregion}, Antioquia` : 'Antioquia', nivel: subregion ? 'subregión' : 'departamento', secciones, cobertura };
 }
 
 const cache = new Map<string, Promise<DossierTerritorial>>();
@@ -238,7 +277,7 @@ const cache = new Map<string, Promise<DossierTerritorial>>();
 /** Dossier de la selección (con caché por unidad) */
 export function dossierTerritorio(sel: SeleccionDossier): Promise<DossierTerritorial> {
   const id = sel.barrioId ?? sel.comunaId ?? sel.muniId;
-  const clave = id ?? `sub:${sel.subregion ?? ''}`;
+  const clave = `${id ?? `sub:${sel.subregion ?? ''}`}|v${versionFuentes()}`;
   if (!cache.has(clave)) {
     const t = id ? territorioFicha(id) : null;
     const prom = t ? dossierLocal(t) : dossierRegional(sel.subregion);

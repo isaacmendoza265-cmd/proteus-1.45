@@ -3,7 +3,7 @@ import { armarMacrofuentes, sistemaConMacrofuentes, JERARQUIA } from '../ia/macr
 import { registrarPerfil } from '../ia/registroPerfil';
 import { generateContent, callGeminiApi } from '../geminiService';
 import { identidadVacia } from '../identidad/identidad';
-import { textoReglamentoVigente, semillaPosturas } from '../marcoService';
+import { textoReglamentoVigente, semillaPosturas, inventarioMarco } from '../marcoService';
 import { activeTerritoryService, oficializar, seleccionDeEstado, DEFAULT_ACTIVE_TERRITORY } from '../activeTerritoryContextService';
 
 afterEach(() => vi.unstubAllGlobals());
@@ -21,14 +21,21 @@ describe('tres macrofuentes', () => {
     registrarPerfil({ nombre: 'Ana Prueba', identidad: identidad() });
     const m = await armarMacrofuentes({ tarea: 'analizar', seleccion: { subregion: null, muniId: 'envigado', comunaId: null, barrioId: null } });
     expect(m.texto.startsWith(JERARQUIA)).toBe(true);
-    expect(m.texto).toContain('=== 1. DATOS DEL APLICATIVO ===');
+    expect(m.texto).toContain('=== MACROFUENTE A · DATOS DEL APLICATIVO SOBRE LA UNIDAD TERRITORIAL ===');
+    expect(m.texto.indexOf('MACROFUENTE C')).toBeLessThan(m.texto.indexOf('MACROFUENTE A')); // lo estable primero (caché de prefijo)
     expect(m.texto).toMatch(/UNIDAD TERRITORIAL: Envigado/);
     expect(m.texto).toContain('Ana Prueba');
     expect(m.texto).toMatch(/Postura frente al Gobierno Nacional: independiente; frente a la Gobernación de Antioquia: aliado/);
     expect(textoReglamentoVigente().length).toBeGreaterThan(20_000);
     expect(m.texto).toContain(textoReglamentoVigente().slice(0, 2000));
     expect(m.texto).toContain(semillaPosturas().slice(0, 300));
-    expect(m.caracteres.marco).toBeGreaterThan(30_000); // reglamento completo, no el 3 %
+    // TODO el marco: cada bloque ingestado, la semilla y el libro de reglas (antes llegaba el 3 %)
+    for (const b of inventarioMarco()) expect(m.texto, b.id).toContain(b.titulo);
+    expect(m.texto).toMatch(/LIBRO DE REGLAS DE PIEZAS/);
+    expect(m.caracteres.marco).toBeGreaterThan(45_000);
+    // Fuentes del motor: cobertura reportada, auxiliares rotuladas
+    expect(m.cobertura.some((c) => c.nivel === 'auxiliar' && c.estado === 'con datos')).toBe(true);
+    expect(m.texto).toMatch(/AUXILIAR \(sin verificar\)/);
   }, 60_000);
 
   it('toda llamada genérica a Gemini sale con las macrofuentes antepuestas a su propia instrucción', async () => {

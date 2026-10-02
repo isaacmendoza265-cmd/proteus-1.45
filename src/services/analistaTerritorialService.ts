@@ -33,7 +33,7 @@ export async function preguntarAnalista(dossier: string, historial: TurnoAnalist
   const r = await fetch('/api/analista/preguntar', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ sistema: sistemaConMacrofuentes(m, SISTEMA_ANALISTA), dossier, historial: historial.slice(-20), pregunta }),
+    body: JSON.stringify({ sistema: sistemaConMacrofuentes(m, SISTEMA_ANALISTA, 'analizar'), dossier, historial: historial.slice(-20), pregunta }),
   });
   const j = await r.json().catch(() => ({}));
   if (!r.ok) throw new Error(j.error || `El servidor respondió ${r.status}.`);

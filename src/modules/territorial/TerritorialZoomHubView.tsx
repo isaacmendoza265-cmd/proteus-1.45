@@ -153,12 +153,15 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
   const currentLevelConfig = ZOOM_LEVELS_CONFIG[currentLevel];
 
   // Bridge handlers to Content Director and Voter Segmentation
+  // "Generar contenido" (drawer, popup y banner) lleva al generador de ESTA pantalla, con el territorio elegido: es el
+  // que lee las tres macrofuentes completas. Antes saltaba a Redactar (herramienta vieja).
+  const irAlGenerador = () => setTimeout(() => document.getElementById('generador-contenido')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60);
   const handleGenerateContent = (feature: TerritoryGeoFeature) => {
     activeTerritoryService.setFromGeoFeature(feature);
-    if (onNavigateToContentDirector) {
-      onNavigateToContentDirector(feature);
-    }
+    setSelectedFeature(feature);
+    irAlGenerador();
   };
+  void onNavigateToContentDirector;
 
   const handleSegmentVoters = (feature: TerritoryGeoFeature) => {
     activeTerritoryService.setFromGeoFeature(feature);
@@ -169,19 +172,14 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
 
   // Handler for scale-level generation (when no specific feature is selected, or using selected feature)
   const handleTriggerCurrentScaleContent = () => {
-    if (selectedFeature) {
-      handleGenerateContent(selectedFeature);
-    } else if (currentDataset && currentDataset.features.length > 0) {
-      handleGenerateContent(currentDataset.features[0]);
-    }
+    // Sin territorio elegido no se toma uno al azar (antes, el primero del mapa): el generador queda en lo que haya
+    if (selectedFeature) handleGenerateContent(selectedFeature);
+    else irAlGenerador();
   };
 
   const handleTriggerCurrentScaleSegmentation = () => {
-    if (selectedFeature) {
-      handleSegmentVoters(selectedFeature);
-    } else if (currentDataset && currentDataset.features.length > 0) {
-      handleSegmentVoters(currentDataset.features[0]);
-    }
+    if (selectedFeature) handleSegmentVoters(selectedFeature);
+    else onNavigateToVoterSegmentation?.(undefined as unknown as TerritoryGeoFeature);
   };
 
   // Handle drill down through scales
@@ -366,6 +364,7 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
       </div>
 
       {/* 4.1. Generador de contenido enlazado a la selección del mapa */}
+      <div id="generador-contenido" className="scroll-mt-4" />
       <GeneradorContenido
         seleccionMapa={seleccionContenido}
         eleccionId={eleccion}

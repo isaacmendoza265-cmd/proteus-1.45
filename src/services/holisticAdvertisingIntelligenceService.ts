@@ -19,6 +19,10 @@ import {
   resolveDepartmentId 
 } from './electoralCensusService';
 import { resolveMunicipality } from '../data/geojson/municipalDivisions';
+import INDICE_TERRITORIOS from '../data/territorio/indiceTerritorios.json';
+import { getResultado2023 } from './electoralResults2023Service';
+import { cargarEconomia, economia, territorioFicha } from './territoryProfileService';
+import { getMunicipioConPuestos, loadPuestosMunicipio } from './pollingStationsService';
 
 export interface OfficialCensusSummary {
   total: number;
@@ -48,6 +52,8 @@ export interface BudgetSaturationMetrics {
   marginalEfficiencyFactor: number; // 1.0 (óptimo) a 0.20 (fatiga severa)
   wastedSpendCOP: number;          // Monto en COP quemado en sobre-saturación
   reallocationAdvice: string;      // Recomendación de reasignar excedente
+  /** Penetración digital, CPM y frecuencia óptima son supuestos de referencia, no mediciones */
+  supuestos: string;
 }
 
 export interface LocalCouncilorSummary {
@@ -73,12 +79,16 @@ export interface CurulReplacementEvent {
   adHookSuggestion: string;
 }
 
+/** Perfil del territorio para la pauta. Solo datos con fuente: lo que no se puede medir (indecisos, voto volátil)
+ *  queda en null ("Sin información"): no hay encuestas cargadas. Antes eran cifras escritas a mano. */
 export interface HeatmapVoterProfile {
   highDensityZones: string[];
-  undecidedYouthPercentage: number;
+  undecidedYouthPercentage: number | null;
   socioeconomicStrataFocus: string;
-  voterTurnoutExpected: number;
-  swingVotersPotential: number; // Porcentaje de votantes volátiles captables
+  /** Participación real de la última Alcaldía (escrutinio 2023) */
+  voterTurnoutExpected: number | null;
+  swingVotersPotential: number | null;
+  fuente: string;
 }
 
 export interface TerritoryMonitoringContext {
@@ -115,134 +125,42 @@ export interface TerritoryGeopoliticalIntelligence {
 }
 
 // Catálogo territorial estructurado con datos demográficos y geoespaciales
-const TERRITORY_HEATMAP_REGISTRY: Record<string, HeatmapVoterProfile> = {
-  'Itagüí': {
-    highDensityZones: ['Comuna 1 (Ditaires - San Pío)', 'Comuna 3 (Bariloche - Calatrava)', 'Comuna 6 (La Florida)'],
-    undecidedYouthPercentage: 42.5,
-    socioeconomicStrataFocus: 'Estratos 2 y 3 (Comercio y manufactura)',
-    voterTurnoutExpected: 54.8,
-    swingVotersPotential: 34.0
-  },
-  'Bello': {
-    highDensityZones: ['Comuna 4 (Suárez - Salento)', 'Comuna 8 (Niquía - La Selva)', 'Comuna 10 (Fontidueño)'],
-    undecidedYouthPercentage: 48.0,
-    socioeconomicStrataFocus: 'Estratos 1, 2 y 3 (Clase trabajadora y madres cabeza de hogar)',
-    voterTurnoutExpected: 47.2,
-    swingVotersPotential: 38.5
-  },
-  'Envigado': {
-    highDensityZones: ['Zona 1 (Las Vegas - San Marcos)', 'Zona 6 (El Dorado - San Rafael)', 'Zona 9 (La Sebastiana)'],
-    undecidedYouthPercentage: 33.0,
-    socioeconomicStrataFocus: 'Estratos 3, 4 y 5 (Clase media consolidada y profesionales)',
-    voterTurnoutExpected: 61.5,
-    swingVotersPotential: 26.0
-  },
-  'Medellín': {
-    highDensityZones: ['Comuna 7 (Robledo)', 'Comuna 13 (San Javier)', 'Comuna 16 (Belén)', 'Comuna 10 (La Candelaria)', 'Comuna 11 (Laureles)'],
-    undecidedYouthPercentage: 45.2,
-    socioeconomicStrataFocus: 'Estratos 1 a 4 (Población estudiantil, comerciantes independientes, gremio salud)',
-    voterTurnoutExpected: 52.6,
-    swingVotersPotential: 36.2
-  },
-  'Sabaneta': {
-    highDensityZones: ['Calle Larga - Holanda', 'Prados de Sabaneta', 'María Auxiliadora', 'Las Lomitas'],
-    undecidedYouthPercentage: 35.8,
-    socioeconomicStrataFocus: 'Estratos 3 y 4 (Jóvenes profesionales y condominios)',
-    voterTurnoutExpected: 59.4,
-    swingVotersPotential: 29.5
-  },
-  'La Estrella': {
-    highDensityZones: ['Cabecera Urbana - Ancón', 'La Tablaza - San José'],
-    undecidedYouthPercentage: 41.0,
-    socioeconomicStrataFocus: 'Estratos 2 y 3 (Población industrial)',
-    voterTurnoutExpected: 51.0,
-    swingVotersPotential: 32.5
-  },
-  'Caldas': {
-    highDensityZones: ['Centro - Olaya Herrera', 'La Inmaculada', 'Felipe Mesa'],
-    undecidedYouthPercentage: 39.5,
-    socioeconomicStrataFocus: 'Estratos 2 y 3 (Arraigo cerámico y comercial)',
-    voterTurnoutExpected: 53.2,
-    swingVotersPotential: 31.0
-  },
-  'Copacabana': {
-    highDensityZones: ['San Juan de la Tasajera', 'La Asunción - El Pedregal'],
-    undecidedYouthPercentage: 43.0,
-    socioeconomicStrataFocus: 'Estratos 2 y 3 (Zona norte metropolitana)',
-    voterTurnoutExpected: 49.8,
-    swingVotersPotential: 35.0
-  },
-  'Girardota': {
-    highDensityZones: ['Centro Histórico - El Llano', 'Juan Cojo - Montecarlo'],
-    undecidedYouthPercentage: 38.0,
-    socioeconomicStrataFocus: 'Estratos 2 y 3 (Sector rural e industrial)',
-    voterTurnoutExpected: 56.1,
-    swingVotersPotential: 28.0
-  },
-  'Barbosa': {
-    highDensityZones: ['Peñolcito - Cabecera', 'Hatillo - La Cejita'],
-    undecidedYouthPercentage: 44.0,
-    socioeconomicStrataFocus: 'Estratos 1 y 2 (Comunidad campesina y peajes)',
-    voterTurnoutExpected: 50.5,
-    swingVotersPotential: 37.0
-  },
-  'Rionegro': {
-    highDensityZones: ['Centro Histórico - San Antonio de Pereira', 'El Porvenir - Cuatro Esquinas', 'Llanogrande - Aeropuerto JMC'],
-    undecidedYouthPercentage: 36.5,
-    socioeconomicStrataFocus: 'Estratos 3, 4 y 5 (Sector salud, agroindustrial y aeronáutico)',
-    voterTurnoutExpected: 62.1,
-    swingVotersPotential: 27.4
-  },
-  'Antioquia': {
-    highDensityZones: ['Valle de Aburrá', 'Oriente Antioqueño (Rionegro - Marinilla)', 'Urabá (Apartadó - Turbo)'],
-    undecidedYouthPercentage: 41.8,
-    socioeconomicStrataFocus: 'Multiestrato Departamental',
-    voterTurnoutExpected: 53.0,
-    swingVotersPotential: 33.5
-  },
-  'Bogotá D.C.': {
-    highDensityZones: ['Suba (La Gaitana, Rincón)', 'Kennedy (Patio Bonito, Castilla)', 'Engativá', 'Bosa', 'Usaquén'],
-    undecidedYouthPercentage: 47.0,
-    socioeconomicStrataFocus: 'Multiestrato Distrital (Estratos 2 a 4)',
-    voterTurnoutExpected: 52.0,
-    swingVotersPotential: 39.0
-  },
-  'Meta': {
-    highDensityZones: ['Villavicencio (Comunas 4, 7 y 8)', 'Acacías', 'Granada', 'Puerto López'],
-    undecidedYouthPercentage: 43.5,
-    socioeconomicStrataFocus: 'Agroindustria llanera, comercio y sector de hidrocarburos',
-    voterTurnoutExpected: 55.4,
-    swingVotersPotential: 35.0
-  },
-  'Santander': {
-    highDensityZones: ['Bucaramanga (Cabecera, Centro, Real de Minas)', 'Floridablanca', 'Piedecuesta', 'Barrancabermeja'],
-    undecidedYouthPercentage: 41.0,
-    socioeconomicStrataFocus: 'Clase media comercial, calzado, salud y petróleo',
-    voterTurnoutExpected: 58.2,
-    swingVotersPotential: 33.0
-  },
-  'Valle del Cauca': {
-    highDensityZones: ['Cali (Aguablanca, Comunas 17, 19 y 22)', 'Palmira', 'Buenaventura', 'Tuluá'],
-    undecidedYouthPercentage: 49.0,
-    socioeconomicStrataFocus: 'Sector azucarero, logística portuaria y servicios',
-    voterTurnoutExpected: 48.6,
-    swingVotersPotential: 40.5
-  },
-  'Cundinamarca': {
-    highDensityZones: ['Soacha', 'Chía - Cajicá - Zipaquirá', 'Facatativá - Mosquera - Funza', 'Girardot'],
-    undecidedYouthPercentage: 42.0,
-    socioeconomicStrataFocus: 'Cinturón industrial, agropecuario y ciudades dormitorio',
-    voterTurnoutExpected: 54.0,
-    swingVotersPotential: 34.2
-  },
-  'Atlántico': {
-    highDensityZones: ['Barranquilla (Suroccidente, Metropolitana, Norte)', 'Soledad', 'Malambo', 'Sabanalarga'],
-    undecidedYouthPercentage: 46.2,
-    socioeconomicStrataFocus: 'Sector portuario, comercio formal e informal (Estratos 1 a 3)',
-    voterTurnoutExpected: 56.8,
-    swingVotersPotential: 36.5
-  }
-};
+// (Antes: TERRITORY_HEATMAP_REGISTRY con jóvenes indecisos, voto volátil y participación escritos a mano para 17
+// territorios y valores por defecto para el resto. Retirado el 2-oct-2026: ver docs/AUDITORIA_DATOS_AUXILIARES.md.)
+
+const SUPUESTOS_PAUTA = 'Supuestos de referencia, no medidos: penetración digital 78 % (áreas metropolitanas) o 54 % (resto), CPM de $3.850 (Meta + TikTok) y frecuencia óptima 3,8. Sirven para dimensionar la pauta, no son datos del territorio.';
+
+/** Perfil del territorio con datos oficiales del aplicativo: participación de la Alcaldía 2023 (escrutinio), estrato
+ *  declarado en el CNPV 2018 y los puestos con más censo 2026. Indecisos y voto volátil: sin información. */
+async function perfilOficialTerritorio(nombre: string): Promise<HeatmapVoterProfile> {
+  const norm = (x: string) => x.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+  const entrada = Object.entries(INDICE_TERRITORIOS as Record<string, { dane: string; nombre: string }>).find(([, m]) => norm(m.nombre) === norm(nombre));
+  if (!entrada) return { highDensityZones: [], undecidedYouthPercentage: null, voterTurnoutExpected: null, swingVotersPotential: null, socioeconomicStrataFocus: 'Sin información para este territorio.', fuente: 'Sin datos cargados' };
+  const [muniId, m] = entrada;
+  const r = getResultado2023(m.dane);
+  await cargarEconomia(m.dane).catch(() => false);
+  const t = territorioFicha(muniId);
+  const e = t ? economia(t) : null;
+  const tot = e ? e.estratos.slice(0, 6).reduce((a, b) => a + b, 0) : 0;
+  const estratos = e && tot ? e.estratos.slice(0, 6).map((v, i) => [i + 1, (100 * v) / tot] as const).filter(([, v]) => v >= 15).map(([k, v]) => `estrato ${k} (${v.toFixed(0)} %)`).join(', ') : '';
+  const puestos = await cargarPuestosMunicipio(m.nombre);
+  return {
+    highDensityZones: puestos.slice(0, 3).map((x) => `${x.puesto} (${x.total.toLocaleString('es-CO')} habilitados)`),
+    undecidedYouthPercentage: null,
+    voterTurnoutExpected: r ? Math.round(r.alcaldia.participacion * 10) / 10 : null,
+    swingVotersPotential: null,
+    socioeconomicStrataFocus: estratos ? `Viviendas por estrato declarado (CNPV 2018): ${estratos}` : 'Sin información de estrato.',
+    fuente: 'Registraduría (escrutinio Alcaldía 2023, censo 2026 por puesto) y DANE (CNPV 2018). Indecisos y voto volátil: sin información (no hay encuesta cargada).',
+  };
+}
+
+async function cargarPuestosMunicipio(nombre: string): Promise<{ puesto: string; total: number }[]> {
+  try {
+    const mm = getMunicipioConPuestos(nombre);
+    if (!mm) return [];
+    return [...await loadPuestosMunicipio(mm)].sort((a, b) => b.total - a.total);
+  } catch { return []; }
+}
 
 export class HolisticAdvertisingIntelligenceService {
   /**
@@ -310,28 +228,8 @@ export class HolisticAdvertisingIntelligenceService {
   ): Promise<TerritoryGeopoliticalIntelligence> {
     const cleanTarget = this.normalizeText(territoryName);
 
-    // Mapear el nombre a una clave conocida en TERRITORY_HEATMAP_REGISTRY
-    const registryKey = Object.keys(TERRITORY_HEATMAP_REGISTRY).find(
-      k => this.normalizeText(k) === cleanTarget
-    );
-
-    const normalizedTerritory = registryKey 
-      ? registryKey 
-      : (cleanTarget.includes('medellin') 
-          ? 'Medellín' 
-          : (cleanTarget.includes('rionegro') 
-              ? 'Rionegro' 
-              : (cleanTarget.includes('bogota') 
-                  ? 'Bogotá D.C.' 
-                  : territoryName)));
-
-    const heatmapProfile = TERRITORY_HEATMAP_REGISTRY[normalizedTerritory] || {
-      highDensityZones: [`Cabecera y Centros Urbanos Estratégicos de ${normalizedTerritory}`],
-      undecidedYouthPercentage: 42.0,
-      socioeconomicStrataFocus: 'Población Multiestrato y Emprendedores Locales',
-      voterTurnoutExpected: 53.5,
-      swingVotersPotential: 34.0
-    };
+    const normalizedTerritory = cleanTarget.includes('medellin') ? 'Medellín' : cleanTarget.includes('rionegro') ? 'Rionegro' : cleanTarget.includes('bogota') ? 'Bogotá D.C.' : territoryName;
+    const heatmapProfile = await perfilOficialTerritorio(normalizedTerritory);
 
     const dominantHouse = this.findDominantHouseForTerritory(normalizedTerritory);
     const competingHouses = this.findCompetingHouses(normalizedTerritory, dominantHouse?.id);
@@ -613,7 +511,7 @@ export class HolisticAdvertisingIntelligenceService {
     // Obtener censo oficial
     const munCensus = getMunicipalCensus(territory, 'antioquia');
     const depCensus = !munCensus ? getDepartmentCensus(territory) : undefined;
-    const censusTotal = munCensus?.total || depCensus?.total || 100_000;
+    const censusTotal = munCensus?.total || depCensus?.total || 0;
 
     // Tasa de penetración digital: 78% en áreas metropolitanas / capitales, 54% en el resto
     const isMetropolitan = [
@@ -622,11 +520,11 @@ export class HolisticAdvertisingIntelligenceService {
       'cali', 'barranquilla', 'bucaramanga', 'cartagena', 'pereira', 'manizales'
     ].some(m => clean.includes(m));
 
-    const penetrationRate = isMetropolitan ? 0.78 : 0.54;
+    const penetrationRate = isMetropolitan ? 0.78 : 0.54; // SUPUESTO de referencia (no medido)
     const effectiveAudience = Math.max(1_000, Math.round(censusTotal * penetrationRate));
 
     // Parámetros de mercado publicitario colombiano
-    const cpmCOP = 3_850; // Costo por mil impresiones promedio ponderado Meta + TikTok
+    const cpmCOP = 3_850; // SUPUESTO de referencia: CPM promedio Meta + TikTok (no medido para esta campaña)
     const optimalFrequency = 3.8; // Ventana óptima de persuasión (Gerber & Green 2011)
 
     // Presupuesto techo para alcanzar 3.8 impactos por votante digital
@@ -641,7 +539,8 @@ export class HolisticAdvertisingIntelligenceService {
         saturationState: 'optimo',
         marginalEfficiencyFactor: 1.0,
         wastedSpendCOP: 0,
-        reallocationAdvice: 'Define un presupuesto de pauta para evaluar la saturación territorial.'
+        reallocationAdvice: 'Define un presupuesto de pauta para evaluar la saturación territorial.',
+        supuestos: SUPUESTOS_PAUTA
       };
     }
 
@@ -678,7 +577,8 @@ export class HolisticAdvertisingIntelligenceService {
       saturationState,
       marginalEfficiencyFactor,
       wastedSpendCOP,
-      reallocationAdvice
+      reallocationAdvice,
+      supuestos: SUPUESTOS_PAUTA
     };
   }
 

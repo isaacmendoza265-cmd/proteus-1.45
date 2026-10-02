@@ -233,6 +233,17 @@ export function libroEnTexto(tipo: TipoPieza, reglasMarco?: string): string {
   ].join('\n');
 }
 
+/** El libro como parte del marco (Capa 3 provisional): principios, escala y todas las dimensiones, sin la orden de JSON */
+export function libroParaMarco(): string {
+  return [
+    `LIBRO DE REGLAS DE PIEZAS v${LIBRO.version} (Capa 3 provisional del marco: cómo se evalúa y se hace una pieza de comunicación)`,
+    'Principios:', ...PRINCIPIOS.map((p) => `${p.id}. ${p.titulo}: ${p.regla}`),
+    'Escala:', ...Object.entries(ESCALA).map(([k, v]) => `${k} = ${v}`),
+    'Dimensiones y criterios:',
+    ...DIMENSIONES.flatMap((d) => [`[${d.id}] ${d.nombre} (aplica a ${d.aplica.join(', ')}): ${d.pregunta}`, ...d.criterios.map((c) => `  - ${c.nombre}: mira ${c.mirar} 1 = ${c.ancla1} 3 = ${c.ancla3} 5 = ${c.ancla5}`)]),
+  ].join('\n');
+}
+
 /** La instrucción de cada análisis: identidad + contexto de la pieza + mediciones de Proteus */
 export function instruccionAnalisis(args: { identidad: IdentidadCandidato; tipo: TipoPieza; canal?: string; propia: boolean; contexto?: string; mediciones?: string[] }): string {
   return [

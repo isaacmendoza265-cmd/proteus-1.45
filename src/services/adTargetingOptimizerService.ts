@@ -45,11 +45,12 @@ export class AdTargetingOptimizerService {
    */
   static async generateCreativesWithAI(
     profile: AdvertisingResonanceProfile,
-    candidateName: string = 'Isaac Mendoza',
+    candidateName: string = 'el candidato del perfil',
     territoryName: string = 'Antioquia'
   ): Promise<GeneratedCreativeSet> {
     const prompt = `
 Eres el Director de Publicidad Electoral y Neuro-Copywriter de la campaña de ${candidateName} en ${territoryName}.
+Usa la voz, los ejes, la postura y los límites del PERFIL DEL CANDIDATO; ancla cada pieza en 1 o 2 datos de los DATOS DEL APLICATIVO de la unidad (con su año) y respeta el marco (frases prohibidas, regla 9). No inventes cifras.
 Tu objetivo es MAXIMIZAR LA EFICACIA PUBLICITARIA para el siguiente segmento de votantes:
 SEGMENTO: ${profile.name} (${profile.description})
 CANAL PRIMARIO: ${profile.primaryChannel}
@@ -85,7 +86,8 @@ Responde ÚNICAMENTE con el bloque JSON válido, sin introducciones ni marcas ma
 
     try {
       const responseText = await callGeminiApi({
-        promptText: prompt
+        promptText: prompt,
+        proteus: { tarea: 'redactar' },
       });
 
       // Parse JSON from response
@@ -93,27 +95,8 @@ Responde ÚNICAMENTE con el bloque JSON válido, sin introducciones ni marcas ma
       const parsed: GeneratedCreativeSet = JSON.parse(cleanJson);
       return parsed;
     } catch (error) {
-      console.warn("Fallback local para creatividades publicitarias:", error);
-      // Fallback estático de alta calidad basado en el catálogo del perfil
-      return {
-        videoReel: {
-          hookSeconds0to2: profile.emotionalHook,
-          coreMessageSeconds3to10: profile.sampleCopyVariantA,
-          callToActionSeconds11to15: profile.callToAction,
-          onScreenText: profile.powerKeywords.slice(0, 3).join(' • ').toUpperCase(),
-          audioMoodSuggestion: profile.category === 'Joven' ? 'Beat dinámico Lo-Fi / Synthwave' : 'Música acústica inspiracional'
-        },
-        whatsAppP2P: {
-          senderGreeting: `¡Hola vecina/o! Te comparto esto porque sé lo mucho que te importa el futuro de nuestra comunidad:`,
-          bodyText: `${profile.sampleCopyVariantB}\n\nCon ${candidateName} tenemos una propuesta real y sin ataduras para respaldar a ${profile.name}.`,
-          sharePrompt: `Reenvíalo a las personas de tu cuadra para que este domingo votemos con decisión.`
-        },
-        outdoorBillboard: {
-          headlineMax7Words: `${profile.powerKeywords[0]} para ${territoryName}: ${candidateName}`,
-          subheadline: profile.sampleCopyVariantA.slice(0, 70) + '...',
-          visualArtDirection: `Foto de ${candidateName} en territorio dialogando con integrantes de ${profile.name}, luz natural cálida.`
-        }
-      };
+      // Sin respaldo estático: antes devolvía textos del catálogo como si los hubiera escrito la IA
+      throw new Error(formatAiError(error));
     }
   }
 }
