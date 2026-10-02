@@ -3,8 +3,8 @@
 - **Fecha:** 2-oct-2026. **Autor:** Claude, sesión de Cowork.
 - **Alcance:** 49 archivos `.ts` de `src/data/` que no genera ningún script de `scripts/`, más 4 tablas metidas dentro de servicios.
 - **Contenido completo:** dos archivos, entregados aparte y fuera del repositorio.
-  - `datos_escritos_a_mano.xlsx`: 64 hojas, una por tabla exportada, con 2.352 filas en total.
-  - `datos_escritos_a_mano_fuentes.zip`: los `.ts` originales.
+  - `datos_escritos_a_mano.xlsx`: 62 hojas, una por tabla exportada, con 2.318 filas en total, más un índice con el veredicto de cada archivo. Se exportó del código ya sin cédulas.
+  - `datos_escritos_a_mano_fuentes.zip`: los `.ts` de `src/data/` como están hoy en `main`, más los 4 servicios que tenían tablas internas en su versión anterior (`cc07d6f`), para ver lo que se quitó.
 - **Método:** cada tabla se cruzó con los datos oficiales que el aplicativo ya tiene. La prueba se corrió con vitest para poder usar los cargadores de la app.
   - DANE: proyección 2026 y NBI 2018 (`src/data/dane/antioquiaDane.json`), y CNPV 2018 por manzana sumado a cada comuna.
   - Registraduría: censo electoral 2026, escrutinio de la Alcaldía 2023 y resultados por puesto.
