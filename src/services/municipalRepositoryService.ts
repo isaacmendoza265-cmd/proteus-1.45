@@ -19,7 +19,6 @@ import {
   CouncilPartySeat,
   RunnerUpCandidate
 } from '../data/antioquia125MunicipalitiesMasterData';
-import { callGeminiApi } from './geminiService';
 import { CENSUS_SOURCE_LABEL, formatCensus, getDepartmentCensus, getMunicipalCensus } from './electoralCensusService';
 
 export type { UnifiedMunicipalityRecord, CouncilPartySeat, RunnerUpCandidate };
@@ -151,7 +150,7 @@ class MunicipalRepositoryRegistry {
 
     const councilSummary = muni.councilSeats && muni.councilSeats.length > 0
       ? muni.councilSeats.map((c) => `${c.party} (${c.seats} curules)`).join(', ')
-      : 'Bancadas multipartidistas';
+      : 'Sin información';
 
     const runnerUpText = muni.runnerUp
       ? `Segundo lugar: ${muni.runnerUp.name} (${muni.runnerUp.party}, ${muni.runnerUp.votes?.toLocaleString() || 'N/D'} votos, ${muni.runnerUp.percentageValid || 'N/D'}%)`
@@ -162,7 +161,7 @@ class MunicipalRepositoryRegistry {
       : '';
 
     return `
-[FICHA TERRITORIAL OFICIAL REPOSITORIO PROTEUS 1.2]:
+[FICHA AUXILIAR DEL REPOSITORIO MUNICIPAL (población, NBI, censo y alcalde copian lo oficial; riesgo, seguridad, problemas y oportunidades son textos sin verificar, en parte plantillas. Los datos oficiales completos van en la macrofuente A y prevalecen)]:
 - Municipio: ${muni.name} (Código DIVIPOLA DANE: ${muni.daneCode})
 - Departamento: ${muni.department} | Subregión: ${muni.subregion} (Categoría: ${muni.category})
 - Población Oficial DANE: ${muni.population.toLocaleString()} habitantes
@@ -174,47 +173,18 @@ class MunicipalRepositoryRegistry {
   ${muni.votesMayor ? `Votación: ${muni.votesMayor.toLocaleString()} votos (${muni.percentageValidMayor}%)` : ''}
   ${runnerUpText ? `${runnerUpText}` : ''}
   ${contactText ? `${contactText}` : ''}
-- Bancadas del Concejo Municipal (${muni.totalCouncilSeats || 11} Curules): ${councilSummary}
-- Nivel de Riesgo Operativo: ${muni.riskLevel}
-- Tasa de Homicidios: ${muni.securityDynamics?.homicideRate || 'Normal subregional'}
-- Extorsión y Delitos: ${muni.securityDynamics?.extortionRisk || 'Moderado'}
-- Actores Armados / Presencia: ${muni.securityDynamics?.armedPresence || 'Bajo control de la fuerza pública'}
-- Vocaciones Económicas Principales: ${muni.economicSectors?.join(', ') || 'Agropecuario y comercio'}
-- Problemáticas prioritarias de la comunidad: ${muni.keyProblems?.join('; ') || 'Infraestructura y empleo'}
-- Oportunidades estratégicas (Campaña / Gobernanza): ${muni.strategicOpportunities?.join('; ') || 'Desarrollo regional'}
+- Bancadas del Concejo Municipal${muni.totalCouncilSeats ? ` (${muni.totalCouncilSeats} curules)` : ''}: ${councilSummary}
+- Nivel de riesgo (auxiliar, sin método): ${muni.riskLevel}
+- Tasa de Homicidios: ${muni.securityDynamics?.homicideRate || 'Sin información'}
+- Extorsión y Delitos: ${muni.securityDynamics?.extortionRisk || 'Sin información'}
+- Actores Armados / Presencia: ${muni.securityDynamics?.armedPresence || 'Sin información'}
+- Vocaciones Económicas Principales: ${muni.economicSectors?.join(', ') || 'Sin información'}
+- Problemáticas prioritarias de la comunidad: ${muni.keyProblems?.join('; ') || 'Sin información'}
+- Oportunidades estratégicas (Campaña / Gobernanza): ${muni.strategicOpportunities?.join('; ') || 'Sin información'}
     `.trim();
   }
 }
 
 export const municipalRepository = new MunicipalRepositoryRegistry();
 
-/**
- * Enhanced Gemini query with automatic municipal context injection and optional Google Search
- */
-export async function queryGeminiWithMunicipalContext(options: {
-  municipalityIdOrName: string;
-  userPrompt: string;
-  candidateProfileContext?: string;
-  useGoogleSearch?: boolean;
-}): Promise<{ text: string; contextUsed: string }> {
-  const contextBlock = municipalRepository.buildContextPrompt(options.municipalityIdOrName);
-  
-  const candidateContext = options.candidateProfileContext 
-    ? `\n\n[PERFIL DEL CANDIDATO ACTIVO]:\n${options.candidateProfileContext}`
-    : '';
-
-  const systemInstruction = `Eres el Agente Estratégico de Proyecto Proteus.
-Usa obligatoriamente los datos territoriales oficiales provistos en la FICHA TERRITORIAL del Repositorio Proteus.
-Si el usuario requiere contrastar con eventos recientes en internet, mantén siempre la consistencia con las cifras oficiales de población, censo electoral y gobierno local aquí consignadas.
-Todos los análisis, recomendaciones o briefs deben ser hiper-específicos al municipio consultado y alineados con el perfil del candidato.`;
-
-  const fullPrompt = `${contextBlock}${candidateContext}\n\n[CONSULTA DEL USUARIO]:\n${options.userPrompt}`;
-
-  const text = await callGeminiApi({
-    promptText: fullPrompt,
-    systemInstruction,
-    useSearch: options.useGoogleSearch ?? true
-  });
-
-  return { text, contextUsed: contextBlock };
-}
+// (oct-2026) Se quitó queryGeminiWithMunicipalContext: nadie la usaba y presentaba la ficha como "datos oficiales".

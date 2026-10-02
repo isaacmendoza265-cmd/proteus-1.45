@@ -31,7 +31,7 @@ import {
 } from 'lucide-react';
 import { jsPDF } from 'jspdf';
 import { CandidateProfile } from '../../components/CandidateProfileManager';
-import { callGeminiApi } from '../../services/geminiService';
+import { callGeminiApi, formatAiError } from '../../services/geminiService';
 import {
   TerritoryHierarchyService,
   TerritorialScale,
@@ -44,7 +44,7 @@ import {
   VoterAudienceGroup,
   VoterAudienceCategory
 } from '../../data/voterAudienceCatalog';
-import { useActiveTerritory, activeTerritoryService } from '../../services/activeTerritoryContextService';
+import { useActiveTerritory, activeTerritoryService, seleccionDeEstado } from '../../services/activeTerritoryContextService';
 import { NATIONAL_CENSUS, formatCensus } from '../../services/electoralCensusService';
 
 interface CampaignContentDirectorViewProps {
@@ -256,31 +256,31 @@ export const CampaignContentDirectorView: React.FC<CampaignContentDirectorViewPr
           ? 'ENFOQUE DE GANANCIA Y ESPERANZA (Prospect Theory - Gain Framing): Centrado en oportunidades de futuro, crecimiento económico, bienestar familiar, optimismo movilizador y conquistas colectivas.'
           : cognitiveFraming === 'loss-protection'
           ? 'ENFOQUE DE PÉRDIDA Y PROTECCIÓN (Prospect Theory - Loss Aversion Framing): Centrado en lo que las familias pueden perder si gana la improvisación (seguridad, empleo, libertad, patrimonio), apelando a la necesidad de blindaje y defensa firme.'
-          : 'ENFOQUE DE EQUILIBRIO PROSPECTIVO (Diagnóstico de Riesgo + Vía de Esperanza): Contraste cognitivo inmediato entre el costo de la inacción (pérdida) y la certeza del alivio y la victoria con Isaac Mendoza (ganancia).';
+          : `ENFOQUE DE EQUILIBRIO PROSPECTIVO (Diagnóstico de Riesgo + Vía de Esperanza): Contraste cognitivo inmediato entre el costo de la inacción (pérdida) y la certeza del alivio y la victoria con ${candidateProfile.nombre || 'el candidato del perfil'} (ganancia).`;
 
       const prompt = `Actúa como Director Creativo y Estratega de Campaña Principal de Proyecto Proteus.
 
-[CONTEXTO TERRITORIAL DETALLADO - ESCALA ${currentTerritory.scale.toUpperCase()}]:
+[CONTEXTO TERRITORIAL DE ESTA HERRAMIENTA - ESCALA ${currentTerritory.scale.toUpperCase()}. Censo, población, NBI, alcalde y concejo son oficiales cuando vienen del territorio activo; los textos de problemas, oportunidades, seguridad y perfil estratégico son fichas AUXILIARES sin verificar. Los datos completos y oficiales van en la macrofuente A y prevalecen.]:
 - Territorio Seleccionado: ${currentTerritory.fullName}
 - Nivel de Escala: ${currentTerritory.scale}
 - Censo Electoral: ${currentTerritory.electoralCensus ? currentTerritory.electoralCensus.toLocaleString('es-CO') + ' votantes' : (activeTerritory.electoralCensus ? activeTerritory.electoralCensus.toLocaleString('es-CO') + ' votantes' : 'sin dato oficial para esta escala')}
-- Población Estimada: ${currentTerritory.population ? currentTerritory.population.toLocaleString('es-CO') + ' habitantes' : (activeTerritory.population ? activeTerritory.population.toLocaleString('es-CO') + ' habitantes' : 'Nacional')}
-- Índice NBI / Pobreza: ${currentTerritory.nbiPercentage ? currentTerritory.nbiPercentage + '%' : (activeTerritory.nbiPercentage ? activeTerritory.nbiPercentage + '%' : 'Variable')}
-- Estratificación Predominante: ${currentTerritory.predominantStratum || activeTerritory.predominantStratum || 'Mixta'}
-- Autoridad Local / Alcalde 2024-2027: ${activeTerritory.electedMayor || 'Administración Municipal'} (${activeTerritory.winnerParty || 'Coalición'})
-- Bancadas del Concejo: ${activeTerritory.councilSummary || 'Multipartidista'}
+- Población Estimada: ${currentTerritory.population ? currentTerritory.population.toLocaleString('es-CO') + ' habitantes' : (activeTerritory.population ? activeTerritory.population.toLocaleString('es-CO') + ' habitantes' : 'Sin información')}
+- Índice NBI / Pobreza: ${currentTerritory.nbiPercentage ? currentTerritory.nbiPercentage + '%' : (activeTerritory.nbiPercentage ? activeTerritory.nbiPercentage + '%' : 'Sin información')}
+- Estratificación Predominante: ${currentTerritory.predominantStratum || activeTerritory.predominantStratum || 'Sin información'}
+- Autoridad Local / Alcalde 2024-2027: ${activeTerritory.electedMayor || 'Sin información'}${activeTerritory.winnerParty ? ` (${activeTerritory.winnerParty})` : ''}
+- Bancadas del Concejo: ${activeTerritory.councilSummary || 'Sin información'}
 - Dinámica de Seguridad y Convivencia:
-  * Riesgo de Extorsión a Negocios: ${activeTerritory.securityDynamics.extortionRisk || 'Monitoreo territorial'}
-  * Bandas y Presencia Delincuencial: ${activeTerritory.securityDynamics.armedPresence || 'Vigilancia institucional'}
-  * Homicidios: ${activeTerritory.securityDynamics.homicideRate || 'Normal subregional'}
-- Sectores Económicos: ${activeTerritory.economicSectors.length > 0 ? activeTerritory.economicSectors.join(', ') : 'Comercio, servicios y producción local'}
+  * Riesgo de Extorsión a Negocios: ${activeTerritory.securityDynamics.extortionRisk || 'Sin información'}
+  * Bandas y Presencia Delincuencial: ${activeTerritory.securityDynamics.armedPresence || 'Sin información'}
+  * Homicidios: ${activeTerritory.securityDynamics.homicideRate || 'Sin información'}
+- Sectores Económicos: ${activeTerritory.economicSectors.length > 0 ? activeTerritory.economicSectors.join(', ') : 'Sin información'}
 - Problemáticas Territoriales Clave:
 ${(activeTerritory.keyProblems.length > 0 ? activeTerritory.keyProblems : currentTerritory.keyIssues).map(issue => `  * ${issue}`).join('\n')}
 - Oportunidades Estratégicas y Propuestas Locales:
 ${(activeTerritory.strategicOpportunities.length > 0 ? activeTerritory.strategicOpportunities : [currentTerritory.strategicContext]).map(opp => `  * ${opp}`).join('\n')}
 - Perfil Estratégico del Territorio: ${currentTerritory.strategicContext}
 
-[AUDIENCIA OBJETIVO & SEGMENTO EXACTO]:
+[AUDIENCIA OBJETIVO (guía de referencia del catálogo: texto fijo, no medido en este territorio; los dolores son hipótesis)]:
 - Nombre del Segmento: ${activeAudience.name}
 - Categoría: ${activeAudience.categoryLabel}
 - Definición y Psicografía: ${activeAudience.description}
@@ -293,10 +293,10 @@ ${activeAudience.dominantPains.map(p => `  * ${p}`).join('\n')}
 
 [PERFIL DEL CANDIDATO]:
 - Nombre: ${candidateProfile.nombre}
-- Cargo de aspiración: ${candidateProfile.afiliacionPartidista || 'Candidato Líder'}
-- Tono narrativo de base: ${candidateProfile.tonoNarrativo || 'Firme y transparente'}
-- Estilo comunicativo: ${candidateProfile.estiloComunicacion || 'Asertivo y directo'}
-- Fototipo y Colorimetría sugerida: ${candidateProfile.colorimetryData?.estacionCromatica || 'Contraste Alto'}
+- Partido: ${candidateProfile.afiliacionPartidista || 'Sin definir en el perfil'}
+- Tono narrativo de base: ${candidateProfile.tonoNarrativo || 'Sin definir en el perfil'}
+- Estilo comunicativo: ${candidateProfile.estiloComunicacion || 'Sin definir en el perfil'}
+- Colorimetría: ${candidateProfile.colorimetryData?.estacionCromatica || 'Sin definir en el perfil'}
 
 [REQUERIMIENTO DEL BRIEF]:
 - Formato: ${contentFormat}
@@ -307,23 +307,24 @@ ${activeAudience.dominantPains.map(p => `  * ${p}`).join('\n')}
 Diseña un BRIEF ESTRATÉGICO DE ALTO IMPACTO estructurado exactamente en los siguientes 7 puntos:
 1. OBJETIVO DE LA PIEZA: Qué queremos que ${activeAudience.name} en ${currentTerritory.name} piense, sienta y haga tras escucharla (calibrado según el sesgo cognitivo ${cognitiveFraming}).
 2. EL GANCHO (HOOK DE LOS PRIMEROS 3-5 SEGUNDOS): Frase demoledora e irresistible dirigida directamente a los dolores de ${activeAudience.name} en ${currentTerritory.name}.
-3. DATOS TERRITORIALES HIPERLOCALES: Cita al menos 2 cifras reales del territorio (censo electoral, población DANE, NBI, alcalde actual o problema de extorsión/seguridad citado arriba) para demostrar que el candidato conoce el territorio como la palma de su mano.
+3. DATOS TERRITORIALES HIPERLOCALES: Cita 2 cifras oficiales de la macrofuente A (con su fuente) que sostengan el mensaje. No uses cifras de las fichas auxiliares como si fueran oficiales.
 4. NÚCLEO DEL MENSAJE / PROPUESTA VALOR: La solución clara y creíble que ${candidateProfile.nombre} propone para este segmento sin rodeos.
 5. LLAMADO A LA ACCIÓN (CTA): Convocatoria específica adaptada a los canales del segmento (${activeAudience.effectiveChannels[0] || 'WhatsApp'}).
 6. RECOMENDACIONES DE PUESTA EN ESCENA & SEMIÓTICA:
-   - Vestuario y colorimetría sugerida acorde al fototipo de ${candidateProfile.nombre}.
+   - Vestuario y color según la identidad visual del perfil (si no está definida, dilo).
    - Lenguaje corporal y encuadre recomendado.
 7. PREGUNTA INCÓMODA Y CÓMO NOQUEARLA: Anticipa la objeción más difícil que ${activeAudience.name} le haría al candidato y dale la respuesta exacta en 20 segundos.`;
 
       const response = await callGeminiApi({
         promptText: prompt,
-        systemInstruction: 'Eres el Director de Creación de Contenido de Proteus. Redacta briefs estratégicos accionables, de tono demoledor, profesionales, sin lugares comunes y con estricto anclaje microterritorial y psicográfico.',
-        useSearch: true
+        systemInstruction: 'Eres el Director de Creación de Contenido de Proteus. Redacta briefs estratégicos accionables, profesionales, sin lugares comunes y anclados en los datos del territorio.',
+        useSearch: true,
+        proteus: { tarea: 'brief', seleccion: seleccionDeEstado(activeTerritory) },
       });
 
       setGeneratedBrief(response);
     } catch (err: any) {
-      setGeneratedBrief('Error al generar el brief con la inteligencia de Gemini. Por favor verifica la conexión e intenta de nuevo.');
+      setGeneratedBrief(`No se pudo generar el brief: ${formatAiError(err)}`);
     } finally {
       setIsGenerating(false);
     }
@@ -395,7 +396,7 @@ Diseña un BRIEF ESTRATÉGICO DE ALTO IMPACTO estructurado exactamente en los si
                 Contenido
               </span>
               <span className="px-2.5 py-0.5 rounded-md bg-[var(--c-ok-soft)] text-[var(--c-ok)] text-xs font-bold">
-                5 Escalas Territoriales + 40 Segmentos
+                5 escalas territoriales + 23 segmentos de referencia
               </span>
             </div>
             <h1 className="font-titulo m-0 text-2xl lg:text-[28px] leading-tight font-medium">

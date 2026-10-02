@@ -20,7 +20,9 @@ import {
 } from 'lucide-react';
 import { PROTEUS_AGENT_TEAM, ProteusAgentDefinition } from '../../data/agentic/proteusAgentTeam';
 import { municipalRepository } from '../../services/municipalRepositoryService';
-import { callGeminiApi } from '../../services/geminiService';
+import { callGeminiApi, formatAiError } from '../../services/geminiService';
+import { seleccionDeDane } from '../../services/ia/macrofuentes';
+import { getMunicipalCensus } from '../../services/electoralCensusService';
 import { CandidateProfile } from '../../components/CandidateProfileManager';
 
 interface AgentTeamConsoleViewProps {
@@ -44,23 +46,26 @@ export const AgentTeamConsoleView: React.FC<AgentTeamConsoleViewProps> = ({
 
     try {
       const muniContext = municipalRepository.buildContextPrompt(targetMuniQuery);
+      const dane = getMunicipalCensus(targetMuniQuery)?.dane ?? null;
+      // Tarea según el rol: redacción para el director creativo, evaluación para multimedia, análisis para el resto
+      const tarea = activeAgent.category === 'Creación de Contenido' ? 'redactar' : activeAgent.category === 'Analítica Multimedia' ? 'evaluar' : activeAgent.category === 'Sincronización & Search' ? 'investigar' : 'analizar';
 
       const systemInstruction = `Eres ${activeAgent.name} (${activeAgent.codeName}), integrante de la cuadrilla de agentes autónomos de Proyecto Proteus.
 Misión asignada: ${activeAgent.mission}
 ${muniContext}
 
-Candidato Activo: ${candidateProfile.nombre} (${candidateProfile.afiliacionPartidista || 'Candidato Líder'}).
-Enfoque Narrativo: ${candidateProfile.tonoNarrativo || 'Firmeza y honestidad'}.`;
+Candidato activo: ${candidateProfile.nombre} (${candidateProfile.afiliacionPartidista || 'partido sin definir en el perfil'}). Su perfil completo está en la macrofuente B.`;
 
       const response = await callGeminiApi({
-        promptText: `[MISIÓN OPERATIVA SOLICITADA POR EL USUARIO]:\n${agentTaskPrompt}\n\nEjecuta tu rol de ${activeAgent.name} entregando un resultado ejecutivo, estructurado y con cifras locales concretas.`,
+        promptText: `[MISIÓN OPERATIVA SOLICITADA POR EL USUARIO]:\n${agentTaskPrompt}\n\nEjecuta tu rol de ${activeAgent.name} entregando un resultado ejecutivo y estructurado. Usa solo cifras de los datos (macrofuente A) o de la búsqueda con su fuente; no inventes.`,
         systemInstruction,
-        useSearch: true
+        useSearch: true,
+        proteus: { tarea, ...(dane ? { seleccion: seleccionDeDane(dane) } : {}) },
       });
 
       setAgentExecutionLog(response);
     } catch (e: any) {
-      setAgentExecutionLog(`Error en la ejecución del agente ${activeAgent.codeName}. Por favor verifica la conexión.`);
+      setAgentExecutionLog(`No se pudo ejecutar ${activeAgent.codeName}: ${formatAiError(e)}`);
     } finally {
       setIsRunningTask(false);
     }
@@ -78,7 +83,7 @@ Enfoque Narrativo: ${candidateProfile.tonoNarrativo || 'Firmeza y honestidad'}.`
                 Cuadrilla de Agentes IA Especializados
               </span>
               <span className="px-2.5 py-0.5 rounded-md text-xs font-bold bg-[var(--c-border)] text-[var(--c-muted)]">
-                5 Agentes Autónomos
+                5 roles
               </span>
             </div>
             <h1 className="font-titulo text-2xl lg:text-[28px] leading-tight font-medium flex items-center gap-3">
@@ -92,12 +97,9 @@ Enfoque Narrativo: ${candidateProfile.tonoNarrativo || 'Firmeza y honestidad'}.`
           {/* Métricas rápidas */}
           <div className="flex items-center gap-3 shrink-0">
             <div className="p-3 rounded-xl bg-[var(--c-sunken)] text-right">
-              <div className="text-xs uppercase text-[var(--c-muted)] font-bold">Estado de Cuadrilla</div>
-              <div className="text-sm font-bold text-[var(--c-ok)] mt-0.5 flex items-center gap-1.5 justify-end">
-                <span className="w-2 h-2 rounded-full bg-[var(--c-ok)]" />
-                5 Agentes Operativos
-              </div>
-              <div className="text-xs text-[var(--c-muted)]">Consola Proteus 1.2</div>
+              <div className="text-xs uppercase text-[var(--c-muted)] font-bold">Cómo funciona</div>
+              <div className="text-sm font-bold mt-0.5">5 roles para Gemini</div>
+              <div className="text-xs text-[var(--c-muted)]">Cada rol es una instrucción; no son procesos en marcha</div>
             </div>
           </div>
         </div>
@@ -125,9 +127,6 @@ Enfoque Narrativo: ${candidateProfile.tonoNarrativo || 'Firmeza y honestidad'}.`
                   {agent.id === 'agent-media-vision' && <Video className="w-4 h-4" />}
                   {agent.id === 'agent-sync-nexus' && <HardDrive className="w-4 h-4" />}
                 </div>
-                <span className="text-xs px-2 py-0.5 rounded-md bg-[var(--c-border)] text-[var(--c-muted)] font-bold">
-                  v{agent.version}
-                </span>
               </div>
               <div className="mt-3">
                 <div className="text-xs text-[var(--c-accent)] font-bold uppercase truncate">
@@ -192,7 +191,7 @@ Enfoque Narrativo: ${candidateProfile.tonoNarrativo || 'Firmeza y honestidad'}.`
             </div>
 
             <div>
-              <div className="text-xs uppercase text-[var(--c-muted)] font-bold">Herramientas & APIs:</div>
+              <div className="text-xs uppercase text-[var(--c-muted)] font-bold">Herramientas descritas (rol de referencia; la ejecución es una sola llamada a Gemini con búsqueda):</div>
               <div className="flex flex-wrap gap-1 mt-1">
                 {activeAgent.toolsAndAPIs.map((t, i) => (
                   <span key={i} className="px-2 py-0.5 rounded-md bg-[var(--c-info-soft)] text-xs text-[var(--c-info)] font-medium">

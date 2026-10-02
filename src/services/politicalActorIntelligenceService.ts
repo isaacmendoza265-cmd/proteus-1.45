@@ -7,6 +7,17 @@
  */
 
 import { callGeminiApi, formatAiError } from './geminiService';
+import { getMunicipalCensus } from './electoralCensusService';
+import { perfilRegistrado } from './ia/registroPerfil';
+import type { SeleccionDossier } from './dossierTerritorialService';
+
+/** Unidad del municipio base del actor, para las macrofuentes (sin importar el motor completo aquí) */
+async function seleccionMunicipio(nombre: string): Promise<SeleccionDossier | undefined> {
+  const dane = getMunicipalCensus(nombre)?.dane;
+  if (!dane) return undefined;
+  const { seleccionDeDane } = await import('./ia/macrofuentes');
+  return seleccionDeDane(dane);
+}
 import { GraphNodeActor, PoliticalHouse, ActorOSINTReport } from '../data/politicalHouses/types';
 
 export class PoliticalActorIntelligenceService {
@@ -55,8 +66,9 @@ Devuelve la respuesta estrictamente en el siguiente formato JSON válido (sin te
       const rawResponse = await callGeminiApi({
         promptText: prompt,
         model: 'gemini-3.8-flash',
-        systemInstruction: 'Eres un analista de inteligencia OSINT y fuentes abiertas especializado en clanes y redes de poder electoral en Colombia. Devuelve siempre JSON estructurado.',
-        useSearch: true // Activa Google Search Grounding
+        systemInstruction: 'Eres un analista de fuentes abiertas especializado en redes de poder electoral en Colombia. Devuelve siempre JSON estructurado. Solo lo que encuentres en la búsqueda; lo que no encuentres, déjalo vacío.',
+        useSearch: true, // Activa Google Search Grounding
+        proteus: { tarea: 'investigar', seleccion: await seleccionMunicipio(actor.municipality) },
       });
 
       // Limpieza de formato markdown codeblocks
@@ -72,10 +84,11 @@ Devuelve la respuesta estrictamente en el siguiente formato JSON válido (sin te
         actorName: actor.name,
         houseName: actor.houseName,
         searchedAt: new Date().toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' }),
-        socialHandlesFound: parsed.socialHandles || [],
+        // "verified" solo lo puede afirmar una persona: lo que dice Gemini queda sin verificar
+        socialHandlesFound: (parsed.socialHandles || []).map((h: { platform: string; handleOrUrl: string }) => ({ ...h, verified: false })),
         recentHeadlines: parsed.recentHeadlines || [],
-        powerAssessment: parsed.powerAssessment || `${actor.name} ejerce liderazgo en ${actor.municipality} con articulación a ${actor.houseName}.`,
-        contradictionAnalysis: parsed.contradictionAnalysis || 'Tensión habitual entre la lealtad partidista estatutaria y los acuerdos transaccionales de gobierno.'
+        powerAssessment: parsed.powerAssessment || 'Sin dato: la búsqueda no lo devolvió.',
+        contradictionAnalysis: parsed.contradictionAnalysis || 'Sin dato: la búsqueda no lo devolvió.'
       };
     } catch (error) {
       console.warn('Error o fallback en búsqueda OSINT para:', actor.name, error);
@@ -83,13 +96,13 @@ Devuelve la respuesta estrictamente en el siguiente formato JSON válido (sin te
       // Fallback local enriquecido a partir de los datos maestros
       const fallbackSocials = [];
       if (actor.socialProfiles.xTwitter) {
-        fallbackSocials.push({ platform: 'X (Twitter)', handleOrUrl: actor.socialProfiles.xTwitter, verified: true });
+        fallbackSocials.push({ platform: 'X (Twitter)', handleOrUrl: actor.socialProfiles.xTwitter, verified: false });
       }
       if (actor.socialProfiles.facebook) {
-        fallbackSocials.push({ platform: 'Facebook', handleOrUrl: actor.socialProfiles.facebook, verified: true });
+        fallbackSocials.push({ platform: 'Facebook', handleOrUrl: actor.socialProfiles.facebook, verified: false });
       }
       if (actor.socialProfiles.instagram) {
-        fallbackSocials.push({ platform: 'Instagram', handleOrUrl: actor.socialProfiles.instagram, verified: true });
+        fallbackSocials.push({ platform: 'Instagram', handleOrUrl: actor.socialProfiles.instagram, verified: false });
       }
       if (fallbackSocials.length === 0) {
         fallbackSocials.push({
@@ -109,17 +122,12 @@ Devuelve la respuesta estrictamente en el siguiente formato JSON válido (sin te
         actorId: actor.id,
         actorName: actor.name,
         houseName: actor.houseName,
-        searchedAt: 'Base de Datos Proteus (Offline)',
+        // Sin búsqueda: solo lo que trae la ficha interna (AUXILIAR, sin verificar); nada de titulares de relleno
+        searchedAt: `Sin búsqueda (${formatAiError(error)}): ficha interna auxiliar, sin verificar`,
         socialHandlesFound: fallbackSocials,
-        recentHeadlines: fallbackNews.length > 0 ? fallbackNews : [
-          {
-            headline: `${actor.name} consolida estructura electoral en ${actor.municipality}`,
-            source: 'Registro Electoral Proteus',
-            dateOrSnippet: 'Seguimiento de bancadas locales y acuerdos de gobernabilidad.'
-          }
-        ],
-        powerAssessment: `${actor.name} opera en la esfera ${actor.sphere.toUpperCase()}, actuando como nodo de articulación entre ${actor.municipalAnchor} y ${actor.extramunicipalConnection}.`,
-        contradictionAnalysis: actor.dialecticalNotes || 'Disputa de visibilidad institucional y negociación de avales para los comicios legislativos.'
+        recentHeadlines: fallbackNews,
+        powerAssessment: `Ficha auxiliar: ${actor.name} opera en la esfera ${actor.sphere.toUpperCase()}, entre ${actor.municipalAnchor} y ${actor.extramunicipalConnection}.`,
+        contradictionAnalysis: actor.dialecticalNotes || 'Sin dato.'
       };
     }
   }
@@ -128,15 +136,16 @@ Devuelve la respuesta estrictamente en el siguiente formato JSON válido (sin te
    * Genera un brief dialéctico estratégico para que la campaña del candidato
    * sepa cómo aproximarse o competir frente a una Casa Política específica.
    */
-  public static async generateTacticalCampaignBrief(house: PoliticalHouse, candidateName: string = 'Isaac Mendoza'): Promise<string> {
+  public static async generateTacticalCampaignBrief(house: PoliticalHouse, candidateName: string = perfilRegistrado()?.nombre || 'el candidato del perfil'): Promise<string> {
     const prompt = `
-Genera un BRIEF TÁCTICO DE NEGOCIACIÓN Y DISPUTA ELECTORAL para la campaña de ${candidateName} frente a la siguiente Casa Política en Antioquia:
+Genera un BRIEF TÁCTICO DE NEGOCIACIÓN Y DISPUTA ELECTORAL para la campaña de ${candidateName} frente a la siguiente Casa Política en Antioquia.
+La ficha de la casa es AUXILIAR (tabla interna con fuentes de prensa sin verificar): preséntala así, y contrasta sus votos con los resultados oficiales de la macrofuente A. La postura del candidato frente a esta casa la decide su perfil (macrofuente B).
 
 - Casa Política: ${house.name}
 - Jefe Político: ${house.leader}
 - Cuartel General: ${house.headquarters}
 - Municipios Feudo: ${house.municipalitiesUnderInfluence.join(', ')}
-- Votos Totales Calculados: ${house.totalVotes2023.toLocaleString('es-CO')}
+- Votos 2023 según la ficha (auxiliar): ${house.totalVotes2023.toLocaleString('es-CO')}
 - Ideología / Enfoque: ${house.coreIdeology}
 - Tesis Oficial: ${house.dialecticalSummary.thesis}
 - Antítesis / Vulnerabilidades: ${house.dialecticalSummary.antithesis}
@@ -152,11 +161,13 @@ Estructura el informe en 3 secciones ejecutivas y directas:
         promptText: prompt,
         model: 'gemini-3.8-flash',
         systemInstruction: 'Eres el Director de Estrategia Electoral y Análisis Maquiavélico de Campaña en Proyecto Proteus. Respuestas tácticas, sin rodeos, orientadas a la victoria.',
-        useSearch: false
+        useSearch: false,
+        proteus: { tarea: 'brief', seleccion: await seleccionMunicipio(house.headquarters) },
       });
       return brief;
-    } catch (err: any) {
-      return `### Análisis Táctico para ${house.name}\n\n- **Vulnerabilidad Central**: ${house.dialecticalSummary.antithesis}\n- **Estrategia Recomendada**: Focalizar la persuasión en los votantes desencantados de ${house.headquarters}, contrastando el modelo clientelista tradicional con la propuesta de transformación y empleo productivo de ${candidateName}.`;
+    } catch (err: unknown) {
+      // Antes: una "estrategia recomendada" de texto fijo. Ahora se avisa.
+      return `No se pudo generar el brief con Gemini: ${formatAiError(err)}`;
     }
   }
 }

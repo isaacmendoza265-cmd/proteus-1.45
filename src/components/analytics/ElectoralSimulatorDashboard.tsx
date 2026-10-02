@@ -31,9 +31,12 @@ import {
   SimulatorParty 
 } from '../../services/electoralSimulatorService';
 import { callGeminiApi, formatAiError } from '../../services/geminiService';
+import { perfilRegistrado } from '../../services/ia/registroPerfil';
 import { TOTAL_CENSUS, formatCensusShort } from '../../services/electoralCensusService';
 
 export const ElectoralSimulatorDashboard: React.FC = () => {
+  // Nombre del perfil activo (antes: 'Isaac Mendoza' fijo)
+  const nombreCandidato = perfilRegistrado()?.nombre?.trim() || 'el candidato del perfil';
   const [turnoutPercent, setTurnoutPercent] = useState<number>(53.5);
   const [blankVotesPercent, setBlankVotesPercent] = useState<number>(6.5);
   const [parties, setParties] = useState<SimulatorParty[]>(ANTIOQUIA_CAMARA_2026_BASELINE.parties);
@@ -192,9 +195,9 @@ export const ElectoralSimulatorDashboard: React.FC = () => {
 
       const prompt = `Actúa como Director General de Estrategia Electoral y Operaciones Territoriales de Proyecto Proteus.
 
-[PARÁMETROS MATEMÁTICOS DE LA SIMULACIÓN ELECTORAL D'HONDT]:
+[ESCENARIO SIMULADO (D'Hondt). La participación, el voto en blanco y los votos por lista los ajusta el usuario; los votos de partida son un SUPUESTO de referencia escrito a mano, no el resultado de 2026. Las cifras del escenario no son datos: preséntalas como escenario.]:
 - Circunscripción: ${territoryName}
-- Censo Electoral: ${census.toLocaleString()} ciudadanos
+- Censo electoral (oficial, Registraduría): ${census.toLocaleString('es-CO')}
 - Participación Proyectada: ${simulation.turnoutPercentage}% (${simulation.totalVotesCast.toLocaleString()} sufragantes)
 - Umbral Legal Constitucional (${simulation.thresholdRule}): ${simulation.thresholdVotes.toLocaleString()} votos válidos
 - Cifra Repartidora Proyectada: ${simulation.cifraRepartidora.toLocaleString()} votos
@@ -202,11 +205,11 @@ export const ElectoralSimulatorDashboard: React.FC = () => {
 - Perseguidor Inmediato: "${simulation.marginalSeatInfo.runnerUpPartyName}"
 - DÉFICIT CRÍTICO PARA ARREBATAR O BLINDAR LA CURUL: ${simulation.marginalSeatInfo.votesNeededForRunnerUp.toLocaleString()} VOTOS EXACTOS
 
-[DISTRIBUCIÓN SUBREGIONAL DE LA META DE VOTOS]:
+[REPARTO SUBREGIONAL DE LA META (porcentajes fijos de referencia de esta herramienta, no medidos; contrástalos con los datos oficiales de la macrofuente A)]:
 ${subregionsSummary}
 
 [CANDIDATO Y EQUIPO]:
-- Candidato Líder: Isaac Mendoza
+- Candidato: ${nombreCandidato} (su perfil, voz y postura están en la macrofuente B)
 - Aplicativo: Proyecto Proteus 1.2 (Inteligencia Territorial y Micro-segmentación)
 
 Diseña un PLAN DE ACCIÓN ELECTORAL DE CHOQUE PARA CONQUISTAR LA CURUL MARGINAL estructurado en 4 secciones concretas y accionables:
@@ -221,8 +224,9 @@ Diseña un PLAN DE ACCIÓN ELECTORAL DE CHOQUE PARA CONQUISTAR LA CURUL MARGINAL
 
       const response = await callGeminiApi({
         promptText: prompt,
-        systemInstruction: 'Eres el Director de Estrategia Electoral de Proteus. Redacta planes tácticos rigurosos, matemáticamente anclados, ejecutables en territorio y sin generalidades vacías.',
-        useSearch: true
+        systemInstruction: 'Eres el Director de Estrategia Electoral de Proteus. Redacta planes tácticos ejecutables en territorio, anclados en el escenario y en los datos, sin generalidades vacías.',
+        useSearch: true,
+        proteus: { tarea: 'brief', seleccion: { subregion: null, muniId: null, comunaId: null, barrioId: null } },
       });
 
       setTacticalPlan(response);
@@ -432,7 +436,7 @@ Diseña un PLAN DE ACCIÓN ELECTORAL DE CHOQUE PARA CONQUISTAR LA CURUL MARGINAL
                 <span className="px-2 py-0.2 rounded-full bg-emerald-500/20 text-emerald-300 text-[9px] border border-emerald-400/30 font-mono">Activo</span>
               </div>
               <h3 className="text-base font-black text-white mt-0.5">
-                Plan Operativo de Conquista Territorial para Isaac Mendoza
+                Plan Operativo de Conquista Territorial para {nombreCandidato}
               </h3>
               <p className="text-xs text-slate-300 max-w-2xl mt-0.5">
                 Genera al instante un plan de choque con micro-metas de votación, argumentos de persuasión cognitiva y cronograma de despliegue territorial para conquistar los <strong className="text-amber-300">+{simulation.marginalSeatInfo.votesNeededForRunnerUp.toLocaleString()} votos</strong> faltantes.
@@ -577,7 +581,7 @@ Diseña un PLAN DE ACCIÓN ELECTORAL DE CHOQUE PARA CONQUISTAR LA CURUL MARGINAL
           {/* Party vote custom adjustment sliders */}
           <div className="pt-4 border-t border-white/10 space-y-3">
             <div className="text-xs font-bold text-white uppercase tracking-wider">
-              Ajuste de Votación Estimada por Lista:
+              Votos por lista (supuesto de referencia, no resultado 2026; ajústalos):
             </div>
             <div className="space-y-3 max-h-72 overflow-y-auto pr-1">
               {parties.map((p) => (

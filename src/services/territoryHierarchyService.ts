@@ -81,9 +81,10 @@ export class TerritoryHierarchyService {
         name: p.name,
         fullName: `Departamento de ${p.name}`,
         departmentName: p.name,
-        population: p.population || 1200000,
+        // Sin dato no se rellena (antes: 1.200.000 habitantes y NBI 22 % para cualquier departamento sin dato)
+        population: p.population || undefined,
         electoralCensus: getDepartmentCensus(p.id)?.total,
-        nbiPercentage: p.nbiPercentage || 22.0,
+        nbiPercentage: p.nbiPercentage || undefined,
         keyIssues: [
           `Competitividad y desarrollo productivo en ${p.name}`,
           `Vías troncales y conectividad intermunicipal en ${p.name}`,
@@ -114,7 +115,8 @@ export class TerritoryHierarchyService {
         fullName: `Subregión ${s.name} (Antioquia)`,
         departmentName: 'Antioquia',
         subregionName: s.name,
-        population: s.demographics.totalPopulation,
+        // DANE 2026: suma del repositorio (copia del DANE). La ficha subregional sumaba mal Oriente y Occidente.
+        population: municipalRepository.getAll().filter((m) => m.subregionId === s.id).reduce((sum, m) => sum + m.population, 0) || undefined,
         electoralCensus: municipalRepository
           .getAll()
           .filter((m) => m.subregionId === s.id)
@@ -163,10 +165,12 @@ export class TerritoryHierarchyService {
     return COMUNAS_INFO.map(c => {
       const comunaKey = `med-c${c.id}`;
       const deepData = MEDELLIN_COMUNAS_DATA[comunaKey];
-      const pop = deepData?.population || 135000;
+      // La población por comuna de MEDELLIN_COMUNAS_DATA no coincide con ninguna fuente (auditoría de datos auxiliares):
+      // no se usa. Los datos oficiales de la comuna los da el dossier (CNPV 2018 por manzana).
+      const pop = undefined;
       // Censo oficial: comunas 1-16 por sus zonas; 90 (puesto censo), 98 y 99 son zonas completas
       const censo = c.id <= 16 ? getMedellinComunaCensus(c.id)?.total : getMedellinZoneCensus(c.zones[0])?.total;
-      const stratum = deepData?.predominantStratum || (c.id === 14 ? 'Estrato 6' : c.id >= 11 ? 'Estrato 4-5' : 'Estrato 1-2');
+      const stratum = deepData?.predominantStratum;
 
       return {
         id: `comuna-${c.id}`,
@@ -180,10 +184,10 @@ export class TerritoryHierarchyService {
         population: pop,
         electoralCensus: censo,
         predominantStratum: stratum,
-        nbiPercentage: c.id <= 3 ? 18.5 : c.id === 14 ? 1.2 : 7.5,
+        nbiPercentage: undefined,
         keyIssues: [
           deepData?.keyDynamics || `Microdinámica electoral de ${c.officialName}`,
-          `Estratificación predominante: ${stratum}`,
+          ...(stratum ? [`Estratificación predominante (ficha auxiliar): ${stratum}`] : []),
           `Zonas de votación registradas: ${c.zones.join(', ')}`
         ],
         strategicContext: `Comuna ${c.id} (${c.officialName}) de Medellín. ${c.description || ''}. Zonas E-24: ${c.zones.join(' y ')}.`
@@ -211,14 +215,14 @@ export class TerritoryHierarchyService {
         subregionName: 'Valle de Aburrá',
         municipalityName: 'Medellín',
         comunaName: p.comunaName,
-        population: p.population || 18000,
+        population: p.population || undefined,
         electoralCensus: p.electoralCensus,
-        predominantStratum: p.predominantStratum || 'Estrato 3',
-        nbiPercentage: p.nbiPercentage || 4.5,
+        predominantStratum: p.predominantStratum || undefined,
+        nbiPercentage: p.nbiPercentage || undefined,
         keyIssues: [
-          `Hito territorial: ${p.keyLandmark || 'Sector urbano barrial'}`,
-          `Puestos de votación en barrio: ${p.votingStationsCount || 2} mesas`,
-          `Ganador 2023 en barrio: ${p.winner2023 || 'Fuerzas afines'}`
+          ...(p.keyLandmark ? [`Hito territorial: ${p.keyLandmark}`] : []),
+          ...(p.votingStationsCount ? [`Mesas en el barrio (ficha auxiliar): ${p.votingStationsCount}`] : []),
+          ...(p.winner2023 ? [`Ganador 2023 en el barrio (ficha auxiliar): ${p.winner2023}`] : []),
         ],
         strategicContext: `Barrio ${p.name}, perteneciente a ${p.comunaName || 'Medellín'}. Nivel micro-territorial de máxima cercanía.`
       };

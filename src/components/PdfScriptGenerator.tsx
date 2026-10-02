@@ -34,6 +34,7 @@ import {
   Activity,
   Radio
 } from 'lucide-react';
+import { normalizarIdentidad } from '../services/identidad/identidad';
 import { generateContent } from '../services/geminiService';
 import { jsPDF } from 'jspdf';
 import { CandidateProfile } from './CandidateProfileManager';
@@ -433,7 +434,9 @@ export const PdfScriptGenerator: React.FC<PdfScriptGeneratorProps> = ({
   // ==========================================
   // ESTADO 1: PDF ESTRUCTURAL SUBIDO POR EL USUARIO
   // ==========================================
-  const [pdfStructure, setPdfStructure] = useState<ExtractedPdfStructure | null>(SAMPLE_STRATEGIC_PDF_STRUCTURE);
+  // Antes arrancaba con el informe de ejemplo del 17-sep-2026 cargado como si fuera el actual (con citas de personas
+  // reales sin verificar). Ahora arranca vacío; el ejemplo se carga a mano y va rotulado.
+  const [pdfStructure, setPdfStructure] = useState<ExtractedPdfStructure | null>(null);
   const [isProcessingPdf, setIsProcessingPdf] = useState<boolean>(false);
   const [pdfProcessError, setPdfProcessError] = useState<string | null>(null);
   const [activePdfTab, setActivePdfTab] = useState<'matrix' | 'thermometer' | 'summary' | 'axes' | 'rules' | 'structure'>('matrix');
@@ -498,6 +501,7 @@ export const PdfScriptGenerator: React.FC<PdfScriptGeneratorProps> = ({
   // ==========================================
   // ESTADO 2: BÚSQUEDA DEL PERFIL CON GOOGLE SEARCH
   // ==========================================
+  const posturaIdentidad = normalizarIdentidad(candidateProfile?.identidad, candidateProfile?.nombre ?? '').posicionamiento;
   const [candidateSearchQuery, setCandidateSearchQuery] = useState<string>(
     candidateProfile?.nombre || 'Luis Horacio Gallón'
   );
@@ -508,15 +512,16 @@ export const PdfScriptGenerator: React.FC<PdfScriptGeneratorProps> = ({
     if (candidateProfile) {
       return {
         name: candidateProfile.nombre,
-        party: candidateProfile.afiliacionPartidista || 'Coalición Departamental',
-        tone: candidateProfile.tonoNarrativo || 'Constructivo, gerencial y propositivo',
-        focusAreas: candidateProfile.ejeTematicoComodo || 'Integración territorial, vías y seguridad',
-        experienceBio: `${candidateProfile.formacionOcupacion || ''}. ${candidateProfile.experienciaPrevia || ''}`,
-        subregionalStance: 'Enfoque en descentralización y articulación territorial con municipios.',
-        nationalAlignment: 'aliado',
-        nationalAlignmentRationale: 'Sintonía de mano dura contra las estructuras criminales y orden institucional con el presidente Abelardo De La Espriella.',
-        localAlignment: 'aliado',
-        localAlignmentRationale: 'Aliado institucional de la administración departamental.',
+        // Del perfil y de la identidad (Posicionamiento › Postura política); lo no definido queda dicho, no supuesto
+        party: candidateProfile.afiliacionPartidista || 'Sin definir en el perfil',
+        tone: candidateProfile.tonoNarrativo || 'Sin definir en el perfil',
+        focusAreas: candidateProfile.ejeTematicoComodo || 'Sin definir en el perfil',
+        experienceBio: [candidateProfile.formacionOcupacion, candidateProfile.experienciaPrevia].filter(Boolean).join('. ') || 'Sin definir en el perfil',
+        subregionalStance: 'Sin definir en el perfil',
+        nationalAlignment: posturaIdentidad.posturaNacional || 'independiente',
+        nationalAlignmentRationale: posturaIdentidad.posturaJustificacion || (posturaIdentidad.posturaNacional ? `Postura definida en la identidad: ${posturaIdentidad.posturaNacional}.` : 'Postura frente al Gobierno Nacional sin definir en la identidad: se trata como independiente hasta que el equipo la defina.'),
+        localAlignment: posturaIdentidad.posturaDepartamental || 'independiente',
+        localAlignmentRationale: posturaIdentidad.posturaJustificacion || (posturaIdentidad.posturaDepartamental ? `Postura definida en la identidad: ${posturaIdentidad.posturaDepartamental}.` : 'Postura frente a la Gobernación sin definir en la identidad: se trata como independiente hasta que el equipo la defina.'),
         source: 'manual',
         timestamp: new Date().toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' })
       };
@@ -688,7 +693,9 @@ Responde ÚNICAMENTE con el objeto JSON puro sin bloques de markdown extraños.`
               }
             ]
           }
-        ]
+        ],
+        // Extracción fiel de las directrices del PDF del usuario: sin macrofuentes, para no mezclarle datos
+        proteus: { sinMacrofuentes: true },
       });
 
       const responseText = response.text || '';
@@ -773,26 +780,20 @@ Asegúrate de basar los datos en los hallazgos fácticos de Google Search.`;
       let resultText = '';
       let queriesExecuted: string[] = [];
 
-      try {
+      // Solo con búsqueda: sin ella Gemini respondería de memoria sobre una persona real
+      {
         const response = await generateContent({
           model: 'gemini-3.8-flash',
-          contents: [{ role: 'user', parts: [{ text: searchPrompt }] }],
+          contents: [{ role: 'user', parts: [{ text: `${searchPrompt}\nLa persona investigada puede no ser el candidato del perfil de Proteus. Si la búsqueda no da un campo, escribe "Sin dato".` }] }],
           config: {
             tools: [{ googleSearch: {} }]
-          }
+          },
+          proteus: { tarea: 'investigar', incluirDatos: false },
         });
         resultText = response.text || '';
         const candidate = response.candidates?.[0];
         const groundingMeta = candidate?.groundingMetadata;
         queriesExecuted = groundingMeta?.webSearchQueries || [];
-      } catch (innerErr) {
-        // Fallback estándar si las herramientas de búsqueda no estuviesen disponibles
-        console.warn('Fallback sin googleSearch tool:', innerErr);
-        const fallbackRes = await generateContent({
-          model: 'gemini-3.8-flash',
-          contents: [{ role: 'user', parts: [{ text: searchPrompt }] }]
-        });
-        resultText = fallbackRes.text || '';
       }
 
       setLastExecutedSearchQueries(
@@ -812,11 +813,11 @@ Asegúrate de basar los datos en los hallazgos fácticos de Google Search.`;
         const subregMatch = resultText.match(/POSTURA_SUBREGIONAL:\s*([\s\S]+)/i);
 
         const extractedName = nameMatch ? nameMatch[1].trim() : query;
-        const extractedParty = partyMatch ? partyMatch[1].trim() : 'Coalición / Movimiento Regional';
-        let extractedTone = toneMatch ? toneMatch[1].trim() : 'Constructivo, propositivo y territorial';
-        const extractedAxes = axesMatch ? axesMatch[1].trim() : 'Seguridad, conectividad vial, desarrollo productivo y salud';
+        const extractedParty = partyMatch ? partyMatch[1].trim() : 'Sin dato';
+        let extractedTone = toneMatch ? toneMatch[1].trim() : 'Sin dato';
+        const extractedAxes = axesMatch ? axesMatch[1].trim() : 'Sin dato';
         const extractedResume = resumeMatch ? resumeMatch[1].trim() : resultText;
-        const extractedSubreg = subregMatch ? subregMatch[1].trim() : 'Enfoque en desarrollo regional articulado.';
+        const extractedSubreg = subregMatch ? subregMatch[1].trim() : 'Sin dato';
 
         // Determinar postura nacional frente a Abelardo de la Espriella
         let parsedAlignment: NationalAlignmentType = 'aliado';
@@ -990,7 +991,7 @@ Asegúrate de basar los datos en los hallazgos fácticos de Google Search.`;
     const candidateTone = scriptToneOverride.trim() || provisionalProfile.tone;
     const nationalAlignment = provisionalProfile.nationalAlignment;
     const nationalRationale = provisionalProfile.nationalAlignmentRationale;
-    const localAlignment = provisionalProfile.localAlignment || 'aliado';
+    const localAlignment = provisionalProfile.localAlignment || 'independiente';
     const localRationale = provisionalProfile.localAlignmentRationale || '';
 
     // Eje temático seleccionado
@@ -998,7 +999,8 @@ Asegúrate de basar los datos en los hallazgos fácticos de Google Search.`;
       ? pdfStructure.strategicAxes[selectedAxisIndex]
       : null;
 
-    const promptScripts = `Eres el Director General de Creatividad y Estrategia Audiovisual de CMT PROTEUS.
+    const esEjemplo = pdfStructure === SAMPLE_STRATEGIC_PDF_STRUCTURE;
+    const promptScripts = `${esEjemplo ? 'AVISO: el informe que sigue es un EJEMPLO del 17-sep-2026, no el actual; sus hechos y citas no están verificados: no los cites como actuales ni pongas esas citas en boca de sus autores.\n\n' : ''}Eres el Director General de Creatividad y Estrategia Audiovisual de CMT PROTEUS.
 Tu tarea es redactar un PAQUETE DE GUIONES DE PUBLICIDAD POLÍTICA Y COMUNICACIÓN ESTRATÉGICA, CONDICIONADO DE FORMA IRRENUNCIABLE A DOS FUENTES:
 1. EL DOCUMENTO ESTRATÉGICO PDF SUBIDO POR EL USUARIO ("${pdfStructure.documentTitle}").
 2. EL PERFIL FÁCTICO DEL CANDIDATO INVESTIGADO EN GOOGLE SEARCH ("${candidateName}").
@@ -1028,7 +1030,7 @@ ${pdfStructure.hierarchyMatrix.map(m => `- #${m.ranking} ${m.axisTitle} [Semáfo
 ` : ''}
 
 ${pdfStructure.thermometerVoices && pdfStructure.thermometerVoices.length > 0 ? `
-TERMÓMETRO DE LA OPINIÓN PÚBLICA (VOCES Y CITAS FÁCTICAS AUDITADAS POR CUADRANTE):
+TERMÓMETRO DE LA OPINIÓN PÚBLICA (voces y citas tal como las trae el informe; atribúyelas al informe, no las cites como declaraciones verificadas):
 ${pdfStructure.thermometerVoices.map(v => `- [${v.cuadrante.toUpperCase()}] (${v.fuente} | ${v.subregion}): "${v.cita}"`).join('\n')}
 ` : ''}
 
@@ -1145,7 +1147,8 @@ Responde ÚNICAMENTE con el arreglo JSON sin texto adicional ni preámbulos.`;
 
       const response = await generateContent({
         model: 'gemini-3.8-flash',
-        contents: [{ role: 'user', parts: [{ text: promptScripts }] }]
+        contents: [{ role: 'user', parts: [{ text: promptScripts }] }],
+        proteus: { tarea: 'redactar' },
       });
 
       const responseText = response.text || '';
@@ -1419,10 +1422,10 @@ Generado por CMT PROTEUS • Herramienta de Guiones Condicionados a PDF y Google
                 setGobCycleResult(null);
               }}
               className="px-3 py-2.5 bg-slate-900/60 backdrop-blur-xl border border-white/10 shadow-xl/10 hover:bg-slate-900/60 backdrop-blur-xl border border-white/10 shadow-xl/20 active:bg-slate-900/60 backdrop-blur-xl border border-white/10 shadow-xl/30 text-white rounded-xl text-xs font-bold transition-colors border border-white/20 flex items-center justify-center gap-1.5 cursor-pointer shadow-sm"
-              title="Cargar la estructura de ejemplo oficial de CMT Proteus"
+              title="Informe de ejemplo del 17-sep-2026: no es actual y sus citas no están verificadas"
             >
               <FileCheck className="w-3.5 h-3.5 text-slate-300" />
-              <span>Ejemplo CMT</span>
+              <span>Ejemplo (17-sep-2026, no actual)</span>
             </button>
 
             <button
