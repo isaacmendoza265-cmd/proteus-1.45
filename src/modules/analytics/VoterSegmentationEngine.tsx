@@ -1,1006 +1,311 @@
-import React, { useState, useMemo } from 'react';
-import { 
-  Users, 
-  Target, 
-  Sparkles, 
-  TrendingUp, 
-  ShieldCheck, 
-  Layers, 
-  CheckCircle2, 
-  Share2, 
-  Download, 
-  Brain, 
-  Radio, 
-  MessageSquare, 
-  AlertTriangle,
-  MapPin,
-  ChevronRight,
-  Filter,
-  Save,
-  GraduationCap,
-  DollarSign,
-  Calendar,
-  UserCheck,
-  Search,
-  FileSpreadsheet,
-  BarChart3,
-  Award,
-  ArrowRight,
-  Globe,
-  Building2
-} from 'lucide-react';
-import { municipalRepository, UnifiedMunicipalityRecord } from '../../services/municipalRepositoryService';
-import { CandidateProfile } from '../../components/CandidateProfileManager';
+/**
+ * SEGMENTOS DE POBLACIÓN (Electorado › Segmentos)
+ *
+ * Cruce de sexo × edad × estrato × nivel educativo de la unidad territorial activa (la de la barra superior y el
+ * mapa), con datos del DANE. Reescrito en oct-2026: antes repartía el censo electoral con pesos fijos y mostraba
+ * "votos en urnas", "participación esperada" y "afinidad con el candidato" por cohorte, sin fuente. Ver
+ * voterDemographicsService.ts para el método.
+ *
+ * Gemini solo se llama al pulsar el botón, con las tres macrofuentes (datos, perfil, marco) y la tarea 'analizar'.
+ */
+import React, { useEffect, useMemo, useState } from 'react';
+import { Brain, Filter, MapPin, Save, Search, Users } from 'lucide-react';
+import type { CandidateProfile } from '../../components/CandidateProfileManager';
 import { callGeminiApi, formatAiError } from '../../services/geminiService';
-import { 
-  VoterDemographicsService, 
-  DemographicCohort, 
-  CircumscriptionContext,
-  GenderType,
-  AgeGroupType,
-  EconomicLevelType,
-  EducationLevelType 
+import {
+  EDADES, EDUCACIONES, ESTRATOS, ETIQUETAS, SEXOS, segmentacionComoTexto, segmentarTerritorio,
+  type AgeGroupType, type DemographicCohort, type EconomicLevelType, type EducationLevelType, type GenderType,
+  type SegmentacionTerritorio,
 } from '../../services/voterDemographicsService';
-import { TerritoryHierarchyService } from '../../services/territoryHierarchyService';
-import { useActiveTerritory, activeTerritoryService } from '../../services/activeTerritoryContextService';
-import { NATIONAL_CENSUS, formatCensusShort } from '../../services/electoralCensusService';
+import { seleccionDeEstado, useActiveTerritory } from '../../services/activeTerritoryContextService';
+import { ETIQUETA_ESTADO, fmt, pct, type EstadoDato } from '../../services/territoryProfileService';
 
 interface VoterSegmentationEngineProps {
   candidateProfile: CandidateProfile;
-  onSaveToDrive?: (title: string, data: any) => void;
+  onSaveToDrive?: (title: string, data: unknown) => void;
   onNavigateToZoom?: () => void;
 }
 
-export type CircumscriptionLevel = 'nacional' | 'departamental' | 'subregional' | 'municipal' | 'comuna-barrio';
+const ESTILO: Record<EstadoDato, string> = {
+  oficial: 'bg-[var(--c-ok-soft)] text-[var(--c-ok)]',
+  estimado: 'bg-[var(--c-warn-soft)] text-[var(--c-warn)]',
+  'sin-informacion': 'bg-[var(--c-border)] text-[var(--c-muted)]',
+};
+const Sello: React.FC<{ estado: EstadoDato; texto?: string }> = ({ estado, texto }) => (
+  <span className={`shrink-0 px-2 py-0.5 rounded-md text-xs font-bold ${ESTILO[estado]}`}>{texto ?? ETIQUETA_ESTADO[estado]}</span>
+);
 
-export const VoterSegmentationEngine: React.FC<VoterSegmentationEngineProps> = ({
-  candidateProfile,
-  onSaveToDrive,
-  onNavigateToZoom
-}) => {
+type Filtro<T extends string> = T | 'all';
+
+function Selector<T extends string>({ titulo, valor, opciones, etiquetas, alCambiar, pesos }: {
+  titulo: string; valor: Filtro<T>; opciones: T[]; etiquetas: Record<T, string>; alCambiar: (v: Filtro<T>) => void; pesos?: Record<T, number> | null;
+}) {
+  return (
+    <fieldset className="space-y-1.5">
+      <legend className="text-xs uppercase font-bold text-[var(--c-muted)]">{titulo}</legend>
+      <div className="flex flex-wrap gap-1.5">
+        {(['all', ...opciones] as Filtro<T>[]).map((o) => (
+          <button
+            key={o}
+            type="button"
+            aria-pressed={valor === o}
+            onClick={() => alCambiar(o)}
+            className={`min-h-9 px-2.5 rounded-lg border text-xs font-semibold ${valor === o ? 'border-[var(--c-accent)] bg-[var(--c-accent-soft)] text-[var(--c-accent-text)]' : 'border-[var(--c-border)] bg-[var(--c-surface)] text-[var(--c-ink)]'}`}
+          >
+            {o === 'all' ? 'Todos' : etiquetas[o as T]}
+            {o !== 'all' && pesos ? <span className="ml-1 text-[var(--c-muted)] font-normal">{pct(100 * pesos[o as T])}</span> : null}
+          </button>
+        ))}
+      </div>
+    </fieldset>
+  );
+}
+
+export const VoterSegmentationEngine: React.FC<VoterSegmentationEngineProps> = ({ candidateProfile, onSaveToDrive, onNavigateToZoom }) => {
   const { activeTerritory } = useActiveTerritory();
-  const allMunicipalities = useMemo(() => municipalRepository.getAll(), []);
-  const departmentsList = useMemo(() => TerritoryHierarchyService.getDepartments(), []);
-  const subregionsList = useMemo(() => TerritoryHierarchyService.getSubregions(), []);
-  const comunasList = useMemo(() => TerritoryHierarchyService.getComunas(), []);
-  
-  // 1. Circumscription State across 5 scales
-  const [circumscriptionLevel, setCircumscriptionLevel] = useState<CircumscriptionLevel>(activeTerritory.scale || 'municipal');
-  const [selectedDeptId, setSelectedDeptId] = useState<string>(activeTerritory.deptId || 'dept-antioquia');
-  const [selectedSubregId, setSelectedSubregId] = useState<string>(activeTerritory.subregId || 'subreg-valle-de-aburra');
-  const [selectedMuniId, setSelectedMuniId] = useState<string>(activeTerritory.muniId || 'mpio-05001'); // Medellín default
-  const [selectedComunaId, setSelectedComunaId] = useState<string>(activeTerritory.comunaId || 'comuna-11'); // Laureles default
+  const seleccion = useMemo(() => seleccionDeEstado(activeTerritory), [activeTerritory]);
+  const [seg, setSeg] = useState<SegmentacionTerritorio | null>(null);
+  const [cargando, setCargando] = useState(true);
+  const [error, setError] = useState('');
 
-  // Synchronize state when activeTerritory changes (e.g. from GIS map navigation)
-  React.useEffect(() => {
-    if (activeTerritory) {
-      if (activeTerritory.scale) setCircumscriptionLevel(activeTerritory.scale);
-      if (activeTerritory.deptId) setSelectedDeptId(activeTerritory.deptId);
-      if (activeTerritory.subregId) setSelectedSubregId(activeTerritory.subregId);
-      if (activeTerritory.muniId) setSelectedMuniId(activeTerritory.muniId);
-      if (activeTerritory.comunaId) setSelectedComunaId(activeTerritory.comunaId);
-    }
-  }, [activeTerritory.updatedAt]);
+  const [sexo, setSexo] = useState<Filtro<GenderType>>('all');
+  const [edad, setEdad] = useState<Filtro<AgeGroupType>>('all');
+  const [estrato, setEstrato] = useState<Filtro<EconomicLevelType>>('all');
+  const [educacion, setEducacion] = useState<Filtro<EducationLevelType>>('all');
+  const [buscar, setBuscar] = useState('');
+  const [focoId, setFocoId] = useState<string | null>(null);
 
-  // 2. The 4 Demographic Variables State (with 'all' option)
-  const [selectedGender, setSelectedGender] = useState<GenderType | 'all'>('all');
-  const [selectedAgeGroup, setSelectedAgeGroup] = useState<AgeGroupType | 'all'>('all');
-  const [selectedEconomicLevel, setSelectedEconomicLevel] = useState<EconomicLevelType | 'all'>('all');
-  const [selectedEducationLevel, setSelectedEducationLevel] = useState<EducationLevelType | 'all'>('all');
+  const [generando, setGenerando] = useState(false);
+  const [analisis, setAnalisis] = useState<string | null>(null);
+  const [errorIa, setErrorIa] = useState<string | null>(null);
 
-  // 3. UI State
-  const [searchTableQuery, setSearchTableQuery] = useState<string>('');
-  const [isGeneratingAiArchetype, setIsGeneratingAiArchetype] = useState<boolean>(false);
-  const [aiCustomInsight, setAiCustomInsight] = useState<string | null>(null);
-  const [aiError, setAiError] = useState<string | null>(null);
-  const [selectedCohortId, setSelectedCohortId] = useState<string | null>(null);
+  useEffect(() => {
+    let vivo = true;
+    setCargando(true); setError(''); setAnalisis(null); setErrorIa(null); setFocoId(null);
+    segmentarTerritorio(seleccion)
+      .then((s) => { if (vivo) setSeg(s); })
+      .catch((e) => { if (vivo) setError(e instanceof Error ? e.message : String(e)); })
+      .finally(() => { if (vivo) setCargando(false); });
+    return () => { vivo = false; };
+  }, [seleccion]);
 
-  const currentMuni = useMemo(() => {
-    return municipalRepository.getMunicipality(selectedMuniId) || allMunicipalities[0];
-  }, [selectedMuniId, allMunicipalities]);
+  const filtrados = useMemo(() => (seg?.cohortes ?? []).filter((c) =>
+    (sexo === 'all' || c.gender === sexo) && (edad === 'all' || c.ageGroup === edad)
+    && (estrato === 'all' || c.economicLevel === estrato) && (educacion === 'all' || c.educationLevel === educacion)), [seg, sexo, edad, estrato, educacion]);
 
-  // Context resolved for calculations across 5 scales
-  const activeContext: CircumscriptionContext = useMemo(() => {
-    if (circumscriptionLevel === 'nacional') {
-      return {
-        id: 'nacional',
-        type: 'nacional',
-        name: 'Colombia (Nacional)',
-        census: NATIONAL_CENSUS.total,
-        nbiPercentage: 19.6,
-        urbanPercentage: 77.0
-      };
-    } else if (circumscriptionLevel === 'departamental') {
-      const deptNode = departmentsList.find(d => d.id === selectedDeptId) || departmentsList[0];
-      return {
-        id: deptNode.id,
-        type: 'departamental',
-        name: `${deptNode.name} (Departamental)`,
-        census: deptNode.electoralCensus || 5350000,
-        nbiPercentage: deptNode.nbiPercentage || 16.5,
-        urbanPercentage: 79.5
-      };
-    } else if (circumscriptionLevel === 'subregional') {
-      const subregNode = subregionsList.find(s => s.id === selectedSubregId) || subregionsList[0];
-      return {
-        id: subregNode.id,
-        type: 'departamental',
-        name: `Subregión ${subregNode.name} (Antioquia)`,
-        census: subregNode.electoralCensus || 450000,
-        nbiPercentage: subregNode.nbiPercentage || 22.0,
-        urbanPercentage: 68.0
-      };
-    } else if (circumscriptionLevel === 'comuna-barrio') {
-      const comunaNode = comunasList.find(c => c.id === selectedComunaId) || comunasList[10];
-      return {
-        id: comunaNode.id,
-        type: 'municipal',
-        name: `${comunaNode.name} (Medellín)`,
-        census: comunaNode.electoralCensus || 85000,
-        nbiPercentage: comunaNode.nbiPercentage || 5.0,
-        urbanPercentage: 99.0
-      };
-    } else {
-      return {
-        id: currentMuni.id,
-        type: 'municipal',
-        name: `${currentMuni.name} (${currentMuni.subregion})`,
-        census: currentMuni.electoralCensus || 50000,
-        nbiPercentage: currentMuni.nbiPercentage || 15.0,
-        urbanPercentage: currentMuni.population > 200000 ? 92.0 : 65.0
-      };
-    }
-  }, [circumscriptionLevel, selectedDeptId, selectedSubregId, selectedMuniId, selectedComunaId, currentMuni, departmentsList, subregionsList, comunasList]);
+  const resumen = useMemo(() => {
+    const personas = filtrados.reduce((a, c) => a + c.personas, 0);
+    return { n: filtrados.length, personas, pct: seg?.adultos ? (100 * personas) / seg.adultos : null };
+  }, [filtrados, seg]);
 
-  // Generate all 54 cohorts for this active context
-  const all54Cohorts = useMemo(() => {
-    return VoterDemographicsService.generateAllCohorts(activeContext, candidateProfile.nombre);
-  }, [activeContext, candidateProfile.nombre]);
+  const foco: DemographicCohort | undefined = useMemo(
+    () => (focoId && seg?.cohortes.find((c) => c.id === focoId)) || filtrados[0], [focoId, seg, filtrados]);
 
-  // Filter cohorts matching the 4 selected variables
-  const filteredCohorts = useMemo(() => {
-    return all54Cohorts.filter((c) => {
-      if (selectedGender !== 'all' && c.gender !== selectedGender) return false;
-      if (selectedAgeGroup !== 'all' && c.ageGroup !== selectedAgeGroup) return false;
-      if (selectedEconomicLevel !== 'all' && c.economicLevel !== selectedEconomicLevel) return false;
-      if (selectedEducationLevel !== 'all' && c.educationLevel !== selectedEducationLevel) return false;
-      return true;
-    });
-  }, [all54Cohorts, selectedGender, selectedAgeGroup, selectedEconomicLevel, selectedEducationLevel]);
+  const tabla = useMemo(() => {
+    const q = buscar.trim().toLowerCase();
+    return q ? filtrados.filter((c) => c.fullTitle.toLowerCase().includes(q)) : filtrados;
+  }, [filtrados, buscar]);
 
-  // Quantified summary for current filtered selection
-  const filteredSummary = useMemo(() => {
-    const totalCensus = activeContext.census;
-    const estimatedPopulation = filteredCohorts.reduce((acc, c) => acc + c.estimatedPopulation, 0);
-    const estimatedVotes = filteredCohorts.reduce((acc, c) => acc + c.estimatedActualVotes, 0);
-    const avgTurnout = estimatedPopulation > 0 ? (estimatedVotes / estimatedPopulation) * 100 : 0;
-    const shareOfCensus = totalCensus > 0 ? (estimatedPopulation / totalCensus) * 100 : 0;
-
+  const repartoSexoEdad = useMemo(() => {
+    if (!seg?.sexoEdad.reparto || !seg.adultos) return null;
+    const r = seg.sexoEdad.reparto;
     return {
-      count: filteredCohorts.length,
-      estimatedPopulation,
-      estimatedVotes,
-      avgTurnout: Number(avgTurnout.toFixed(1)),
-      shareOfCensus: Number(shareOfCensus.toFixed(2))
+      sexo: Object.fromEntries(SEXOS.map((g) => [g, EDADES.reduce((s, a) => s + r[g][a], 0) / seg.adultos!])) as Record<GenderType, number>,
+      edad: Object.fromEntries(EDADES.map((a) => [a, SEXOS.reduce((s, g) => s + r[g][a], 0) / seg.adultos!])) as Record<AgeGroupType, number>,
     };
-  }, [filteredCohorts, activeContext.census]);
+  }, [seg]);
 
-  // Currently focused cohort (first filtered or explicitly chosen)
-  const focusedCohort: DemographicCohort = useMemo(() => {
-    if (selectedCohortId) {
-      const found = all54Cohorts.find((c) => c.id === selectedCohortId);
-      if (found) return found;
-    }
-    return filteredCohorts[0] || all54Cohorts[0];
-  }, [selectedCohortId, filteredCohorts, all54Cohorts]);
+  const limpiar = () => { setSexo('all'); setEdad('all'); setEstrato('all'); setEducacion('all'); setFocoId(null); };
 
-  // Deep AI synthesis for this specific demographic group and territory
-  const handleGenerateAiArchetype = async () => {
-    setIsGeneratingAiArchetype(true);
-    setAiError(null);
-
+  const analizarSegmento = async () => {
+    if (!seg || !foco) return;
+    setGenerando(true); setErrorIa(null);
     try {
-      const prompt = `Actúa como Director de Inteligencia Electoral y Psicografía Política de Proyecto Proteus.
-
-[PARÁMETROS DEL GRUPO DEMOGRÁFICO CUANTIFICADO]:
-- Circunscripción: ${activeContext.name} (Censo total: ${activeContext.census.toLocaleString()} votantes)
-- Segmento Específico: ${focusedCohort.fullTitle}
-- Cuantificación en Territorio: ${focusedCohort.estimatedPopulation.toLocaleString()} ciudadanos (${focusedCohort.shareOfCensus}% del censo)
-- Participación Esperada (Turnout): ${focusedCohort.expectedTurnoutRate}% (${focusedCohort.estimatedActualVotes.toLocaleString()} votos reales en urnas)
-- Prioridad Táctica: ${focusedCohort.tacticalPriority}
-
-[CANDIDATO]:
-- Nombre: ${candidateProfile.nombre}
-- Tono: ${candidateProfile.tonoNarrativo || 'Firme, cercano y propositivo'}
-- Afiliación: ${candidateProfile.afiliacionPartidista || 'Liderazgo Independiente'}
-
-Elabora un DIAGNÓSTICO PSICOGRÁFICO Y GUÍA DE ACCIÓN DE MICRO-TARGETING en 4 secciones concretas:
-1. RADIOGRAFÍA PSICOGRÁFICA Y MIEDOS NO DECLARADOS: Qué le quita el sueño a este grupo específico en ${activeContext.name}.
-2. PALABRAS DE PODER Y METÁFORAS GANADORAS: Vocabulario exacto que ${candidateProfile.nombre} debe usar al hablarles.
-3. PROPUESTA BANDERA QUE CONVIERTE SU VOTO: La medida específica que los convence de votar por el candidato.
-4. CANAL Y FORMATO DE DESPLIEGUE: Cómo alcanzarlos sin desperdiciar presupuesto (digital vs territorial).`;
-
+      const promptText = [
+        'Lee este segmento de población del territorio y propón cómo puede hablarle el candidato del perfil.',
+        '',
+        segmentacionComoTexto(seg, foco),
+        '',
+        `Guía general de referencia para este cruce (texto fijo del aplicativo, NO es un dato del territorio): ${foco.guia.tagline} Temas: ${foco.guia.temas.join(', ')}. Canales: ${foco.guia.canales.join(', ')}.`,
+        '',
+        'Responde en 4 apartados breves:',
+        '1. Qué dicen los datos de este segmento en este territorio (solo cifras de los datos, con su rótulo Oficial/Estimado).',
+        '2. Preocupaciones probables: márcalas como HIPÓTESIS y di en qué dato del territorio se apoya cada una (o que no hay dato).',
+        '3. Cómo le habla el candidato: con su voz, ejes y postura del perfil, y las reglas del marco.',
+        '4. Canales y qué dato faltaría para confirmarlo (encuesta, grupo focal, datos de pauta).',
+        'No estimes votos, participación ni intención de voto del segmento: no hay datos para eso.',
+      ].join('\n');
       const res = await callGeminiApi({
-        promptText: prompt,
-        systemInstruction: 'Eres el Director de Inteligencia Electoral de Proteus. Redacta diagnósticos psicográficos precisos, contundentes y aplicables en campaña.',
-        useSearch: true
+        promptText,
+        systemInstruction: 'Eres el analista de segmentos de Proteus. Escribe en español de Colombia, sobrio y concreto.',
+        proteus: { tarea: 'analizar', seleccion },
       });
-      setAiCustomInsight(res);
-    } catch (e: any) {
-      setAiError(formatAiError(e));
+      setAnalisis(res);
+    } catch (e) {
+      setErrorIa(formatAiError(e));
     } finally {
-      setIsGeneratingAiArchetype(false);
+      setGenerando(false);
     }
   };
 
-  const handleResetFilters = () => {
-    setSelectedGender('all');
-    setSelectedAgeGroup('all');
-    setSelectedEconomicLevel('all');
-    setSelectedEducationLevel('all');
-    setSelectedCohortId(null);
-  };
+  const tarjeta = 'rounded-2xl border border-[var(--c-border)] bg-[var(--c-surface)] p-4';
 
   return (
-    <div className="space-y-6 animate-fadeIn pb-12 text-white">
-      {/* 1. Header Banner */}
-      <div className="p-6 rounded-3xl bg-slate-950/40 backdrop-blur-3xl border border-white/20 shadow-[0_20px_50px_rgba(0,0,0,0.5),inset_0_1.5px_2px_rgba(255,255,255,0.4)] relative overflow-hidden">
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-              <span className="px-3 py-1 rounded-full text-[10px] font-mono font-black uppercase tracking-wider bg-gradient-to-r from-sky-400/20 via-indigo-400/20 to-purple-500/30 text-sky-300 border border-sky-400/50 shadow-[0_0_12px_rgba(56,189,248,0.3)] flex items-center gap-1.5">
-                <Brain className="w-3.5 h-3.5 text-sky-400" />
-                Electorado
-              </span>
-              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-400/30">
-                Segmentación Cuatridimensional (54 Cohortes)
-              </span>
-            </div>
-            <h1 className="text-2xl lg:text-3xl font-black tracking-tight text-white flex items-center gap-3">
-              <span>Segmentos de votantes</span>
-            </h1>
-            <p className="text-slate-300 text-xs sm:text-sm mt-1 max-w-3xl">
-              Cruce exhaustivo de 4 variables: <strong className="text-white">Sexo</strong> (Hombre/Mujer) × <strong className="text-white">Grupo Etario</strong> (Joven/Adulto/Adulto Mayor) × <strong className="text-white">Nivel Económico</strong> (Alto/Medio/Bajo) × <strong className="text-white">Grado Educativo</strong> (Primaria/Secundaria/Superior).
-            </p>
+    <div className="proteus-civico space-y-4 pb-12">
+      {/* Cabecera */}
+      <div className={`${tarjeta} flex flex-col lg:flex-row lg:items-center justify-between gap-3`}>
+        <div className="space-y-1">
+          <div className="flex items-center gap-2 text-xs uppercase tracking-wide text-[var(--c-accent)] font-bold">
+            <Users className="w-4 h-4" /><span>Electorado</span>
           </div>
-
-          {/* Active Candidate Badge */}
-          <div className="shrink-0 p-3 rounded-2xl bg-white/05 border border-white/15 backdrop-blur-xl">
-            <div className="text-[10px] font-mono uppercase text-slate-400 font-bold">Candidato Activo</div>
-            <div className="text-sm font-black text-amber-300 mt-0.5">{candidateProfile.nombre}</div>
-            <div className="text-[10px] text-slate-400">{candidateProfile.afiliacionPartidista || 'Proyecto Político'}</div>
-          </div>
+          <h1 className="font-titulo text-xl sm:text-2xl font-medium">Segmentos de población</h1>
+          <p className="text-xs sm:text-sm text-[var(--c-muted)] max-w-3xl">
+            Personas de 18 años o más de <strong className="text-[var(--c-ink)]">{seg?.territorio ?? activeTerritory.name}</strong> por sexo, edad, estrato y nivel educativo, con datos del DANE.
+            Los 54 cruces son un estimado; no hay votos ni participación por segmento.
+          </p>
         </div>
-
-        {/* Circunscription Selector Tabs across 5 Scales */}
-        <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-3 mt-6 pt-4 border-t border-white/10 text-xs">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[10px] font-mono uppercase text-slate-400 font-bold flex items-center gap-1 shrink-0">
-              <Globe className="w-3.5 h-3.5 text-sky-400" />
-              Escala Territorial:
-            </span>
-            <div className="flex flex-wrap items-center gap-1 bg-black/40 p-1 rounded-2xl border border-white/10">
-              <button
-                onClick={() => setCircumscriptionLevel('nacional')}
-                className={`px-3 py-1.5 rounded-xl font-bold transition flex items-center gap-1.5 ${
-                  circumscriptionLevel === 'nacional'
-                    ? 'bg-sky-500/30 text-white border border-sky-400/60 shadow-[0_0_10px_rgba(56,189,248,0.3)]'
-                    : 'text-slate-400 hover:text-white'
-                }`}
-              >
-                <span>🇨🇴 Nacional</span>
-                <span className="text-[9px] font-mono text-slate-400">({formatCensusShort(NATIONAL_CENSUS.total)})</span>
-              </button>
-              <button
-                onClick={() => setCircumscriptionLevel('departamental')}
-                className={`px-3 py-1.5 rounded-xl font-bold transition flex items-center gap-1.5 ${
-                  circumscriptionLevel === 'departamental'
-                    ? 'bg-emerald-500/30 text-white border border-emerald-400/60 shadow-[0_0_10px_rgba(16,185,129,0.3)]'
-                    : 'text-slate-400 hover:text-white'
-                }`}
-              >
-                <span>🏛️ Departamental</span>
-                <span className="text-[9px] font-mono text-slate-400">(33 Deptos)</span>
-              </button>
-              <button
-                onClick={() => setCircumscriptionLevel('subregional')}
-                className={`px-3 py-1.5 rounded-xl font-bold transition flex items-center gap-1.5 ${
-                  circumscriptionLevel === 'subregional'
-                    ? 'bg-indigo-500/30 text-white border border-indigo-400/60 shadow-[0_0_10px_rgba(99,102,241,0.3)]'
-                    : 'text-slate-400 hover:text-white'
-                }`}
-              >
-                <span>🌲 Subregional</span>
-                <span className="text-[9px] font-mono text-slate-400">(9 Subreg)</span>
-              </button>
-              <button
-                onClick={() => setCircumscriptionLevel('municipal')}
-                className={`px-3 py-1.5 rounded-xl font-bold transition flex items-center gap-1.5 ${
-                  circumscriptionLevel === 'municipal'
-                    ? 'bg-amber-500/30 text-white border border-amber-400/60 shadow-[0_0_10px_rgba(245,158,11,0.3)]'
-                    : 'text-slate-400 hover:text-white'
-                }`}
-              >
-                <span>🏙️ Municipal</span>
-                <span className="text-[9px] font-mono text-slate-400">(125 Mpios)</span>
-              </button>
-              <button
-                onClick={() => setCircumscriptionLevel('comuna-barrio')}
-                className={`px-3 py-1.5 rounded-xl font-bold transition flex items-center gap-1.5 ${
-                  circumscriptionLevel === 'comuna-barrio'
-                    ? 'bg-purple-500/30 text-white border border-purple-400/60 shadow-[0_0_10px_rgba(168,85,247,0.3)]'
-                    : 'text-slate-400 hover:text-white'
-                }`}
-              >
-                <span>📍 Comuna / Barrio</span>
-                <span className="text-[9px] font-mono text-slate-400">(Medellín)</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Cascading Specific Selector Dropdown */}
-          <div className="flex items-center gap-2">
-            {circumscriptionLevel === 'departamental' && (
-              <div className="flex items-center gap-2 w-full sm:w-auto">
-                <label className="text-[10px] font-mono uppercase text-slate-400 font-bold flex items-center gap-1 shrink-0">
-                  <Building2 className="w-3.5 h-3.5 text-emerald-400" />
-                  Departamento:
-                </label>
-                <select
-                  value={selectedDeptId}
-                  onChange={(e) => setSelectedDeptId(e.target.value)}
-                  className="w-full sm:w-64 px-3 py-1.5 rounded-2xl bg-white/10 hover:bg-white/15 border border-white/20 text-white text-xs font-bold focus:outline-none focus:border-emerald-400 backdrop-blur-xl"
-                >
-                  {departmentsList.map((d) => (
-                    <option key={d.id} value={d.id} className="bg-slate-900 text-white">
-                      {d.name} {d.electoralCensus ? `(Censo: ${d.electoralCensus.toLocaleString()})` : ''}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )}
-
-            {circumscriptionLevel === 'subregional' && (
-              <div className="flex items-center gap-2 w-full sm:w-auto">
-                <label className="text-[10px] font-mono uppercase text-slate-400 font-bold flex items-center gap-1 shrink-0">
-                  <Layers className="w-3.5 h-3.5 text-indigo-400" />
-                  Subregión:
-                </label>
-                <select
-                  value={selectedSubregId}
-                  onChange={(e) => setSelectedSubregId(e.target.value)}
-                  className="w-full sm:w-64 px-3 py-1.5 rounded-2xl bg-white/10 hover:bg-white/15 border border-white/20 text-white text-xs font-bold focus:outline-none focus:border-indigo-400 backdrop-blur-xl"
-                >
-                  {subregionsList.map((s) => (
-                    <option key={s.id} value={s.id} className="bg-slate-900 text-white">
-                      {s.name} ({s.municipalityCount} mpios) - Censo: {s.electoralCensus?.toLocaleString()}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )}
-
-            {circumscriptionLevel === 'municipal' && (
-              <div className="flex items-center gap-2 w-full sm:w-auto">
-                <label className="text-[10px] font-mono uppercase text-slate-400 font-bold flex items-center gap-1 shrink-0">
-                  <MapPin className="w-3.5 h-3.5 text-amber-400" />
-                  Municipio:
-                </label>
-                <select
-                  value={selectedMuniId}
-                  onChange={(e) => setSelectedMuniId(e.target.value)}
-                  className="w-full sm:w-64 px-3 py-1.5 rounded-2xl bg-white/10 hover:bg-white/15 border border-white/20 text-white text-xs font-bold focus:outline-none focus:border-amber-400 backdrop-blur-xl"
-                >
-                  {allMunicipalities.map((m) => (
-                    <option key={m.id} value={m.id} className="bg-slate-900 text-white">
-                      {m.name} ({m.subregion}) - Censo: {m.electoralCensus?.toLocaleString()}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )}
-
-            {circumscriptionLevel === 'comuna-barrio' && (
-              <div className="flex items-center gap-2 w-full sm:w-auto">
-                <label className="text-[10px] font-mono uppercase text-slate-400 font-bold flex items-center gap-1 shrink-0">
-                  <MapPin className="w-3.5 h-3.5 text-purple-400" />
-                  Comuna:
-                </label>
-                <select
-                  value={selectedComunaId}
-                  onChange={(e) => setSelectedComunaId(e.target.value)}
-                  className="w-full sm:w-64 px-3 py-1.5 rounded-2xl bg-white/10 hover:bg-white/15 border border-white/20 text-white text-xs font-bold focus:outline-none focus:border-purple-400 backdrop-blur-xl"
-                >
-                  {comunasList.map((c) => (
-                    <option key={c.id} value={c.id} className="bg-slate-900 text-white">
-                      {c.name} {c.electoralCensus ? `(Censo: ${c.electoralCensus.toLocaleString()})` : ''}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* 1.5. Bioluminescent GIS Connection Banner */}
-      <div className="p-4 rounded-3xl bg-gradient-to-r from-sky-500/20 via-indigo-500/20 to-purple-500/20 border border-sky-400/50 backdrop-blur-2xl shadow-[0_0_30px_rgba(56,189,248,0.25)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 animate-fadeIn">
-        <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-2xl bg-sky-500/30 border border-sky-400/60 text-sky-300 shadow-[0_0_15px_rgba(56,189,248,0.4)] shrink-0">
-            <MapPin className="w-5 h-5" />
-          </div>
-          <div>
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="text-[10px] font-mono uppercase tracking-widest text-sky-300 font-black px-2 py-0.5 rounded-full bg-sky-500/25 border border-sky-400/40">
-                📍 VINCULADO AL ZOOM TERRITORIAL GIS
-              </span>
-              <span className="text-xs font-black text-white">
-                {activeTerritory.fullName}
-              </span>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-400/30 uppercase font-bold">
-                Escala {activeTerritory.scale}
-              </span>
-            </div>
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-slate-300 mt-1 font-mono">
-              {activeTerritory.electoralCensus && (
-                <span>Censo: <strong className="text-emerald-300">{activeTerritory.electoralCensus.toLocaleString('es-CO')}</strong> votantes</span>
-              )}
-              {activeTerritory.population && (
-                <span>Población: <strong className="text-sky-300">{activeTerritory.population.toLocaleString('es-CO')}</strong> hab.</span>
-              )}
-              {activeTerritory.nbiPercentage && (
-                <span>NBI: <strong className="text-amber-300">{activeTerritory.nbiPercentage}%</strong></span>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {onNavigateToZoom && (
-          <button
-            type="button"
-            onClick={onNavigateToZoom}
-            className="shrink-0 px-3.5 py-2 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/25 hover:border-sky-400 text-sky-200 hover:text-white text-xs font-bold transition-all flex items-center gap-1.5 shadow-lg transform hover:scale-[1.02] active:scale-95 cursor-pointer"
-            title="Volver al mapa GIS interactivo"
-          >
-            <span>🗺️ Ver en Mapa GIS</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </button>
-        )}
-      </div>
-
-      {/* 2. Key Metrics Bar for Active Circumscription */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
-        <div className="p-4 rounded-3xl bg-slate-950/40 backdrop-blur-2xl border border-white/15">
-          <div className="text-[10px] font-mono text-slate-400 uppercase font-bold">Censo de la Circunscripción</div>
-          <div className="text-xl font-black text-white font-mono mt-1">
-            {activeContext.census.toLocaleString()}
-          </div>
-          <div className="text-[10px] text-slate-400 mt-0.5 truncate">{activeContext.name}</div>
-        </div>
-
-        <div className="p-4 rounded-3xl bg-slate-950/40 backdrop-blur-2xl border border-white/15">
-          <div className="text-[10px] font-mono text-slate-400 uppercase font-bold">Grupos en Disputa</div>
-          <div className="text-xl font-black text-sky-300 font-mono mt-1">
-            {filteredSummary.count} <span className="text-xs font-normal text-slate-400">/ 54 cohortes</span>
-          </div>
-          <div className="text-[10px] text-slate-400 mt-0.5">Espacio muestral 4D completo</div>
-        </div>
-
-        <div className="p-4 rounded-3xl bg-slate-950/40 backdrop-blur-2xl border border-white/15">
-          <div className="text-[10px] font-mono text-slate-400 uppercase font-bold">Población del Cruce Activo</div>
-          <div className="text-xl font-black text-amber-300 font-mono mt-1">
-            {filteredSummary.estimatedPopulation.toLocaleString()}
-          </div>
-          <div className="text-[10px] text-slate-400 mt-0.5 font-mono">
-            {filteredSummary.shareOfCensus}% del censo total
-          </div>
-        </div>
-
-        <div className="p-4 rounded-3xl bg-slate-950/40 backdrop-blur-2xl border border-emerald-400/30">
-          <div className="text-[10px] font-mono text-emerald-400 uppercase font-bold">Votos Proyectados en Urnas</div>
-          <div className="text-xl font-black text-emerald-300 font-mono mt-1">
-            {filteredSummary.estimatedVotes.toLocaleString()}
-          </div>
-          <div className="text-[10px] text-slate-400 mt-0.5 font-mono">
-            Participación esperada: {filteredSummary.avgTurnout}%
-          </div>
-        </div>
-      </div>
-
-      {/* 3. The 4-Variable Interactive Selector Quadrant */}
-      <div className="p-5 rounded-3xl bg-slate-950/40 backdrop-blur-3xl border border-white/15 space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/10 pb-3">
-          <div className="flex items-center gap-2">
-            <Filter className="w-4 h-4 text-amber-400" />
-            <h2 className="text-xs font-mono uppercase tracking-wider text-white font-bold">
-              Variables de Cruce Demográfico Cuatridimensional
-            </h2>
-          </div>
-          <button
-            onClick={handleResetFilters}
-            className="text-[11px] font-mono text-sky-400 hover:text-sky-300 transition underline underline-offset-2"
-          >
-            Ver Todas las 54 Cohortes
-          </button>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
-          {/* Variable 1: Sexo */}
-          <div className="p-3.5 rounded-2xl bg-white/05 border border-white/10 space-y-2">
-            <div className="flex items-center justify-between text-slate-300 font-bold">
-              <span className="flex items-center gap-1.5 text-sky-300">
-                <UserCheck className="w-3.5 h-3.5" />
-                1. Sexo:
-              </span>
-              <span className="text-[10px] font-mono text-slate-400">2 Opciones</span>
-            </div>
-            <div className="grid grid-cols-3 gap-1.5 font-medium">
-              <button
-                onClick={() => setSelectedGender('all')}
-                className={`py-1.5 px-2 rounded-xl text-center transition ${
-                  selectedGender === 'all'
-                    ? 'bg-sky-500/30 text-white border border-sky-400 font-bold'
-                    : 'bg-black/20 text-slate-400 hover:text-white border border-white/05'
-                }`}
-              >
-                Todos
-              </button>
-              <button
-                onClick={() => setSelectedGender('hombre')}
-                className={`py-1.5 px-2 rounded-xl text-center transition ${
-                  selectedGender === 'hombre'
-                    ? 'bg-sky-500/30 text-white border border-sky-400 font-bold'
-                    : 'bg-black/20 text-slate-400 hover:text-white border border-white/05'
-                }`}
-              >
-                Hombre
-              </button>
-              <button
-                onClick={() => setSelectedGender('mujer')}
-                className={`py-1.5 px-2 rounded-xl text-center transition ${
-                  selectedGender === 'mujer'
-                    ? 'bg-sky-500/30 text-white border border-sky-400 font-bold'
-                    : 'bg-black/20 text-slate-400 hover:text-white border border-white/05'
-                }`}
-              >
-                Mujer
-              </button>
-            </div>
-          </div>
-
-          {/* Variable 2: Grupo Etario */}
-          <div className="p-3.5 rounded-2xl bg-white/05 border border-white/10 space-y-2">
-            <div className="flex items-center justify-between text-slate-300 font-bold">
-              <span className="flex items-center gap-1.5 text-indigo-300">
-                <Calendar className="w-3.5 h-3.5" />
-                2. Grupo Etario:
-              </span>
-              <span className="text-[10px] font-mono text-slate-400">3 Opciones</span>
-            </div>
-            <div className="grid grid-cols-4 gap-1 font-medium text-[11px]">
-              <button
-                onClick={() => setSelectedAgeGroup('all')}
-                className={`py-1.5 rounded-xl text-center transition ${
-                  selectedAgeGroup === 'all'
-                    ? 'bg-indigo-500/30 text-white border border-indigo-400 font-bold'
-                    : 'bg-black/20 text-slate-400 hover:text-white border border-white/05'
-                }`}
-              >
-                Todos
-              </button>
-              <button
-                onClick={() => setSelectedAgeGroup('joven')}
-                className={`py-1.5 rounded-xl text-center transition ${
-                  selectedAgeGroup === 'joven'
-                    ? 'bg-indigo-500/30 text-white border border-indigo-400 font-bold'
-                    : 'bg-black/20 text-slate-400 hover:text-white border border-white/05'
-                }`}
-                title="18 a 28 años"
-              >
-                Joven
-              </button>
-              <button
-                onClick={() => setSelectedAgeGroup('adulto')}
-                className={`py-1.5 rounded-xl text-center transition ${
-                  selectedAgeGroup === 'adulto'
-                    ? 'bg-indigo-500/30 text-white border border-indigo-400 font-bold'
-                    : 'bg-black/20 text-slate-400 hover:text-white border border-white/05'
-                }`}
-                title="29 a 59 años"
-              >
-                Adulto
-              </button>
-              <button
-                onClick={() => setSelectedAgeGroup('adulto_mayor')}
-                className={`py-1.5 rounded-xl text-center transition ${
-                  selectedAgeGroup === 'adulto_mayor'
-                    ? 'bg-indigo-500/30 text-white border border-indigo-400 font-bold'
-                    : 'bg-black/20 text-slate-400 hover:text-white border border-white/05'
-                }`}
-                title="60+ años"
-              >
-                Mayor
-              </button>
-            </div>
-          </div>
-
-          {/* Variable 3: Nivel Económico / Estrato */}
-          <div className="p-3.5 rounded-2xl bg-white/05 border border-white/10 space-y-2">
-            <div className="flex items-center justify-between text-slate-300 font-bold">
-              <span className="flex items-center gap-1.5 text-amber-300">
-                <DollarSign className="w-3.5 h-3.5" />
-                3. Nivel Económico:
-              </span>
-              <span className="text-[10px] font-mono text-slate-400">3 Opciones</span>
-            </div>
-            <div className="grid grid-cols-4 gap-1 font-medium text-[11px]">
-              <button
-                onClick={() => setSelectedEconomicLevel('all')}
-                className={`py-1.5 rounded-xl text-center transition ${
-                  selectedEconomicLevel === 'all'
-                    ? 'bg-amber-500/30 text-white border border-amber-400 font-bold'
-                    : 'bg-black/20 text-slate-400 hover:text-white border border-white/05'
-                }`}
-              >
-                Todos
-              </button>
-              <button
-                onClick={() => setSelectedEconomicLevel('bajo')}
-                className={`py-1.5 rounded-xl text-center transition ${
-                  selectedEconomicLevel === 'bajo'
-                    ? 'bg-amber-500/30 text-white border border-amber-400 font-bold'
-                    : 'bg-black/20 text-slate-400 hover:text-white border border-white/05'
-                }`}
-                title="Estratos 1 y 2"
-              >
-                Bajo
-              </button>
-              <button
-                onClick={() => setSelectedEconomicLevel('medio')}
-                className={`py-1.5 rounded-xl text-center transition ${
-                  selectedEconomicLevel === 'medio'
-                    ? 'bg-amber-500/30 text-white border border-amber-400 font-bold'
-                    : 'bg-black/20 text-slate-400 hover:text-white border border-white/05'
-                }`}
-                title="Estratos 3 y 4"
-              >
-                Medio
-              </button>
-              <button
-                onClick={() => setSelectedEconomicLevel('alto')}
-                className={`py-1.5 rounded-xl text-center transition ${
-                  selectedEconomicLevel === 'alto'
-                    ? 'bg-amber-500/30 text-white border border-amber-400 font-bold'
-                    : 'bg-black/20 text-slate-400 hover:text-white border border-white/05'
-                }`}
-                title="Estratos 5 y 6"
-              >
-                Alto
-              </button>
-            </div>
-          </div>
-
-          {/* Variable 4: Grado Educativo */}
-          <div className="p-3.5 rounded-2xl bg-white/05 border border-white/10 space-y-2">
-            <div className="flex items-center justify-between text-slate-300 font-bold">
-              <span className="flex items-center gap-1.5 text-emerald-300">
-                <GraduationCap className="w-3.5 h-3.5" />
-                4. Grado Educativo:
-              </span>
-              <span className="text-[10px] font-mono text-slate-400">3 Opciones</span>
-            </div>
-            <div className="grid grid-cols-4 gap-1 font-medium text-[11px]">
-              <button
-                onClick={() => setSelectedEducationLevel('all')}
-                className={`py-1.5 rounded-xl text-center transition ${
-                  selectedEducationLevel === 'all'
-                    ? 'bg-emerald-500/30 text-white border border-emerald-400 font-bold'
-                    : 'bg-black/20 text-slate-400 hover:text-white border border-white/05'
-                }`}
-              >
-                Todos
-              </button>
-              <button
-                onClick={() => setSelectedEducationLevel('primaria')}
-                className={`py-1.5 rounded-xl text-center transition ${
-                  selectedEducationLevel === 'primaria'
-                    ? 'bg-emerald-500/30 text-white border border-emerald-400 font-bold'
-                    : 'bg-black/20 text-slate-400 hover:text-white border border-white/05'
-                }`}
-                title="Básica Primaria"
-              >
-                Primaria
-              </button>
-              <button
-                onClick={() => setSelectedEducationLevel('secundaria')}
-                className={`py-1.5 rounded-xl text-center transition ${
-                  selectedEducationLevel === 'secundaria'
-                    ? 'bg-emerald-500/30 text-white border border-emerald-400 font-bold'
-                    : 'bg-black/20 text-slate-400 hover:text-white border border-white/05'
-                }`}
-                title="Bachillerato o Técnico"
-              >
-                Secund.
-              </button>
-              <button
-                onClick={() => setSelectedEducationLevel('superior')}
-                className={`py-1.5 rounded-xl text-center transition ${
-                  selectedEducationLevel === 'superior'
-                    ? 'bg-emerald-500/30 text-white border border-emerald-400 font-bold'
-                    : 'bg-black/20 text-slate-400 hover:text-white border border-white/05'
-                }`}
-                title="Universitario o Posgrado"
-              >
-                Superior
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* 4. Focused Cohort Deep Analysis Card */}
-      <div className="p-6 rounded-3xl bg-slate-950/45 backdrop-blur-3xl border border-white/20 shadow-[0_15px_40px_rgba(0,0,0,0.5)] space-y-5">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-white/10 pb-4">
-          <div>
-            <div className="flex items-center gap-2 mb-1">
-              <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold border ${
-                focusedCohort.tacticalPriority === 'Pivotal'
-                  ? 'bg-rose-500/20 text-rose-300 border-rose-400/40'
-                  : focusedCohort.tacticalPriority === 'Alta'
-                  ? 'bg-amber-500/20 text-amber-300 border-amber-400/40'
-                  : 'bg-sky-500/20 text-sky-300 border-sky-400/40'
-              }`}>
-                Prioridad: {focusedCohort.tacticalPriority}
-              </span>
-              <span className="text-[10px] font-mono text-slate-400">
-                {activeContext.name}
-              </span>
-            </div>
-            <h3 className="text-xl font-black text-white capitalize">
-              {focusedCohort.fullTitle}
-            </h3>
-            <p className="text-xs text-slate-300 mt-0.5 italic">
-              "{focusedCohort.tagline}"
-            </p>
-          </div>
-
-          <div className="flex items-center gap-4 bg-black/40 p-3 rounded-2xl border border-white/10 shrink-0">
-            <div className="text-right">
-              <div className="text-[10px] font-mono text-slate-400 uppercase">Potencial en Censo</div>
-              <div className="text-lg font-black text-sky-400 font-mono">
-                {focusedCohort.estimatedPopulation.toLocaleString()}
-                <span className="text-xs text-slate-400 font-normal ml-1">({focusedCohort.shareOfCensus}%)</span>
-              </div>
-            </div>
-            <div className="h-8 w-px bg-white/15" />
-            <div className="text-right">
-              <div className="text-[10px] font-mono text-slate-400 uppercase">Votos en Urnas</div>
-              <div className="text-lg font-black text-emerald-400 font-mono">
-                ~{focusedCohort.estimatedActualVotes.toLocaleString()}
-                <span className="text-xs text-slate-400 font-normal ml-1">({focusedCohort.expectedTurnoutRate}% part.)</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Breakdown Columns */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          {/* Column 1: Dominant Concerns */}
-          <div className="space-y-2">
-            <div className="text-xs font-mono font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
-              <AlertTriangle className="w-3.5 h-3.5" />
-              Preocupaciones & Dolores Clave
-            </div>
-            <ul className="space-y-1.5">
-              {focusedCohort.dominantIssues.map((issue, idx) => (
-                <li key={idx} className="p-2.5 rounded-xl bg-white/05 border border-white/10 text-xs text-slate-200 flex items-start gap-2">
-                  <span className="text-amber-400 font-bold">•</span>
-                  <span>{issue}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Column 2: Effective Communication Channels */}
-          <div className="space-y-2">
-            <div className="text-xs font-mono font-bold text-sky-400 uppercase tracking-wider flex items-center gap-1.5">
-              <Radio className="w-3.5 h-3.5" />
-              Canales de Mayor Penetración
-            </div>
-            <div className="space-y-1.5">
-              {focusedCohort.effectiveChannels.map((channel, idx) => (
-                <div key={idx} className="p-2.5 rounded-xl bg-sky-500/10 border border-sky-400/25 text-xs text-sky-200 flex items-center justify-between">
-                  <span>{channel}</span>
-                  <span className="text-[10px] font-mono text-sky-400 font-bold">Directo</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Column 3: Narrative Angle & Counter-objections */}
-          <div className="space-y-3">
-            <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-400/30 space-y-1.5">
-              <div className="text-xs font-mono font-bold text-amber-300 uppercase tracking-wider flex items-center gap-1.5">
-                <Target className="w-3.5 h-3.5" />
-                Ángulo Discursivo para {candidateProfile.nombre}
-              </div>
-              <p className="text-xs text-slate-200 leading-relaxed">
-                {focusedCohort.narrativeAngle}
-              </p>
-            </div>
-
-            <div className="p-3.5 rounded-2xl bg-white/05 border border-white/10 space-y-1">
-              <div className="text-[11px] font-mono font-bold text-slate-300 uppercase">
-                Cómo Desactivar su Principal Objeción:
-              </div>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                {focusedCohort.counterObjection}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* AI Generator Action Button */}
-        <div className="pt-3 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-emerald-400 font-bold flex items-center gap-1">
-              <CheckCircle2 className="w-4 h-4" />
-              Afinidad con el Candidato: {focusedCohort.candidateFitScore}%
-            </span>
-          </div>
-
-          <div className="flex items-center gap-2">
-            {onSaveToDrive && (
-              <button
-                onClick={() => onSaveToDrive(`Demografia_${focusedCohort.fullTitle}_${activeContext.name}`, focusedCohort)}
-                className="px-3.5 py-2 rounded-2xl bg-white/05 hover:bg-white/10 border border-white/15 text-slate-300 hover:text-white text-xs font-bold transition flex items-center gap-1.5"
-              >
-                <Save className="w-3.5 h-3.5 text-sky-400" />
-                <span>Guardar</span>
-              </button>
-            )}
-
-            <button
-              onClick={handleGenerateAiArchetype}
-              disabled={isGeneratingAiArchetype}
-              className="px-4 py-2 rounded-2xl bg-gradient-to-r from-amber-500 via-sky-500 to-indigo-600 hover:from-amber-400 hover:to-indigo-500 text-white text-xs font-black uppercase tracking-wider flex items-center gap-2 shadow-[0_0_15px_rgba(251,191,36,0.3)] transition disabled:opacity-50"
-            >
-              <Sparkles className={`w-3.5 h-3.5 text-amber-300 ${isGeneratingAiArchetype ? 'animate-spin' : ''}`} />
-              <span>{isGeneratingAiArchetype ? 'Consultando Gemini 3.8...' : 'Estrategia Micro-Targeting con IA'}</span>
+        <div className="flex flex-wrap items-center gap-2">
+          {onNavigateToZoom && (
+            <button type="button" onClick={onNavigateToZoom} className="min-h-9 px-3 rounded-lg border border-[var(--c-border)] bg-[var(--c-surface)] text-xs font-semibold flex items-center gap-1.5">
+              <MapPin className="w-3.5 h-3.5" />Cambiar territorio en el mapa
             </button>
-          </div>
+          )}
         </div>
+      </div>
 
-        {/* AI Custom Strategy Box */}
-        {aiError && (
-          <div className="p-3.5 rounded-2xl bg-rose-500/15 border border-rose-400/30 text-rose-200 text-xs flex items-center gap-2">
-            <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0" />
-            <span>{aiError}</span>
+      {cargando && <div className={`${tarjeta} text-xs text-[var(--c-muted)]`}>Cargando los datos del DANE del territorio…</div>}
+      {error && <div className={`${tarjeta} text-xs text-[var(--c-warn)]`}>No se pudieron cargar los datos: {error}</div>}
+
+      {seg && !cargando && (
+        <>
+          {/* Datos de base */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div className={tarjeta}>
+              <div className="flex items-center justify-between gap-2"><span className="text-xs uppercase font-bold text-[var(--c-muted)]">Personas de 18 años o más</span><Sello estado={seg.sexoEdad.estado} /></div>
+              <div className="text-2xl font-titulo mt-1">{fmt(seg.adultos)}</div>
+              <p className="text-xs text-[var(--c-muted)] mt-1">{seg.sexoEdad.fuente}</p>
+            </div>
+            <div className={tarjeta}>
+              <div className="flex items-center justify-between gap-2"><span className="text-xs uppercase font-bold text-[var(--c-muted)]">Censo electoral</span><Sello estado={seg.electoral.censo ? 'oficial' : 'sin-informacion'} /></div>
+              <div className="text-2xl font-titulo mt-1">{fmt(seg.electoral.censo)}</div>
+              <p className="text-xs text-[var(--c-muted)] mt-1">
+                {seg.electoral.alcance}{seg.electoral.mujeres ? ` · ${fmt(seg.electoral.mujeres)} mujeres y ${fmt(seg.electoral.hombres)} hombres` : ''}. No trae edad, estrato ni educación.
+              </p>
+            </div>
+            <div className={tarjeta}>
+              <div className="flex items-center justify-between gap-2"><span className="text-xs uppercase font-bold text-[var(--c-muted)]">Participación Alcaldía 2023</span><Sello estado={seg.electoral.participacionAlcaldia2023 != null ? 'oficial' : 'sin-informacion'} /></div>
+              <div className="text-2xl font-titulo mt-1">{pct(seg.electoral.participacionAlcaldia2023)}</div>
+              <p className="text-xs text-[var(--c-muted)] mt-1">{seg.electoral.fuente}. Es del territorio entero: no se reparte por segmento.</p>
+            </div>
           </div>
-        )}
 
-        {aiCustomInsight && (
-          <div className="p-5 rounded-3xl bg-gradient-to-br from-indigo-950/40 via-slate-950/80 to-purple-950/40 border border-indigo-400/40 space-y-3">
+          {seg.faltantes.length > 0 && (
+            <div className={`${tarjeta} text-xs`}>
+              <Sello estado="sin-informacion" /> <span className="ml-1">Falta {seg.faltantes.join(', ')} para {seg.territorio}: no se pueden armar los cruces.</span>
+            </div>
+          )}
+
+          {/* Filtros */}
+          <div className={`${tarjeta} space-y-3`}>
             <div className="flex items-center justify-between">
-              <div className="text-xs font-mono font-bold text-indigo-300 uppercase tracking-wider flex items-center gap-2">
-                <Brain className="w-4 h-4 text-indigo-400" />
-                <span>Guía Operativa de Persuasión IA • Gemini 3.8 Flash</span>
+              <span className="text-xs uppercase font-bold text-[var(--c-muted)] flex items-center gap-1.5"><Filter className="w-4 h-4 text-[var(--c-accent)]" />Filtrar segmentos</span>
+              <button type="button" onClick={limpiar} className="min-h-9 px-3 rounded-lg border border-[var(--c-border)] text-xs font-semibold">Quitar filtros</button>
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+              <Selector titulo="Sexo" valor={sexo} opciones={SEXOS} etiquetas={ETIQUETAS.sexo} alCambiar={setSexo} pesos={repartoSexoEdad?.sexo} />
+              <Selector titulo="Edad" valor={edad} opciones={EDADES} etiquetas={ETIQUETAS.edad} alCambiar={setEdad} pesos={repartoSexoEdad?.edad} />
+              <Selector titulo="Estrato (viviendas)" valor={estrato} opciones={ESTRATOS} etiquetas={ETIQUETAS.estrato} alCambiar={setEstrato} pesos={seg.estrato.reparto} />
+              <Selector titulo="Nivel educativo" valor={educacion} opciones={EDUCACIONES} etiquetas={ETIQUETAS.educacion} alCambiar={setEducacion} pesos={seg.educacion.reparto} />
+            </div>
+            <p className="text-xs text-[var(--c-muted)]">
+              Estrato: {seg.estrato.fuente}{seg.estrato.sinEstratoPct != null ? ` (${pct(seg.estrato.sinEstratoPct)} de las viviendas sin estrato, fuera del reparto)` : ''}. Educación: {seg.educacion.fuente}.
+            </p>
+            {seg.cohortes.length > 0 && (
+              <div className="flex flex-wrap items-center gap-2 text-xs">
+                <Sello estado="estimado" />
+                <span><strong>{resumen.n}</strong> segmentos · <strong>{fmt(resumen.personas)}</strong> personas de 18 años o más · {pct(resumen.pct)} de los adultos del territorio</span>
               </div>
-              <button
-                onClick={() => setAiCustomInsight(null)}
-                className="text-xs text-slate-400 hover:text-white"
-              >
-                Cerrar
-              </button>
-            </div>
-            <div className="text-xs sm:text-sm text-slate-200 whitespace-pre-line leading-relaxed bg-black/40 p-4 rounded-2xl border border-white/10 max-h-[400px] overflow-y-auto font-sans">
-              {aiCustomInsight}
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* 5. Complete Quantification Matrix (The 54 Cohorts Table) */}
-      <div className="p-5 rounded-3xl bg-slate-950/40 backdrop-blur-2xl border border-white/15 space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div>
-            <div className="text-[10px] font-mono uppercase text-emerald-400 font-bold flex items-center gap-1.5">
-              <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-400" />
-              Matriz Completa de Cuantificación Demográfica (54 Grupos)
-            </div>
-            <h3 className="text-sm font-black text-white mt-0.5">
-              Censo y Votos Estimados en {activeContext.name}
-            </h3>
+            )}
           </div>
 
-          <div className="flex items-center gap-2 w-full sm:w-72">
-            <div className="relative w-full">
-              <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
-              <input
-                type="text"
-                placeholder="Buscar grupo demográfico..."
-                value={searchTableQuery}
-                onChange={(e) => setSearchTableQuery(e.target.value)}
-                className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-white/10 border border-white/20 text-white text-xs font-medium focus:outline-none focus:border-sky-400"
-              />
-            </div>
-          </div>
-        </div>
+          {/* Segmento elegido */}
+          {foco && (
+            <div className={`${tarjeta} space-y-3`}>
+              <div className="flex flex-col md:flex-row md:items-start justify-between gap-2">
+                <div>
+                  <span className="text-xs uppercase font-bold text-[var(--c-muted)]">Segmento elegido</span>
+                  <h2 className="font-titulo text-lg font-medium">{foco.fullTitle}</h2>
+                </div>
+                <div className="text-right">
+                  <div className="flex items-center gap-2 justify-end"><Sello estado="estimado" /><span className="text-xl font-titulo">{fmt(foco.personas)}</span></div>
+                  <div className="text-xs text-[var(--c-muted)]">personas de 18 años o más · {pct(foco.pctAdultos)} de los adultos</div>
+                </div>
+              </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead>
-              <tr className="border-b border-white/15 text-[10px] font-mono uppercase text-slate-400 font-bold">
-                <th className="py-2.5 px-3">Grupo Demográfico (4D)</th>
-                <th className="py-2.5 px-2">Sexo</th>
-                <th className="py-2.5 px-2">Edad</th>
-                <th className="py-2.5 px-2">Estrato</th>
-                <th className="py-2.5 px-2">Educación</th>
-                <th className="py-2.5 px-2 text-right">Censo Est.</th>
-                <th className="py-2.5 px-2 text-right">% Censo</th>
-                <th className="py-2.5 px-2 text-right">Votos Est.</th>
-                <th className="py-2.5 px-2 text-center">Prioridad</th>
-                <th className="py-2.5 px-3 text-center">Acción</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-white/10">
-              {all54Cohorts
-                .filter((c) => {
-                  if (!searchTableQuery) return true;
-                  return c.fullTitle.toLowerCase().includes(searchTableQuery.toLowerCase());
-                })
-                .slice(0, 20)
-                .map((cohort) => (
-                  <tr
-                    key={cohort.id}
-                    className={`hover:bg-white/05 transition ${
-                      cohort.id === focusedCohort.id ? 'bg-sky-500/10' : ''
-                    }`}
+              <div className="rounded-xl border border-[var(--c-border)] bg-[var(--c-sunken)] p-3 text-xs space-y-1.5">
+                <div className="font-bold text-[var(--c-muted)] uppercase">Guía general (texto fijo, no medido en el territorio)</div>
+                <p>{foco.guia.tagline}</p>
+                <p><strong>Temas de referencia:</strong> {foco.guia.temas.join(' · ')}</p>
+                <p><strong>Canales de referencia:</strong> {foco.guia.canales.join(' · ')}</p>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-2">
+                <button type="button" onClick={analizarSegmento} disabled={generando} className="min-h-9 px-3.5 rounded-lg bg-[var(--c-accent)] text-white text-xs font-semibold flex items-center gap-1.5 disabled:opacity-50">
+                  <Brain className="w-3.5 h-3.5" />{generando ? 'Analizando con Gemini…' : analisis ? 'Analizar de nuevo' : 'Analizar este segmento con IA'}
+                </button>
+                {onSaveToDrive && (
+                  <button
+                    type="button"
+                    onClick={() => onSaveToDrive(`Segmento: ${foco.fullTitle} · ${seg.territorio}`, { territorio: seg.territorio, segmento: foco, metodo: seg.metodo, fuentes: { sexoEdad: seg.sexoEdad.fuente, estrato: seg.estrato.fuente, educacion: seg.educacion.fuente }, analisis })}
+                    className="min-h-9 px-3 rounded-lg border border-[var(--c-border)] text-xs font-semibold flex items-center gap-1.5"
                   >
-                    <td className="py-2.5 px-3 font-bold text-white capitalize">
-                      {cohort.fullTitle}
-                    </td>
-                    <td className="py-2.5 px-2 text-slate-300 capitalize">{cohort.gender}</td>
-                    <td className="py-2.5 px-2 text-slate-300 capitalize">{cohort.ageGroup.replace('_', ' ')}</td>
-                    <td className="py-2.5 px-2 text-slate-300 capitalize">{cohort.economicLevel}</td>
-                    <td className="py-2.5 px-2 text-slate-300 capitalize">{cohort.educationLevel}</td>
-                    <td className="py-2.5 px-2 text-right font-mono font-bold text-slate-200">
-                      {cohort.estimatedPopulation.toLocaleString()}
-                    </td>
-                    <td className="py-2.5 px-2 text-right font-mono text-slate-400">
-                      {cohort.shareOfCensus}%
-                    </td>
-                    <td className="py-2.5 px-2 text-right font-mono font-bold text-emerald-300">
-                      {cohort.estimatedActualVotes.toLocaleString()}
-                    </td>
-                    <td className="py-2.5 px-2 text-center">
-                      <span className={`px-2 py-0.5 rounded-full text-[9px] font-mono font-bold border ${
-                        cohort.tacticalPriority === 'Pivotal'
-                          ? 'bg-rose-500/20 text-rose-300 border-rose-400/30'
-                          : cohort.tacticalPriority === 'Alta'
-                          ? 'bg-amber-500/20 text-amber-300 border-amber-400/30'
-                          : 'bg-sky-500/20 text-sky-300 border-sky-400/30'
-                      }`}>
-                        {cohort.tacticalPriority}
-                      </span>
-                    </td>
-                    <td className="py-2.5 px-3 text-center">
-                      <button
-                        onClick={() => setSelectedCohortId(cohort.id)}
-                        className="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 border border-white/20 text-sky-300 text-[10px] font-bold transition"
-                      >
-                        Analizar
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
-          <div className="text-[10px] font-mono text-slate-400 text-right pt-2">
-            Mostrando las 20 cohortes con mayor peso electoral de las 54 combinaciones posibles.
-          </div>
-        </div>
-      </div>
+                    <Save className="w-3.5 h-3.5" />Guardar en Archivos
+                  </button>
+                )}
+                <span className="text-xs text-[var(--c-muted)]">Gemini lee los datos del territorio, el perfil de {candidateProfile.nombre || 'el candidato'} y el marco completo.</span>
+              </div>
+              {errorIa && <p className="text-xs text-[var(--c-warn)]">No se pudo analizar: {errorIa}</p>}
+              {analisis && <div className="rounded-xl border border-[var(--c-border)] p-3 text-sm whitespace-pre-wrap leading-relaxed">{analisis}</div>}
+            </div>
+          )}
+
+          {/* Tabla de segmentos */}
+          {seg.cohortes.length > 0 && (
+            <div className={`${tarjeta} space-y-3`}>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <h3 className="font-titulo text-base font-medium">Segmentos ({tabla.length})</h3>
+                <label className="flex items-center gap-1.5 text-xs">
+                  <Search className="w-3.5 h-3.5 text-[var(--c-muted)]" />
+                  <input value={buscar} onChange={(e) => setBuscar(e.target.value)} placeholder="Buscar segmento" className="min-h-9 px-2.5 rounded-lg border border-[var(--c-border)] bg-[var(--c-surface)] text-xs w-full sm:w-56" />
+                </label>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="w-full text-xs">
+                  <thead>
+                    <tr className="text-left text-[var(--c-muted)] border-b border-[var(--c-border)]">
+                      <th className="py-2 pr-2">Segmento</th>
+                      <th className="py-2 px-2 text-right">Personas (estimado)</th>
+                      <th className="py-2 pl-2 text-right">% de los adultos</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {tabla.map((c) => (
+                      <tr key={c.id} className={`border-b border-[var(--c-border)] ${foco?.id === c.id ? 'bg-[var(--c-accent-soft)]' : ''}`}>
+                        <td className="py-1.5 pr-2">
+                          <button type="button" onClick={() => { setFocoId(c.id); setAnalisis(null); }} className="text-left underline-offset-2 hover:underline">{c.fullTitle}</button>
+                        </td>
+                        <td className="py-1.5 px-2 text-right tabular-nums">{fmt(c.personas)}</td>
+                        <td className="py-1.5 pl-2 text-right tabular-nums">{pct(c.pctAdultos)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <p className="text-xs text-[var(--c-muted)]">{seg.metodo}</p>
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
 };

@@ -1,13 +1,48 @@
 // =============================================================================
-// PROYECTO PROTEUS 1.2 • SERVICIO DE IDENTIFICACIÓN Y CUANTIFICACIÓN DEMOGRÁFICA
-// Cruce Cuatridimensional: Sexo x Grupo Etario x Estrato Económico x Grado Educativo
-// 54 Cohortes Demográficas Calibradas por Circunscripción (Nacional, Dptal, Mpal)
+// SEGMENTOS DE POBLACIÓN: Sexo × Grupo de edad × Estrato × Nivel educativo (54 cruces)
+//
+// Antes (hasta oct-2026) este servicio repartía el CENSO ELECTORAL con pesos fijos, iguales para todos los municipios
+// (48,8 % hombres, 26 % jóvenes…), derivaba el estrato del NBI con una fórmula sin fuente, la educación del "% urbano"
+// y le ponía a cada cruce una "participación esperada" y unos "votos reales en urnas" inventados. Nada de eso se medía.
+//
+// Ahora cada cruce sale de los datos del territorio:
+//   - Sexo × edad (18 años o más): proyección DANE 2026 por sexo y edad (municipio, cabecera o resto rural). Donde no
+//     la hay (comunas, barrios, veredas) se usa el CNPV 2018 por manzana, que trae sexo y edad por separado.
+//   - Estrato: viviendas por estrato del CNPV 2018 por manzana (sumadas en el territorio).
+//   - Nivel educativo: % de personas por nivel alcanzado, CNPV 2018 por manzana.
+// El cruce de las cuatro variables es un ESTIMADO: supone que son independientes dentro del territorio (no lo son del
+// todo: el estrato y la educación van juntos), y aplica a las personas el reparto de VIVIENDAS por estrato.
+//
+// No hay votos ni participación por cruce: el censo electoral no trae edad, estrato ni educación, y la participación
+// solo se conoce por mesa o puesto, no por grupo. Se muestran aparte, con su fuente, para el territorio entero.
+// Los textos de temas y canales de cada cruce son una guía general fija, no un dato del territorio.
 // =============================================================================
+
+import { ANTIOQUIA_125_MUNICIPIOS_GEOJSON } from '../data/geojson';
+import type { SeleccionDossier } from './dossierTerritorialService';
+import { getResultado2023 } from './electoralResults2023Service';
+import { CENSUS_SOURCE_LABEL, getMedellinComunaCensus, getMedellinCorregimientoCensus, getMunicipalCensus } from './electoralCensusService';
+import {
+  cargarDemografia, cargarEconomia, demografia, economia, municipioFichaPorDane, piramide2026, territorioFicha,
+  type EstadoDato, type TerritorioFicha,
+} from './territoryProfileService';
 
 export type GenderType = 'hombre' | 'mujer';
 export type AgeGroupType = 'joven' | 'adulto' | 'adulto_mayor';
 export type EconomicLevelType = 'bajo' | 'medio' | 'alto';
 export type EducationLevelType = 'primaria' | 'secundaria' | 'superior';
+
+export const SEXOS: GenderType[] = ['mujer', 'hombre'];
+export const EDADES: AgeGroupType[] = ['joven', 'adulto', 'adulto_mayor'];
+export const ESTRATOS: EconomicLevelType[] = ['bajo', 'medio', 'alto'];
+export const EDUCACIONES: EducationLevelType[] = ['primaria', 'secundaria', 'superior'];
+
+export const ETIQUETAS = {
+  sexo: { hombre: 'Hombres', mujer: 'Mujeres' } as Record<GenderType, string>,
+  edad: { joven: 'Jóvenes (18 a 29)', adulto: 'Adultos (30 a 59)', adulto_mayor: 'Adultos mayores (60 o más)' } as Record<AgeGroupType, string>,
+  estrato: { bajo: 'Estratos 1 y 2', medio: 'Estratos 3 y 4', alto: 'Estratos 5 y 6' } as Record<EconomicLevelType, string>,
+  educacion: { primaria: 'Primaria o ninguno', secundaria: 'Secundaria', superior: 'Técnica, universitaria o posgrado' } as Record<EducationLevelType, string>,
+};
 
 export interface DemographicCohort {
   id: string;
@@ -15,285 +50,249 @@ export interface DemographicCohort {
   ageGroup: AgeGroupType;
   economicLevel: EconomicLevelType;
   educationLevel: EducationLevelType;
-  
-  // Labels
   genderLabel: string;
   ageGroupLabel: string;
   economicLevelLabel: string;
   educationLevelLabel: string;
   fullTitle: string;
-  tagline: string;
-
-  // Quantification
-  shareOfCensus: number;          // e.g. 2.45%
-  estimatedPopulation: number;    // Votantes potenciales en el censo
-  expectedTurnoutRate: number;    // e.g. 52.4% de participación esperada
-  estimatedActualVotes: number;   // Votos proyectados reales en urnas
-  tacticalPriority: 'Pivotal' | 'Alta' | 'Media' | 'Blanda';
-  candidateFitScore: number;      // 0 a 100
-
-  // Strategic Messaging
-  dominantIssues: string[];
-  effectiveChannels: string[];
-  narrativeAngle: string;
-  counterObjection: string;
+  /** Personas de 18 años o más estimadas en el cruce (supone independencia de las 4 variables) */
+  personas: number;
+  /** % de las personas de 18 años o más del territorio */
+  pctAdultos: number;
+  /** Guía general de referencia (texto fijo, no medido en el territorio) */
+  guia: { tagline: string; temas: string[]; canales: string[] };
 }
 
-export interface CircumscriptionContext {
-  id: string;
-  type: 'nacional' | 'departamental' | 'municipal';
-  name: string;
-  census: number;
-  nbiPercentage: number;
-  urbanPercentage: number;
+type Reparto<K extends string> = Record<K, number>;
+
+export interface SegmentacionTerritorio {
+  territorio: string;
+  nivel: 'municipio' | 'división' | 'subdivisión' | 'subregión' | 'departamento';
+  /** Personas de 18 años o más (base de los cruces); null si no hay sexo y edad para el territorio */
+  adultos: number | null;
+  sexoEdad: { estado: EstadoDato; fuente: string; reparto: Record<GenderType, Reparto<AgeGroupType>> | null };
+  estrato: { estado: EstadoDato; fuente: string; reparto: Reparto<EconomicLevelType> | null; sinEstratoPct: number | null };
+  educacion: { estado: EstadoDato; fuente: string; reparto: Reparto<EducationLevelType> | null };
+  /** Contexto electoral del territorio entero (no por cruce) */
+  electoral: {
+    censo: number | null; mujeres: number | null; hombres: number | null; alcance: string;
+    participacionAlcaldia2023: number | null; fuente: string;
+  };
+  /** 54 cruces; vacío si falta alguna de las cuatro variables */
+  cohortes: DemographicCohort[];
+  faltantes: string[];
+  metodo: string;
 }
 
-export class VoterDemographicsService {
-  /**
-   * Ponderaciones empíricas de las 4 variables base para Colombia / Antioquia
-   */
-  public static GENDER_WEIGHTS: Record<GenderType, { label: string; weight: number }> = {
-    hombre: { label: 'Hombres', weight: 0.488 },
-    mujer: { label: 'Mujeres', weight: 0.512 }
-  };
+export const METODO_SEGMENTOS = 'Estimado: cada cruce multiplica las personas de 18 años o más por sexo y edad por el reparto del estrato (viviendas) y del nivel educativo (personas) del mismo territorio, suponiendo que esas variables son independientes. No es un conteo: el DANE no publica el cruce de las cuatro. No hay votos ni participación por cruce.';
 
-  public static AGE_WEIGHTS: Record<AgeGroupType, { label: string; range: string; weight: number; baseTurnout: number }> = {
-    joven: { label: 'Jóvenes', range: '18 a 28 años', weight: 0.260, baseTurnout: 0.43 },
-    adulto: { label: 'Adultos', range: '29 a 59 años', weight: 0.520, baseTurnout: 0.55 },
-    adulto_mayor: { label: 'Adultos Mayores', range: '60+ años', weight: 0.220, baseTurnout: 0.61 }
-  };
+// --- Sexo × edad ---------------------------------------------------------------------------------------
 
-  public static ECONOMIC_LEVELS: Record<EconomicLevelType, { label: string; strata: string; baseTurnout: number }> = {
-    bajo: { label: 'Bajo', strata: 'Estratos 1 y 2', baseTurnout: 0.47 },
-    medio: { label: 'Medio', strata: 'Estratos 3 y 4', baseTurnout: 0.54 },
-    alto: { label: 'Alto', strata: 'Estratos 5 y 6', baseTurnout: 0.64 }
-  };
+const vacioEdad = (): Reparto<AgeGroupType> => ({ joven: 0, adulto: 0, adulto_mayor: 0 });
 
-  public static EDUCATION_LEVELS: Record<EducationLevelType, { label: string; desc: string; baseTurnout: number }> = {
-    primaria: { label: 'Primaria', desc: 'Básica primaria / Incompleta', baseTurnout: 0.44 },
-    secundaria: { label: 'Secundaria', desc: 'Bachillerato / Técnico medio', baseTurnout: 0.52 },
-    superior: { label: 'Superior', desc: 'Universitario / Tecnológico / Posgrado', baseTurnout: 0.66 }
-  };
+/** Grupos quinquenales (0-4 … 80+): 18 y 19 años son 2/5 del grupo 15-19 */
+function edadesQuinquenales(v: number[]): Reparto<AgeGroupType> {
+  const s = (a: number, b: number) => v.slice(a, b + 1).reduce((x, y) => x + (y ?? 0), 0);
+  return { joven: 0.4 * (v[3] ?? 0) + s(4, 5), adulto: s(6, 11), adulto_mayor: s(12, 16) };
+}
+/** Grupos decenales (0-9 … 80+): 18 y 19 años son 2/10 del grupo 10-19 */
+function edadesDecenales(v: number[]): Reparto<AgeGroupType> {
+  const s = (a: number, b: number) => v.slice(a, b + 1).reduce((x, y) => x + (y ?? 0), 0);
+  return { joven: 0.2 * (v[1] ?? 0) + (v[2] ?? 0), adulto: s(3, 5), adulto_mayor: s(6, 8) };
+}
 
-  /**
-   * Calcula la distribución económica de un territorio a partir de su NBI
-   */
-  public static getEconomicWeights(nbi: number): Record<EconomicLevelType, number> {
-    const low = Math.min(0.75, Math.max(0.25, (nbi * 1.5 + 20) / 100));
-    const high = Math.max(0.03, Math.min(0.28, (100 - nbi * 1.8) / 350));
-    const mid = Math.max(0.20, 1 - (low + high));
-    return { bajo: low, medio: mid, alto: high };
+interface SexoEdadT { estado: EstadoDato; fuente: string; reparto: Record<GenderType, Reparto<AgeGroupType>> | null }
+
+function sexoEdadDe(t: TerritorioFicha): SexoEdadT {
+  const p = piramide2026(t);
+  if (p) {
+    const alcance = p.alcance === 'municipio' ? 'municipio' : p.alcance === 'cabecera' ? 'cabecera' : 'resto rural';
+    return { estado: 'oficial', fuente: `${p.fuente} (${alcance})`, reparto: { hombre: edadesQuinquenales(p.hombres), mujer: edadesQuinquenales(p.mujeres) } };
   }
+  const d = demografia(t);
+  if (!d.datos || !d.conDetalle) return { estado: 'sin-informacion', fuente: d.fuente, reparto: null };
+  const edades = d.datos.etiquetasEdad.length === 9 ? edadesDecenales(d.datos.edades) : edadesQuinquenales(d.datos.edades);
+  const conSexo = d.datos.hombres + d.datos.mujeres;
+  const ph = d.datos.hombres / conSexo;
+  const rep = (f: number) => ({ joven: edades.joven * f, adulto: edades.adulto * f, adulto_mayor: edades.adulto_mayor * f });
+  return {
+    estado: 'estimado',
+    fuente: `${d.fuente} (CNPV 2018; trae sexo y edad por separado: el cruce supone la misma proporción de hombres en cada edad)`,
+    reparto: { hombre: rep(ph), mujer: rep(1 - ph) },
+  };
+}
 
-  /**
-   * Calcula la distribución educativa según el grado de urbanización del territorio
-   */
-  public static getEducationWeights(urbanPct: number): Record<EducationLevelType, number> {
-    const isUrban = urbanPct >= 75;
-    if (isUrban) {
-      return { primaria: 0.18, secundaria: 0.50, superior: 0.32 };
-    } else if (urbanPct >= 50) {
-      return { primaria: 0.28, secundaria: 0.52, superior: 0.20 };
-    } else {
-      return { primaria: 0.42, secundaria: 0.46, superior: 0.12 };
-    }
+// --- Estrato y educación -------------------------------------------------------------------------------
+
+interface EcoT { estratos: number[]; educacionPct: number[] /* 5 niveles */; peso: number }
+
+function ecoDe(t: TerritorioFicha): EcoT | null {
+  const e = economia(t);
+  if (!e) return null;
+  return { estratos: e.estratos, educacionPct: e.educacion.map((x) => x.pct), peso: 1 };
+}
+
+function repartoEstrato(estratos: number[]): { reparto: Reparto<EconomicLevelType>; sinEstratoPct: number } | null {
+  const con = estratos.slice(0, 6).reduce((a, b) => a + b, 0);
+  if (!con) return null;
+  const total = con + (estratos[6] ?? 0);
+  return {
+    reparto: { bajo: (estratos[0] + estratos[1]) / con, medio: (estratos[2] + estratos[3]) / con, alto: (estratos[4] + estratos[5]) / con },
+    sinEstratoPct: total ? (100 * (estratos[6] ?? 0)) / total : 0,
+  };
+}
+
+function repartoEducacion(pct: number[]): Reparto<EducationLevelType> | null {
+  const tot = pct.reduce((a, b) => a + b, 0);
+  if (!tot) return null;
+  return { primaria: (pct[0] + pct[1]) / tot, secundaria: pct[2] / tot, superior: (pct[3] + pct[4]) / tot };
+}
+
+// --- Guía general por cruce (texto fijo) -----------------------------------------------------------------
+
+function guiaGeneral(g: GenderType, a: AgeGroupType, e: EconomicLevelType): DemographicCohort['guia'] {
+  if (a === 'joven') {
+    if (e === 'bajo') return { tagline: 'Jóvenes de sectores populares: empleo, estudio y seguridad del barrio.', temas: ['Primer empleo', 'Transporte', 'Seguridad barrial y reclutamiento', 'Formación técnica'], canales: ['TikTok y Reels', 'WhatsApp barrial', 'Canchas y parques'] };
+    if (e === 'medio') return { tagline: 'Jóvenes de clase media: estudio, empleo calificado y vivienda.', temas: ['Empleo en servicios y tecnología', 'Becas', 'Salud mental', 'Vivienda joven'], canales: ['Instagram', 'TikTok', 'Comunidades universitarias'] };
+    return { tagline: 'Jóvenes de estratos altos: emprendimiento, ambiente e instituciones.', temas: ['Emprendimiento e inversión', 'Ambiente', 'Transparencia'], canales: ['Instagram', 'LinkedIn', 'Pódcasts'] };
   }
+  if (a === 'adulto') {
+    if (e === 'bajo') return g === 'mujer'
+      ? { tagline: 'Mujeres de sectores populares, muchas jefas de hogar: ingreso, cuidado y seguridad.', temas: ['Cuidado infantil', 'Extorsión y "gota a gota"', 'Costo de la canasta', 'Crédito productivo'], canales: ['WhatsApp barrial', 'Juntas de acción comunal', 'Puerta a puerta', 'Emisoras locales'] }
+      : { tagline: 'Hombres de sectores populares: empleo formal y seguridad.', temas: ['Extorsión y microtráfico', 'Empleo formal', 'Crédito sin usura'], canales: ['WhatsApp', 'Lugares de trabajo', 'Torneos barriales', 'Radio local'] };
+    if (e === 'medio') return { tagline: 'Adultos de clase media: costo de vida, educación de los hijos y seguridad.', temas: ['Costo de vida y tarifas', 'Educación de los hijos', 'Seguridad en la calle y el transporte', 'Salud'], canales: ['Facebook e Instagram', 'WhatsApp de padres de familia', 'Comercio local', 'Prensa local'] };
+    return { tagline: 'Adultos de estratos altos: impuestos, gestión pública e inversión.', temas: ['Impuestos', 'Trámites', 'Infraestructura', 'Seguridad jurídica'], canales: ['LinkedIn', 'Gremios', 'Prensa de opinión y económica'] };
+  }
+  if (e === 'bajo') return { tagline: 'Adultos mayores de sectores populares: salud, subsidios y compañía.', temas: ['Medicamentos y citas', 'Subsidio al adulto mayor', 'Comedores comunitarios', 'Seguridad en el espacio público'], canales: ['Radio comunitaria', 'Parroquias y centros de salud', 'Puerta a puerta'] };
+  return { tagline: 'Adultos mayores de clase media y alta: pensión, salud y seguridad.', temas: ['Pensión', 'Salud', 'Estafas', 'Espacio público seguro'], canales: ['WhatsApp familiar', 'Radio', 'Prensa impresa', 'Asociaciones de pensionados'] };
+}
 
-  /**
-   * Genera el conjunto completo de las 54 cohortes demográficas para una circunscripción
-   */
-  public static generateAllCohorts(
-    context: CircumscriptionContext,
-    candidateName: string = 'Isaac Mendoza'
-  ): DemographicCohort[] {
-    const economicWeights = this.getEconomicWeights(context.nbiPercentage);
-    const educationWeights = this.getEducationWeights(context.urbanPercentage);
-    const cohorts: DemographicCohort[] = [];
+// --- Armado ------------------------------------------------------------------------------------------------
 
-    const genders: GenderType[] = ['mujer', 'hombre'];
-    const ageGroups: AgeGroupType[] = ['joven', 'adulto', 'adulto_mayor'];
-    const economicLevels: EconomicLevelType[] = ['bajo', 'medio', 'alto'];
-    const educationLevels: EducationLevelType[] = ['primaria', 'secundaria', 'superior'];
-
-    genders.forEach((gender) => {
-      ageGroups.forEach((age) => {
-        economicLevels.forEach((econ) => {
-          educationLevels.forEach((edu) => {
-            const pGender = this.GENDER_WEIGHTS[gender].weight;
-            const pAge = this.AGE_WEIGHTS[age].weight;
-            const pEcon = economicWeights[econ];
-            const pEdu = educationWeights[edu];
-
-            // Probabilidad conjunta del segmento
-            const share = pGender * pAge * pEcon * pEdu;
-            const estPopulation = Math.round(context.census * share);
-
-            // Turnout ponderado con corrección multivariada
-            const baseTurnout = (
-              this.AGE_WEIGHTS[age].baseTurnout * 0.40 +
-              this.ECONOMIC_LEVELS[econ].baseTurnout * 0.30 +
-              this.EDUCATION_LEVELS[edu].baseTurnout * 0.30
-            );
-            const turnout = Math.min(0.78, Math.max(0.32, baseTurnout + (gender === 'mujer' ? 0.015 : -0.015)));
-            const actualVotes = Math.round(estPopulation * turnout);
-
-            // Generar metadatos y perfil discursivo
-            const metadata = this.resolveCohortMessaging(gender, age, econ, edu, candidateName, context.name);
-
-            // Prioridad táctica según tamaño y propensión
-            let priority: 'Pivotal' | 'Alta' | 'Media' | 'Blanda' = 'Media';
-            if (estPopulation > context.census * 0.035 && age !== 'adulto_mayor') {
-              priority = 'Pivotal';
-            } else if (estPopulation > context.census * 0.02) {
-              priority = 'Alta';
-            } else if (age === 'joven' && econ === 'medio') {
-              priority = 'Pivotal';
-            } else if (age === 'adulto_mayor') {
-              priority = 'Blanda';
-            }
-
-            cohorts.push({
-              id: `cohorte-${gender}-${age}-${econ}-${edu}`,
-              gender,
-              ageGroup: age,
-              economicLevel: econ,
-              educationLevel: edu,
-              genderLabel: this.GENDER_WEIGHTS[gender].label,
-              ageGroupLabel: `${this.AGE_WEIGHTS[age].label} (${this.AGE_WEIGHTS[age].range})`,
-              economicLevelLabel: `${this.ECONOMIC_LEVELS[econ].label} (${this.ECONOMIC_LEVELS[econ].strata})`,
-              educationLevelLabel: `${this.EDUCATION_LEVELS[edu].label}`,
-              fullTitle: `${gender === 'mujer' ? 'Mujeres' : 'Hombres'} ${this.AGE_WEIGHTS[age].label.toLowerCase()} • Estrato ${this.ECONOMIC_LEVELS[econ].label.toLowerCase()} • Educación ${this.EDUCATION_LEVELS[edu].label.toLowerCase()}`,
-              tagline: metadata.tagline,
-              shareOfCensus: Number((share * 100).toFixed(2)),
-              estimatedPopulation: estPopulation,
-              expectedTurnoutRate: Number((turnout * 100).toFixed(1)),
-              estimatedActualVotes: actualVotes,
-              tacticalPriority: priority,
-              candidateFitScore: metadata.fitScore,
-              dominantIssues: metadata.issues,
-              effectiveChannels: metadata.channels,
-              narrativeAngle: metadata.narrative,
-              counterObjection: metadata.counterObjection
-            });
-          });
-        });
-      });
+function cruzar(se: Record<GenderType, Reparto<AgeGroupType>>, es: Reparto<EconomicLevelType>, ed: Reparto<EducationLevelType>, adultos: number): DemographicCohort[] {
+  const out: DemographicCohort[] = [];
+  for (const g of SEXOS) for (const a of EDADES) for (const e of ESTRATOS) for (const u of EDUCACIONES) {
+    const personas = se[g][a] * es[e] * ed[u];
+    out.push({
+      id: `cohorte-${g}-${a}-${e}-${u}`,
+      gender: g, ageGroup: a, economicLevel: e, educationLevel: u,
+      genderLabel: ETIQUETAS.sexo[g], ageGroupLabel: ETIQUETAS.edad[a], economicLevelLabel: ETIQUETAS.estrato[e], educationLevelLabel: ETIQUETAS.educacion[u],
+      fullTitle: `${ETIQUETAS.sexo[g]} · ${ETIQUETAS.edad[a].toLowerCase()} · ${ETIQUETAS.estrato[e].toLowerCase()} · ${ETIQUETAS.educacion[u].toLowerCase()}`,
+      personas: Math.round(personas),
+      pctAdultos: adultos ? (100 * personas) / adultos : 0,
+      guia: guiaGeneral(g, a, e),
     });
+  }
+  return out.sort((x, y) => y.personas - x.personas);
+}
 
-    // Ordenar de mayor a menor volumen electoral
-    return cohorts.sort((a, b) => b.estimatedActualVotes - a.estimatedActualVotes);
+const fichaDeDane = (dane: string) => { const id = municipioFichaPorDane(dane); return id ? territorioFicha(id) : null; };
+
+function municipiosDe(subregion: string | null): string[] {
+  return ANTIOQUIA_125_MUNICIPIOS_GEOJSON.features
+    .filter((f) => !subregion || String(f.properties.subregion ?? '') === subregion)
+    .map((f) => String((f.properties as { daneCode?: string }).daneCode));
+}
+
+/** Censo y participación del territorio entero (Registraduría). Debajo del municipio, el de la comuna de Medellín o el del municipio. */
+function electoralDe(daneList: string[], t: TerritorioFicha | null): SegmentacionTerritorio['electoral'] {
+  let censo = 0, mujeres = 0, hombres = 0, votantes = 0, censoAlc = 0, alcance = daneList.length > 1 ? `${daneList.length} municipios` : 'municipio';
+  const div = t && t.dane === '05001' ? (t.tipo === 'division' ? t.id : null) : null;
+  const comuna = div ? /^comuna-(\d+)$/.exec(div)?.[1] : null;
+  const cm = comuna ? getMedellinComunaCensus(Number(comuna)) : div?.startsWith('med-correg-') ? getMedellinCorregimientoCensus(div) : undefined;
+  if (cm) { censo = cm.total; mujeres = cm.mujeres; hombres = cm.hombres; alcance = t!.nombre; }
+  else {
+    for (const d of daneList) { const c = getMunicipalCensus(d); if (c) { censo += c.total; mujeres += c.mujeres; hombres += c.hombres; } }
+    if (t && t.tipo !== 'municipio') alcance = `municipio de ${t.municipio} (no hay censo cargado para ${t.nombre})`;
+  }
+  for (const d of daneList) { const r = getResultado2023(d); if (r) { votantes += r.alcaldia.votantes; censoAlc += r.alcaldia.censo; } }
+  return {
+    censo: censo || null, mujeres: mujeres || null, hombres: hombres || null, alcance,
+    participacionAlcaldia2023: censoAlc ? (100 * votantes) / censoAlc : null,
+    fuente: `${CENSUS_SOURCE_LABEL} · Registraduría, escrutinio de Alcaldía 2023 (participación de ${daneList.length > 1 ? 'los municipios' : 'todo el municipio'})`,
+  };
+}
+
+const cache = new Map<string, Promise<SegmentacionTerritorio>>();
+
+/** Segmentos de la unidad territorial (la del territorio activo, por defecto en la vista) */
+export function segmentarTerritorio(sel: SeleccionDossier): Promise<SegmentacionTerritorio> {
+  const clave = JSON.stringify(sel);
+  if (!cache.has(clave)) {
+    const p = armar(sel);
+    p.catch(() => cache.delete(clave));
+    cache.set(clave, p);
+  }
+  return cache.get(clave)!;
+}
+
+async function armar(sel: SeleccionDossier): Promise<SegmentacionTerritorio> {
+  const id = sel.barrioId ?? sel.comunaId ?? sel.muniId;
+  const t = id ? territorioFicha(id) : null;
+  const daneList = t ? [t.dane] : municipiosDe(sel.subregion);
+  await Promise.all(daneList.flatMap((d) => [cargarDemografia(d), cargarEconomia(d)]));
+
+  let se: SexoEdadT; let eco: EcoT | null; let territorio: string; let nivel: SegmentacionTerritorio['nivel'];
+  if (t) {
+    se = sexoEdadDe(t); eco = ecoDe(t); territorio = t.tipo === 'municipio' ? t.nombre : `${t.nombre} (${t.municipio})`;
+    nivel = t.tipo === 'municipio' ? 'municipio' : t.tipo === 'division' ? 'división' : 'subdivisión';
+  } else {
+    // Subregión o departamento: suma de los municipios (proyección DANE 2026 por municipio y CNPV 2018 por manzana)
+    territorio = sel.subregion ? `Subregión ${sel.subregion}` : 'Antioquia';
+    nivel = sel.subregion ? 'subregión' : 'departamento';
+    const fichas = daneList.map(fichaDeDane).filter((x): x is TerritorioFicha => !!x);
+    const partes = fichas.map((f) => ({ se: sexoEdadDe(f), eco: ecoDe(f) }));
+    const completo = partes.length > 0 && partes.every((x) => x.se.reparto);
+    const rep = { hombre: vacioEdad(), mujer: vacioEdad() };
+    if (completo) for (const x of partes) for (const g of SEXOS) for (const a of EDADES) rep[g][a] += x.se.reparto![g][a];
+    se = completo ? { estado: 'oficial', fuente: `${partes[0].se.fuente.replace(/ \(municipio\)$/, '')}, suma de ${partes.length} municipios`, reparto: rep } : { estado: 'sin-informacion', fuente: 'DANE', reparto: null };
+    // Estrato: suma de viviendas. Educación: promedio de los % municipales ponderado por sus personas de 18 años o más.
+    const conEco = partes.filter((x) => x.eco && x.se.reparto);
+    if (conEco.length === partes.length && conEco.length) {
+      const estratos = new Array(7).fill(0) as number[]; const edu = new Array(5).fill(0) as number[];
+      for (const x of conEco) {
+        const w = SEXOS.reduce((s, g) => s + EDADES.reduce((s2, a) => s2 + x.se.reparto![g][a], 0), 0);
+        x.eco!.estratos.forEach((v, i) => { estratos[i] += v; });
+        x.eco!.educacionPct.forEach((v, i) => { edu[i] += v * w; });
+      }
+      eco = { estratos, educacionPct: edu, peso: 1 };
+    } else eco = null;
   }
 
-  /**
-   * Resuelve los dolores, canales y narrativa específicos de cada una de las 54 combinaciones
-   */
-  private static resolveCohortMessaging(
-    gender: GenderType,
-    age: AgeGroupType,
-    econ: EconomicLevelType,
-    edu: EducationLevelType,
-    candidateName: string,
-    territoryName: string
-  ) {
-    const issues: string[] = [];
-    const channels: string[] = [];
-    let tagline = '';
-    let narrative = '';
-    let counterObjection = '';
-    let fitScore = 80;
+  const adultos = se.reparto ? SEXOS.reduce((s, g) => s + EDADES.reduce((s2, a) => s2 + se.reparto![g][a], 0), 0) : null;
+  const est = eco ? repartoEstrato(eco.estratos) : null;
+  const edu = eco ? repartoEducacion(eco.educacionPct) : null;
+  const fuenteEco = 'DANE, CNPV 2018 por manzana (sumado en el territorio)';
+  const faltantes = [
+    !se.reparto && 'sexo y edad',
+    !est && 'estrato',
+    !edu && 'nivel educativo',
+  ].filter(Boolean) as string[];
 
-    // 1. Dolores y Preocupaciones por combinación
-    if (age === 'joven') {
-      if (econ === 'bajo') {
-        issues.push('Primer empleo sin palancas', 'Transporte público accesible', 'Seguridad barrial y freno al reclutamiento', 'Cursos técnicos y oficios rápidos');
-        channels.push('TikTok / Reels', 'WhatsApp barrial', 'Activaciones en canchas y parques', 'Grupos de empleo locales');
-        tagline = 'Jóvenes que buscan salir adelante frente a la falta de oportunidades y el costo de vida.';
-        narrative = `Enfocar la propuesta de ${candidateName} en incentivos tributarios para empresas que contraten jóvenes de sectores populares y cero burocracia para emprender.`;
-        counterObjection = 'Ante el escepticismo de "los políticos prometen y no cumplen", mostrar acuerdos directos con gremios comerciales locales.';
-        fitScore = 86;
-      } else if (econ === 'medio') {
-        issues.push('Empleo en tecnología y servicios', 'Becas universitarias de mérito', 'Salud mental y espacios de coworking', 'Acceso a vivienda joven');
-        channels.push('Instagram Stories', 'TikTok', 'Twitter / X', 'Comunidades universitarias y Discord');
-        tagline = 'Jóvenes de clase media con aspiraciones globales, preocupados por la movilidad social y el futuro.';
-        narrative = `Posicionar a ${candidateName} como un líder moderno pro-tecnología, conectividad y libertad económica que premia el mérito.`;
-        counterObjection = 'Demostrar propuestas técnicas viables sin populismo asistencialista.';
-        fitScore = 89;
-      } else {
-        issues.push('Ecosistema de startups e inversión', 'Sostenibilidad y medio ambiente', 'Libertades civiles y transparencia', 'Internacionalización');
-        channels.push('LinkedIn', 'Instagram', 'Podcasts especializados', 'Eventos de networking');
-        tagline = 'Jóvenes de alta capacidad adquisitiva, enfocados en innovación y calidad institucional.';
-        narrative = `${candidateName} representa la certeza jurídica, la atracción de capital y el combate a la corrupción estatal.`;
-        counterObjection = 'Exigir planes de gobierno con métricas de impacto claras.';
-        fitScore = 84;
-      }
-    } else if (age === 'adulto') {
-      if (gender === 'mujer') {
-        if (econ === 'bajo') {
-          issues.push('Centros de cuidado y guarderías de horario extendido', 'Freno a la extorsión en tiendas y hogares', 'Subsidio a la canasta familiar', 'Crédito productivo sin gota a gota');
-          channels.push('Grupos de WhatsApp barriales', 'Salones comunales', 'Puerta a puerta matutino', 'Emisoras locales');
-          tagline = 'Mujeres jefas de hogar que sostienen a sus familias en medio de la inflación y la inseguridad.';
-          narrative = `${candidateName} prioriza la protección del ingreso del hogar, seguridad en las esquinas y facilidades de guardería para que puedan trabajar.`;
-          counterObjection = 'Frente al temor de pérdida de ayudas sociales, asegurar su continuidad y ampliación hacia la autonomía económica.';
-          fitScore = 93;
-        } else if (econ === 'medio') {
-          issues.push('Costos educativos de los hijos', 'Seguridad en el transporte y calles', 'Estabilidad laboral y emprendimiento', 'Atención médica oportuna');
-          channels.push('Facebook e Instagram', 'WhatsApp de padres de familia', 'Puntos de encuentro y comercio', 'Prensa local');
-          tagline = 'Mujeres trabajadoras de clase media que equilibran familia, profesión y economía doméstica.';
-          narrative = `${candidateName} promueve la formalización, créditos blandos para microempresas lideradas por mujeres y mano dura contra el delito callejero.`;
-          counterObjection = 'Presentar propuestas concretas de alivio tributario y seguridad en transporte.';
-          fitScore = 91;
-        } else {
-          issues.push('Carga tributaria excesiva', 'Libre competencia y seguridad jurídica', 'Educación bilingüe de excelencia', 'Salud privada y bienestar');
-          channels.push('LinkedIn', 'Instagram', 'Reuniones de gremios y clubes', 'Medios de opinión');
-          tagline = 'Profesionales, empresarias y ejecutivas con alto poder de decisión y opinión informada.';
-          narrative = `Liderazgo con visión de gerencia pública, optimización del gasto estatal y defensa de la iniciativa privada.`;
-          counterObjection = 'Exigir solvencia técnica y un equipo económico de primer nivel.';
-          fitScore = 85;
-        }
-      } else {
-        // Hombre adulto
-        if (econ === 'bajo') {
-          issues.push('Mano dura contra la extorsión y microtráfico', 'Empleo formal y salarios dignos', 'Acceso a crédito sin usura', 'Seguridad para trabajar de noche');
-          channels.push('WhatsApp', 'Talleres y fábricas', 'Torneos de fútbol barriales', 'Radio popular AM/FM');
-          tagline = 'Hombres trabajadores que enfrentan la informalidad y la delincuencia en sus barrios.';
-          narrative = `${candidateName} garantiza orden público, respaldo a la fuerza pública y estímulos a sectores de construcción e industria para generar empleos.`;
-          counterObjection = 'Demostrar carácter firme y antecedentes de coherencia.';
-          fitScore = 90;
-        } else if (econ === 'medio') {
-          issues.push('Protección del poder adquisitivo', 'Tarifas justas de servicios públicos', 'Seguridad comercial e industrial', 'Movilidad y vías');
-          channels.push('Facebook Groups', 'WhatsApp laboral', 'Canales de noticias regionales', 'Comercio local');
-          tagline = 'Padres de familia, comerciantes e independientes que mueven la economía intermedia.';
-          narrative = `${candidateName} defiende al contribuyente de a pie, frena el derroche fiscal y apoya a quien arriesga capital para crear empresa.`;
-          counterObjection = 'Presentar planes específicos para congelar alzas tributarias y mejorar vías.';
-          fitScore = 88;
-        } else {
-          issues.push('Seguridad institucional e inversión', 'Simplificación de trámites y licencias', 'Infraestructura vial y logística', 'Defensa del modelo productivo');
-          channels.push('LinkedIn', 'Foros empresariales', 'Prensa económica', 'Twitter / X');
-          tagline = 'Empresarios, directivos e inversionistas que exigen estabilidad macroeconómica e institucional.';
-          narrative = `Garantía de un Estado austero, facilitador y con reglas de juego predecibles para la inversión en ${territoryName}.`;
-          counterObjection = 'Cuestionar compromisos de largo plazo y gobernabilidad.';
-          fitScore = 86;
-        }
-      }
-    } else {
-      // Adulto Mayor (60+)
-      if (econ === 'bajo') {
-        issues.push('Entrega oportuna de medicamentos', 'Subsidio integral al adulto mayor', 'Comedores comunitarios dignos', 'Seguridad en calles y parques');
-        channels.push('Radio AM comunitaria', 'Puntos de pago de subsidios', 'Parroquias y centros de salud', 'Visitas puerta a puerta');
-        tagline = 'Adultos mayores en vulnerabilidad que requieren dignidad, salud y acompañamiento estatal.';
-        narrative = `${candidateName} propone un sistema de salud que lleve el medicamento a la casa y dignifique a quienes construyeron el territorio.`;
-        counterObjection = 'Asegurar que los subsidios nunca serán recortados.';
-        fitScore = 91;
-      } else {
-        issues.push('Defensa del ahorro pensional', 'Atención en salud de alta complejidad', 'Seguridad frente al engaño y estafas', 'Espacios públicos caminables y seguros');
-        channels.push('WhatsApp familiar', 'Radio tradicional', 'Reuniones de pensionados', 'Prensa dominical');
-        tagline = 'Jubilados y adultos mayores de clase media y alta con alta disciplina cívica y voto garantizado.';
-        narrative = `${candidateName} blindará las pensiones contra reformas expropiatorias y garantizará ciudades seguras para caminar en paz.`;
-        counterObjection = 'Mostrar respeto irrestricto a la propiedad privada y a los ahorros de toda una vida.';
-        fitScore = 92;
-      }
-    }
+  return {
+    territorio, nivel, adultos: adultos != null ? Math.round(adultos) : null,
+    sexoEdad: se,
+    estrato: { estado: est ? 'oficial' : 'sin-informacion', fuente: `${fuenteEco}: viviendas por estrato`, reparto: est?.reparto ?? null, sinEstratoPct: est?.sinEstratoPct ?? null },
+    educacion: { estado: edu ? 'oficial' : 'sin-informacion', fuente: `${fuenteEco}: personas por nivel educativo alcanzado (todas las edades)${t ? '' : ', ponderado por las personas de 18 años o más de cada municipio'}`, reparto: edu },
+    electoral: electoralDe(daneList, t),
+    cohortes: se.reparto && est && edu && adultos ? cruzar(se.reparto, est.reparto, edu, adultos) : [],
+    faltantes,
+    metodo: METODO_SEGMENTOS,
+  };
+}
 
-    return { issues, channels, tagline, narrative, counterObjection, fitScore };
-  }
+/** Texto de los segmentos para la instrucción de Gemini (solo cifras de los datos, con su rótulo) */
+export function segmentacionComoTexto(s: SegmentacionTerritorio, foco?: DemographicCohort): string {
+  const n = (x: number | null | undefined) => (x == null ? 'sin información' : Math.round(x).toLocaleString('es-CO'));
+  const p = (x: number | null | undefined) => (x == null ? 'sin información' : `${x.toFixed(1).replace('.', ',')} %`);
+  const lineas = [
+    `Segmentos de población de ${s.territorio} (${s.nivel}).`,
+    `Personas de 18 años o más: ${n(s.adultos)} (${s.sexoEdad.fuente}).`,
+    s.estrato.reparto ? `Estrato (viviendas): bajo ${p(100 * s.estrato.reparto.bajo)}, medio ${p(100 * s.estrato.reparto.medio)}, alto ${p(100 * s.estrato.reparto.alto)}. ${s.estrato.fuente}.` : 'Estrato: sin información.',
+    s.educacion.reparto ? `Nivel educativo (personas): primaria o ninguno ${p(100 * s.educacion.reparto.primaria)}, secundaria ${p(100 * s.educacion.reparto.secundaria)}, superior ${p(100 * s.educacion.reparto.superior)}. ${s.educacion.fuente}.` : 'Nivel educativo: sin información.',
+    `Censo electoral (${s.electoral.alcance}): ${n(s.electoral.censo)}; participación en Alcaldía 2023: ${p(s.electoral.participacionAlcaldia2023)} (${s.electoral.fuente}). El censo no trae edad, estrato ni educación: no hay votos ni participación por segmento.`,
+    `Método de los cruces: ${s.metodo}`,
+  ];
+  if (foco) lineas.push(`Segmento elegido: ${foco.fullTitle}: ${n(foco.personas)} personas de 18 años o más estimadas (${p(foco.pctAdultos)} de los adultos del territorio). Estimado, no conteo.`);
+  return lineas.join('\n');
 }
