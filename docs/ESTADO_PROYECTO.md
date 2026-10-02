@@ -1,6 +1,6 @@
 # Proteus — estado del proyecto (memoria compartida entre agentes)
 
-Última actualización: 1-oct-2026 (Claude Opus: Concejo y Asamblea 2023 por candidato en el Valle de Aburrá `27f007b`, estratificación oficial de Sabaneta `58b8b5f`, serie del censo electoral `9fba5cb` y por puesto `b8b15c8`). **Todo agente debe actualizar este archivo al terminar.**
+Última actualización: 2-oct-2026 (Claude Opus: estratificación de Medellín y valor del suelo AMVA `e9a59bc`, analista territorial y dossier `b0ec6ae`/`ba9ed7c`, evaluación del director de contenidos). **Todo agente debe actualizar este archivo al terminar.**
 Repositorio local: `C:\Users\isaac\OneDrive\Documentos\Proyecto Proteus`. Remoto: github.com/isaacmendoza265-cmd/proteus-1.45.
 Ramas `codex/navegacion-mapa`, `claude/inicio` y `claude/encuestas-2026` ya fusionadas en `main` (28-sep). No subir bundles a GitHub por la web: se aplican con `git fetch <bundle>`.
 Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en el PATH de los agentes
@@ -31,6 +31,16 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
   `src/data/estratificacion/`. Los otros 9 municipios del Valle de Aburrá no publican la suya descargable; Medellín sí
   (MapServer `VC_Catastro_VCT/10`, 32.384 manzanas, CC BY-SA) pero su servidor responde 403 a descargas automáticas:
   bajarla desde un navegador y dejarla en `_originales/estratificacion/medellin/`. Fuentes: `_originales/estratificacion/_FUENTES.md`.
+- **Estratificación oficial de Medellín** (2-oct, `e9a59bc`): capa del Distrito (32.384 manzanas), por barrio y por
+  comuna/corregimiento. Se consultó desde el navegador del usuario (el servidor bloquea descargas automáticas): conteo por
+  barrio y estrato en `_originales/estratificacion/medellin/`, con suma de control. **Valor del suelo del AMVA** en los
+  otros 8 municipios del Valle de Aburrá (Mapa de Valores de Suelo Metropolitano, 749 zonas, sep-2022, CC BY 4.0;
+  catastral, salvo Copacabana y La Estrella, comercial): `scripts/build_valores_suelo_amva.py` → `src/data/valoresSuelo/`.
+- **Analista territorial y dossier** (2-oct, `b0ec6ae`, `ba9ed7c`): `dossierTerritorialService` reúne todo lo que Proteus
+  tiene de una unidad (barrio, comuna, municipio, subregión) con su fuente; el Analista (debajo del generador de
+  contenido, `/api/analista/preguntar`, Gemini 3.8 Flash) responde solo con ese dossier, y el generador también lo lee
+  completo. **Sin probar con Gemini real** (la clave del servidor da 403). Evaluación de las herramientas de IA y plan
+  para unificarlas: `docs/EVALUACION_DIRECTOR_CONTENIDOS.md` (decisiones pendientes de Isaac y Jose en su sección 6).
 - **Serie del censo electoral por municipio** (1-oct, `9fba5cb`): habilitados de cada jornada 2018, 2019, 2022 (Congreso
   y Presidencia por separado), 2023 y 2026 para los 125 municipios (Registraduría, Consulta Histórico de Resultados
   Electorales). Las elecciones mesa a mesa 2018-2022 ya muestran participación municipal; ficha › Censo electoral
@@ -196,6 +206,10 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
   `territoryProfileService.ts`; ficha: `src/components/territorio/`.
 
 ## 5. Bitácora (agregar arriba lo más reciente)
+- 2-oct (Claude Opus, `main`) `e9a59bc`, `b0ec6ae`, `ba9ed7c`: estratificación de Medellín, valor del suelo AMVA, analista
+  territorial con dossier completo; el generador lee el dossier. Evaluación en `docs/EVALUACION_DIRECTOR_CONTENIDOS.md`:
+  22 de 25 prompts alcanzables no reciben identidad ni marco y 10 archivos a mano alimentan a Gemini; propone una sola
+  tubería (dossier → marco → identidad → tarea) en 4 fases.
 - 1-oct (Claude Opus, `main`) `27f007b`, `58b8b5f`, `9fba5cb`: Concejo y Asamblea 2023 por candidato y puesto en el Valle
   de Aburrá (MMV), estratificación oficial de Sabaneta y serie del censo electoral por municipio. Investigado y anotado:
   los códigos de puesto cambian y se parten entre años: el censo es comparable por municipio o comuna, y por puesto solo
