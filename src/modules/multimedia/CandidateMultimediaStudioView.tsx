@@ -206,7 +206,7 @@ export const CandidateMultimediaStudioView: React.FC<CandidateMultimediaStudioVi
                 Fotometría & Colorimetría
               </div>
               <p className="text-xs text-[var(--c-muted)] leading-relaxed">
-                Analiza las características morfológicas, tono de piel, contraste y presencia fotográfica del candidato para construir su paleta de colorimetría institucional.
+                Mide en la foto del perfil la paleta, la tonalidad y la composición, y las compara con la paleta de marca. Gemini las interpreta con el perfil y el marco; ve la foto solo si la identidad lo permite.
               </p>
 
               {candidateProfile.photoBase64 ? (

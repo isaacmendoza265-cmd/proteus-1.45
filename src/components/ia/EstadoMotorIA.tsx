@@ -34,7 +34,7 @@ export const EstadoMotorIA: React.FC<{ cobertura?: RegistroLlamada['cobertura'] 
               {cob.filter((c) => c.estado !== 'no aplica').map((c) => (
                 <li key={c.id}>
                   <span className={c.estado === 'con datos' ? 'text-[var(--c-ok)]' : 'text-[var(--c-muted)]'}>{c.estado === 'con datos' ? '●' : '○'}</span>{' '}
-                  {c.titulo} <span className="text-[var(--c-muted)]">({c.nivel}{c.estado === 'con datos' ? `, ${c.datos} datos` : ', sin datos para esta unidad'})</span>
+                  {c.titulo} <span className="text-[var(--c-muted)]">({c.nivel}{c.estado === 'con datos' ? `, ${c.datos} ${c.datos === 1 ? 'dato' : 'datos'}` : ', sin datos para esta unidad'})</span>
                 </li>
               ))}
             </ul>
