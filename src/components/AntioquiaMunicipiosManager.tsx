@@ -62,7 +62,8 @@ import {
   ANTIOQUIA_125_MUNICIPALITIES_MASTER_DATA, 
   UnifiedMunicipalityRecord 
 } from '../data/antioquia125MunicipalitiesMasterData';
-import { activeTerritoryService } from '../services/activeTerritoryContextService';
+import { activeTerritoryService, seleccionDeEstado, useActiveTerritory } from '../services/activeTerritoryContextService';
+import { territorioFicha } from '../services/territoryProfileService';
 
 interface CandidateProfileProps {
   nombre?: string;
@@ -254,7 +255,20 @@ export const AntioquiaMunicipiosManager: React.FC<AntioquiaMunicipiosManagerProp
   const [searchMuniQuery, setSearchMuniQuery] = useState<string>('');
 
   // Estado del municipio activo
-  const [selectedMuniId, setSelectedMuniId] = useState<string>('bello');
+  // Arranca y sigue el municipio del territorio activo (lo elegido en el mapa); el selector propio se conserva
+  const { activeTerritory } = useActiveTerritory();
+  const muniDelActivo = (): string | null => {
+    const id = seleccionDeEstado(activeTerritory).muniId;
+    const t = id ? territorioFicha(id) : null;
+    if (!id || !t) return null;
+    return STRATEGIC_7_KEYS.includes(id) ? id : `mpio-${t.dane}`;
+  };
+  const [selectedMuniId, setSelectedMuniId] = useState<string>(() => muniDelActivo() ?? 'bello');
+  useEffect(() => {
+    const m = muniDelActivo();
+    if (m) setSelectedMuniId(m);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTerritory.updatedAt]);
   
   const currentMuni: StrategicMunicipality = useMemo(() => {
     return getMunicipalityAdapter(selectedMuniId);

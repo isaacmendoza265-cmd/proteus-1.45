@@ -1,11 +1,12 @@
 import { AnalistaTerritorial } from '../../components/territorio/AnalistaTerritorial';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { HerramientasUnidad, type AnclaMapa } from '../../components/territorio/HerramientasUnidad';
+import type { NavViewId } from '../../components/layout/navigation';
 import { 
   ZoomLevelId, 
   ThematicMetricLayer, 
   TerritoryGeoFeature, 
   GEOJSON_LAYERS_BY_ZOOM, 
-  ZOOM_LEVELS_CONFIG,
   ORDERED_ZOOM_LEVELS
 } from '../../data/geojson';
 import { MapBreadcrumb } from '../../components/maps/MapBreadcrumb';
@@ -18,7 +19,7 @@ import { GeneradorContenido } from '../../components/territorio/GeneradorConteni
 import { AnalisisNarrativoMunicipio } from '../../components/territorio/AnalisisNarrativoMunicipio';
 import { EncuestasTerritorio } from '../../components/territorio/EncuestasTerritorio';
 import type { SeleccionEncuestas } from '../../components/encuestas/VotoCorrelaciones';
-import { SELECCION_GENERAL, seleccionDesdeMapa, type PerfilCandidato } from '../../services/contentGeneratorService';
+import { SELECCION_GENERAL, nombreSeleccion, seleccionDesdeMapa, type PerfilCandidato } from '../../services/contentGeneratorService';
 import { RedDePoder3D } from '../../components/territorio/RedDePoder3D';
 import { usePuestosTerritorio, puestosDe, codigosResultadosDe } from '../../components/territorio/usePuestosTerritorio';
 import { territorioFicha, tieneFicha, municipioFichaPorDane, MUNICIPIOS_CON_FICHA } from '../../services/territoryProfileService';
@@ -29,15 +30,8 @@ import {
   Layers, 
   Building2,
   MapPin, 
-  Sparkles, 
-  Users, 
-  Vote, 
-  TrendingUp, 
-  ArrowRight,
   FileSpreadsheet,
-  Network,
-  X,
-  Megaphone
+  X
 } from 'lucide-react';
 import { E24HistoricalViewer } from '../../components/maps/E24HistoricalViewer';
 import { activeTerritoryService } from '../../services/activeTerritoryContextService';
@@ -54,6 +48,8 @@ interface TerritorialZoomHubViewProps {
   onAbrirEncuestas?: (s: SeleccionEncuestas) => void;
   /** Perfil del candidato activo (nombre y estilo, para el generador de contenido) */
   candidato?: PerfilCandidato | null;
+  /** Abre otra vista de la app (las herramientas de la columna derecha) */
+  onNavigateToView?: (vista: NavViewId) => void;
 }
 
 export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
@@ -61,6 +57,7 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
   onNavigateToVoterSegmentation,
   onAbrirEncuestas,
   candidato,
+  onNavigateToView,
 }) => {
   const [currentLevel, setCurrentLevel] = useState<ZoomLevelId>('municipal');
   const [activeLayer, setActiveLayer] = useState<ThematicMetricLayer>('electoral');
@@ -125,6 +122,31 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
     const dane = selectedFeature ? ((selectedFeature.properties as { daneCode?: string }).daneCode ?? /(\d{5})$/.exec(id!)?.[1] ?? null) : null;
     return seleccionDesdeMapa({ featureId: id, featureName: selectedFeature?.properties.name, muniId: isMunicipal ? selectedMunicipalityId : null, dane });
   }, [selectedFeature, currentLevel, selectedMunicipalityId, subregionSel]);
+  // EL MAPA ES LA CONSOLA DE NAVEGACIÓN: cada unidad que se elige aquí pasa a ser el territorio activo de toda la app
+  // (barra superior, Segmentos, Publicidad, Multimedia, Redactar, piezas y los selectores propios de las demás
+  // herramientas). No se aplica al abrir la pantalla, para no pisar el territorio que el usuario ya tenía.
+  const primeraSincronizacion = useRef(true);
+  useEffect(() => {
+    if (primeraSincronizacion.current) { primeraSincronizacion.current = false; return; }
+    activeTerritoryService.setFromMapa(seleccionContenido, selectedFeature);
+  }, [seleccionContenido, selectedFeature]);
+
+  // Columna de herramientas: aparece cuando hay una unidad elegida en el mapa
+  const fueraDeAntioquia = !!selectedFeature && !seleccionContenido.muniId && !seleccionContenido.subregion
+    && (currentLevel === 'nacional' && !/antioquia/i.test(selectedFeature.properties.name ?? ''));
+  const hayUnidad = !!selectedFeature || !!subregionSel || isMunicipalScale;
+  const nombreUnidad = !hayUnidad ? null
+    : fueraDeAntioquia ? selectedFeature!.properties.name
+      : nombreSeleccion(seleccionContenido);
+  const irAHerramienta = (v: NavViewId) => {
+    activeTerritoryService.setFromMapa(seleccionContenido, selectedFeature);
+    onNavigateToView?.(v);
+  };
+  const irAAncla = (a: AnclaMapa) => {
+    if (a === 'redes') { setVista('redes'); return; }
+    document.getElementById(a === 'generador' ? 'generador-contenido' : 'analista-territorial')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
   const puestosDeFicha = useMemo(
     () => (fichaTerritorio ? { territorioId: fichaTerritorio.id, codigosResultados: codigosResultadosFicha, codigos2026: puestosFicha.map((p) => p.codPuesto) } : null),
     [fichaTerritorio, codigosResultadosFicha, puestosFicha],
@@ -150,36 +172,24 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
   const encuestasBajoMunicipio = isMunicipalScale && (currentLevel !== 'municipal' || !!selectedFeature);
 
   const currentDataset = GEOJSON_LAYERS_BY_ZOOM[currentLevel];
-  const currentLevelConfig = ZOOM_LEVELS_CONFIG[currentLevel];
 
   // Bridge handlers to Content Director and Voter Segmentation
   // "Generar contenido" (drawer, popup y banner) lleva al generador de ESTA pantalla, con el territorio elegido: es el
   // que lee las tres macrofuentes completas. Antes saltaba a Redactar (herramienta vieja).
   const irAlGenerador = () => setTimeout(() => document.getElementById('generador-contenido')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60);
   const handleGenerateContent = (feature: TerritoryGeoFeature) => {
-    activeTerritoryService.setFromGeoFeature(feature);
+    // El territorio activo lo actualiza la sincronización con el mapa (efecto de arriba)
     setSelectedFeature(feature);
     irAlGenerador();
   };
   void onNavigateToContentDirector;
 
   const handleSegmentVoters = (feature: TerritoryGeoFeature) => {
-    activeTerritoryService.setFromGeoFeature(feature);
+    const dane = (feature.properties as { daneCode?: string }).daneCode ?? /(\d{5})$/.exec(String(feature.id))?.[1] ?? null;
+    activeTerritoryService.setFromMapa(seleccionDesdeMapa({ featureId: String(feature.id), featureName: feature.properties.name, muniId: isMunicipalScale ? selectedMunicipalityId : null, dane }), feature);
     if (onNavigateToVoterSegmentation) {
       onNavigateToVoterSegmentation(feature);
     }
-  };
-
-  // Handler for scale-level generation (when no specific feature is selected, or using selected feature)
-  const handleTriggerCurrentScaleContent = () => {
-    // Sin territorio elegido no se toma uno al azar (antes, el primero del mapa): el generador queda en lo que haya
-    if (selectedFeature) handleGenerateContent(selectedFeature);
-    else irAlGenerador();
-  };
-
-  const handleTriggerCurrentScaleSegmentation = () => {
-    if (selectedFeature) handleSegmentVoters(selectedFeature);
-    else onNavigateToVoterSegmentation?.(undefined as unknown as TerritoryGeoFeature);
   };
 
   // Handle drill down through scales
@@ -218,15 +228,6 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
     setSearchQuery('');
   };
 
-  // Calculate aggregated stats for active scale
-  const totalPopulation = currentDataset?.features.reduce(
-    (acc, f) => acc + (f.properties.population || 0), 
-    0
-  ) || 0;
-  const totalCensus = currentDataset?.features.reduce(
-    (acc, f) => acc + (f.properties.electoralCensus || 0), 
-    0
-  ) || 0;
 
   return (
     <div className="space-y-6 pb-12 animate-fadeIn">
@@ -267,7 +268,9 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
         />
       )}
 
-      {vista === 'mapa' && (<>
+      {vista === 'mapa' && (
+      <div className="xl:grid xl:grid-cols-[minmax(0,1fr)_18rem] xl:gap-5 items-start">
+      <div className="min-w-0 space-y-6">
       {/* 2. Navigation Breadcrumb (5 Steps) */}
       <MapBreadcrumb
         currentLevel={currentLevel}
@@ -345,7 +348,6 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
               onCambiarEleccion={setEleccion}
               seccion={seccionFicha}
               onCambiarSeccion={cambiarSeccionFicha}
-              onUsarComoActivo={selectedFeature ? () => activeTerritoryService.setFromGeoFeature(selectedFeature) : undefined}
             />
           </div>
         )}
@@ -363,6 +365,11 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
         )}
       </div>
 
+      {/* Herramientas de la unidad (en pantallas medianas, debajo del mapa; en grandes, columna derecha) */}
+      <div className="xl:hidden">
+        <HerramientasUnidad nombre={nombreUnidad} antioquia={!fueraDeAntioquia} onIr={irAHerramienta} onAncla={irAAncla} enCuadricula />
+      </div>
+
       {/* 4.1. Generador de contenido enlazado a la selección del mapa */}
       <div id="generador-contenido" className="scroll-mt-4" />
       <GeneradorContenido
@@ -373,7 +380,9 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
       />
 
       {/* 4.1.b Analista territorial: preguntas sobre la unidad elegida, con todo lo que Proteus tiene de ella */}
-      <AnalistaTerritorial seleccion={seleccionContenido} />
+      <div id="analista-territorial" className="scroll-mt-4">
+        <AnalistaTerritorial seleccion={seleccionContenido} />
+      </div>
 
       {/* 4.2. Puestos de votación del territorio visible */}
       <PollingStationsPanel
@@ -384,48 +393,6 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
         comunaAbiertaId={currentLevel === 'comunas-barrios' ? comunaAbierta?.id ?? null : null}
         subregion={currentLevel === 'departamental' ? subregionSel : null}
       />
-
-      {/* 4.5. Fast Campaign Bridge Banner (Conexión Directa con Generador de Contenido y Segmentación) */}
-      <div className="p-4 sm:p-5 rounded-3xl bg-gradient-to-r from-amber-500/15 via-sky-500/15 to-purple-500/15 border border-amber-400/40 backdrop-blur-2xl shadow-[0_10px_30px_rgba(0,0,0,0.5)] flex flex-col md:flex-row items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-2xl bg-amber-500/30 border border-amber-400/60 text-amber-300 shadow-[0_0_15px_rgba(251,191,36,0.3)] shrink-0">
-            <Sparkles className="w-5 h-5" />
-          </div>
-          <div>
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="text-xs font-mono uppercase tracking-wider text-amber-300 font-bold">
-                Conexión Bidireccional Activa • GIS ➔ Inteligencia de Campaña
-              </span>
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 font-mono font-bold">
-                {selectedFeature ? selectedFeature.properties.name : currentLevelConfig.label}
-              </span>
-            </div>
-            <div className="text-xs text-slate-300 mt-0.5">
-              {selectedFeature 
-                ? `Transfiere inmediatamente los microdatos de ${selectedFeature.properties.name} (censo, DANE, NBI, liderazgo y problemáticas) al Director de Contenido.`
-                : `Explora o selecciona cualquier territorio en el mapa para redactar discursos hiperlocales y segmentar votantes con precisión quirúrgica.`
-              }
-            </div>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2.5 shrink-0 w-full md:w-auto">
-          <button
-            onClick={handleTriggerCurrentScaleContent}
-            className="flex-1 md:flex-none px-4 py-2.5 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black font-black text-xs shadow-[0_0_20px_rgba(251,191,36,0.4)] flex items-center justify-center gap-2 transition-all transform hover:scale-[1.02] active:scale-95 cursor-pointer"
-          >
-            <Megaphone className="w-4 h-4" />
-            <span>Generar Contenido con IA</span>
-          </button>
-          <button
-            onClick={handleTriggerCurrentScaleSegmentation}
-            className="flex-1 md:flex-none px-4 py-2.5 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold text-xs flex items-center justify-center gap-2 transition-all transform hover:scale-[1.02] active:scale-95 cursor-pointer"
-          >
-            <Users className="w-4 h-4 text-sky-400" />
-            <span>Segmentar Votantes</span>
-          </button>
-        </div>
-      </div>
 
       {/* 5. Direct 5-Scale Cards Selector */}
       <div className="space-y-3">
@@ -583,7 +550,14 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
           </button>
         </div>
       </div>
-      </>)}
+      </div>
+
+      {/* Columna derecha: herramientas de generación y análisis para la unidad elegida en el mapa */}
+      <aside className="hidden xl:block sticky top-0 max-h-[calc(100vh-6rem)] overflow-y-auto">
+        <HerramientasUnidad nombre={nombreUnidad} antioquia={!fueraDeAntioquia} onIr={irAHerramienta} onAncla={irAAncla} />
+      </aside>
+      </div>
+      )}
 
       {/* Standalone E-24 Historical Matrix Modal */}
       {e24ModalOpen && (

@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { 
   Globe, 
   MapPin, 
@@ -26,6 +26,7 @@ import { DEPARTMENT_NBI_SUMMARY, MUNICIPALITY_NBI_DATA, MunicipalityNBI } from '
 import { generateContent, formatAiError } from '../../services/geminiService';
 import { seleccionDeDane } from '../../services/ia/macrofuentes';
 import { getMunicipalCensus } from '../../services/electoralCensusService';
+import { useActiveTerritory } from '../../services/activeTerritoryContextService';
 import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
@@ -36,6 +37,21 @@ export const NationalDashboardView: React.FC = () => {
   const [selectedSubregion, setSelectedSubregion] = useState<string | null>(null);
   const [selectedMuni, setSelectedMuni] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'departamento' | 'municipios'>('municipios');
+
+  // Sigue el territorio activo (lo elegido en el mapa): su departamento y, si es un municipio, el municipio.
+  // Los selectores propios de esta vista se conservan.
+  const { activeTerritory } = useActiveTerritory();
+  useEffect(() => {
+    const t = activeTerritory;
+    const enAntioquia = !!t.unidad || t.deptId === 'dept-antioquia' || /antioquia/i.test(t.fullName ?? '');
+    const depto = t.scale === 'departamental' && !enAntioquia ? t.name : 'Antioquia';
+    const region = COLOMBIA_REGIONS.find((r) => r.departments.some((d) => d.name.toLowerCase() === depto.toLowerCase()));
+    if (!region) return;
+    setSelectedRegionId(region.id);
+    setSelectedDeptName(region.departments.find((d) => d.name.toLowerCase() === depto.toLowerCase())!.name);
+    setSelectedMuni(t.scale === 'municipal' && t.unidad?.muniId ? t.name : null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTerritory.updatedAt]);
   
   // Department IA report
   const [deptReport, setDeptReport] = useState<{ name: string; text: string } | null>(null);

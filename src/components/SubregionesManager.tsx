@@ -42,6 +42,7 @@ import ReactMarkdown from 'react-markdown';
 import { jsPDF } from 'jspdf';
 import { formatAiError, generateContent } from '../services/geminiService';
 import { seleccionDeSubregion } from '../services/ia/macrofuentes';
+import { seleccionDeEstado, useActiveTerritory } from '../services/activeTerritoryContextService';
 import { normalizarIdentidad } from '../services/identidad/identidad';
 import { getDaneMunicipio } from '../services/daneMunicipalService';
 import { getMunicipalCensus } from '../services/electoralCensusService';
@@ -84,7 +85,20 @@ export const SubregionesManager: React.FC<SubregionesManagerProps> = ({
   onNavigateToBio
 }) => {
   // Parámetro 1: Área geográfica (Subregión de Antioquia)
-  const [selectedSubregionId, setSelectedSubregionId] = useState<string>('valle-de-aburra');
+  // Arranca en la subregión del territorio activo (lo que se eligió en el mapa) y la sigue cuando cambia; el selector
+  // propio de esta herramienta se conserva.
+  const { activeTerritory } = useActiveTerritory();
+  const subregionDelActivo = (): string | null => {
+    const sub = seleccionDeEstado(activeTerritory).subregion;
+    if (!sub) return null;
+    return Object.keys(ANTIOQUIA_SUBREGIONS_DATA).find((k) => seleccionDeSubregion(ANTIOQUIA_SUBREGIONS_DATA[k].name).subregion === sub) ?? null;
+  };
+  const [selectedSubregionId, setSelectedSubregionId] = useState<string>(() => subregionDelActivo() ?? 'valle-de-aburra');
+  useEffect(() => {
+    const k = subregionDelActivo();
+    if (k) setSelectedSubregionId(k);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTerritory.updatedAt]);
   const [showMunicipalitiesList, setShowMunicipalitiesList] = useState<boolean>(false);
 
   // Parámetro 2: Grupo demográfico (General vs Microsegmentado)
@@ -440,7 +454,7 @@ export const SubregionesManager: React.FC<SubregionesManagerProps> = ({
 
   // Cálculo cuantitativo de la población objetivo según parámetros demográficos
   // Población oficial (DANE 2026) y censo electoral (Registraduría) de los municipios de la subregión según la capa de
-  // municipios. Antes: la población de la ficha escrita a mano (Oriente y Occidente mal sumadas) y "votantes en urnas"
+  // municipios. Antes: la población de la ficha escrita a mano y "votantes en urnas"
   // = población × 0,58 o × 0,54, sin fuente.
   const subregionOficial = useMemo(() => {
     const sel = seleccionDeSubregion(currentSubregion.name);

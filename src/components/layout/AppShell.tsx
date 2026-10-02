@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Search } from 'lucide-react';
 import { TopStatusBar } from './TopStatusBar';
 import { BarraModulos, SidebarNav } from './SidebarNav';
@@ -18,6 +18,17 @@ interface AppShellProps {
 type Tema = 'claro' | 'oscuro';
 const CLAVE_TEMA = 'proteus_tema';
 
+/** Menú lateral: abierto (con nombres), compacto (solo íconos) u oculto (más espacio para el mapa y el contenido) */
+type ModoMenu = 'abierto' | 'compacto' | 'oculto';
+const CLAVE_MENU = 'proteus_menu';
+function leerMenu(): ModoMenu {
+  try {
+    const m = localStorage.getItem(CLAVE_MENU);
+    if (m === 'abierto' || m === 'compacto' || m === 'oculto') return m;
+  } catch { /* sin almacenamiento */ }
+  return 'abierto';
+}
+
 function leerTema(): Tema {
   try {
     const t = localStorage.getItem(CLAVE_TEMA);
@@ -31,7 +42,16 @@ function leerTema(): Tema {
  * módulo, pestañas para sus vistas. Estilo "sobrio cívico" (claro u oscuro).
  */
 export const AppShell: React.FC<AppShellProps> = ({ currentView, onSelectView, candidateName, onOpenCandidateModal, usuario, children }) => {
-  const [collapsed, setCollapsed] = useState(false);
+  const [menu, setMenu] = useState<ModoMenu>(leerMenu);
+  // Al ocultarlo y volver a mostrarlo, vuelve como estaba (abierto o compacto)
+  const [ultimoVisible, setUltimoVisible] = useState<Exclude<ModoMenu, 'oculto'>>(() => (leerMenu() === 'compacto' ? 'compacto' : 'abierto'));
+  useEffect(() => {
+    try { localStorage.setItem(CLAVE_MENU, menu); } catch { /* sin almacenamiento */ }
+    if (menu !== 'oculto') setUltimoVisible(menu);
+  }, [menu]);
+  const alternarMenu = () => setMenu((m) => (m === 'oculto' ? ultimoVisible : 'oculto'));
+  const alternarRef = useRef(alternarMenu);
+  alternarRef.current = alternarMenu;
   const [archivosAbierto, setArchivosAbierto] = useState(false);
   const [tema, setTema] = useState<Tema>(leerTema);
   const [buscador, setBuscador] = useState(false);
@@ -47,6 +67,9 @@ export const AppShell: React.FC<AppShellProps> = ({ currentView, onSelectView, c
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
         setBuscador(true);
+      } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'b') {
+        e.preventDefault();
+        alternarRef.current();
       } else if (e.key === 'Escape') setBuscador(false);
     };
     window.addEventListener('keydown', onKey);
@@ -69,15 +92,16 @@ export const AppShell: React.FC<AppShellProps> = ({ currentView, onSelectView, c
 
   return (
     <div className="proteus-app flex h-screen overflow-hidden bg-[var(--c-bg)] text-[var(--c-ink)]">
-      <SidebarNav
+      {menu !== 'oculto' && <SidebarNav
         currentView={currentView}
         onSelectView={onSelectView}
-        collapsed={collapsed}
-        onToggleCollapse={() => setCollapsed(!collapsed)}
+        collapsed={menu === 'compacto'}
+        onToggleCollapse={() => setMenu(menu === 'compacto' ? 'abierto' : 'compacto')}
+        onHide={() => setMenu('oculto')}
         candidateName={candidateName}
         onOpenCandidateModal={onOpenCandidateModal}
         usuario={usuario}
-      />
+      />}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         <TopStatusBar
           onOpenArchivos={() => setArchivosAbierto(true)}
@@ -85,12 +109,14 @@ export const AppShell: React.FC<AppShellProps> = ({ currentView, onSelectView, c
           onOpenSearch={() => setBuscador(true)}
           tema={tema}
           onToggleTema={() => setTema(tema === 'claro' ? 'oscuro' : 'claro')}
+          menuOculto={menu === 'oculto'}
+          onToggleMenu={alternarMenu}
         />
         {/* relative: sin él, los elementos absolutos de dentro (p. ej. los sr-only de las tablas) se posicionan respecto
             a la página, la estiran (Territorio medía 2.412 px en una ventana de 950) y la rueda desplazaba la app
             entera, menú y barra incluidos. */}
         <main className="relative flex-1 overflow-y-auto px-4 md:px-8 pt-6 pb-24 lg:pb-6">
-          <div className="max-w-[1440px] mx-auto w-full flex flex-col gap-5">
+          <div className={`${currentView === 'territorial-zoom' ? 'max-w-none' : 'max-w-[1440px]'} mx-auto w-full flex flex-col gap-5`}>
             {modulo.id !== 'inicio' && (
               <div className="proteus-civico flex flex-col gap-3">
                 <div className="flex flex-col gap-1">

@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { 
   Network, 
   Layers, 
@@ -31,7 +31,9 @@ import { PoliticalHouse3DGraph } from '../../components/graphs/PoliticalHouse3DG
 import { ActorDossierDrawer } from '../../components/graphs/ActorDossierDrawer';
 import { DialecticalAnalysisCard } from '../../components/graphs/DialecticalAnalysisCard';
 import { CandidateProfile } from '../../components/CandidateProfileManager';
-import { activeTerritoryService } from '../../services/activeTerritoryContextService';
+import { activeTerritoryService, seleccionDeEstado, useActiveTerritory } from '../../services/activeTerritoryContextService';
+import { municipioFichaPorDane, territorioFicha } from '../../services/territoryProfileService';
+import { getMunicipalCensus } from '../../services/electoralCensusService';
 
 export interface PartyFilterConfig {
   id: string;
@@ -133,6 +135,17 @@ export const PoliticalHousesGraphView: React.FC<PoliticalHousesGraphViewProps> =
     return Array.from(set).sort();
   }, []);
 
+  // Arranca y sigue el municipio del territorio activo (lo elegido en el mapa); el filtro propio se conserva
+  const { activeTerritory } = useActiveTerritory();
+  useEffect(() => {
+    const id = seleccionDeEstado(activeTerritory).muniId;
+    const nombre = id ? territorioFicha(id)?.nombre : null;
+    const norm = (x: string) => x.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+    const m = nombre ? uniqueMunicipalities.find((u) => norm(u) === norm(nombre)) : null;
+    setSelectedMunicipality(m ?? 'all');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTerritory.updatedAt]);
+
   // Filtrado de nodos con soporte prioritario de GRAFO POR PARTIDO y concejales
   const searchedNodes = useMemo(() => {
     let list = GRAPH_NODES_DATA;
@@ -200,17 +213,12 @@ export const PoliticalHousesGraphView: React.FC<PoliticalHousesGraphViewProps> =
 
   // Navegar al Director de Contenido precargando el territorio del actor
   const handleNavigateToContent = (actor: GraphNodeActor) => {
+    // El municipio del actor pasa a ser el territorio activo (antes solo cambiaba el nombre y dejaba el municipio anterior)
+    const dane = getMunicipalCensus(actor.municipality)?.dane;
+    const muniId = dane ? municipioFichaPorDane(dane) : null;
+    if (muniId) activeTerritoryService.setFromMapa({ subregion: null, muniId, comunaId: null, barrioId: null });
     activeTerritoryService.setState({
-      scale: actor.sphere === 'extramunicipal' ? 'departamental' : 'municipal',
-      name: actor.municipality,
-      fullName: `${actor.municipality} (Área Metropolitana, Antioquia)`,
-      deptId: 'dept-antioquia',
-      subregId: 'subreg-valle-de-aburra',
-      keyProblems: [
-        `Tensión política con la ${actor.houseName}`,
-        `Disputa de liderazgo y avales con ${actor.name}`
-      ],
-      source: 'manual_selector'
+      keyProblems: [`Tensión política con la ${actor.houseName} (ficha auxiliar)`, `Disputa de liderazgo y avales con ${actor.name} (ficha auxiliar)`],
     });
     if (onNavigateToContentDirector) {
       onNavigateToContentDirector();

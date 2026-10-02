@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { 
   Bot, 
   Sparkles, 
@@ -23,6 +23,8 @@ import { municipalRepository } from '../../services/municipalRepositoryService';
 import { callGeminiApi, formatAiError } from '../../services/geminiService';
 import { seleccionDeDane } from '../../services/ia/macrofuentes';
 import { getMunicipalCensus } from '../../services/electoralCensusService';
+import { seleccionDeEstado, useActiveTerritory } from '../../services/activeTerritoryContextService';
+import { territorioFicha } from '../../services/territoryProfileService';
 import { CandidateProfile } from '../../components/CandidateProfileManager';
 
 interface AgentTeamConsoleViewProps {
@@ -33,7 +35,18 @@ export const AgentTeamConsoleView: React.FC<AgentTeamConsoleViewProps> = ({
   candidateProfile
 }) => {
   const [selectedAgentId, setSelectedAgentId] = useState<string>(PROTEUS_AGENT_TEAM[0].id);
-  const [targetMuniQuery, setTargetMuniQuery] = useState('Medellín');
+  // El municipio sale del territorio activo (lo elegido en el mapa) y se puede cambiar aquí
+  const { activeTerritory } = useActiveTerritory();
+  const municipioActivo = () => {
+    const id = seleccionDeEstado(activeTerritory).muniId;
+    return id ? territorioFicha(id)?.nombre ?? null : null;
+  };
+  const [targetMuniQuery, setTargetMuniQuery] = useState(() => municipioActivo() ?? 'Medellín');
+  useEffect(() => {
+    const m = municipioActivo();
+    if (m) setTargetMuniQuery(m);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTerritory.updatedAt]);
   const [agentTaskPrompt, setAgentTaskPrompt] = useState('Analiza los 3 principales dolores comunitarios y genera una propuesta prioritaria.');
   const [isRunningTask, setIsRunningTask] = useState(false);
   const [agentExecutionLog, setAgentExecutionLog] = useState<string | null>(null);

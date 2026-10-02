@@ -132,6 +132,7 @@ export default function App() {
           onNavigateToVoterSegmentation={() => setCurrentView('voter-segmentation')}
           onAbrirEncuestas={(sel) => { setSeleccionEncuestas(sel); setCurrentView('encuestas-2026'); }}
           candidato={candidateProfile}
+          onNavigateToView={setCurrentView}
         />
       )}
 

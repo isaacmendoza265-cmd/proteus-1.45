@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChevronLeft, ChevronRight, LogOut } from 'lucide-react';
+import { ChevronLeft, ChevronRight, LogOut, PanelLeftClose } from 'lucide-react';
 import { cerrarSesion, type UsuarioSesion } from '../../services/sesionCliente';
 import { MODULES, moduloDeVista, type NavViewId } from './navigation';
 
@@ -10,6 +10,8 @@ interface SidebarNavProps {
   onSelectView: (view: NavViewId) => void;
   collapsed: boolean;
   onToggleCollapse: () => void;
+  /** Oculta el menú del todo (se vuelve a mostrar desde la barra superior o con Ctrl B) */
+  onHide?: () => void;
   candidateName?: string;
   onOpenCandidateModal?: () => void;
   usuario?: UsuarioSesion | null;
@@ -17,7 +19,7 @@ interface SidebarNavProps {
 
 const iniciales = (n: string) => n.split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]?.toUpperCase()).join('');
 
-export const SidebarNav: React.FC<SidebarNavProps> = ({ currentView, onSelectView, collapsed, onToggleCollapse, candidateName = 'Isaac Mendoza', onOpenCandidateModal, usuario }) => {
+export const SidebarNav: React.FC<SidebarNavProps> = ({ currentView, onSelectView, collapsed, onToggleCollapse, onHide, candidateName = 'Isaac Mendoza', onOpenCandidateModal, usuario }) => {
   const actual = moduloDeVista(currentView).id;
   const principales = MODULES.filter((m) => m.id !== 'ajustes');
   const ajustes = MODULES.find((m) => m.id === 'ajustes')!;
@@ -63,6 +65,12 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({ currentView, onSelectVie
         {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
         {!collapsed && <span>Contraer</span>}
       </button>
+      {onHide && (
+        <button onClick={onHide} className="flex items-center gap-3 min-h-10 px-3 rounded-lg text-sm text-[var(--c-muted)] hover:text-[var(--c-ink)]" aria-label="Ocultar el menú" title="Ocultar el menú (Ctrl B)">
+          <PanelLeftClose className="w-4 h-4 shrink-0" />
+          {!collapsed && <span>Ocultar menú</span>}
+        </button>
+      )}
       <button onClick={cerrarSesion} className="flex items-center gap-3 min-h-10 px-3 rounded-lg text-sm text-[var(--c-muted)] hover:text-[var(--c-ink)] text-left" title={usuario ? `Sesión de ${usuario.email}` : undefined} aria-label="Cerrar sesión">
         <LogOut className="w-4 h-4 shrink-0" />
         {!collapsed && <span className="min-w-0 truncate">Cerrar sesión{usuario ? ` · ${usuario.nombre}` : ''}</span>}

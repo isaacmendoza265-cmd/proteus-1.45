@@ -57,6 +57,12 @@ export interface ActiveTerritoryState {
   auxiliares?: string[];
   /** De dónde salen las cifras oficiales (DANE, Registraduría) */
   fuentesOficiales?: string;
+  /**
+   * Unidad exacta elegida en el mapa (la misma que leen el generador y el analista). Si está, manda sobre los ids
+   * heredados (muniId, comunaId…), que solo conocen bien Medellín. Se borra cuando otra herramienta cambia el
+   * territorio con sus propios selectores.
+   */
+  unidad?: SeleccionDossier;
 }
 
 const STORAGE_KEY = 'proteus_active_territory_context';
@@ -149,6 +155,7 @@ export function oficializar(s: ActiveTerritoryState): ActiveTerritoryState {
 
 /** Unidad del dossier (barrio, comuna, municipio, subregión) que corresponde al territorio activo */
 export function seleccionDeEstado(s: ActiveTerritoryState): SeleccionDossier {
+  if (s.unidad) return { ...s.unidad };
   const dane = /(\d{5})$/.exec(s.muniId)?.[1];
   const muni = dane ? municipioFichaPorDane(dane) : null;
   const subFeat = ANTIOQUIA_125_MUNICIPIOS_GEOJSON.features.find((f) => (f.properties as { daneCode?: string }).daneCode === dane);
@@ -194,8 +201,11 @@ class ActiveTerritoryManager {
   }
 
   public setState(newState: Partial<ActiveTerritoryState>) {
+    // Si una herramienta cambia el lugar con sus propios selectores, la unidad del mapa deja de valer
+    const cambiaLugar = (['scale', 'deptId', 'subregId', 'muniId', 'comunaId', 'barrioId'] as const).some((k) => k in newState);
     this.currentState = {
       ...this.currentState,
+      ...(cambiaLugar && !('unidad' in newState) ? { unidad: undefined } : {}),
       ...newState,
       updatedAt: new Date().toISOString()
     };
@@ -227,6 +237,80 @@ class ActiveTerritoryManager {
    * enriquecido para el Director de Contenido y Segmentación.
    */
   public setFromGeoFeature(feature: TerritoryGeoFeature): ActiveTerritoryState {
+    return this.confirmar(this.estadoDesdeFeature(feature));
+  }
+
+  private confirmar(estado: ActiveTerritoryState): ActiveTerritoryState {
+    this.currentState = oficializar(estado);
+    this.persist();
+    this.notify();
+    return this.currentState;
+  }
+
+  /**
+   * El mapa es la consola de navegación: cada unidad que se elige en él (subregión, municipio, comuna, corregimiento,
+   * barrio o vereda, de cualquier municipio con ficha) pasa a ser el territorio activo de todas las herramientas.
+   * `unidad` es la misma selección que leen el generador y el analista del mapa.
+   */
+  public setFromMapa(unidad: SeleccionDossier, feature?: TerritoryGeoFeature | null): ActiveTerritoryState {
+    const muni = unidad.muniId ? territorioFicha(unidad.muniId) : null;
+    const fina = unidad.barrioId ? territorioFicha(unidad.barrioId) : unidad.comunaId ? territorioFicha(unidad.comunaId) : null;
+    const fid = (x: TerritoryGeoFeature | null | undefined) => (x ? String(x.id) : '');
+    const geoDe = (sub: string | null) => ANTIOQUIA_125_MUNICIPIOS_GEOJSON.features
+      .filter((f) => !sub || String(f.properties.subregion ?? '') === sub)
+      .map((f) => String((f.properties as { daneCode?: string }).daneCode));
+    let base: ActiveTerritoryState;
+    if (muni) {
+      const dane = muni.dane;
+      // Comunas y barrios de Medellín: la ficha heredada los conoce; el resto parte del municipio
+      const esMed = dane === '05001';
+      const f = esMed && feature && fina && (fid(feature) === fina.id || fid(feature).startsWith('med-') || fid(feature).startsWith('barrio-')) ? feature : null;
+      base = f ? this.estadoDesdeFeature(f) : this.estadoDesdeFeature({ id: `mpio-${dane}`, type: 'Feature', properties: { name: muni.nombre, level: 'municipal' }, geometry: null } as unknown as TerritoryGeoFeature);
+      if (fina) {
+        const otraDivision = !f;
+        base = {
+          ...base,
+          scale: 'comuna-barrio',
+          name: fina.nombre,
+          fullName: [fina.nombre, fina.tipo === 'subdivision' && fina.padreId ? territorioFicha(fina.padreId)?.nombre : null, muni.nombre, 'Antioquia'].filter(Boolean).join(', '),
+          muniId: `mpio-${dane}`,
+          comunaId: unidad.comunaId ?? (fina.tipo === 'division' ? fina.id : fina.padreId ?? ''),
+          barrioId: unidad.barrioId ?? 'all-comuna',
+          // La población y el censo de la unidad los da el dossier (CNPV por manzana, censo por puesto)
+          population: undefined,
+          electoralCensus: esMed && /^comuna-\d+$/.test(fina.id) ? base.electoralCensus : undefined,
+          nbiPercentage: undefined,
+          // Los textos del municipio no describen la comuna o el barrio de otro municipio
+          ...(otraDivision ? { keyProblems: [], strategicOpportunities: [], economicSectors: [], riskLevel: undefined, predominantStratum: undefined, securityDynamics: { homicideRate: SIN_FUENTE, extortionRisk: SIN_FUENTE, armedPresence: SIN_FUENTE } } : {}),
+        };
+      }
+    } else if (unidad.subregion) {
+      const clave = Object.keys(ANTIOQUIA_SUBREGIONS_DATA).find((k) => {
+        const n = (x: string) => x.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\s+antioquen[oa]$/, '');
+        return n(ANTIOQUIA_SUBREGIONS_DATA[k].name) === n(unidad.subregion!);
+      });
+      base = this.estadoDesdeFeature({ id: `subreg-${clave ?? unidad.subregion}`, type: 'Feature', properties: { name: unidad.subregion, level: 'departamental' }, geometry: null } as unknown as TerritoryGeoFeature);
+      const danes = geoDe(unidad.subregion);
+      // DANE 2026 y Registraduría, sumados por código DANE
+      base = { ...base, population: danes.reduce((a, d) => a + (getDaneMunicipio(d)?.poblacion ?? 0), 0) || undefined, electoralCensus: danes.reduce((a, d) => a + (getMunicipalCensus(d)?.total ?? 0), 0) || undefined, nbiPercentage: undefined };
+    } else if (feature && (fid(feature).startsWith('dept-') || feature.properties.level === 'nacional') && !/antioquia/i.test(feature.properties.name ?? '')) {
+      // Otro departamento de Colombia: Proteus no tiene su dossier; queda el departamento sin unidad de Antioquia
+      return this.confirmar({ ...this.estadoDesdeFeature(feature), unidad: undefined });
+    } else {
+      const danes = geoDe(null);
+      base = {
+        ...this.currentState, scale: 'departamental', name: 'Antioquia', fullName: 'Departamento de Antioquia', deptId: 'dept-antioquia',
+        subregId: '', muniId: '', comunaId: '', barrioId: 'all-comuna',
+        population: danes.reduce((a, d) => a + (getDaneMunicipio(d)?.poblacion ?? 0), 0) || undefined,
+        electoralCensus: getDepartmentCensus('antioquia')?.total, nbiPercentage: undefined, riskLevel: undefined, predominantStratum: undefined,
+        electedMayor: undefined, winnerParty: undefined, councilSummary: undefined, keyProblems: [], strategicOpportunities: [], economicSectors: [],
+        securityDynamics: { homicideRate: SIN_FUENTE, extortionRisk: SIN_FUENTE, armedPresence: SIN_FUENTE },
+      };
+    }
+    return this.confirmar({ ...base, unidad: { ...unidad }, featureId: feature ? fid(feature) : undefined, source: 'zoom_gis', updatedAt: new Date().toISOString() });
+  }
+
+  private estadoDesdeFeature(feature: TerritoryGeoFeature): ActiveTerritoryState {
     const p = feature.properties;
     const fid = feature.id;
     const level = p.level || 'municipal';
@@ -360,7 +444,8 @@ class ActiveTerritoryManager {
       const popP = POPULATION_DATA[cNum];
 
       if (deepC) {
-        population = deepC.population;
+        // La población por comuna de esta tabla no coincide con ninguna fuente (auditoría): no se usa
+        population = undefined;
         electoralCensus = deepC.electoralCensusSource === 'oficial' ? deepC.electoralCensus : undefined;
         predominantStratum = deepC.predominantStratum;
         keyProblems = [
@@ -409,7 +494,7 @@ class ActiveTerritoryManager {
       economicSectors = ['Comercio vecinal', 'Servicios'];
     }
 
-    const newState: ActiveTerritoryState = {
+    return {
       scale,
       name,
       fullName,
@@ -434,11 +519,6 @@ class ActiveTerritoryManager {
       source: 'zoom_gis',
       updatedAt: new Date().toISOString()
     };
-
-    this.currentState = oficializar(newState);
-    this.persist();
-    this.notify();
-    return this.currentState;
   }
 }
 

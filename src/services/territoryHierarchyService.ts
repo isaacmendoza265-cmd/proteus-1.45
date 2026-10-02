@@ -115,7 +115,7 @@ export class TerritoryHierarchyService {
         fullName: `Subregión ${s.name} (Antioquia)`,
         departmentName: 'Antioquia',
         subregionName: s.name,
-        // DANE 2026: suma del repositorio (copia del DANE). La ficha subregional sumaba mal Oriente y Occidente.
+        // DANE 2026: suma del repositorio (copia del DANE), por código
         population: municipalRepository.getAll().filter((m) => m.subregionId === s.id).reduce((sum, m) => sum + m.population, 0) || undefined,
         electoralCensus: municipalRepository
           .getAll()
