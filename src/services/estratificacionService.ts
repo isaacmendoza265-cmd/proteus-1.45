@@ -2,7 +2,7 @@
  * ESTRATIFICACIÓN OFICIAL DEL MUNICIPIO (la que adopta la alcaldía, predio por predio), por barrio y vereda.
  *
  * src/data/estratificacion/<municipio>.json, generados con `python3 scripts/build_estratificacion_oficial.py`
- * (crudos y procedencia en _originales/estratificacion/). Hoy: Sabaneta. Es distinta del estrato del censo DANE
+ * (crudos y procedencia en _originales/estratificacion/). Hoy: Medellín (manzanas, capa del Distrito) y Sabaneta (predios). Es distinta del estrato del censo DANE
  * 2018 que ya muestra la ficha (lo que declararon los hogares por su factura de energía, por manzana).
  * Archivos pequeños: se leen con import.meta.glob eager, así que un municipio sin archivo simplemente no tiene bloque.
  */
@@ -14,6 +14,8 @@ interface ArchivoEstratificacion {
   municipio: number[];
   sinUbicar: number;
   porTerritorio: Record<string, number[]>;
+  /** Comuna o corregimiento con TODAS sus unidades (también las que no caen en un barrio de Proteus): Medellín */
+  porDivision?: Record<string, number[]>;
 }
 
 const ARCHIVOS = import.meta.glob<ArchivoEstratificacion>('../data/estratificacion/*.json', { eager: true, import: 'default' });
@@ -36,7 +38,9 @@ export function estratificacionOficial(t: TerritorioFicha, slug: string | null):
   if (!a) return null;
   const estratos = t.tipo === 'municipio'
     ? a.municipio
-    : idsBarrios(t).map((id) => a.porTerritorio[id]).filter(Boolean).reduce((acc, f) => acc.map((v, i) => v + f[i]), [0, 0, 0, 0, 0, 0]);
+    : t.tipo === 'division' && a.porDivision
+      ? (a.porDivision[t.id] ?? [0, 0, 0, 0, 0, 0])
+      : idsBarrios(t).map((id) => a.porTerritorio[id]).filter(Boolean).reduce((acc, f) => acc.map((v, i) => v + f[i]), [0, 0, 0, 0, 0, 0]);
   const total = estratos.reduce((s, v) => s + v, 0);
   if (!total) return null;
   return {

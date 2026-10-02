@@ -8,6 +8,15 @@ Fuentes (crudos en _originales/estratificacion/<municipio>/, procedencia en _ori
   https://services7.arcgis.com/OsNfmcCXlLRPMVA8/arcgis/rest/services/Estratificacion/FeatureServer/0
   Descargada el 1-oct-2026 (f=geojson, outSR=4326): sabaneta/sabaneta_estratificacion_predios.geojson.
 
+- Medellín: capa "Estrato Socioeconómico" de la Secretaría de Gestión y Control Territorial (MapServer
+  vivienda_ciudad_terri/VC_Catastro_VCT/10, actualización diaria, CC BY-SA 4.0), una MANZANA por registro con su
+  estrato. El servidor rechaza descargas automáticas: el 1-oct-2026 se consultó desde el navegador del usuario el
+  conteo de manzanas por barrio y estrato (outStatistics, agrupado por codigo_barrio y estrato) y se guardó en
+  medellin/medellin_estrato_manzanas_por_barrio.txt ("barrio,estrato,manzanas,área m²;..."; 32.384 manzanas,
+  verificado con suma de control). El barrio se cruza por código (el mismo del Distrito); las manzanas de códigos
+  que Proteus no tiene como barrio (áreas institucionales, sectores de corregimiento) cuentan en su comuna o
+  corregimiento (los dos primeros dígitos) y en el municipio.
+
 Por qué: el estrato que Proteus ya muestra es el que declararon los hogares en el censo DANE 2018 (factura de
 energía), por manzana. Esta es la estratificación vigente que adopta la alcaldía, predio por predio.
 Los demás municipios del Valle de Aburrá no publican la suya (Medellín sí, pero su servidor rechaza la descarga
@@ -46,8 +55,41 @@ FUENTES = {
 }
 
 
+DIVISION_MEDELLIN = {**{f'{i:02d}': f'comuna-{i}' for i in range(1, 17)}, '50': 'med-correg-palmitas', '60': 'med-correg-san-cristobal',
+                     '70': 'med-correg-altavista', '80': 'med-correg-san-antonio-de-prado', '90': 'med-correg-santa-elena'}
+
+
+def medellin():
+    """Manzanas por estrato y barrio (consulta agregada de la capa oficial del Distrito)."""
+    filas = [r.split(',') for r in (CRUDOS / 'medellin/medellin_estrato_manzanas_por_barrio.txt').read_text().strip().split(';')]
+    feats = json.load(open(ROOT / 'src/data/geojson/medellinBarrios.geo.json'))['features']
+    id_de = {f['properties']['code']: f['properties']['id'] for f in feats}
+    total, por, por_div, sin_cruce = [0] * 6, collections.defaultdict(lambda: [0] * 6), collections.defaultdict(lambda: [0] * 6), 0
+    for cod, e, n, _area in filas:
+        e, n = int(e), int(n)
+        total[e - 1] += n
+        por_div[DIVISION_MEDELLIN[cod[:2]]][e - 1] += n
+        if cod in id_de:
+            por[id_de[cod]][e - 1] += n
+        else:
+            sin_cruce += n
+    assert sum(total) == 32384, sum(total)
+    meta = {
+        'fuente': 'Distrito de Medellín, capa oficial "Estrato Socioeconómico" (Secretaría de Gestión y Control Territorial, actualizada a diario)',
+        'url': 'https://www.medellin.gov.co/servidormapas/rest/services/vivienda_ciudad_terri/VC_Catastro_VCT/MapServer/10',
+        'unidad': 'manzanas', 'corte': '2026-10-01', 'descarga': '2026-10-01', 'licencia': 'CC BY-SA 4.0',
+        'nota': (f'Manzanas por estrato de cada barrio (código del Distrito). {sin_cruce} manzanas de áreas institucionales o '
+                 'sectores sin barrio en Proteus cuentan solo en su comuna o corregimiento.'),
+    }
+    json.dump({'meta': meta, 'municipio': total, 'sinUbicar': sin_cruce, 'porTerritorio': dict(sorted(por.items())),
+               'porDivision': dict(sorted(por_div.items()))},
+              open(OUT / 'medellin.json', 'w'), ensure_ascii=False, separators=(',', ':'))
+    print('medellin manzanas', sum(total), 'por estrato', total, 'barrios', len(por), 'sin barrio en Proteus', sin_cruce)
+
+
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
+    medellin()
     for slug, f in FUENTES.items():
         subs = json.load(open(ROOT / f'src/data/geojson/municipios/{slug}.subdivisiones.geo.json'))['features']
         geoms = [shape(s['geometry']).buffer(0) for s in subs]

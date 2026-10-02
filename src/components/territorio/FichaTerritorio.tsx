@@ -7,8 +7,9 @@ import React, { useEffect, useMemo, useState } from 'react';
 import {
   type TerritorioFicha, type EstadoDato, ETIQUETA_ESTADO,
   demografia, censoElectoral, grupos, politica, fmt, pct,
-  cargarDemografia, cargarEconomia, economia, piramide2026, municipioFichaPorDane } from '../../services/territoryProfileService';
+  cargarDemografia, cargarEconomia, economia, piramide2026, municipioFichaPorDane, territorioFicha } from '../../services/territoryProfileService';
 import { estratificacionOficial } from '../../services/estratificacionService';
+import { valorSuelo } from '../../services/valoresSueloService';
 import { serieCenso, jornadaDe, FUENTE_CENSO_HISTORICO, NOTA_CENSO_HISTORICO } from '../../services/censoHistoricoService';
 import { cargarElecciones, sumarEleccion, tipoEleccion, ELECCIONES_PENDIENTES, type EleccionPuestos } from '../../services/electionResultsService';
 import type { PuestoVotacion } from '../../services/pollingStationsService';
@@ -39,10 +40,11 @@ const Etiqueta: React.FC<{ estado: EstadoDato; texto?: string }> = ({ estado, te
   <span className={`shrink-0 px-2 py-0.5 rounded-md text-xs font-bold ${ESTILO_ESTADO[estado]}`}>{texto ?? ETIQUETA_ESTADO[estado]}</span>
 );
 
-const Cifra: React.FC<{ label: string; value: string }> = ({ label, value }) => (
+const Cifra: React.FC<{ label: string; value: string; detalle?: string }> = ({ label, value, detalle }) => (
   <div className="px-2.5 py-1.5 rounded-lg bg-[var(--c-sunken)] flex flex-col min-w-0">
     <span className="text-xs font-semibold text-[var(--c-muted)] truncate">{label}</span>
     <span className="text-base font-semibold tabular-nums">{value}</span>
+    {detalle && <span className="text-xs text-[var(--c-muted)]">{detalle}</span>}
   </div>
 );
 
@@ -165,6 +167,7 @@ export const FichaTerritorio: React.FC<FichaTerritorioProps> = ({
   const eco = useMemo(() => economia(t), [t, demLista]);
   const serie = useMemo(() => serieCenso(t.dane), [t.dane]);
   const estOf = useMemo(() => estratificacionOficial(t, municipioFichaPorDane(t.dane)), [t]);
+  const suelo = useMemo(() => (estOf ? null : valorSuelo(t, municipioFichaPorDane(t.dane))), [t, estOf]);
   const pir = useMemo(() => piramide2026(t), [t]);
   const cen = useMemo(() => censoElectoral(t, puestosDentro, sinUbicar), [t, puestosDentro, sinUbicar]);
   // Censo de los puestos que cada año quedaban dentro del territorio (comuna, barrio, vereda): solo si ninguno falta
@@ -452,7 +455,30 @@ export const FichaTerritorio: React.FC<FichaTerritorioProps> = ({
                   return w > 0 ? <div key={i} title={`Estrato ${i + 1}: ${fmt(v)} ${estOf.unidad}`} className="flex items-center justify-center" style={{ width: `${w}%`, background: ['#9B2C2C', '#C05621', '#B7791F', '#2F855A', '#2B6CB0', '#553C9A'][i] }}>{w >= 7 ? `E${i + 1} ${Math.round(w)} %` : ''}</div> : null;
                 })}
               </div>
-              <span className="text-xs text-[var(--c-muted)]">La que adopta la alcaldía, predio por predio (la que se usa en servicios públicos e impuestos). El bloque de condiciones económicas es lo que declararon los hogares en el censo 2018.{t.tipo === 'municipio' ? '' : ` ${estOf.nota}`}</span>
+              <span className="text-xs text-[var(--c-muted)]">La que adopta la alcaldía{estOf.unidad === 'manzanas' ? ', manzana por manzana' : ', predio por predio'} (la que se usa en servicios públicos e impuestos). El bloque de condiciones económicas es lo que declararon los hogares en el censo 2018.{t.tipo === 'municipio' ? '' : ` ${estOf.nota}`}</span>
+            </div>
+          )}
+          {suelo && (
+            <div className="flex flex-col gap-2 px-3 py-2.5 rounded-xl bg-[var(--c-sunken)]">
+              <Cabecera titulo="Valor del suelo (AMVA)" estado="oficial" fuente={suelo.fuente} />
+              <div className="grid grid-cols-2 gap-1.5">
+                <Cifra label={`Valor ${suelo.tipo} por m²`} value={`$${fmt(Math.round(suelo.valorM2))}`} detalle={suelo.cobertura != null && suelo.cobertura < 95 ? `zonas con valor en el ${pct(suelo.cobertura)} del área` : undefined} />
+                {suelo.urbano != null && suelo.rural != null
+                  ? <Cifra label="Promedio de los barrios" value={`$${fmt(Math.round(suelo.urbano))}`} detalle={`veredas: $${fmt(Math.round(suelo.rural))} por m²`} />
+                  : <Cifra label="Zonas de valor" value={fmt(suelo.ranking.length)} detalle="barrios o veredas con dato" />}
+              </div>
+              {suelo.ranking.length > 3 && (
+                <div className="flex flex-col gap-0.5 text-sm">
+                  <span className="text-xs font-bold text-[var(--c-muted)]">Más alto y más bajo</span>
+                  {[...suelo.ranking.slice(0, 3), ...suelo.ranking.slice(-2)].map((r, i) => (
+                    <div key={r.id} className={`flex gap-2 ${i === 3 ? 'border-t border-[var(--c-border)] pt-0.5' : ''}`}>
+                      <span className="grow truncate">{territorioFicha(r.id)?.nombre ?? r.id}</span>
+                      <span className="tabular-nums font-semibold">${fmt(Math.round(r.valorM2))}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <span className="text-xs text-[var(--c-muted)]">{t.municipio} no publica su estratificación oficial; este es el sustituto: valor {suelo.tipo} del suelo por m² de las zonas del mapa metropolitano, promediado por área. {suelo.tipo === 'catastral' ? 'El catastral es más bajo que el comercial: no se compara con municipios que reportan valor comercial (Copacabana, La Estrella).' : 'Es valor comercial: no se compara con los municipios que reportan valor catastral.'} El promedio del municipio incluye el suelo rural, mucho más barato.</span>
             </div>
           )}
           {eco && eco.estado === 'oficial' && (
