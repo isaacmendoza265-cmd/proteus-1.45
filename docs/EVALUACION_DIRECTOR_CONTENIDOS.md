@@ -167,3 +167,33 @@ piezas.
 - Hay un nuevo endpoint `/api/analista/preguntar`.
 - La ubicación de los puestos por territorio quedó compartida entre la ficha y el dossier (`cargarPuestosTerritorio`).
 - El dossier ya respeta la sección 3 (sin "votantes" por sexo × edad), marca los actores sin verificar línea por línea y hace prevalecer el escrutinio sobre el preconteo.
+
+## 8. Estado al 2-oct-2026 (resuelto en esta sesión)
+
+Isaac pidió resolver todos los problemas. Todo análisis debe partir de tres macrofuentes, completas y siempre: los datos del aplicativo, el perfil del candidato y el marco. Además decidió tres cosas:
+- se mantienen las posturas políticas, como semilla del marco;
+- no se retiran Multimedia ni el Analista de video: se evalúan y se corrigen;
+- los archivos escritos a mano se entregan y quedan como auxiliares.
+
+Diseño: `docs/MOTOR_DE_ANALISIS.md`. Auditoría de datos: `docs/AUDITORIA_DATOS_AUXILIARES.md`. Multimedia: `docs/EVALUACION_MULTIMEDIA.md`.
+
+| # | Problema | Cómo quedó | Commit |
+|---|---|---|---|
+| 1 | Datos a mano presentados como oficiales | **Territorio activo** (`oficializar`): DANE y Registraduría, o "Sin información"; los campos auxiliares van marcados. **Fichas del repositorio y de las herramientas heredadas**: rotuladas AUXILIAR, sin rellenos. **Jerarquía territorial**: sin poblaciones ni NBI inventados. | c06bfb5, 7437f1e, 8cf1458 |
+| 2 | Segmentos con pesos fijos y "votos reales" | **Cruces**: sexo y edad de la proyección DANE 2026, o CNPV 2018 debajo del municipio; estrato y educación del CNPV 2018. **Sin votos ni participación por cohorte**: censo y participación 2023 aparte. **Gemini**: solo al pulsar. **Municipios de Antioquia y Subregiones**: usan los mismos cruces. | b9c8140, a32a9df, fa1e232 |
+| 3 | Publicidad con tabla inventada y llamada automática | **Perfil del territorio**: sale de datos oficiales. **CTR y CPM**: rotulados como supuestos. **Generación**: solo al pulsar y sin respaldo estático. | c06bfb5 |
+| 4 | Posturas fijas en los prompts | **Se conservan como semilla del marco** (`src/data/marco/semilla/posturas-politicas.md`). **Cada herramienta lee la postura de la identidad**, editable en Posicionamiento › Postura política; si no está definida, se trata como independiente y se dice. **Candidato**: el nombre sale del perfil. | c06bfb5, fa1e232, 8cf1458 |
+| 5 | Multimedia sin imagen; video con rellenos | **Colorimetría**: mide la foto y la envía con permiso. **Video**: va completo, con audio; lo que no se ve queda "Sin dato". | e4eed69, 73e5b4b |
+| 6 | La identidad no gobernaba | **Macrofuente B en toda llamada**: identidad completa, postura e historial del candidato. | c06bfb5, 7437f1e |
+| 7 | Marco recortado (3 %) | **Macrofuente C completa en toda tarea**: capas 0-4 ingestadas, semilla, libro de reglas e inventario. | c06bfb5 |
+| 9 | Dos territorios activos | **Unidad por defecto**: el territorio activo (`seleccionDeEstado`). **Herramientas con unidad propia**: la declaran en `proteus.seleccion`. | c06bfb5 |
+| 10 | Botones del mapa a la herramienta vieja | **Llevan al generador** de la misma pantalla. | c06bfb5 |
+| 11 | Funciones duplicadas | **Búsqueda de una persona en la web**: un solo patrón (solo con búsqueda, sin perfil inventado si falla). **Respaldo con texto fijo**: se quitó de Subregiones (informe, noticias atribuidas a medios reales, guiones), Municipios, Casas políticas y el brief. | fa1e232, a32a9df, 8cf1458 |
+| 12 | Código muerto | **Quitados**: `queryGeminiWithMunicipalContext` y los respaldos de Subregiones; el enlace `'observatorio-redes'` corregido. **Por revisar con Isaac**: los archivos sin uso (están en el `.xlsx`). | c06bfb5, 8cf1458 |
+
+**Guardia.** `tuberiaIA.test.ts` falla si una llamada a Gemini no declara su tarea, o su exención, en `proteus`, o si vuelve "votos reales en urnas". `sinCedulas.test.ts` impide que vuelvan las cédulas.
+
+**Pendiente**
+- Problema 8: reglas copiadas a mano en `municipioNarrativeService`. Ahora el marco completo llega a Gemini, pero la narrativa local sigue con sus copias.
+- Problema 13: bundle de `CandidateProfileManager`.
+- La batería de calidad de la fase 3, que necesita la clave válida de Gemini.

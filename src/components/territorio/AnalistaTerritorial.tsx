@@ -8,6 +8,7 @@ import { MessagesSquare, Send, Trash2 } from 'lucide-react';
 import { dossierComoTexto, dossierTerritorio, type DossierTerritorial } from '../../services/dossierTerritorialService';
 import { preguntarAnalista, preguntasSugeridas, type TurnoAnalista } from '../../services/analistaTerritorialService';
 import type { SeleccionTerritorio } from '../../services/contentGeneratorService';
+import { EstadoMotorIA } from '../ia/EstadoMotorIA';
 
 export const AnalistaTerritorial: React.FC<{ seleccion: SeleccionTerritorio }> = ({ seleccion }) => {
   const clave = JSON.stringify(seleccion);
@@ -80,6 +81,7 @@ export const AnalistaTerritorial: React.FC<{ seleccion: SeleccionTerritorio }> =
           </div>
         )}
       </details>
+      <EstadoMotorIA cobertura={dossier?.cobertura} />
 
       {turnos.length > 0 && (
         <div className="flex flex-col gap-2 max-h-[32rem] overflow-y-auto pr-1" aria-live="polite">

@@ -3,7 +3,7 @@
 //
 // Antes (hasta oct-2026) este servicio repartía el CENSO ELECTORAL con pesos fijos, iguales para todos los municipios
 // (48,8 % hombres, 26 % jóvenes…), derivaba el estrato del NBI con una fórmula sin fuente, la educación del "% urbano"
-// y le ponía a cada cruce una "participación esperada" y unos "votos reales en urnas" inventados. Nada de eso se medía.
+// y le ponía a cada cruce una "participación esperada" y unos votos "en urnas" inventados. Nada de eso se medía.
 //
 // Ahora cada cruce sale de los datos del territorio:
 //   - Sexo × edad (18 años o más): proyección DANE 2026 por sexo y edad (municipio, cabecera o resto rural). Donde no

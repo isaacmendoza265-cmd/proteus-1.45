@@ -157,11 +157,5 @@ export function seleccionDeSubregion(nombre: string): SeleccionDossier {
 /** Unidad del territorio (id de municipio del índice) a partir de un código DANE, para las herramientas */
 export const seleccionDeDane = (dane: string): SeleccionDossier => ({ subregion: null, muniId: municipioFichaPorDane(dane), comunaId: null, barrioId: null });
 
-// --- Transparencia: qué recibió la última llamada --------------------------------------------------
-
-export interface RegistroLlamada { tarea: TareaIA; territorio: string; caracteres: Macrofuentes['caracteres']; cuando: string; cobertura?: CoberturaFuente[] }
-let ultima: RegistroLlamada | null = null;
-const oyentes = new Set<(r: RegistroLlamada) => void>();
-export function anotarLlamada(r: RegistroLlamada) { ultima = r; oyentes.forEach((f) => f(r)); }
-export const ultimaLlamada = () => ultima;
-export function alLlamar(f: (r: RegistroLlamada) => void) { oyentes.add(f); return () => { oyentes.delete(f); }; }
+// --- Transparencia: qué recibió la última llamada (registro liviano, sin el motor, para la interfaz) -----------
+export { anotarLlamada, ultimaLlamada, alLlamar, type RegistroLlamada } from './registroLlamadas';
