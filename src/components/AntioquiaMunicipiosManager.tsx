@@ -38,7 +38,10 @@ import {
   Shield
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { generateContent } from '../services/geminiService';
+import { formatAiError, generateContent } from '../services/geminiService';
+import { seleccionDeDane } from '../services/ia/macrofuentes';
+import { getResultado2023 } from '../services/electoralResults2023Service';
+import { segmentacionComoTexto, segmentarTerritorio, type SegmentacionTerritorio } from '../services/voterDemographicsService';
 import { jsPDF } from 'jspdf';
 import { 
   STRATEGIC_MUNICIPALITIES, 
@@ -314,29 +317,42 @@ export const AntioquiaMunicipiosManager: React.FC<AntioquiaMunicipiosManagerProp
   // Área activa seleccionada
   const currentArea = currentMuni.areas.find(a => a.id === selectedAreaId) || currentMuni.areas[0];
 
-  // Cálculo del cruce demográfico dinámico
+  // Cruce demográfico con datos del DANE del MUNICIPIO (voterDemographicsService). Antes: % escritos a mano (26/54/20,
+  // 78/20/2, 48/40/12 para casi todos los municipios), un factor ×2,4 sin fuente, un mínimo de 80 personas y
+  // "votantes en urnas" = × 0,58. El área (comuna/vereda) de esta herramienta no tiene dato propio del DANE aquí.
+  const daneMuni = activeMasterRec?.daneCode ?? /(\d{5})$/.exec(selectedMuniId)?.[1] ?? null;
+  const [segMuni, setSegMuni] = useState<SegmentacionTerritorio | null>(null);
+  useEffect(() => {
+    let vivo = true;
+    setSegMuni(null);
+    if (daneMuni) segmentarTerritorio(seleccionDeDane(daneMuni)).then((x) => { if (vivo) setSegMuni(x); }).catch(() => {});
+    return () => { vivo = false; };
+  }, [daneMuni]);
+  const oficial2023 = daneMuni ? getResultado2023(daneMuni) : undefined;
+  const MAPA_EDAD = { joven: 'joven', adulto: 'adulto', adultoMayor: 'adulto_mayor' } as const;
+  const MAPA_EDU = { basico: 'primaria', medio: 'secundaria', superior: 'superior' } as const;
+  /** % real del DANE para las opciones de los selectores; si no hay, el de la ficha marcado como auxiliar */
+  const pctMostrar = (eje: 'edad' | 'estrato' | 'edu', clave: string, auxiliar: number) => {
+    if (segMuni?.adultos) {
+      const c = segMuni.cohortes;
+      const suma = c.filter((x) => (eje === 'edad' ? x.ageGroup === MAPA_EDAD[clave as keyof typeof MAPA_EDAD] : eje === 'estrato' ? x.economicLevel === clave : x.educationLevel === MAPA_EDU[clave as keyof typeof MAPA_EDU])).reduce((a, x) => a + x.personas, 0);
+      if (c.length) return `${((100 * suma) / segMuni.adultos).toFixed(1)}% (DANE)`;
+    }
+    return `${auxiliar}% (auxiliar, sin verificar)`;
+  };
   const demographicEstimation = useMemo(() => {
     const selectedArea = currentMuni.areas.find(a => a.id === selectedAreaId) || currentMuni.areas[0];
-    const areaPopulation = selectedArea.estimatedPopulation || Math.round(currentMuni.totalPopulation * 0.6);
-    const agePct = (currentMuni.demographics.ageGroups[selectedAge]?.percentage || 25) / 100;
-    let stratumPct = (currentMuni.demographics.socioeconomicStratum[selectedStratum]?.percentage || 33) / 100;
-    let eduPct = (currentMuni.demographics.educationLevels[selectedEducation]?.percentage || 33) / 100;
-    const estimatedGroupCount = Math.round(areaPopulation * agePct * stratumPct * eduPct * 2.4);
-    const finalEstimatedCount = Math.max(80, Math.min(Math.round(areaPopulation * 0.45), estimatedGroupCount));
-    const estimatedVoterTurnout = Math.round(finalEstimatedCount * 0.58);
-    const percentageOfArea = ((finalEstimatedCount / (areaPopulation || 1)) * 100).toFixed(1);
-    const percentageOfMunicipality = ((finalEstimatedCount / (currentMuni.totalPopulation || 1)) * 100).toFixed(2);
+    const cruce = segMuni?.cohortes.filter((c) => c.ageGroup === MAPA_EDAD[selectedAge] && c.economicLevel === selectedStratum && c.educationLevel === MAPA_EDU[selectedEducation]) ?? [];
+    const finalEstimatedCount = cruce.length ? cruce.reduce((a, c) => a + c.personas, 0) : null;
     return {
       finalEstimatedCount,
-      estimatedVoterTurnout,
-      percentageOfArea,
-      percentageOfMunicipality,
+      percentageOfArea: finalEstimatedCount != null && segMuni?.adultos ? ((100 * finalEstimatedCount) / segMuni.adultos).toFixed(1) : '—',
       areaName: selectedArea.name,
       areaType: selectedArea.type,
-      areaPopulation,
-      totalMunicipalityPopulation: currentMuni.totalPopulation
+      totalMunicipalityPopulation: currentMuni.totalPopulation,
     };
-  }, [currentMuni, selectedAreaId, selectedAge, selectedStratum, selectedEducation]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentMuni, segMuni, selectedAreaId, selectedAge, selectedStratum, selectedEducation]);
 
   // Antecedente electoral seleccionado
   const currentElectoralData = currentMuni.electoralAntecedents[selectedOffice];
@@ -372,29 +388,19 @@ export const AntioquiaMunicipiosManager: React.FC<AntioquiaMunicipiosManagerProp
       2. Principales temas o banderas que defiende (seguridad, empleo, educación, etc.).
       3. Estilo de comunicación y tono predominante que proyecta en medios o redes.`;
 
-      let text = '';
-      try {
-        const response = await generateContent({
-          model: 'gemini-3.8-flash',
-          contents: [{ role: 'user', parts: [{ text: prompt }] }],
-          config: {
-            tools: [{ googleSearch: {} }]
-          }
-        });
-        text = response.text || '';
-      } catch (err) {
-        // Fallback estándar
-        const fallbackRes = await generateContent({
-          model: 'gemini-3.8-flash',
-          contents: [{ role: 'user', parts: [{ text: prompt }] }]
-        });
-        text = fallbackRes.text || '';
-      }
+      // Solo con búsqueda (sin ella respondería de memoria sobre una persona real)
+      const response = await generateContent({
+        model: 'gemini-3.8-flash',
+        contents: [{ role: 'user', parts: [{ text: `${prompt}\nLa persona investigada puede no ser el candidato del perfil de Proteus. Si no encuentras un dato, di que no aparece.` }] }],
+        config: { tools: [{ googleSearch: {} }] },
+        proteus: { tarea: 'investigar', incluirDatos: false },
+      });
+      const text = response.text || '';
 
       setCandidateWebSearchBio(text);
     } catch (error: any) {
       console.error('Error buscando candidato en web:', error);
-      setCandidateWebSearchBio(`Perfil identificado: ${customCandidateName}. Se utilizará el contexto estándar de campaña para cargos de elección popular en Antioquia.`);
+      setCandidateWebSearchBio(`No se pudo investigar a ${customCandidateName}: ${formatAiError(error)}`);
     } finally {
       setIsSearchingCandidateWeb(false);
     }
@@ -409,16 +415,16 @@ export const AntioquiaMunicipiosManager: React.FC<AntioquiaMunicipiosManagerProp
     if (candidateSourceMode === 'bio' && candidateProfile) {
       candidateContext = `
       - Nombre del candidato: ${candidateProfile.nombre}
-      - Partido / Afiliación: ${candidateProfile.afiliacionPartidista || 'Centroderecha / Independiente'}
-      - Tono narrativo calibrado en Biografía: ${candidateProfile.tonoNarrativo || 'Pragmático, firme y empático'}
-      - Estilo de comunicación: ${candidateProfile.estiloComunicacion || 'Cercano e institucional'}
-      - Ejes temáticos cómodos: ${candidateProfile.ejeTematicoComodo || 'Seguridad, empleo, desarrollo familiar, obras'}
+      - Partido / Afiliación: ${candidateProfile.afiliacionPartidista || 'Sin definir en el perfil'}
+      - Tono narrativo calibrado en Biografía: ${candidateProfile.tonoNarrativo || 'Sin definir en el perfil'}
+      - Estilo de comunicación: ${candidateProfile.estiloComunicacion || 'Sin definir en el perfil'}
+      - Ejes temáticos cómodos: ${candidateProfile.ejeTematicoComodo || 'Sin definir en el perfil'}
       - Resumen de perfil: ${candidateProfile.resumenEstrategico || candidateProfile.experienciaPrevia || ''}
       `;
     } else {
       candidateContext = `
       - Nombre del candidato ingresado: ${effectiveCandidateName}
-      - Datos extraídos o conocidos: ${candidateWebSearchBio || 'Liderazgo en proceso de consolidación electoral local en Antioquia.'}
+      - Datos extraídos o conocidos: ${candidateWebSearchBio || 'Sin datos: no se investigó.'}
       `;
     }
 
@@ -429,22 +435,20 @@ DEBES CONSIDERAR RIGUROSAMENTE LOS SIGUIENTES FACTORES:
 1. TERRITORIO: Municipio de ${currentMuni.name}, Antioquia.
    - Área / División Político-Administrativa: ${currentArea.name} (${currentArea.type} - ${currentArea.subtype}).
    - Barrios / Veredas que comprende: ${currentArea.barriosOrVeredas.join(', ')}.
-   - Población estimada del área: ${currentArea.estimatedPopulation.toLocaleString()} habitantes.
-   - Densidad: ${currentArea.urbanDensity} | Nivel educativo general: ${currentArea.educationalLevelGeneral} | Estrato predominante: ${currentArea.predominantStratum}.
-   - Dinámicas locales del área: ${currentArea.characteristics}.
+   - Ficha AUXILIAR del área (tabla interna sin verificar; no la cites como oficial): población ${currentArea.estimatedPopulation.toLocaleString('es-CO')}, densidad ${currentArea.urbanDensity}, nivel educativo ${currentArea.educationalLevelGeneral}, estrato ${currentArea.predominantStratum}. Dinámicas: ${currentArea.characteristics}.
+   - Datos oficiales del municipio: los de la macrofuente A.
 
 2. GRUPO DEMOGRÁFICO ESPECÍFICO (CRUCE DE VARIABLES):
-   - Grupo etario: ${selectedAge.toUpperCase()} (${currentMuni.demographics.ageGroups[selectedAge].range}).
-   - Estrato socioeconómico: ${selectedStratum.toUpperCase()} (${currentMuni.demographics.socioeconomicStratum[selectedStratum].strata} - ${currentMuni.demographics.socioeconomicStratum[selectedStratum].description}).
-   - Nivel educativo: ${selectedEducation.toUpperCase()} (${currentMuni.demographics.educationLevels[selectedEducation].level} - ${currentMuni.demographics.educationLevels[selectedEducation].description}).
-   - Población estimada de este segmento específico en el área: ${demographicEstimation.finalEstimatedCount.toLocaleString()} personas (~${demographicEstimation.percentageOfArea}% de la división).
-   - Potencial de votantes efectivos estimados en urnas: ${demographicEstimation.estimatedVoterTurnout.toLocaleString()} votos.
+   - Grupo etario: ${selectedAge.toUpperCase()}. Estrato: ${selectedStratum.toUpperCase()}. Nivel educativo: ${selectedEducation.toUpperCase()}.
+   - Personas de 18 años o más de este cruce en el MUNICIPIO (estimado con datos del DANE; el área no tiene dato propio): ${demographicEstimation.finalEstimatedCount?.toLocaleString('es-CO') ?? 'sin información'} (${demographicEstimation.percentageOfArea}% de los adultos).
+   - No hay censo electoral ni votos por segmento: no los estimes.
+${segMuni ? segmentacionComoTexto(segMuni) : ''}
 
 3. TIPO DE ELECCIÓN Y COMPETENCIAS INSTITUCIONALES:
    - Cargo en disputa: ${selectedOffice.toUpperCase()}.
    - Competencias institucionales específicas: ${currentElectoralData.competencies}.
-   - Antecedentes electorales 2023 en ${currentMuni.name}: Ganador/Primer lugar (${currentElectoralData.immediateAntecedents2023.winnerOrLeadingParty} con ${currentElectoralData.immediateAntecedents2023.winnerVotes.toLocaleString()} votos), Segundo lugar (${currentElectoralData.immediateAntecedents2023.secondPlaceOrParty} con ${currentElectoralData.immediateAntecedents2023.secondVotes.toLocaleString()} votos). Abstención histórica: ${currentElectoralData.immediateAntecedents2023.abstentionRate}%.
-   - Claves de la contienda: ${currentElectoralData.immediateAntecedents2023.keyInsights}.
+   - Antecedentes electorales 2023 en ${currentMuni.name}: usa SOLO los resultados oficiales de la macrofuente A (escrutinio de la Registraduría). La ficha de esta herramienta traía votos calculados como porcentajes fijos del censo: no existen.
+   - Claves de la contienda (texto AUXILIAR sin verificar): ${currentElectoralData.immediateAntecedents2023.keyInsights}.
    - ADVERTENCIA CRÍTICA DE COMPETENCIAS: Si es Concejo o Asamblea, las promesas NO pueden ser ejecutivas de gasto directo sino de control político, acuerdos/ordenanzas y gestión comunitaria. Si es Alcaldía o Gobernación, son competencias ejecutivas plenas de presupuesto y gobierno.
 
 4. PERFIL DEL CANDIDATO CONDICIONANTE:
@@ -473,41 +477,22 @@ ESTRUCTURA OBLIGATORIA DEL INFORME (RESPETA EXACTAMENTE ESTOS 6 PUNTOS):
    - Pieza 2: Mensaje territorial para impreso o micro-conversación en el barrio/vereda.
    - Pieza 3: Activación en territorio orientada a este segmento demográfico en ${currentArea.name}).
 
-Entrega un informe denso, sin texto genérico ni rodeos, con lenguaje de consultoría política de primer nivel.`;
+Entrega un informe denso y sin rodeos. Solo cifras de los datos, con su rótulo; lo psicológico del punto 2 son hipótesis y se marcan así.`;
 
     try {
-      let result = '';
-      try {
-        const response = await generateContent({
-          model: 'gemini-3.8-flash',
-          contents: [{ role: 'user', parts: [{ text: promptText }] }],
-          config: {
-            tools: [{ googleSearch: {} }]
-          }
-        });
-        result = response.text || '';
-      } catch (e) {
-        const fallbackRes = await generateContent({
-          model: 'gemini-3.8-flash',
-          contents: [{ role: 'user', parts: [{ text: promptText }] }]
-        });
-        result = fallbackRes.text || '';
-      }
+      const response = await generateContent({
+        model: 'gemini-3.8-flash',
+        contents: [{ role: 'user', parts: [{ text: promptText }] }],
+        config: { tools: [{ googleSearch: {} }] },
+        proteus: { tarea: 'brief', ...(daneMuni ? { seleccion: seleccionDeDane(daneMuni) } : {}) },
+      });
+      const result = response.text || '';
 
       setAnalysisReport(result);
     } catch (err: any) {
       console.error('Error generando informe de analista:', err);
-      // Fallback precalculado inteligente si falla la red
-      setAnalysisReport(generateFallbackReport(
-        currentMuni,
-        currentArea,
-        selectedAge,
-        selectedStratum,
-        selectedEducation,
-        selectedOffice,
-        effectiveCandidateName,
-        demographicEstimation
-      ));
+      // Antes: un informe de plantilla con cifras inventadas. Ahora se avisa.
+      setAnalysisReport(`**No se pudo generar el informe con Gemini.** ${formatAiError(err)}\n\nVuelve a intentarlo.`);
     } finally {
       setIsGeneratingAnalysis(false);
     }
@@ -1286,15 +1271,15 @@ Entrega un informe denso, sin texto genérico ni rodeos, con lenguaje de consult
                       <div className="space-y-1.5 text-xs">
                         <div className="flex justify-between">
                           <span className="text-slate-300">Jóvenes (18-28):</span>
-                          <span className="font-mono text-white font-bold">{currentMuni.demographics.ageGroups.joven.percentage}%</span>
+                          <span className="font-mono text-white font-bold">{pctMostrar('edad', 'joven', currentMuni.demographics.ageGroups.joven.percentage)}</span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-slate-300">Adultos (29-59):</span>
-                          <span className="font-mono text-white font-bold">{currentMuni.demographics.ageGroups.adulto.percentage}%</span>
+                          <span className="font-mono text-white font-bold">{pctMostrar('edad', 'adulto', currentMuni.demographics.ageGroups.adulto.percentage)}</span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-slate-300">Adultos Mayores (60+):</span>
-                          <span className="font-mono text-white font-bold">{currentMuni.demographics.ageGroups.adultoMayor.percentage}%</span>
+                          <span className="font-mono text-white font-bold">{pctMostrar('edad', 'adultoMayor', currentMuni.demographics.ageGroups.adultoMayor.percentage)}</span>
                         </div>
                       </div>
                     </div>
@@ -1305,15 +1290,15 @@ Entrega un informe denso, sin texto genérico ni rodeos, con lenguaje de consult
                       <div className="space-y-1.5 text-xs">
                         <div className="flex justify-between">
                           <span className="text-slate-300">Estrato 1 y 2 (Bajo):</span>
-                          <span className="font-mono text-white font-bold">{currentMuni.demographics.socioeconomicStratum.bajo.percentage}%</span>
+                          <span className="font-mono text-white font-bold">{pctMostrar('estrato', 'bajo', currentMuni.demographics.socioeconomicStratum.bajo.percentage)}</span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-slate-300">Estrato 3 y 4 (Medio):</span>
-                          <span className="font-mono text-white font-bold">{currentMuni.demographics.socioeconomicStratum.medio.percentage}%</span>
+                          <span className="font-mono text-white font-bold">{pctMostrar('estrato', 'medio', currentMuni.demographics.socioeconomicStratum.medio.percentage)}</span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-slate-300">Estrato 5 y 6 (Alto):</span>
-                          <span className="font-mono text-white font-bold">{currentMuni.demographics.socioeconomicStratum.alto.percentage}%</span>
+                          <span className="font-mono text-white font-bold">{pctMostrar('estrato', 'alto', currentMuni.demographics.socioeconomicStratum.alto.percentage)}</span>
                         </div>
                       </div>
                     </div>
@@ -1324,15 +1309,15 @@ Entrega un informe denso, sin texto genérico ni rodeos, con lenguaje de consult
                       <div className="space-y-1.5 text-xs">
                         <div className="flex justify-between">
                           <span className="text-slate-300">Básico:</span>
-                          <span className="font-mono text-white font-bold">{currentMuni.demographics.educationLevels.basico.percentage}%</span>
+                          <span className="font-mono text-white font-bold">{pctMostrar('edu', 'basico', currentMuni.demographics.educationLevels.basico.percentage)}</span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-slate-300">Medio / Técnico:</span>
-                          <span className="font-mono text-white font-bold">{currentMuni.demographics.educationLevels.medio.percentage}%</span>
+                          <span className="font-mono text-white font-bold">{pctMostrar('edu', 'medio', currentMuni.demographics.educationLevels.medio.percentage)}</span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-slate-300">Superior / Universitario:</span>
-                          <span className="font-mono text-white font-bold">{currentMuni.demographics.educationLevels.superior.percentage}%</span>
+                          <span className="font-mono text-white font-bold">{pctMostrar('edu', 'superior', currentMuni.demographics.educationLevels.superior.percentage)}</span>
                         </div>
                       </div>
                     </div>
@@ -1670,9 +1655,9 @@ Entrega un informe denso, sin texto genérico ni rodeos, con lenguaje de consult
                   onChange={(e) => setSelectedAge(e.target.value as any)}
                   className="w-full bg-white/[0.04] backdrop-blur-sm border border-white/10 border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold text-white focus:ring-2 focus:ring-emerald-600 focus:outline-none"
                 >
-                  <option value="joven">Joven (18 - 28 años) - {currentMuni.demographics.ageGroups.joven.percentage}%</option>
-                  <option value="adulto">Adulto (29 - 59 años) - {currentMuni.demographics.ageGroups.adulto.percentage}%</option>
-                  <option value="adultoMayor">Adulto Mayor (60+ años) - {currentMuni.demographics.ageGroups.adultoMayor.percentage}%</option>
+                  <option value="joven">Joven (18 - 28 años) - {pctMostrar('edad', 'joven', currentMuni.demographics.ageGroups.joven.percentage)}</option>
+                  <option value="adulto">Adulto (29 - 59 años) - {pctMostrar('edad', 'adulto', currentMuni.demographics.ageGroups.adulto.percentage)}</option>
+                  <option value="adultoMayor">Adulto Mayor (60+ años) - {pctMostrar('edad', 'adultoMayor', currentMuni.demographics.ageGroups.adultoMayor.percentage)}</option>
                 </select>
               </div>
 
@@ -1684,9 +1669,9 @@ Entrega un informe denso, sin texto genérico ni rodeos, con lenguaje de consult
                   onChange={(e) => setSelectedStratum(e.target.value as any)}
                   className="w-full bg-white/[0.04] backdrop-blur-sm border border-white/10 border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold text-white focus:ring-2 focus:ring-emerald-600 focus:outline-none"
                 >
-                  <option value="bajo">Bajo (Estrato 1 y 2) - {currentMuni.demographics.socioeconomicStratum.bajo.percentage}%</option>
-                  <option value="medio">Medio (Estrato 3 y 4) - {currentMuni.demographics.socioeconomicStratum.medio.percentage}%</option>
-                  <option value="alto">Alto (Estrato 5 y 6) - {currentMuni.demographics.socioeconomicStratum.alto.percentage}%</option>
+                  <option value="bajo">Bajo (Estrato 1 y 2) - {pctMostrar('estrato', 'bajo', currentMuni.demographics.socioeconomicStratum.bajo.percentage)}</option>
+                  <option value="medio">Medio (Estrato 3 y 4) - {pctMostrar('estrato', 'medio', currentMuni.demographics.socioeconomicStratum.medio.percentage)}</option>
+                  <option value="alto">Alto (Estrato 5 y 6) - {pctMostrar('estrato', 'alto', currentMuni.demographics.socioeconomicStratum.alto.percentage)}</option>
                 </select>
               </div>
 
@@ -1698,9 +1683,9 @@ Entrega un informe denso, sin texto genérico ni rodeos, con lenguaje de consult
                   onChange={(e) => setSelectedEducation(e.target.value as any)}
                   className="w-full bg-white/[0.04] backdrop-blur-sm border border-white/10 border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold text-white focus:ring-2 focus:ring-emerald-600 focus:outline-none"
                 >
-                  <option value="basico">Básico (Primaria / Secundaria incompleta) - {currentMuni.demographics.educationLevels.basico.percentage}%</option>
-                  <option value="medio">Medio (Bachiller / Técnico / Tecnólogo SENA) - {currentMuni.demographics.educationLevels.medio.percentage}%</option>
-                  <option value="superior">Superior (Universitario / Posgrados) - {currentMuni.demographics.educationLevels.superior.percentage}%</option>
+                  <option value="basico">Básico (Primaria / Secundaria incompleta) - {pctMostrar('edu', 'basico', currentMuni.demographics.educationLevels.basico.percentage)}</option>
+                  <option value="medio">Medio (Bachiller / Técnico / Tecnólogo SENA) - {pctMostrar('edu', 'medio', currentMuni.demographics.educationLevels.medio.percentage)}</option>
+                  <option value="superior">Superior (Universitario / Posgrados) - {pctMostrar('edu', 'superior', currentMuni.demographics.educationLevels.superior.percentage)}</option>
                 </select>
               </div>
 
@@ -1712,24 +1697,24 @@ Entrega un informe denso, sin texto genérico ni rodeos, con lenguaje de consult
                     Estimación Poblacional del Cruce
                   </span>
                   <span className="text-[9px] font-bold bg-emerald-200 text-emerald-900 px-2 py-0.5 rounded-full">
-                    {demographicEstimation.percentageOfArea}% del área
+                    {demographicEstimation.percentageOfArea}% de los adultos del municipio
                   </span>
                 </div>
 
                 <div className="grid grid-cols-2 gap-2 text-center pt-1">
                   <div className="bg-slate-900/60 backdrop-blur-xl border border-white/10 shadow-xl p-2 rounded-xl shadow-2xs border border-emerald-100">
-                    <span className="text-[9px] font-bold text-slate-400 uppercase block">Población Objetivo</span>
+                    <span className="text-[9px] font-bold text-slate-400 uppercase block">Población objetivo (estimado DANE)</span>
                     <span className="text-base font-black text-emerald-900">
-                      {demographicEstimation.finalEstimatedCount.toLocaleString()}
+                      {demographicEstimation.finalEstimatedCount?.toLocaleString('es-CO') ?? 'Sin dato'}
                     </span>
-                    <span className="text-[9px] text-slate-400 block">habitantes</span>
+                    <span className="text-[9px] text-slate-400 block">personas de 18+ en el municipio</span>
                   </div>
                   <div className="bg-slate-900/60 backdrop-blur-xl border border-white/10 shadow-xl p-2 rounded-xl shadow-2xs border border-emerald-100">
-                    <span className="text-[9px] font-bold text-slate-400 uppercase block">Potencial Votante</span>
+                    <span className="text-[9px] font-bold text-slate-400 uppercase block">Censo electoral</span>
                     <span className="text-base font-black text-blue-900">
-                      ~{demographicEstimation.estimatedVoterTurnout.toLocaleString()}
+                      {segMuni?.electoral.censo?.toLocaleString('es-CO') ?? 'Sin dato'}
                     </span>
-                    <span className="text-[9px] text-slate-400 block">urnas proyectadas</span>
+                    <span className="text-[9px] text-slate-400 block">todo el municipio; no hay censo por segmento</span>
                   </div>
                 </div>
               </div>
@@ -1759,33 +1744,26 @@ Entrega un informe denso, sin texto genérico ni rodeos, con lenguaje de consult
                 <option value="Gobernación">Gobernación de Antioquia (Poder ejecutivo seccional)</option>
               </select>
 
-              {/* Ficha de Antecedentes Electorales Inmediatos (2023) */}
+              {/* Antecedentes 2023: escrutinio oficial de la Registraduría (antes: votos = % fijos del censo para 118 municipios) */}
               <div className="bg-purple-50/70 border border-purple-200/80 rounded-2xl p-3.5 space-y-2 text-xs">
                 <div className="flex items-center justify-between text-[10px] font-black uppercase text-purple-900 border-b border-purple-200/60 pb-1.5">
                   <span>Antecedentes 2023 ({selectedOffice})</span>
-                  <span className="text-slate-400 font-bold">Abstención: {currentElectoralData.immediateAntecedents2023.abstentionRate}%</span>
+                  {selectedOffice === 'Alcaldía' && oficial2023 && <span className="text-slate-400 font-bold">Participación: {oficial2023.alcaldia.participacion.toFixed(1)}% · Oficial</span>}
                 </div>
 
-                <div className="space-y-1 text-[11px] text-slate-200">
-                  <div className="flex justify-between">
-                    <span className="text-slate-400">1º Lugar / Vencedor:</span>
-                    <strong className="text-white truncate max-w-[170px]" title={currentElectoralData.immediateAntecedents2023.winnerOrLeadingParty}>
-                      {currentElectoralData.immediateAntecedents2023.winnerOrLeadingParty}
-                    </strong>
+                {selectedOffice === 'Alcaldía' && oficial2023 ? (
+                  <div className="space-y-1 text-[11px] text-slate-200">
+                    {[...oficial2023.alcaldia.candidatos].sort((a, b) => b.votos - a.votos).slice(0, 2).map((c, k) => (
+                      <div key={c.nombre} className="flex justify-between gap-2">
+                        <span className="text-slate-400">{k + 1}º lugar:</span>
+                        <strong className="text-white truncate max-w-[200px]" title={`${c.nombre} (${c.partido})`}>{c.nombre} · {c.votos.toLocaleString('es-CO')}</strong>
+                      </div>
+                    ))}
+                    <div className="text-[10px] text-slate-400">Registraduría, escrutinio de Alcaldía 2023.</div>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-400">Votos 1º Lugar:</span>
-                    <strong className="text-purple-900 font-mono">
-                      {currentElectoralData.immediateAntecedents2023.winnerVotes.toLocaleString()}
-                    </strong>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-400">2º Lugar:</span>
-                    <span className="text-slate-200 truncate max-w-[170px]" title={currentElectoralData.immediateAntecedents2023.secondPlaceOrParty}>
-                      {currentElectoralData.immediateAntecedents2023.secondPlaceOrParty}
-                    </span>
-                  </div>
-                </div>
+                ) : (
+                  <div className="text-[11px] text-slate-300">Sin dato en esta ficha: el escrutinio oficial de {selectedOffice} está en Territorio y lo recibe el analista.</div>
+                )}
 
                 <div className="pt-1.5 border-t border-purple-200/60 text-[10px] text-purple-950 leading-tight">
                   <strong className="text-purple-900">Competencias del cargo:</strong> {currentElectoralData.competencies}
@@ -1803,64 +1781,3 @@ Entrega un informe denso, sin texto genérico ni rodeos, con lenguaje de consult
     </div>
   );
 };
-
-// Generador de informe de contingencia estructurado en los 6 puntos exactos
-function generateFallbackReport(
-  muni: StrategicMunicipality,
-  area: any,
-  age: 'joven' | 'adulto' | 'adultoMayor',
-  stratum: 'bajo' | 'medio' | 'alto',
-  education: 'basico' | 'medio' | 'superior',
-  office: string,
-  candidateName: string,
-  demographics: any
-): string {
-  const ageLabel = age === 'joven' ? 'Jóvenes (18-28 años)' : age === 'adulto' ? 'Adultos (29-59 años)' : 'Adultos Mayores (60+ años)';
-  const stratumLabel = stratum === 'bajo' ? 'Estrato Bajo (1-2)' : stratum === 'medio' ? 'Estrato Medio (3-4)' : 'Estrato Alto (5-6)';
-  const eduLabel = education === 'basico' ? 'Nivel Básico' : education === 'medio' ? 'Nivel Medio / Técnico' : 'Nivel Superior Universitario';
-
-  return `### 1. Perfil general
-El segmento objetivo en ${area.name} (${muni.name}, Antioquia) corresponde a ${ageLabel} de ${stratumLabel} con ${eduLabel}, representando un universo estimado de ${demographics.finalEstimatedCount.toLocaleString()} personas con un potencial directo de votantes en urnas de ~${demographics.estimatedVoterTurnout.toLocaleString()} ciudadanos. Para la contienda a ${office.toUpperCase()}, la candidatura de ${candidateName} debe articular una oferta diferenciada que responda a la identidad barrial y a los antecedentes electorales del municipio, donde la disciplina comunitaria y las demandas de ${area.type === 'Urbana' ? 'seguridad barrial, movilidad metropolitana y empleo' : 'vías terciarias, apoyo al productor y conectividad rural'} condicionan la decisión de voto.
-
-### 2. Descripción psicológica del votante seleccionado
-- **Motivaciones:** Búsqueda de estabilidad, certidumbre económica y protección de su entorno cotidiano. En este grupo poblacional existe alta sensibilidad frente a la falta de oportunidades concretas y el costo de vida metropolitano.
-- **Miedos y frustraciones:** Temor a la delincuencia común, microtráfico en parques y esquinas, y frustración ante promesas incumplidas de políticos tradicionales. Desconfianza hacia discursos radicales o improvisados.
-- **Aspiraciones:** Formalización, independencia económica o progreso para sus hijos en educación técnica/universitaria; orgullo por su territorio en ${muni.name} y anhelo de que sus impuestos se reflejen en obras tangibles.
-- **Detonante de voto:** Credibilidad ética del candidato, demostración de carácter con cercanía humana y propuestas viables que no suenen a utopía burocrática.
-
-### 3. Líneas discursivas estratégicas
-Ajustadas estrictamente a las competencias constitucionales de ${office.toUpperCase()}:
-- **Línea 1 (Seguridad y Tranquilidad Territorial):** ${office === 'Concejo' || office === 'Asamblea' ? 'Control político riguroso y veeduría a los recursos de vigilancia, botones de pánico y frentes de seguridad barrial.' : 'Mano firme en el gobierno local/departamental con inversión en cámaras analíticas, recuperación de parques tomados y respaldo total a la Fuerza Pública.'}
-- **Línea 2 (Oportunidades y Empleo para ${ageLabel}):** ${office === 'Concejo' || office === 'Asamblea' ? 'Gestión de acuerdos normativos para incentivos tributarios a empresas que contraten mano de obra local en ' + muni.name + '.' : 'Alianzas con el sector productivo privado y el SENA para crédito sin usura y capacitación técnica enfocada en demanda laboral real.'}
-- **Línea 3 (Eficiencia y Defensa de la Calidad de Vida en ${area.name}):** ${office === 'Concejo' || office === 'Asamblea' ? 'Fiscalización milimétrica para que cada peso del presupuesto llegue a las vías y centros de salud del sector.' : 'Inversión focalizada en infraestructura comunitaria, mejoramiento del transporte integrado y salud oportuna sin filas.'}
-
-**Eslóganes y Mensajes-Fuerza:**
-- *"Con ${candidateName}, en ${muni.name} el orden y las oportunidades se hacen realidad."*
-- *"${area.name} merece resultados, no promesas vacías."*
-
-### 4. Tono narrativo prioritario
-- **Tono Primario:** **Firme, Pragmático y Empático**.
-- **Justificación Psicológica:** Este segmento rechaza tanto la soberbia tecnocrática distante como la demagogia populista. Responde positivamente a un liderazgo con aplomo y autoridad serena que hable el lenguaje claro de la calle y conozca al dedillo las cuadras y problemáticas de ${area.name}. La voz de ${candidateName} debe transmitir confiabilidad institucional y capacidad inmediata de ejecución.
-
-### 5. Medios prioritarios
-- **Digital / Redes Sociales:**
-  - *Instagram y TikTok (Especialmente si el grupo es joven o adulto con educación media/superior):* Videos cortos en formato vertical grabados en el territorio (caminando en ${area.name}), con subtítulos dinámicos de alto contraste, mensaje frontal en los primeros 3 segundos y llamados a la acción concretos.
-  - *Facebook y Grupos Barriales:* Contenido más descriptivo, testimonios de vecinos, galerías fotográficas de recorridos y transmisión en vivo de diálogos ciudadanos.
-  - *WhatsApp (Comunidades y Estados):* Piezas infográficas en formato JPG/PDF ligero y audios directos de ${candidateName} saludando puntualmente a la comunidad de ${area.name}.
-- **Territorio y Publicidad Física:**
-  - Volanteo directo mano a mano con tarjeta electoral pedagógica en puntos de alto flujo peatonal (estaciones de transporte, parques comerciales).
-  - Vallas y micro-perifoneo respetuoso en zonas de concentración comercial.
-  - Encuentros comunitarios en casas de líderes barriales para generar efecto multiplicador persona a persona.
-
-### 6. Brief general de contenidos
-- **Pieza 1 (Video Corto Digital - 45 segundos):**
-  - *Escena:* ${candidateName} caminando en una calle representativa de ${area.name} hablando directo a cámara.
-  - *Gancho (0-5s):* "¿Cansado de que solo visiten ${area.name} cada cuatro años a prometer lo mismo?"
-  - *Desarrollo (5-35s):* Explica puntualmente la propuesta principal para ${office} enfocada en el grupo seleccionado, mostrando cifras y soluciones concretas.
-  - *Cierre (35-45s):* "Soy ${candidateName}. Con tu apoyo en las urnas, defenderemos ${muni.name}. ¡Vota bien!"
-- **Pieza 2 (Volante / Flyer Territorial Microsegmentado):**
-  - *Frente:* Foto cálida y decidida de ${candidateName}, logotipo de campaña y el compromiso específico para ${area.name}.
-  - *Reverso:* Infografía de "Cómo votar por ${candidateName}" explicando el número en el tarjetón o casilla electoral para ${office}, junto a 3 compromisos verificables.
-- **Pieza 3 (Activación en Territorio):**
-  - Jornada de "Tinto y Diálogo con ${candidateName}" en el corazón de ${area.name}, con carpa móvil, toma pedagógica del espacio y registro digital de voluntarios del segmento.`;
-}
