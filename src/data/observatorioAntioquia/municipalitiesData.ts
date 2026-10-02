@@ -55,14 +55,14 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 8,
           percentageValid: 25.75,
           councilors: [
-            { name: 'Andrés Felipe Tobón Villada', party: 'Partido Político Creemos', votes: 43795, cedula: '1.152.189.793' },
-            { name: 'María Paulina Suárez Roldán', party: 'Partido Político Creemos', votes: 16145, cedula: '43.597.417' },
-            { name: 'Santiago Perdomo Montoya', party: 'Partido Político Creemos', votes: 15240, cedula: '1.152.435.767' },
-            { name: 'Alejandro De Bedout Arango', party: 'Partido Político Creemos', votes: 11115, cedula: '10.376.006.12' },
-            { name: 'Juan Carlos De La Cuesta Galvis', party: 'Partido Político Creemos', votes: 9523, cedula: '71.741.348' },
-            { name: 'Damián Pérez Arroyave', party: 'Partido Político Creemos', votes: 9338, cedula: '1.035.830.866' },
-            { name: 'Santiago Narváez Lombana', party: 'Partido Político Creemos', votes: 9303, cedula: '1.037.626.061' },
-            { name: 'Camila Gaviria Barreneche', party: 'Partido Político Creemos', votes: 4546, cedula: '43.222.003' }
+            { name: 'Andrés Felipe Tobón Villada', party: 'Partido Político Creemos', votes: 43795 },
+            { name: 'María Paulina Suárez Roldán', party: 'Partido Político Creemos', votes: 16145 },
+            { name: 'Santiago Perdomo Montoya', party: 'Partido Político Creemos', votes: 15240 },
+            { name: 'Alejandro De Bedout Arango', party: 'Partido Político Creemos', votes: 11115 },
+            { name: 'Juan Carlos De La Cuesta Galvis', party: 'Partido Político Creemos', votes: 9523 },
+            { name: 'Damián Pérez Arroyave', party: 'Partido Político Creemos', votes: 9338 },
+            { name: 'Santiago Narváez Lombana', party: 'Partido Político Creemos', votes: 9303 },
+            { name: 'Camila Gaviria Barreneche', party: 'Partido Político Creemos', votes: 4546 }
           ]
         },
         {
@@ -71,11 +71,11 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 5,
           percentageValid: 18.62,
           councilors: [
-            { name: 'Sebastián López Valencia', party: 'Partido Centro Democrático', votes: 42444, cedula: '98.764.731' },
-            { name: 'Claudia Victoria Carrasquilla Minami', party: 'Partido Centro Democrático', votes: 14966, cedula: '43.497.054' },
-            { name: 'Luis Guillermo De Jesús Vélez Álvarez', party: 'Partido Centro Democrático', votes: 9648, cedula: '70.063.180' },
-            { name: 'Andrés Felipe Rodríguez Puerta', party: 'Partido Centro Democrático', votes: 6186, cedula: '812.768.1' },
-            { name: 'Leticia Orrego Pérez', party: 'Partido Centro Democrático', votes: 6131, cedula: '21.911.590' }
+            { name: 'Sebastián López Valencia', party: 'Partido Centro Democrático', votes: 42444 },
+            { name: 'Claudia Victoria Carrasquilla Minami', party: 'Partido Centro Democrático', votes: 14966 },
+            { name: 'Luis Guillermo De Jesús Vélez Álvarez', party: 'Partido Centro Democrático', votes: 9648 },
+            { name: 'Andrés Felipe Rodríguez Puerta', party: 'Partido Centro Democrático', votes: 6186 },
+            { name: 'Leticia Orrego Pérez', party: 'Partido Centro Democrático', votes: 6131 }
           ]
         },
         {
@@ -84,8 +84,8 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 2,
           percentageValid: 7.31,
           councilors: [
-            { name: 'Juan Ramón Jiménez Lara', party: 'Partido Conservador Colombiano', votes: 14500, cedula: '76.324.026' },
-            { name: 'Brisvani Alexis Arenas Suaza', party: 'Partido Conservador Colombiano', votes: 9657, cedula: '71.363.158' }
+            { name: 'Juan Ramón Jiménez Lara', party: 'Partido Conservador Colombiano', votes: 14500 },
+            { name: 'Brisvani Alexis Arenas Suaza', party: 'Partido Conservador Colombiano', votes: 9657 }
           ]
         },
         {
@@ -94,7 +94,7 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 1,
           percentageValid: 5.52,
           councilors: [
-            { name: 'Farley Jhair Macías Betancur', party: 'Partido Liberal Colombiano', votes: 10491, cedula: '1.152.700.230' }
+            { name: 'Farley Jhair Macías Betancur', party: 'Partido Liberal Colombiano', votes: 10491 }
           ]
         },
         {
@@ -103,7 +103,7 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 1,
           percentageValid: 5.34,
           councilors: [
-            { name: 'José Luis Marín Mora', party: 'Pacto Histórico', votes: 46988, cedula: '10.375.770.70', notes: 'Voto Lista Cerrada' }
+            { name: 'José Luis Marín Mora', party: 'Pacto Histórico', votes: 46988, notes: 'Voto Lista Cerrada' }
           ]
         },
         {
@@ -112,7 +112,7 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 1,
           percentageValid: 5.24,
           councilors: [
-            { name: 'Alejandro Arias García', party: 'Partido Alianza Verde', votes: 4946, cedula: '10.171.392.58' }
+            { name: 'Alejandro Arias García', party: 'Partido Alianza Verde', votes: 4946 }
           ]
         },
         {
@@ -121,7 +121,7 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 1,
           percentageValid: 4.95,
           councilors: [
-            { name: 'Miguel Ángel Iguarán Osorio', party: 'Juntos', votes: 10271, cedula: '10.375.715.77' }
+            { name: 'Miguel Ángel Iguarán Osorio', party: 'Juntos', votes: 10271 }
           ]
         },
         {
@@ -130,7 +130,7 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 1,
           percentageValid: 4.32,
           councilors: [
-            { name: 'Janeth Hurtado Betancur', party: 'Partido Alianza Social Independiente "ASI"', votes: 6099, cedula: '1.128.448.452' }
+            { name: 'Janeth Hurtado Betancur', party: 'Partido Alianza Social Independiente "ASI"', votes: 6099 }
           ]
         },
         {
@@ -139,34 +139,34 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 2,
           percentageValid: 3.82,
           councilors: [
-            { name: 'Carlos Alberto Gutiérrez Bustamante', party: 'Independientes', votes: 3105, cedula: '71.227.585' },
-            { name: 'Juan Carlos Upegui Vanegas', party: 'Independientes', votes: 95883, cedula: '1.020.421.384', isOppositionSeat: true, notes: 'Curul Ley 1909 Estatuto de Oposición (2.º lugar Alcaldía)' }
+            { name: 'Carlos Alberto Gutiérrez Bustamante', party: 'Independientes', votes: 3105 },
+            { name: 'Juan Carlos Upegui Vanegas', party: 'Independientes', votes: 95883, isOppositionSeat: true, notes: 'Curul Ley 1909 Estatuto de Oposición (2.º lugar Alcaldía)' }
           ]
         }
       ],
       allElectedCouncilors: [
-        { name: 'Andrés Felipe Tobón Villada', party: 'Partido Político Creemos', votes: 43795, cedula: '1.152.189.793' },
-        { name: 'María Paulina Suárez Roldán', party: 'Partido Político Creemos', votes: 16145, cedula: '43.597.417' },
-        { name: 'Santiago Perdomo Montoya', party: 'Partido Político Creemos', votes: 15240, cedula: '1.152.435.767' },
-        { name: 'Alejandro De Bedout Arango', party: 'Partido Político Creemos', votes: 11115, cedula: '10.376.006.12' },
-        { name: 'Juan Carlos De La Cuesta Galvis', party: 'Partido Político Creemos', votes: 9523, cedula: '71.741.348' },
-        { name: 'Damián Pérez Arroyave', party: 'Partido Político Creemos', votes: 9338, cedula: '1.035.830.866' },
-        { name: 'Santiago Narváez Lombana', party: 'Partido Político Creemos', votes: 9303, cedula: '1.037.626.061' },
-        { name: 'Camila Gaviria Barreneche', party: 'Partido Político Creemos', votes: 4546, cedula: '43.222.003' },
-        { name: 'Sebastián López Valencia', party: 'Partido Centro Democrático', votes: 42444, cedula: '98.764.731' },
-        { name: 'Claudia Victoria Carrasquilla Minami', party: 'Partido Centro Democrático', votes: 14966, cedula: '43.497.054' },
-        { name: 'Luis Guillermo De Jesús Vélez Álvarez', party: 'Partido Centro Democrático', votes: 9648, cedula: '70.063.180' },
-        { name: 'Andrés Felipe Rodríguez Puerta', party: 'Partido Centro Democrático', votes: 6186, cedula: '812.768.1' },
-        { name: 'Leticia Orrego Pérez', party: 'Partido Centro Democrático', votes: 6131, cedula: '21.911.590' },
-        { name: 'Juan Ramón Jiménez Lara', party: 'Partido Conservador Colombiano', votes: 14500, cedula: '76.324.026' },
-        { name: 'Brisvani Alexis Arenas Suaza', party: 'Partido Conservador Colombiano', votes: 9657, cedula: '71.363.158' },
-        { name: 'Farley Jhair Macías Betancur', party: 'Partido Liberal Colombiano', votes: 10491, cedula: '1.152.700.230' },
-        { name: 'Alejandro Arias García', party: 'Partido Alianza Verde', votes: 4946, cedula: '10.171.392.58' },
-        { name: 'Miguel Ángel Iguarán Osorio', party: 'Juntos', votes: 10271, cedula: '10.375.715.77' },
-        { name: 'Janeth Hurtado Betancur', party: 'Partido Alianza Social Independiente "ASI"', votes: 6099, cedula: '1.128.448.452' },
-        { name: 'José Luis Marín Mora', party: 'Pacto Histórico', votes: 46988, cedula: '10.375.770.70', notes: 'Lista Cerrada' },
-        { name: 'Carlos Alberto Gutiérrez Bustamante', party: 'Independientes', votes: 3105, cedula: '71.227.585' },
-        { name: 'Juan Carlos Upegui Vanegas', party: 'Independientes', votes: 95883, cedula: '1.020.421.384', isOppositionSeat: true, notes: 'Estatuto de Oposición (2.º lugar Alcaldía)' }
+        { name: 'Andrés Felipe Tobón Villada', party: 'Partido Político Creemos', votes: 43795 },
+        { name: 'María Paulina Suárez Roldán', party: 'Partido Político Creemos', votes: 16145 },
+        { name: 'Santiago Perdomo Montoya', party: 'Partido Político Creemos', votes: 15240 },
+        { name: 'Alejandro De Bedout Arango', party: 'Partido Político Creemos', votes: 11115 },
+        { name: 'Juan Carlos De La Cuesta Galvis', party: 'Partido Político Creemos', votes: 9523 },
+        { name: 'Damián Pérez Arroyave', party: 'Partido Político Creemos', votes: 9338 },
+        { name: 'Santiago Narváez Lombana', party: 'Partido Político Creemos', votes: 9303 },
+        { name: 'Camila Gaviria Barreneche', party: 'Partido Político Creemos', votes: 4546 },
+        { name: 'Sebastián López Valencia', party: 'Partido Centro Democrático', votes: 42444 },
+        { name: 'Claudia Victoria Carrasquilla Minami', party: 'Partido Centro Democrático', votes: 14966 },
+        { name: 'Luis Guillermo De Jesús Vélez Álvarez', party: 'Partido Centro Democrático', votes: 9648 },
+        { name: 'Andrés Felipe Rodríguez Puerta', party: 'Partido Centro Democrático', votes: 6186 },
+        { name: 'Leticia Orrego Pérez', party: 'Partido Centro Democrático', votes: 6131 },
+        { name: 'Juan Ramón Jiménez Lara', party: 'Partido Conservador Colombiano', votes: 14500 },
+        { name: 'Brisvani Alexis Arenas Suaza', party: 'Partido Conservador Colombiano', votes: 9657 },
+        { name: 'Farley Jhair Macías Betancur', party: 'Partido Liberal Colombiano', votes: 10491 },
+        { name: 'Alejandro Arias García', party: 'Partido Alianza Verde', votes: 4946 },
+        { name: 'Miguel Ángel Iguarán Osorio', party: 'Juntos', votes: 10271 },
+        { name: 'Janeth Hurtado Betancur', party: 'Partido Alianza Social Independiente "ASI"', votes: 6099 },
+        { name: 'José Luis Marín Mora', party: 'Pacto Histórico', votes: 46988, notes: 'Lista Cerrada' },
+        { name: 'Carlos Alberto Gutiérrez Bustamante', party: 'Independientes', votes: 3105 },
+        { name: 'Juan Carlos Upegui Vanegas', party: 'Independientes', votes: 95883, isOppositionSeat: true, notes: 'Estatuto de Oposición (2.º lugar Alcaldía)' }
       ]
     },
     governor: {
@@ -962,10 +962,10 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 4,
           percentageValid: 24.62,
           councilors: [
-            { name: 'Diego Armando Congote Lopera', party: 'Partido Liberal Colombiano', votes: 1184, cedula: '70.329.690' },
-            { name: 'Daniel Orozco Córdoba', party: 'Partido Liberal Colombiano', votes: 1146, cedula: '1.035.880.269' },
-            { name: 'Sebastián Madrigal Cadavid', party: 'Partido Liberal Colombiano', votes: 1044, cedula: '1.035.854.973' },
-            { name: 'Camilo Alzate Jaramillo', party: 'Partido Liberal Colombiano', votes: 1012, cedula: '1.128.434.938' }
+            { name: 'Diego Armando Congote Lopera', party: 'Partido Liberal Colombiano', votes: 1184 },
+            { name: 'Daniel Orozco Córdoba', party: 'Partido Liberal Colombiano', votes: 1146 },
+            { name: 'Sebastián Madrigal Cadavid', party: 'Partido Liberal Colombiano', votes: 1044 },
+            { name: 'Camilo Alzate Jaramillo', party: 'Partido Liberal Colombiano', votes: 1012 }
           ]
         },
         {
@@ -974,10 +974,10 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 4,
           percentageValid: 22.97,
           councilors: [
-            { name: 'María Berenice Álzate Castro', party: 'Partido Conservador Colombiano', votes: 1006, cedula: '39.353.402' },
-            { name: 'Juan David Bustamante Bustamante', party: 'Partido Conservador Colombiano', votes: 960, cedula: '70.330.344' },
-            { name: 'Sergio Andrés Orlas Jiménez', party: 'Partido Conservador Colombiano', votes: 922, cedula: '70.326.327' },
-            { name: 'Reinaldo Zapata Sánchez', party: 'Partido Conservador Colombiano', votes: 872, cedula: '1.035.853.159' }
+            { name: 'María Berenice Álzate Castro', party: 'Partido Conservador Colombiano', votes: 1006 },
+            { name: 'Juan David Bustamante Bustamante', party: 'Partido Conservador Colombiano', votes: 960 },
+            { name: 'Sergio Andrés Orlas Jiménez', party: 'Partido Conservador Colombiano', votes: 922 },
+            { name: 'Reinaldo Zapata Sánchez', party: 'Partido Conservador Colombiano', votes: 872 }
           ]
         },
         {
@@ -986,8 +986,8 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 2,
           percentageValid: 13.33,
           councilors: [
-            { name: 'Jaime de Jesús Montoya Ospina', party: 'Movimiento Alianza Democrática Amplia (ADA)', votes: 942, cedula: '70.328.621' },
-            { name: 'Robert David Marulanda Rúa', party: 'Movimiento Alianza Democrática Amplia (ADA)', votes: 556, cedula: '1.035.870.014' }
+            { name: 'Jaime de Jesús Montoya Ospina', party: 'Movimiento Alianza Democrática Amplia (ADA)', votes: 942 },
+            { name: 'Robert David Marulanda Rúa', party: 'Movimiento Alianza Democrática Amplia (ADA)', votes: 556 }
           ]
         },
         {
@@ -996,8 +996,8 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 2,
           percentageValid: 13.26,
           councilors: [
-            { name: 'Sebastián Zapata Arias', party: 'Primero Girardota', votes: 1220, cedula: '1.035.867.624' },
-            { name: 'Mary Sol Henao Bustamante', party: 'Primero Girardota', votes: 772, cedula: '39.356.906' }
+            { name: 'Sebastián Zapata Arias', party: 'Primero Girardota', votes: 1220 },
+            { name: 'Mary Sol Henao Bustamante', party: 'Primero Girardota', votes: 772 }
           ]
         },
         {
@@ -1006,7 +1006,7 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 1,
           percentageValid: 7.82,
           councilors: [
-            { name: 'Tulio César Osorio Zapata', party: 'ASI Verde', votes: 533, cedula: '70.323.860' }
+            { name: 'Tulio César Osorio Zapata', party: 'ASI Verde', votes: 533 }
           ]
         },
         {
@@ -1015,25 +1015,25 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 1,
           percentageValid: 0,
           councilors: [
-            { name: 'Juan Ignacio Torres Gómez', party: 'Girardota Territorio de Vida', votes: 11393, cedula: '70.330.056', isOppositionSeat: true, notes: 'Curul Ley 1909 Estatuto de Oposición (2.º lugar Alcaldía)' }
+            { name: 'Juan Ignacio Torres Gómez', party: 'Girardota Territorio de Vida', votes: 11393, isOppositionSeat: true, notes: 'Curul Ley 1909 Estatuto de Oposición (2.º lugar Alcaldía)' }
           ]
         }
       ],
       allElectedCouncilors: [
-        { name: 'Diego Armando Congote Lopera', party: 'Partido Liberal Colombiano', votes: 1184, cedula: '70.329.690' },
-        { name: 'Daniel Orozco Córdoba', party: 'Partido Liberal Colombiano', votes: 1146, cedula: '1.035.880.269' },
-        { name: 'Sebastián Madrigal Cadavid', party: 'Partido Liberal Colombiano', votes: 1044, cedula: '1.035.854.973' },
-        { name: 'Camilo Alzate Jaramillo', party: 'Partido Liberal Colombiano', votes: 1012, cedula: '1.128.434.938' },
-        { name: 'María Berenice Álzate Castro', party: 'Partido Conservador Colombiano', votes: 1006, cedula: '39.353.402' },
-        { name: 'Juan David Bustamante Bustamante', party: 'Partido Conservador Colombiano', votes: 960, cedula: '70.330.344' },
-        { name: 'Sergio Andrés Orlas Jiménez', party: 'Partido Conservador Colombiano', votes: 922, cedula: '70.326.327' },
-        { name: 'Reinaldo Zapata Sánchez', party: 'Partido Conservador Colombiano', votes: 872, cedula: '1.035.853.159' },
-        { name: 'Sebastián Zapata Arias', party: 'Primero Girardota', votes: 1220, cedula: '1.035.867.624' },
-        { name: 'Mary Sol Henao Bustamante', party: 'Primero Girardota', votes: 772, cedula: '39.356.906' },
-        { name: 'Jaime de Jesús Montoya Ospina', party: 'Movimiento Alianza Democrática Amplia (ADA)', votes: 942, cedula: '70.328.621' },
-        { name: 'Robert David Marulanda Rúa', party: 'Movimiento Alianza Democrática Amplia (ADA)', votes: 556, cedula: '1.035.870.014' },
-        { name: 'Tulio César Osorio Zapata', party: 'ASI Verde', votes: 533, cedula: '70.323.860' },
-        { name: 'Juan Ignacio Torres Gómez', party: 'Girardota Territorio de Vida', votes: 11393, cedula: '70.330.056', isOppositionSeat: true, notes: 'Estatuto de Oposición (2.º lugar Alcaldía)' }
+        { name: 'Diego Armando Congote Lopera', party: 'Partido Liberal Colombiano', votes: 1184 },
+        { name: 'Daniel Orozco Córdoba', party: 'Partido Liberal Colombiano', votes: 1146 },
+        { name: 'Sebastián Madrigal Cadavid', party: 'Partido Liberal Colombiano', votes: 1044 },
+        { name: 'Camilo Alzate Jaramillo', party: 'Partido Liberal Colombiano', votes: 1012 },
+        { name: 'María Berenice Álzate Castro', party: 'Partido Conservador Colombiano', votes: 1006 },
+        { name: 'Juan David Bustamante Bustamante', party: 'Partido Conservador Colombiano', votes: 960 },
+        { name: 'Sergio Andrés Orlas Jiménez', party: 'Partido Conservador Colombiano', votes: 922 },
+        { name: 'Reinaldo Zapata Sánchez', party: 'Partido Conservador Colombiano', votes: 872 },
+        { name: 'Sebastián Zapata Arias', party: 'Primero Girardota', votes: 1220 },
+        { name: 'Mary Sol Henao Bustamante', party: 'Primero Girardota', votes: 772 },
+        { name: 'Jaime de Jesús Montoya Ospina', party: 'Movimiento Alianza Democrática Amplia (ADA)', votes: 942 },
+        { name: 'Robert David Marulanda Rúa', party: 'Movimiento Alianza Democrática Amplia (ADA)', votes: 556 },
+        { name: 'Tulio César Osorio Zapata', party: 'ASI Verde', votes: 533 },
+        { name: 'Juan Ignacio Torres Gómez', party: 'Girardota Territorio de Vida', votes: 11393, isOppositionSeat: true, notes: 'Estatuto de Oposición (2.º lugar Alcaldía)' }
       ]
     },
     governor: {
@@ -1137,8 +1137,8 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 2,
           percentageValid: 10.52,
           councilors: [
-            { name: 'Jaime Bedoya Castaño', party: 'Profe Piolo Cremos', votes: 619, cedula: '1.026.160.607' },
-            { name: 'Yenifer Restrepo Henao', party: 'Profe Piolo Cremos', votes: 611, cedula: '1.026.153.730' }
+            { name: 'Jaime Bedoya Castaño', party: 'Profe Piolo Cremos', votes: 619 },
+            { name: 'Yenifer Restrepo Henao', party: 'Profe Piolo Cremos', votes: 611 }
           ]
         },
         {
@@ -1147,9 +1147,9 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 3,
           percentageValid: 10.50,
           councilors: [
-            { name: 'Luis Aníbal Vergara Ochoa', party: 'Partido Político Creemos', votes: 720, cedula: '71.394.549' },
-            { name: 'Fabio de Jesús Guzmán Echeverri', party: 'Partido Político Creemos', votes: 636, cedula: '71.391.232' },
-            { name: 'Raúl Alejandro Mesa Correa', party: 'Partido Político Creemos', votes: 10982, cedula: '71.399.771', isOppositionSeat: true, notes: 'Curul Ley 1909 Estatuto de Oposición (2.º lugar Alcaldía)' }
+            { name: 'Luis Aníbal Vergara Ochoa', party: 'Partido Político Creemos', votes: 720 },
+            { name: 'Fabio de Jesús Guzmán Echeverri', party: 'Partido Político Creemos', votes: 636 },
+            { name: 'Raúl Alejandro Mesa Correa', party: 'Partido Político Creemos', votes: 10982, isOppositionSeat: true, notes: 'Curul Ley 1909 Estatuto de Oposición (2.º lugar Alcaldía)' }
           ]
         },
         {
@@ -1158,8 +1158,8 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 2,
           percentageValid: 10.09,
           councilors: [
-            { name: 'Jonathan Hurtado Betancur', party: 'Diálogo Ciudadano', votes: 921, cedula: '1.026.138.418' },
-            { name: 'Jose David Rodríguez Molina', party: 'Diálogo Ciudadano', votes: 704, cedula: '1.026.146.796' }
+            { name: 'Jonathan Hurtado Betancur', party: 'Diálogo Ciudadano', votes: 921 },
+            { name: 'Jose David Rodríguez Molina', party: 'Diálogo Ciudadano', votes: 704 }
           ]
         },
         {
@@ -1168,8 +1168,8 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 2,
           percentageValid: 9.42,
           councilors: [
-            { name: 'Juan Camilo Baena Ramírez', party: 'Partido Liberal Colombiano', votes: 1475, cedula: '1.026.137.298' },
-            { name: 'Juliana Sepúlveda Arredondo', party: 'Partido Liberal Colombiano', votes: 996, cedula: '1.026.149.983' }
+            { name: 'Juan Camilo Baena Ramírez', party: 'Partido Liberal Colombiano', votes: 1475 },
+            { name: 'Juliana Sepúlveda Arredondo', party: 'Partido Liberal Colombiano', votes: 996 }
           ]
         },
         {
@@ -1178,7 +1178,7 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 1,
           percentageValid: 9.30,
           councilors: [
-            { name: 'Luis Hernando Yepes Torres', party: 'Partido Cambio Radical', votes: 742, cedula: '70.519.981' }
+            { name: 'Luis Hernando Yepes Torres', party: 'Partido Cambio Radical', votes: 742 }
           ]
         },
         {
@@ -1187,7 +1187,7 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 1,
           percentageValid: 6.69,
           councilors: [
-            { name: 'Astrid Janneth Quirós Colorado', party: 'Partido de la Unión por la Gente - Partido de la U', votes: 976, cedula: '43.687.504' }
+            { name: 'Astrid Janneth Quirós Colorado', party: 'Partido de la Unión por la Gente - Partido de la U', votes: 976 }
           ]
         },
         {
@@ -1196,7 +1196,7 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 1,
           percentageValid: 6.46,
           councilors: [
-            { name: 'Sebastián Querubín Loaiza', party: 'Partido Conservador Colombiano', votes: 553, cedula: '1.036.641.498' }
+            { name: 'Sebastián Querubín Loaiza', party: 'Partido Conservador Colombiano', votes: 553 }
           ]
         },
         {
@@ -1205,7 +1205,7 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 1,
           percentageValid: 5.69,
           councilors: [
-            { name: 'John Jairo Velásquez Ortiz', party: 'Partido Alianza Social Independiente "ASI"', votes: 560, cedula: '98.524.240' }
+            { name: 'John Jairo Velásquez Ortiz', party: 'Partido Alianza Social Independiente "ASI"', votes: 560 }
           ]
         },
         {
@@ -1214,7 +1214,7 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 1,
           percentageValid: 5.51,
           councilors: [
-            { name: 'Angela María Espinosa Castro', party: 'Centro Democrático - MIRA', votes: 732, cedula: '43.681.300' }
+            { name: 'Angela María Espinosa Castro', party: 'Centro Democrático - MIRA', votes: 732 }
           ]
         },
         {
@@ -1223,7 +1223,7 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 1,
           percentageValid: 5.08,
           councilors: [
-            { name: 'John Fredy Jiménez Granados', party: 'Partido Alianza Verde', votes: 694, cedula: '1.026.132.890' }
+            { name: 'John Fredy Jiménez Granados', party: 'Partido Alianza Verde', votes: 694 }
           ]
         },
         {
@@ -1232,27 +1232,27 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 1,
           percentageValid: 4.86,
           councilors: [
-            { name: 'James Andrés Arango Valencia', party: 'Partido Nuevo Liberalismo', votes: 396, cedula: '3.402.409' }
+            { name: 'James Andrés Arango Valencia', party: 'Partido Nuevo Liberalismo', votes: 396 }
           ]
         }
       ],
       allElectedCouncilors: [
-        { name: 'Juan Camilo Baena Ramírez', party: 'Partido Liberal Colombiano', votes: 1475, cedula: '1.026.137.298' },
-        { name: 'Juliana Sepúlveda Arredondo', party: 'Partido Liberal Colombiano', votes: 996, cedula: '1.026.149.983' },
-        { name: 'Astrid Janneth Quirós Colorado', party: 'Partido de la Unión por la Gente - Partido de la U', votes: 976, cedula: '43.687.504' },
-        { name: 'Jonathan Hurtado Betancur', party: 'Diálogo Ciudadano', votes: 921, cedula: '1.026.138.418' },
-        { name: 'Luis Hernando Yepes Torres', party: 'Partido Cambio Radical', votes: 742, cedula: '70.519.981' },
-        { name: 'Angela María Espinosa Castro', party: 'Centro Democrático - MIRA', votes: 732, cedula: '43.681.300' },
-        { name: 'Luis Aníbal Vergara Ochoa', party: 'Partido Político Creemos', votes: 720, cedula: '71.394.549' },
-        { name: 'Jose David Rodríguez Molina', party: 'Diálogo Ciudadano', votes: 704, cedula: '1.026.146.796' },
-        { name: 'John Fredy Jiménez Granados', party: 'Partido Alianza Verde', votes: 694, cedula: '1.026.132.890' },
-        { name: 'Fabio de Jesús Guzmán Echeverri', party: 'Partido Político Creemos', votes: 636, cedula: '71.391.232' },
-        { name: 'Jaime Bedoya Castaño', party: 'Profe Piolo Cremos', votes: 619, cedula: '1.026.160.607' },
-        { name: 'Yenifer Restrepo Henao', party: 'Profe Piolo Cremos', votes: 611, cedula: '1.026.153.730' },
-        { name: 'John Jairo Velásquez Ortiz', party: 'Partido Alianza Social Independiente "ASI"', votes: 560, cedula: '98.524.240' },
-        { name: 'Sebastián Querubín Loaiza', party: 'Partido Conservador Colombiano', votes: 553, cedula: '1.036.641.498' },
-        { name: 'James Andrés Arango Valencia', party: 'Partido Nuevo Liberalismo', votes: 396, cedula: '3.402.409' },
-        { name: 'Raúl Alejandro Mesa Correa', party: 'Partido Político Creemos', votes: 10982, cedula: '71.399.771', isOppositionSeat: true, notes: 'Estatuto de Oposición (2.º lugar Alcaldía)' }
+        { name: 'Juan Camilo Baena Ramírez', party: 'Partido Liberal Colombiano', votes: 1475 },
+        { name: 'Juliana Sepúlveda Arredondo', party: 'Partido Liberal Colombiano', votes: 996 },
+        { name: 'Astrid Janneth Quirós Colorado', party: 'Partido de la Unión por la Gente - Partido de la U', votes: 976 },
+        { name: 'Jonathan Hurtado Betancur', party: 'Diálogo Ciudadano', votes: 921 },
+        { name: 'Luis Hernando Yepes Torres', party: 'Partido Cambio Radical', votes: 742 },
+        { name: 'Angela María Espinosa Castro', party: 'Centro Democrático - MIRA', votes: 732 },
+        { name: 'Luis Aníbal Vergara Ochoa', party: 'Partido Político Creemos', votes: 720 },
+        { name: 'Jose David Rodríguez Molina', party: 'Diálogo Ciudadano', votes: 704 },
+        { name: 'John Fredy Jiménez Granados', party: 'Partido Alianza Verde', votes: 694 },
+        { name: 'Fabio de Jesús Guzmán Echeverri', party: 'Partido Político Creemos', votes: 636 },
+        { name: 'Jaime Bedoya Castaño', party: 'Profe Piolo Cremos', votes: 619 },
+        { name: 'Yenifer Restrepo Henao', party: 'Profe Piolo Cremos', votes: 611 },
+        { name: 'John Jairo Velásquez Ortiz', party: 'Partido Alianza Social Independiente "ASI"', votes: 560 },
+        { name: 'Sebastián Querubín Loaiza', party: 'Partido Conservador Colombiano', votes: 553 },
+        { name: 'James Andrés Arango Valencia', party: 'Partido Nuevo Liberalismo', votes: 396 },
+        { name: 'Raúl Alejandro Mesa Correa', party: 'Partido Político Creemos', votes: 10982, isOppositionSeat: true, notes: 'Estatuto de Oposición (2.º lugar Alcaldía)' }
       ]
     },
     governor: {
@@ -1339,9 +1339,9 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 3,
           percentageValid: 15.35,
           councilors: [
-            { name: 'Jeisson Alexander Castaño Jaramillo', party: 'Partido Conservador Colombiano', votes: 550, cedula: '1.035.852.292' },
-            { name: 'Diego Alejandro Castaño', party: 'Partido Conservador Colombiano', votes: 516, cedula: '70.879.220' },
-            { name: 'Mónica Yanet Henao Zuleta', party: 'Partido Conservador Colombiano', votes: 373, cedula: '39.214.609' }
+            { name: 'Jeisson Alexander Castaño Jaramillo', party: 'Partido Conservador Colombiano', votes: 550 },
+            { name: 'Diego Alejandro Castaño', party: 'Partido Conservador Colombiano', votes: 516 },
+            { name: 'Mónica Yanet Henao Zuleta', party: 'Partido Conservador Colombiano', votes: 373 }
           ]
         },
         {
@@ -1350,9 +1350,9 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 3,
           percentageValid: 15.30,
           councilors: [
-            { name: 'Mauricio Antonio Marín Marín', party: 'Partido Liberal Colombiano', votes: 600, cedula: '70.142.871' },
-            { name: 'Beatriz Elena Rodríguez Madrid', party: 'Partido Liberal Colombiano', votes: 459, cedula: '39.206.347' },
-            { name: 'Mauricio de Jesús Cuartas Agudelo', party: 'Partido Liberal Colombiano', votes: 406, cedula: '70.137.664' }
+            { name: 'Mauricio Antonio Marín Marín', party: 'Partido Liberal Colombiano', votes: 600 },
+            { name: 'Beatriz Elena Rodríguez Madrid', party: 'Partido Liberal Colombiano', votes: 459 },
+            { name: 'Mauricio de Jesús Cuartas Agudelo', party: 'Partido Liberal Colombiano', votes: 406 }
           ]
         },
         {
@@ -1361,8 +1361,8 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 2,
           percentageValid: 10.78,
           councilors: [
-            { name: 'Juan Felipe Agudelo Carmona', party: 'Partido Político Gente en Movimiento', votes: 620, cedula: '1.035.227.537' },
-            { name: 'Álvaro Rinaldi Martínez', party: 'Partido Político Gente en Movimiento', votes: 415, cedula: '73.103.829' }
+            { name: 'Juan Felipe Agudelo Carmona', party: 'Partido Político Gente en Movimiento', votes: 620 },
+            { name: 'Álvaro Rinaldi Martínez', party: 'Partido Político Gente en Movimiento', votes: 415 }
           ]
         },
         {
@@ -1371,7 +1371,7 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 1,
           percentageValid: 8.14,
           councilors: [
-            { name: 'Fran Esteban García Gaviria', party: 'Partido de la Unión por la Gente - Partido de la U', votes: 428, cedula: '70.140.773' }
+            { name: 'Fran Esteban García Gaviria', party: 'Partido de la Unión por la Gente - Partido de la U', votes: 428 }
           ]
         },
         {
@@ -1380,7 +1380,7 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 1,
           percentageValid: 7.53,
           councilors: [
-            { name: 'Carlos Andrés Zapata Chaverra', party: 'Partido Centro Democrático', votes: 511, cedula: '1.035.233.703' }
+            { name: 'Carlos Andrés Zapata Chaverra', party: 'Partido Centro Democrático', votes: 511 }
           ]
         },
         {
@@ -1389,7 +1389,7 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 1,
           percentageValid: 6.47,
           councilors: [
-            { name: 'Johnny Enrique Agudelo Franco', party: 'Partido Alianza Verde', votes: 512, cedula: '1.035.225.480' }
+            { name: 'Johnny Enrique Agudelo Franco', party: 'Partido Alianza Verde', votes: 512 }
           ]
         },
         {
@@ -1398,7 +1398,7 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 1,
           percentageValid: 5.25,
           councilors: [
-            { name: 'Reinaldo de Jesús Zapata Marín', party: 'Movimiento Autoridades Indígenas de Colombia "AICO"', votes: 221, cedula: '70.135.168' }
+            { name: 'Reinaldo de Jesús Zapata Marín', party: 'Movimiento Autoridades Indígenas de Colombia "AICO"', votes: 221 }
           ]
         },
         {
@@ -1407,7 +1407,7 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 1,
           percentageValid: 5.15,
           councilors: [
-            { name: 'Jesús Ernesto García Sierra', party: 'Partido Alianza Social Independiente "ASI"', votes: 154, cedula: '72.144.284' }
+            { name: 'Jesús Ernesto García Sierra', party: 'Partido Alianza Social Independiente "ASI"', votes: 154 }
           ]
         },
         {
@@ -1416,25 +1416,25 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 1,
           percentageValid: 4.99,
           councilors: [
-            { name: 'Víctor Antonio Graciano Ramírez', party: 'Partido Cambio Radical', votes: 7718, cedula: '71.625.467', isOppositionSeat: true, notes: 'Curul Ley 1909 Estatuto de Oposición (2.º lugar Alcaldía)' }
+            { name: 'Víctor Antonio Graciano Ramírez', party: 'Partido Cambio Radical', votes: 7718, isOppositionSeat: true, notes: 'Curul Ley 1909 Estatuto de Oposición (2.º lugar Alcaldía)' }
           ]
         }
       ],
       allElectedCouncilors: [
-        { name: 'Juan Felipe Agudelo Carmona', party: 'Partido Político Gente en Movimiento', votes: 620, cedula: '1.035.227.537' },
-        { name: 'Mauricio Antonio Marín Marín', party: 'Partido Liberal Colombiano', votes: 600, cedula: '70.142.871' },
-        { name: 'Jeisson Alexander Castaño Jaramillo', party: 'Partido Conservador Colombiano', votes: 550, cedula: '1.035.852.292' },
-        { name: 'Diego Alejandro Castaño', party: 'Partido Conservador Colombiano', votes: 516, cedula: '70.879.220' },
-        { name: 'Johnny Enrique Agudelo Franco', party: 'Partido Alianza Verde', votes: 512, cedula: '1.035.225.480' },
-        { name: 'Carlos Andrés Zapata Chaverra', party: 'Partido Centro Democrático', votes: 511, cedula: '1.035.233.703' },
-        { name: 'Beatriz Elena Rodríguez Madrid', party: 'Partido Liberal Colombiano', votes: 459, cedula: '39.206.347' },
-        { name: 'Fran Esteban García Gaviria', party: 'Partido de la Unión por la Gente - Partido de la U', votes: 428, cedula: '70.140.773' },
-        { name: 'Álvaro Rinaldi Martínez', party: 'Partido Político Gente en Movimiento', votes: 415, cedula: '73.103.829' },
-        { name: 'Mauricio de Jesús Cuartas Agudelo', party: 'Partido Liberal Colombiano', votes: 406, cedula: '70.137.664' },
-        { name: 'Mónica Yanet Henao Zuleta', party: 'Partido Conservador Colombiano', votes: 373, cedula: '39.214.609' },
-        { name: 'Reinaldo de Jesús Zapata Marín', party: 'Movimiento Autoridades Indígenas de Colombia "AICO"', votes: 221, cedula: '70.135.168' },
-        { name: 'Jesús Ernesto García Sierra', party: 'Partido Alianza Social Independiente "ASI"', votes: 154, cedula: '72.144.284' },
-        { name: 'Víctor Antonio Graciano Ramírez', party: 'Partido Cambio Radical', votes: 7718, cedula: '71.625.467', isOppositionSeat: true, notes: 'Estatuto de Oposición (2.º lugar Alcaldía)' }
+        { name: 'Juan Felipe Agudelo Carmona', party: 'Partido Político Gente en Movimiento', votes: 620 },
+        { name: 'Mauricio Antonio Marín Marín', party: 'Partido Liberal Colombiano', votes: 600 },
+        { name: 'Jeisson Alexander Castaño Jaramillo', party: 'Partido Conservador Colombiano', votes: 550 },
+        { name: 'Diego Alejandro Castaño', party: 'Partido Conservador Colombiano', votes: 516 },
+        { name: 'Johnny Enrique Agudelo Franco', party: 'Partido Alianza Verde', votes: 512 },
+        { name: 'Carlos Andrés Zapata Chaverra', party: 'Partido Centro Democrático', votes: 511 },
+        { name: 'Beatriz Elena Rodríguez Madrid', party: 'Partido Liberal Colombiano', votes: 459 },
+        { name: 'Fran Esteban García Gaviria', party: 'Partido de la Unión por la Gente - Partido de la U', votes: 428 },
+        { name: 'Álvaro Rinaldi Martínez', party: 'Partido Político Gente en Movimiento', votes: 415 },
+        { name: 'Mauricio de Jesús Cuartas Agudelo', party: 'Partido Liberal Colombiano', votes: 406 },
+        { name: 'Mónica Yanet Henao Zuleta', party: 'Partido Conservador Colombiano', votes: 373 },
+        { name: 'Reinaldo de Jesús Zapata Marín', party: 'Movimiento Autoridades Indígenas de Colombia "AICO"', votes: 221 },
+        { name: 'Jesús Ernesto García Sierra', party: 'Partido Alianza Social Independiente "ASI"', votes: 154 },
+        { name: 'Víctor Antonio Graciano Ramírez', party: 'Partido Cambio Radical', votes: 7718, isOppositionSeat: true, notes: 'Estatuto de Oposición (2.º lugar Alcaldía)' }
       ]
     },
     governor: {
@@ -1523,9 +1523,9 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 3,
           percentageValid: 13.14,
           councilors: [
-            { name: 'Juan Pablo Arteaga Cano', party: 'Partido Liberal Colombiano', votes: 1242, cedula: '1.040.733.333' },
-            { name: 'Estiben Orleit Moncada Castañeda', party: 'Partido Liberal Colombiano', votes: 758, cedula: '1.040.739.420' },
-            { name: 'Dahyana Pabón Jiménez', party: 'Partido Liberal Colombiano', votes: 660, cedula: '1.010.056.825' }
+            { name: 'Juan Pablo Arteaga Cano', party: 'Partido Liberal Colombiano', votes: 1242 },
+            { name: 'Estiben Orleit Moncada Castañeda', party: 'Partido Liberal Colombiano', votes: 758 },
+            { name: 'Dahyana Pabón Jiménez', party: 'Partido Liberal Colombiano', votes: 660 }
           ]
         },
         {
@@ -1534,8 +1534,8 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 2,
           percentageValid: 8.58,
           councilors: [
-            { name: 'Walter Alexis Londoño Agudelo', party: 'Imparables', votes: 546, cedula: '1.036.611.549' },
-            { name: 'Nathacha Gil Escobar', party: 'Imparables', votes: 127, cedula: '1.040.745.181' }
+            { name: 'Walter Alexis Londoño Agudelo', party: 'Imparables', votes: 546 },
+            { name: 'Nathacha Gil Escobar', party: 'Imparables', votes: 127 }
           ]
         },
         {
@@ -1544,8 +1544,8 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 2,
           percentageValid: 8.48,
           councilors: [
-            { name: 'Willington Herrera Arroyave', party: 'Partido Centro Democrático', votes: 533, cedula: '98.658.912' },
-            { name: 'John Edison Ocampo Mejía', party: 'Partido Centro Democrático', votes: 380, cedula: '1.040.732.698' }
+            { name: 'Willington Herrera Arroyave', party: 'Partido Centro Democrático', votes: 533 },
+            { name: 'John Edison Ocampo Mejía', party: 'Partido Centro Democrático', votes: 380 }
           ]
         },
         {
@@ -1554,7 +1554,7 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 1,
           percentageValid: 7.35,
           councilors: [
-            { name: 'Gustavo Aguilar Pérez', party: 'Alianza CREO', votes: 399, cedula: '70.084.774' }
+            { name: 'Gustavo Aguilar Pérez', party: 'Alianza CREO', votes: 399 }
           ]
         },
         {
@@ -1563,7 +1563,7 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 1,
           percentageValid: 6.88,
           councilors: [
-            { name: 'Jhon Mauricio Oquendo Cadavid', party: 'Movimiento Político Fuerza Ciudadana', votes: 942, cedula: '1.040.738.219' }
+            { name: 'Jhon Mauricio Oquendo Cadavid', party: 'Movimiento Político Fuerza Ciudadana', votes: 942 }
           ]
         },
         {
@@ -1572,7 +1572,7 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 1,
           percentageValid: 6.50,
           councilors: [
-            { name: 'Natalia Alejandra Londoño Parra', party: 'Partido de la Unión por la Gente - Partido de la U', votes: 698, cedula: '32.351.806' }
+            { name: 'Natalia Alejandra Londoño Parra', party: 'Partido de la Unión por la Gente - Partido de la U', votes: 698 }
           ]
         },
         {
@@ -1581,7 +1581,7 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 1,
           percentageValid: 5.85,
           councilors: [
-            { name: 'Andrés Camilo Cano Londoño', party: 'Partido Conservador Colombiano', votes: 646, cedula: '1.040.737.013' }
+            { name: 'Andrés Camilo Cano Londoño', party: 'Partido Conservador Colombiano', votes: 646 }
           ]
         },
         {
@@ -1590,7 +1590,7 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 1,
           percentageValid: 5.07,
           councilors: [
-            { name: 'Fernando de Jesús Moreno Moreno', party: 'Partido Político Creemos', votes: 337, cedula: '7.158.322.1' }
+            { name: 'Fernando de Jesús Moreno Moreno', party: 'Partido Político Creemos', votes: 337 }
           ]
         },
         {
@@ -1599,7 +1599,7 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 1,
           percentageValid: 4.92,
           councilors: [
-            { name: 'Juan David Barco Aguirre', party: 'Una Estrella Para Todos', votes: 518, cedula: '1.036.613.256' }
+            { name: 'Juan David Barco Aguirre', party: 'Una Estrella Para Todos', votes: 518 }
           ]
         },
         {
@@ -1608,7 +1608,7 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 1,
           percentageValid: 4.38,
           councilors: [
-            { name: 'Sebastián Tapias Madrigal', party: 'Hacemos Conciencia', votes: 366, cedula: '1.026.156.607' }
+            { name: 'Sebastián Tapias Madrigal', party: 'Hacemos Conciencia', votes: 366 }
           ]
         },
         {
@@ -1617,26 +1617,26 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 1,
           percentageValid: 4.10,
           councilors: [
-            { name: 'Daniel Garcés Flórez', party: 'Partido Demócrata Colombiano', votes: 801, cedula: '1.040.742.162' }
+            { name: 'Daniel Garcés Flórez', party: 'Partido Demócrata Colombiano', votes: 801 }
           ]
         }
       ],
       allElectedCouncilors: [
-        { name: 'Juan Pablo Arteaga Cano', party: 'Partido Liberal Colombiano', votes: 1242, cedula: '1.040.733.333' },
-        { name: 'Jhon Mauricio Oquendo Cadavid', party: 'Movimiento Político Fuerza Ciudadana', votes: 942, cedula: '1.040.738.219' },
-        { name: 'Daniel Garcés Flórez', party: 'Partido Demócrata Colombiano', votes: 801, cedula: '1.040.742.162' },
-        { name: 'Estiben Orleit Moncada Castañeda', party: 'Partido Liberal Colombiano', votes: 758, cedula: '1.040.739.420' },
-        { name: 'Natalia Alejandra Londoño Parra', party: 'Partido de la Unión por la Gente - Partido de la U', votes: 698, cedula: '32.351.806' },
-        { name: 'Dahyana Pabón Jiménez', party: 'Partido Liberal Colombiano', votes: 660, cedula: '1.010.056.825' },
-        { name: 'Andrés Camilo Cano Londoño', party: 'Partido Conservador Colombiano', votes: 646, cedula: '1.040.737.013' },
-        { name: 'Walter Alexis Londoño Agudelo', party: 'Imparables', votes: 546, cedula: '1.036.611.549' },
-        { name: 'Willington Herrera Arroyave', party: 'Partido Centro Democrático', votes: 533, cedula: '98.658.912' },
-        { name: 'Juan David Barco Aguirre', party: 'Una Estrella Para Todos', votes: 518, cedula: '1.036.613.256' },
-        { name: 'Gustavo Aguilar Pérez', party: 'Alianza CREO', votes: 399, cedula: '70.084.774' },
-        { name: 'John Edison Ocampo Mejía', party: 'Partido Centro Democrático', votes: 380, cedula: '1.040.732.698' },
-        { name: 'Sebastián Tapias Madrigal', party: 'Hacemos Conciencia', votes: 366, cedula: '1.026.156.607' },
-        { name: 'Fernando de Jesús Moreno Moreno', party: 'Partido Político Creemos', votes: 337, cedula: '7.158.322.1' },
-        { name: 'Nathacha Gil Escobar', party: 'Imparables', votes: 127, cedula: '1.040.745.181' }
+        { name: 'Juan Pablo Arteaga Cano', party: 'Partido Liberal Colombiano', votes: 1242 },
+        { name: 'Jhon Mauricio Oquendo Cadavid', party: 'Movimiento Político Fuerza Ciudadana', votes: 942 },
+        { name: 'Daniel Garcés Flórez', party: 'Partido Demócrata Colombiano', votes: 801 },
+        { name: 'Estiben Orleit Moncada Castañeda', party: 'Partido Liberal Colombiano', votes: 758 },
+        { name: 'Natalia Alejandra Londoño Parra', party: 'Partido de la Unión por la Gente - Partido de la U', votes: 698 },
+        { name: 'Dahyana Pabón Jiménez', party: 'Partido Liberal Colombiano', votes: 660 },
+        { name: 'Andrés Camilo Cano Londoño', party: 'Partido Conservador Colombiano', votes: 646 },
+        { name: 'Walter Alexis Londoño Agudelo', party: 'Imparables', votes: 546 },
+        { name: 'Willington Herrera Arroyave', party: 'Partido Centro Democrático', votes: 533 },
+        { name: 'Juan David Barco Aguirre', party: 'Una Estrella Para Todos', votes: 518 },
+        { name: 'Gustavo Aguilar Pérez', party: 'Alianza CREO', votes: 399 },
+        { name: 'John Edison Ocampo Mejía', party: 'Partido Centro Democrático', votes: 380 },
+        { name: 'Sebastián Tapias Madrigal', party: 'Hacemos Conciencia', votes: 366 },
+        { name: 'Fernando de Jesús Moreno Moreno', party: 'Partido Político Creemos', votes: 337 },
+        { name: 'Nathacha Gil Escobar', party: 'Imparables', votes: 127 }
       ]
     },
     governor: {
@@ -1743,9 +1743,9 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 3,
           percentageValid: 13.72,
           councilors: [
-            { name: 'Carlos Alberto Gómez Yarce', party: 'Partido Político Creemos', votes: 1018, cedula: '1.035.425.982' },
-            { name: 'Julián Andrés Tobón Martínez', party: 'Partido Político Creemos', votes: 647, cedula: '1.035.424.146' },
-            { name: 'Yilber Andrés Montoya Bernal', party: 'Partido Político Creemos', votes: 576, cedula: '10.376.310.16' }
+            { name: 'Carlos Alberto Gómez Yarce', party: 'Partido Político Creemos', votes: 1018 },
+            { name: 'Julián Andrés Tobón Martínez', party: 'Partido Político Creemos', votes: 647 },
+            { name: 'Yilber Andrés Montoya Bernal', party: 'Partido Político Creemos', votes: 576 }
           ]
         },
         {
@@ -1754,9 +1754,9 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 3,
           percentageValid: 13.43,
           councilors: [
-            { name: 'Jonathan Eduardo Chaverra Ortiz', party: 'Partido Alianza Verde', votes: 885, cedula: '1.035.420.271' },
-            { name: 'Juan Camilo Ramírez Gallón', party: 'Partido Alianza Verde', votes: 705, cedula: '71.364.638' },
-            { name: 'Carolina Díaz González', party: 'Partido Alianza Verde', votes: 582, cedula: '10.354.375.21' }
+            { name: 'Jonathan Eduardo Chaverra Ortiz', party: 'Partido Alianza Verde', votes: 885 },
+            { name: 'Juan Camilo Ramírez Gallón', party: 'Partido Alianza Verde', votes: 705 },
+            { name: 'Carolina Díaz González', party: 'Partido Alianza Verde', votes: 582 }
           ]
         },
         {
@@ -1765,8 +1765,8 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 2,
           percentageValid: 11.76,
           councilors: [
-            { name: 'Robinson Higinio Giraldo', party: 'Partido Cambio Radical', votes: 1303, cedula: '10.375.813.99' },
-            { name: 'Juan Sebastian Hernández Foronda', party: 'Partido Cambio Radical', votes: 847, cedula: '10.354.298.77' }
+            { name: 'Robinson Higinio Giraldo', party: 'Partido Cambio Radical', votes: 1303 },
+            { name: 'Juan Sebastian Hernández Foronda', party: 'Partido Cambio Radical', votes: 847 }
           ]
         },
         {
@@ -1775,8 +1775,8 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 2,
           percentageValid: 11.44,
           councilors: [
-            { name: 'Julián Marcelo Machado Cadavid', party: 'Partido Liberal Colombiano', votes: 737, cedula: '15.515.272' },
-            { name: 'Nelson Camilo Quiceno Hernández', party: 'Partido Liberal Colombiano', votes: 621, cedula: '10.354.230.06' }
+            { name: 'Julián Marcelo Machado Cadavid', party: 'Partido Liberal Colombiano', votes: 737 },
+            { name: 'Nelson Camilo Quiceno Hernández', party: 'Partido Liberal Colombiano', votes: 621 }
           ]
         },
         {
@@ -1785,7 +1785,7 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 1,
           percentageValid: 7.00,
           councilors: [
-            { name: 'Margarita María Muñoz Giraldo', party: 'Partido Centro Democrático', votes: 377, cedula: '42.687.560' }
+            { name: 'Margarita María Muñoz Giraldo', party: 'Partido Centro Democrático', votes: 377 }
           ]
         },
         {
@@ -1794,7 +1794,7 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 1,
           percentageValid: 5.74,
           councilors: [
-            { name: 'Juan David Quintero Arango', party: 'Partido de la Unión por la Gente - Partido de la U', votes: 785, cedula: '10.354.311.52' }
+            { name: 'Juan David Quintero Arango', party: 'Partido de la Unión por la Gente - Partido de la U', votes: 785 }
           ]
         },
         {
@@ -1803,7 +1803,7 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 1,
           percentageValid: 5.51,
           councilors: [
-            { name: 'Edwin Ramírez Lopera', party: 'Partido Conservador Colombiano', votes: 677, cedula: '15.519.017' }
+            { name: 'Edwin Ramírez Lopera', party: 'Partido Conservador Colombiano', votes: 677 }
           ]
         },
         {
@@ -1812,7 +1812,7 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 1,
           percentageValid: 5.49,
           councilors: [
-            { name: 'Edwin Alexander Gómez', party: 'Partido Nuevo Liberalismo', votes: 590, cedula: '15.516.361' }
+            { name: 'Edwin Alexander Gómez', party: 'Partido Nuevo Liberalismo', votes: 590 }
           ]
         },
         {
@@ -1821,26 +1821,26 @@ export const MUNICIPALITIES_DATA: MunicipalityData[] = [
           seats: 1,
           percentageValid: 4.14,
           councilors: [
-            { name: 'Deisy Yurany Suárez Acevedo', party: 'ASI - MIRA', votes: 374, cedula: '10.376.291.33' }
+            { name: 'Deisy Yurany Suárez Acevedo', party: 'ASI - MIRA', votes: 374 }
           ]
         }
       ],
       allElectedCouncilors: [
-        { name: 'Robinson Higinio Giraldo', party: 'Partido Cambio Radical', votes: 1303, cedula: '10.375.813.99' },
-        { name: 'Carlos Alberto Gómez Yarce', party: 'Partido Político Creemos', votes: 1018, cedula: '1.035.425.982' },
-        { name: 'Jonathan Eduardo Chaverra Ortiz', party: 'Partido Alianza Verde', votes: 885, cedula: '1.035.420.271' },
-        { name: 'Juan Sebastian Hernández Foronda', party: 'Partido Cambio Radical', votes: 847, cedula: '10.354.298.77' },
-        { name: 'Juan David Quintero Arango', party: 'Partido de la Unión por la Gente - Partido de la U', votes: 785, cedula: '10.354.311.52' },
-        { name: 'Julián Marcelo Machado Cadavid', party: 'Partido Liberal Colombiano', votes: 737, cedula: '15.515.272' },
-        { name: 'Juan Camilo Ramírez Gallón', party: 'Partido Alianza Verde', votes: 705, cedula: '71.364.638' },
-        { name: 'Edwin Ramírez Lopera', party: 'Partido Conservador Colombiano', votes: 677, cedula: '15.519.017' },
-        { name: 'Julián Andrés Tobón Martínez', party: 'Partido Político Creemos', votes: 647, cedula: '1.035.424.146' },
-        { name: 'Nelson Camilo Quiceno Hernández', party: 'Partido Liberal Colombiano', votes: 621, cedula: '10.354.230.06' },
-        { name: 'Edwin Alexander Gómez', party: 'Partido Nuevo Liberalismo', votes: 590, cedula: '15.516.361' },
-        { name: 'Carolina Díaz González', party: 'Partido Alianza Verde', votes: 582, cedula: '10.354.375.21' },
-        { name: 'Yilber Andrés Montoya Bernal', party: 'Partido Político Creemos', votes: 576, cedula: '10.376.310.16' },
-        { name: 'Margarita María Muñoz Giraldo', party: 'Partido Centro Democrático', votes: 377, cedula: '42.687.560' },
-        { name: 'Deisy Yurany Suárez Acevedo', party: 'ASI - MIRA', votes: 374, cedula: '10.376.291.33' }
+        { name: 'Robinson Higinio Giraldo', party: 'Partido Cambio Radical', votes: 1303 },
+        { name: 'Carlos Alberto Gómez Yarce', party: 'Partido Político Creemos', votes: 1018 },
+        { name: 'Jonathan Eduardo Chaverra Ortiz', party: 'Partido Alianza Verde', votes: 885 },
+        { name: 'Juan Sebastian Hernández Foronda', party: 'Partido Cambio Radical', votes: 847 },
+        { name: 'Juan David Quintero Arango', party: 'Partido de la Unión por la Gente - Partido de la U', votes: 785 },
+        { name: 'Julián Marcelo Machado Cadavid', party: 'Partido Liberal Colombiano', votes: 737 },
+        { name: 'Juan Camilo Ramírez Gallón', party: 'Partido Alianza Verde', votes: 705 },
+        { name: 'Edwin Ramírez Lopera', party: 'Partido Conservador Colombiano', votes: 677 },
+        { name: 'Julián Andrés Tobón Martínez', party: 'Partido Político Creemos', votes: 647 },
+        { name: 'Nelson Camilo Quiceno Hernández', party: 'Partido Liberal Colombiano', votes: 621 },
+        { name: 'Edwin Alexander Gómez', party: 'Partido Nuevo Liberalismo', votes: 590 },
+        { name: 'Carolina Díaz González', party: 'Partido Alianza Verde', votes: 582 },
+        { name: 'Yilber Andrés Montoya Bernal', party: 'Partido Político Creemos', votes: 576 },
+        { name: 'Margarita María Muñoz Giraldo', party: 'Partido Centro Democrático', votes: 377 },
+        { name: 'Deisy Yurany Suárez Acevedo', party: 'ASI - MIRA', votes: 374 }
       ]
     },
     governor: {

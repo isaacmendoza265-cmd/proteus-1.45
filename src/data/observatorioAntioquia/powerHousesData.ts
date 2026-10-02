@@ -26,7 +26,6 @@ export const CENTRO_DEMOCRATICO_HOUSES: PowerHouseNode[] = [
         municipality: 'Medellín',
         status: 'Concejal electo (42.444 votos) - Futuro candidato a la Alcaldía de Medellín',
         votes: 42444,
-        cedula: '98.764.731',
         notes: 'Cabeza de lista al Concejo de Medellín 2023. Renunció para aspiración a Alcaldía.'
       },
       {
@@ -140,7 +139,6 @@ export const CENTRO_DEMOCRATICO_HOUSES: PowerHouseNode[] = [
         municipality: 'Medellín',
         status: 'En funciones (6.131 votos)',
         votes: 6131,
-        cedula: '21.911.590',
         notes: 'Concejal reelecta de Medellín'
       }
     ]
@@ -281,7 +279,6 @@ export const CENTRO_DEMOCRATICO_HOUSES: PowerHouseNode[] = [
         municipality: 'Medellín',
         status: 'Concejal electa (14.966 votos) - Renunció para ser viceministra de defensa',
         votes: 14966,
-        cedula: '43.497.054',
         notes: 'Concejal de Medellín 2024. Recientemente renunció para asumir viceministerio.'
       },
       {
@@ -446,7 +443,6 @@ export const CENTRO_DEMOCRATICO_HOUSES: PowerHouseNode[] = [
         municipality: 'Medellín',
         status: 'En funciones (6.186 votos)',
         votes: 6186,
-        cedula: '812.768.1',
         notes: 'Concejal de Medellín ("Gury Rodríguez")'
       }
     ]
@@ -508,7 +504,6 @@ export const CREEMOS_HOUSES: PowerHouseNode[] = [
         municipality: 'Medellín',
         status: 'En funciones (43.795 votos)',
         votes: 43795,
-        cedula: '1.152.189.793',
         notes: 'Mayor votación al Concejo de Medellín'
       },
       {
@@ -518,8 +513,7 @@ export const CREEMOS_HOUSES: PowerHouseNode[] = [
         roleLabel: 'Concejal de Medellín',
         municipality: 'Medellín',
         status: 'En funciones (16.145 votos)',
-        votes: 16145,
-        cedula: '43.597.417'
+        votes: 16145
       },
       {
         id: 'cr-1-4',
@@ -528,8 +522,7 @@ export const CREEMOS_HOUSES: PowerHouseNode[] = [
         roleLabel: 'Concejal de Medellín',
         municipality: 'Medellín',
         status: 'En funciones (15.240 votos)',
-        votes: 15240,
-        cedula: '1.152.435.767'
+        votes: 15240
       },
       {
         id: 'cr-1-5',
@@ -538,8 +531,7 @@ export const CREEMOS_HOUSES: PowerHouseNode[] = [
         roleLabel: 'Concejal de Medellín',
         municipality: 'Medellín',
         status: 'En funciones (11.115 votos)',
-        votes: 11115,
-        cedula: '10.376.006.12'
+        votes: 11115
       },
       {
         id: 'cr-1-6',
@@ -548,8 +540,7 @@ export const CREEMOS_HOUSES: PowerHouseNode[] = [
         roleLabel: 'Concejal de Medellín',
         municipality: 'Medellín',
         status: 'En funciones (9.523 votos)',
-        votes: 9523,
-        cedula: '71.741.348'
+        votes: 9523
       },
       {
         id: 'cr-1-7',
@@ -558,8 +549,7 @@ export const CREEMOS_HOUSES: PowerHouseNode[] = [
         roleLabel: 'Concejal de Medellín',
         municipality: 'Medellín',
         status: 'En funciones (9.338 votos)',
-        votes: 9338,
-        cedula: '1.035.830.866'
+        votes: 9338
       },
       {
         id: 'cr-1-8',
@@ -568,8 +558,7 @@ export const CREEMOS_HOUSES: PowerHouseNode[] = [
         roleLabel: 'Concejal de Medellín',
         municipality: 'Medellín',
         status: 'En funciones (9.303 votos)',
-        votes: 9303,
-        cedula: '1.037.626.061'
+        votes: 9303
       },
       {
         id: 'cr-1-9',
@@ -578,8 +567,7 @@ export const CREEMOS_HOUSES: PowerHouseNode[] = [
         roleLabel: 'Concejal de Medellín',
         municipality: 'Medellín',
         status: 'En funciones (4.546 votos)',
-        votes: 4546,
-        cedula: '43.222.003'
+        votes: 4546
       },
       {
         id: 'cr-1-10',
@@ -616,8 +604,7 @@ export const CREEMOS_HOUSES: PowerHouseNode[] = [
         roleLabel: 'Concejal de Caldas',
         municipality: 'Caldas',
         status: 'En funciones (720 votos)',
-        votes: 720,
-        cedula: '71.394.549'
+        votes: 720
       },
       {
         id: 'cr-1-14',
@@ -626,8 +613,7 @@ export const CREEMOS_HOUSES: PowerHouseNode[] = [
         roleLabel: 'Concejal de Caldas',
         municipality: 'Caldas',
         status: 'En funciones (636 votos)',
-        votes: 636,
-        cedula: '71.391.232'
+        votes: 636
       },
       {
         id: 'cr-1-15',
@@ -637,7 +623,6 @@ export const CREEMOS_HOUSES: PowerHouseNode[] = [
         municipality: 'Caldas',
         status: 'En funciones (10.982 votos en Alcaldía)',
         votes: 10982,
-        cedula: '71.399.771',
         notes: 'Curul Ley 1909 Estatuto de Oposición'
       }
     ]
@@ -706,8 +691,7 @@ export const CONSERVADOR_HOUSES: PowerHouseNode[] = [
         roleLabel: 'Concejal de Medellín',
         municipality: 'Medellín',
         status: 'En funciones (15.556 votos)',
-        votes: 15556,
-        cedula: '1.037.601.785'
+        votes: 15556
       }
     ]
   },
@@ -753,8 +737,7 @@ export const CONSERVADOR_HOUSES: PowerHouseNode[] = [
         roleLabel: 'Concejal de Caldas',
         municipality: 'Caldas',
         status: 'En funciones (1.105 votos)',
-        votes: 1105,
-        cedula: '71.745.399'
+        votes: 1105
       }
     ]
   }
@@ -886,8 +869,7 @@ export const LIBERAL_HOUSES: PowerHouseNode[] = [
         roleLabel: 'Concejal de Medellín',
         municipality: 'Medellín',
         status: 'En funciones (10.984 votos)',
-        votes: 10984,
-        cedula: '1.037.575.876'
+        votes: 10984
       },
       {
         id: 'lib-2-4',
