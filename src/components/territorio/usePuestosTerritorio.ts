@@ -42,68 +42,58 @@ function ubicarResultados(elecciones: EleccionPuestos[], features: TerritoryGeoF
 
 const VACIO: PuestosTerritorio = { cargando: false, todos: [], sinUbicar: [], division: {}, subdivision: {}, resultadosDivision: {}, resultadosSubdivision: {} };
 
+const cachePuestos = new Map<string, Promise<PuestosTerritorio>>();
+
 /**
+ * Puestos de un municipio ubicados en sus comunas y barrios/veredas (los de 2026 y los de las elecciones con códigos
+ * propios). Sin React, con caché por municipio: la usan la ficha (por el hook) y el dossier del analista.
  * @param muniId id del municipio en el índice de fichas
  * @param nombreMunicipio para los municipios sin cartografía interna (solo se cargan sus puestos)
  */
+export function cargarPuestosTerritorio(muniId: string | null, nombreMunicipio?: string): Promise<PuestosTerritorio> {
+  const clave = `${muniId ?? ''}|${nombreMunicipio ?? ''}`;
+  if (!cachePuestos.has(clave)) {
+    const p = construirPuestos(muniId, nombreMunicipio);
+    p.catch(() => cachePuestos.delete(clave));
+    cachePuestos.set(clave, p);
+  }
+  return cachePuestos.get(clave)!;
+}
+
+async function construirPuestos(muniId: string | null, nombreMunicipio?: string): Promise<PuestosTerritorio> {
+  const entry = muniId ? MUNICIPAL_DIVISIONS_REGISTRY[muniId] : undefined;
+  const m = entry ? getMunicipioConPuestos(entry.name) : nombreMunicipio ? getMunicipioConPuestos(nombreMunicipio) : undefined;
+  // Solo territorios con ficha (se descarta, p. ej., el contorno completo de Medellín)
+  const conFicha = <T extends { features: TerritoryGeoFeature[] }>(c: T | undefined) => c && { ...c, features: c.features.filter((f) => tieneFicha(String(f.id))) };
+  if (!m) {
+    // Municipio con cartografía pero sin puestos 2026 cargados: puede haber resultados 2023 por puesto con su
+    // propia ubicación (Divipole 2023); se ubican igual.
+    if (!entry) return VACIO;
+    const [divsCapa, subsCapa, elecciones] = await Promise.all([entry.loadDivisions?.(), entry.loadSubdivisions?.(), cargarElecciones(entry.daneCode)]);
+    const divs = conFicha(divsCapa), subs = conFicha(subsCapa);
+    return { ...VACIO, resultadosDivision: ubicarResultados(elecciones, divs?.features ?? []), resultadosSubdivision: ubicarResultados(elecciones, subs?.features ?? []) };
+  }
+  // Sin cartografía interna: solo los puestos del municipio (todos cuentan en el municipio)
+  if (!entry) return { ...VACIO, todos: await loadPuestosMunicipio(m) };
+  const [puestos, divsCapa, subsCapa, elecciones] = await Promise.all([loadPuestosMunicipio(m), entry.loadDivisions?.(), entry.loadSubdivisions?.(), cargarElecciones(entry.daneCode)]);
+  const divs = conFicha(divsCapa), subs = conFicha(subsCapa);
+  const a = asignarPuestosATerritorios(puestos, divs?.features ?? []);
+  const b = asignarPuestosATerritorios(puestos, subs?.features ?? []);
+  return {
+    cargando: false, todos: puestos, sinUbicar: divs?.features.length ? a.sinCoordenadas : [], division: a.territorioDePuesto, subdivision: b.territorioDePuesto,
+    resultadosDivision: ubicarResultados(elecciones, divs?.features ?? []),
+    resultadosSubdivision: ubicarResultados(elecciones, subs?.features ?? []),
+  };
+}
+
 export function usePuestosTerritorio(muniId: string | null, nombreMunicipio?: string): PuestosTerritorio {
   const [estado, setEstado] = useState<PuestosTerritorio>(VACIO);
   useEffect(() => {
-    const entry = muniId ? MUNICIPAL_DIVISIONS_REGISTRY[muniId] : undefined;
-    const m = entry ? getMunicipioConPuestos(entry.name) : nombreMunicipio ? getMunicipioConPuestos(nombreMunicipio) : undefined;
-    if (!m) {
-      // Municipio con cartografía pero sin puestos 2026 cargados: puede haber resultados 2023 por
-      // puesto con su propia ubicación (Divipole 2023); se ubican igual. (Desde el 27-sep los 79
-      // municipios de fase C sí tienen puestos 2026: getMunicipioConPuestos los encuentra.)
-      if (!entry) {
-        setEstado(VACIO);
-        return;
-      }
-      let activo = true;
-      setEstado({ ...VACIO, cargando: true });
-      Promise.all([entry.loadDivisions?.(), entry.loadSubdivisions?.(), cargarElecciones(entry.daneCode)])
-        .then(([divsCapa, subsCapa, elecciones]) => {
-          if (!activo) return;
-          const divs = divsCapa && { ...divsCapa, features: divsCapa.features.filter((f) => tieneFicha(String(f.id))) };
-          const subs = subsCapa && { ...subsCapa, features: subsCapa.features.filter((f) => tieneFicha(String(f.id))) };
-          setEstado({
-            ...VACIO, cargando: false,
-            resultadosDivision: ubicarResultados(elecciones, divs?.features ?? []),
-            resultadosSubdivision: ubicarResultados(elecciones, subs?.features ?? []),
-          });
-        })
-        .catch((err) => {
-          console.error('No se pudieron cargar los resultados 2023 del municipio:', err);
-          if (activo) setEstado(VACIO);
-        });
-      return () => { activo = false; };
-    }
-    if (!entry) {
-      // Sin cartografía interna: solo los puestos del municipio
-      let activo = true;
-      setEstado({ ...VACIO, cargando: true });
-      loadPuestosMunicipio(m).then((puestos) => {
-        // Sin comunas con ficha no hay dónde ubicarlos: todos cuentan en el municipio
-        if (activo) setEstado({ ...VACIO, todos: puestos });
-      }).catch(() => { if (activo) setEstado(VACIO); });
-      return () => { activo = false; };
-    }
+    if (!muniId && !nombreMunicipio) { setEstado(VACIO); return; }
     let activo = true;
     setEstado({ ...VACIO, cargando: true });
-    Promise.all([loadPuestosMunicipio(m), entry.loadDivisions?.(), entry.loadSubdivisions?.(), cargarElecciones(entry.daneCode)])
-      .then(([puestos, divsCapa, subsCapa, elecciones]) => {
-        if (!activo) return;
-        // Solo territorios con ficha (se descarta, p. ej., el contorno completo de Medellín)
-        const divs = divsCapa && { ...divsCapa, features: divsCapa.features.filter((f) => tieneFicha(String(f.id))) };
-        const subs = subsCapa && { ...subsCapa, features: subsCapa.features.filter((f) => tieneFicha(String(f.id))) };
-        const a = asignarPuestosATerritorios(puestos, divs?.features ?? []);
-        const b = asignarPuestosATerritorios(puestos, subs?.features ?? []);
-        setEstado({
-          cargando: false, todos: puestos, sinUbicar: divs?.features.length ? a.sinCoordenadas : [], division: a.territorioDePuesto, subdivision: b.territorioDePuesto,
-          resultadosDivision: ubicarResultados(elecciones, divs?.features ?? []),
-          resultadosSubdivision: ubicarResultados(elecciones, subs?.features ?? []),
-        });
-      })
+    cargarPuestosTerritorio(muniId, nombreMunicipio)
+      .then((p) => { if (activo) setEstado(p); })
       .catch((err) => {
         console.error('No se pudieron cargar los puestos del municipio:', err);
         if (activo) setEstado(VACIO);

@@ -1,3 +1,4 @@
+import { AnalistaTerritorial } from '../../components/territorio/AnalistaTerritorial';
 import React, { useCallback, useMemo, useState } from 'react';
 import { 
   ZoomLevelId, 
@@ -371,6 +372,9 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
         ficha={puestosDeFicha}
         candidato={candidato}
       />
+
+      {/* 4.1.b Analista territorial: preguntas sobre la unidad elegida, con todo lo que Proteus tiene de ella */}
+      <AnalistaTerritorial seleccion={seleccionContenido} />
 
       {/* 4.2. Puestos de votación del territorio visible */}
       <PollingStationsPanel

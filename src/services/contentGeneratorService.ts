@@ -4,9 +4,10 @@
  * Arma la instrucción para Gemini con:
  * - el territorio elegido (subregión, municipio, comuna, barrio o "General" = Antioquia),
  * - el medio y el tipo de pieza,
- * - SOLO datos con fuente que Proteus ya tiene (resultados de la elección elegida, población y NBI
- *   del DANE, CNPV 2018 por manzana). Lo que no hay se dice "sin información"; Gemini recibe la
- *   orden de no inventar cifras.
+ * - SOLO datos con fuente que Proteus ya tiene: la elección elegida en el mapa y el dossier COMPLETO de la unidad
+ *   (dossierTerritorialService: población, economía, estratificación o valor del suelo, alcaldía en cifras, censo
+ *   electoral y la serie de todas las elecciones). Lo que no hay se dice "sin información"; Gemini recibe la orden de
+ *   no inventar cifras.
  * La llamada va a /api/contenido/generar (server.ts): la clave de Gemini no sale del servidor.
  * No se envían datos personales del candidato (correo, fotos), solo su nombre y estilo.
  */
@@ -27,6 +28,7 @@ import {
 import { valorDemografico } from './mapColorService';
 import { reglasPiso3 } from './marcoService';
 import { identidadParaIA, type IdentidadCandidato } from './identidad/identidad';
+import { dossierTerritorio } from './dossierTerritorialService';
 
 // --- Medios y tipos de pieza ------------------------------------------------------------------
 
@@ -208,6 +210,16 @@ function lineasPerfil(t: TerritorioFicha): string[] {
  * ya están ubicados); si no, se usa el total del municipio y se dice.
  */
 export async function contextoTerritorio(sel: SeleccionTerritorio, eleccionId: string, ficha?: PuestosDeFicha | null): Promise<string[]> {
+  // Primero la elección elegida en el mapa (el foco de la pieza); después, el dossier COMPLETO de la unidad: el mismo
+  // que lee el analista territorial (dossierTerritorialService), para que la pieza use todo lo que Proteus sabe de ella.
+  const [foco, dossier] = await Promise.all([contextoFoco(sel, eleccionId, ficha), dossierTerritorio(sel)]);
+  return [
+    ...foco.map((l) => `ELECCIÓN DEL MAPA · ${l}`),
+    ...dossier.secciones.flatMap((x) => x.lineas.map((l) => `${x.titulo} · ${l.trim()}`)),
+  ];
+}
+
+async function contextoFoco(sel: SeleccionTerritorio, eleccionId: string, ficha?: PuestosDeFicha | null): Promise<string[]> {
   const lineas: string[] = [];
   const idFino = sel.barrioId ?? sel.comunaId;
 
@@ -274,6 +286,7 @@ export const SISTEMA_CONTENIDO = [
   'Eres redactor de comunicación política para una campaña en Antioquia (Colombia). Escribes en español de Colombia, claro y cercano.',
   'Reglas obligatorias:',
   '- Usa solo las cifras de la sección DATOS. No inventes cifras, encuestas, hechos ni citas. Si un dato no está, no lo menciones o di que no hay información.',
+  '- La sección DATOS trae primero la elección elegida en el mapa (el foco) y luego todo lo que Proteus sabe del territorio. Escoge los 2 o 3 datos más pertinentes para la pieza y el tema; no los amontones. Los votos se cuentan donde está el puesto, no donde vive el votante.',
   '- No difundas información falsa ni engañosa, no ataques la vida privada de nadie y no uses lenguaje discriminatorio.',
   '- Respeta las normas de publicidad política de Colombia (Ley 130 de 1994, Ley 1475 de 2011 y reglas del CNE): en piezas pagadas indica que es publicidad política pagada y deja un espacio para el responsable.',
   '- No prometas lo que un cargo no puede hacer. Habla de propuestas, no de dádivas.',

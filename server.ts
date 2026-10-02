@@ -42,7 +42,7 @@ async function startServer() {
 
   app.use(express.json({ limit: '15mb' }));
   // Cada llamada a estas rutas gasta cuota de Gemini: 20 por minuto por cliente
-  app.use(['/api/gemini', '/api/contenido', '/api/piezas', '/api/antigravity/interactions'], limitarPeticiones(20, 60_000));
+  app.use(['/api/gemini', '/api/contenido', '/api/piezas', '/api/analista', '/api/antigravity/interactions'], limitarPeticiones(20, 60_000));
 
   // Helper para inicialización perezosa de GoogleGenAI
   let cachedAi: GoogleGenAI | null = null;
@@ -291,8 +291,8 @@ async function startServer() {
         res.status(400).json({ error: "Falta la instrucción ('instruccion')." });
         return;
       }
-      // El sistema incluye las reglas del piso 3 del marco metodológico (varios miles de caracteres)
-      if (instruccion.length > 20_000 || (typeof sistema === 'string' && sistema.length > 15_000)) {
+      // El sistema incluye las reglas del piso 3 del marco; la instrucción, el dossier completo del territorio (~40 mil caracteres)
+      if (instruccion.length > 320_000 || (typeof sistema === 'string' && sistema.length > 20_000)) {
         res.status(400).json({ error: 'La instrucción es demasiado larga.' });
         return;
       }
@@ -339,6 +339,43 @@ async function startServer() {
         : status === 429 ? 'Se agotó la cuota de Gemini. Intenta más tarde.' : contexto;
     return { status, error: `${motivo} (${status}${detalle ? `: ${detalle}` : ''})` };
   };
+
+  // Analista territorial (src/components/territorio/AnalistaTerritorial.tsx). El cliente manda las reglas del analista
+  // (sistema), el dossier completo de la unidad territorial (todo lo que Proteus tiene de ella: dossierTerritorialService)
+  // y la conversación. Gemini 3.8 Flash responde solo con lo que hay en el dossier.
+  const MODELO_ANALISTA = 'gemini-3.8-flash';
+  app.post('/api/analista/preguntar', async (req, res) => {
+    try {
+      const { sistema, dossier, historial, pregunta } = req.body ?? {};
+      const turnos: { rol: string; texto: string }[] = Array.isArray(historial) ? historial : [];
+      if (typeof pregunta !== 'string' || !pregunta.trim() || typeof dossier !== 'string' || !dossier.trim()) {
+        res.status(400).json({ error: "Faltan la pregunta ('pregunta') o el dossier del territorio ('dossier')." });
+        return;
+      }
+      if (pregunta.length > 4_000 || dossier.length > 300_000 || (typeof sistema === 'string' && sistema.length > 20_000)
+        || turnos.length > 30 || turnos.some((t) => typeof t?.texto !== 'string' || t.texto.length > 20_000)) {
+        res.status(400).json({ error: 'La pregunta, el dossier o la conversación son demasiado largos.' });
+        return;
+      }
+      const ai = getGenAI(req.headers['x-gemini-api-key'] as string | undefined);
+      const contents = [
+        { role: 'user', parts: [{ text: `DOSSIER DE LA UNIDAD TERRITORIAL (única fuente de datos para responder):\n${dossier}` }] },
+        { role: 'model', parts: [{ text: 'Leí el dossier completo. Responderé solo con esos datos y diré cuando algo no esté.' }] },
+        ...turnos.map((t) => ({ role: t.rol === 'analista' ? 'model' : 'user', parts: [{ text: t.texto }] })),
+        { role: 'user', parts: [{ text: pregunta }] },
+      ];
+      const respuesta = await ai.models.generateContent({
+        model: MODELO_ANALISTA,
+        contents,
+        config: typeof sistema === 'string' && sistema.trim() ? { systemInstruction: sistema } : undefined,
+      });
+      res.json({ texto: respuesta.text ?? '', modelo: MODELO_ANALISTA });
+    } catch (err: any) {
+      console.error('Error en /api/analista/preguntar:', err);
+      const e = errorGemini(err, 'El analista no pudo responder.');
+      res.status(e.status).json({ error: e.error });
+    }
+  });
 
   // Archivos grandes (video): se reciben en binario y se suben a la Files API de Gemini
   app.post('/api/piezas/subir', express.raw({ type: 'application/octet-stream', limit: '2gb' }), async (req, res) => {
