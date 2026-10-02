@@ -172,11 +172,32 @@ componente se conserva porque de él salen el tipo `CandidateProfile` y el perfi
   Pantallas → **Playwright MCP**. Rediseños de módulos existentes → skill `redisenando-interfaces-en-produccion`;
   landing/login → skill `construyendo-landings-premium`.
 
-### Cuándo delegar y reparto de modelos
+### ⚡ Flujo de trabajo: superpowers (OBLIGATORIO)
 
-La sesión principal edita directo cuando el cambio toca ≤ 2 archivos, es UI/copy/config o un bug localizado,
-o es un ajuste sobre trabajo de la misma sesión. Delegar solo con ≥ 3 unidades de trabajo independientes o
-para explorar código que no está en contexto. Al delegar: `model: "sonnet"` explícito siempre (sin él hereda el
-de la sesión, el más caro). Revisión con `model: "opus"` solo para la revisión final de una rama grande y para
-diffs de auth/sesión, datos de usuarios o aislamiento multi-tenant. A los subagentes: que corran **solo su
-archivo de prueba** (su Bash corta a los 120 s) y que usen el grafo antes de leer archivos.
+**Antes de cualquier tarea, comprobar qué skill de superpowers aplica** e invocarla. Son
+flujos obligatorios, no sugerencias. Donde un skill choque con otra regla de este archivo
+(ramas, merge, despliegue), **manda este archivo**.
+
+| Cambio | Flujo |
+|---|---|
+| **Breve**: ≤ 2 archivos, bug localizado, UI/copy/config, o ajuste sobre trabajo de esta misma sesión | Sin brainstorming ni plan. Bug → `systematic-debugging` primero. Luego `test-driven-development` → `verification-before-completion`. |
+| **Feature o cambio de comportamiento** | `brainstorming` (spec en `docs/superpowers/specs/`) → `writing-plans` (plan en `docs/superpowers/plans/`) → ejecutar el plan → `finishing-a-development-branch`. |
+
+- `test-driven-development` aplica SIEMPRE que se implementa: test que falla, verlo
+  fallar, código mínimo, verlo pasar, commit.
+- **Ejecutar un plan: `executing-plans` (en línea) por defecto**, con una revisión fresca
+  de toda la rama al final (`requesting-code-review`, subagente con `model: "opus"`).
+  **`subagent-driven-development` solo si** el plan toca dinero, auth/seguridad,
+  concurrencia o aislamiento multi-tenant, o hay **≥ 3 tareas independientes**
+  paralelizables. No presentar el menú de opciones de ejecución: decidir con esta regla y
+  anunciarlo. *Por qué:* cada subagente arranca en frío, carga este archivo y relee el
+  código; los hallazgos que importan los caza la revisión final, no las intermedias.
+- **Subagentes siempre con `model` explícito** (sin él heredan el de la sesión, el más
+  caro): desarrollo y exploración → `sonnet`; `opus` solo en la revisión final de rama y
+  en diffs de riesgo. Explore y Plan no cargan este archivo ni `.claude/rules/`: lo que
+  necesiten, va en su prompt. Si Opus da límite de sesión, reintentar con Sonnet y decirlo.
+- **`finishing-a-development-branch`**: si este archivo define cómo se cierra el trabajo
+  (merge directo, despliegue, verificación en producción), se sigue eso sin presentar el
+  menú de opciones.
+- Sesión que se porta raro (un skill que salta cuando no debe o calla cuando debe, trabajo
+  repetido, un plan ignorado, gasto alto) → `diagnosing-superpowers`.
