@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { 
   Video, 
   Camera, 
@@ -20,7 +20,9 @@ import {
 } from 'lucide-react';
 import { CandidateProfile } from '../../components/CandidateProfileManager';
 import { CandidateVideoAnalyzer } from '../../components/CandidateVideoAnalyzer';
-import { callGeminiApi } from '../../services/geminiService';
+import { formatAiError, generateContent } from '../../services/geminiService';
+import { normalizarIdentidad, paletaDefinida } from '../../services/identidad/identidad';
+import { medicionesEnTexto, medirImagen, type MedicionPieza } from '../../services/analisisPiezas/pieza';
 
 interface CandidateMultimediaStudioViewProps {
   candidateProfile: CandidateProfile;
@@ -39,35 +41,57 @@ export const CandidateMultimediaStudioView: React.FC<CandidateMultimediaStudioVi
   const [analyzingImage, setAnalyzingImage] = useState(false);
   const [imageAnalysisResult, setImageAnalysisResult] = useState<string | null>(candidateProfile.colorimetryReport || null);
 
+  // Colorimetría (revisado oct-2026): antes pedía a Gemini fototipo, estación cromática y códigos HEX SIN enviarle la
+  // foto (respondía de memoria, igual para cualquier candidato). Ahora exige la foto del perfil, mide en el navegador
+  // la paleta, tonalidad y composición (medirImagen, igual que el análisis de piezas) y envía la imagen solo si la
+  // identidad lo permite (Privacidad › Enviar imágenes a Gemini). Sin permiso, Gemini recibe solo las mediciones y no
+  // opina sobre el rostro. La llamada lleva las tres macrofuentes con la tarea 'evaluar'.
+  const identidad = useMemo(() => normalizarIdentidad(candidateProfile.identidad, candidateProfile.nombre), [candidateProfile.identidad, candidateProfile.nombre]);
+  const foto = candidateProfile.photoBase64;
+  const [medicionFoto, setMedicionFoto] = useState<MedicionPieza | null>(null);
+  const [errorImagen, setErrorImagen] = useState('');
+  const conPermiso = identidad.privacidad.enviarFotosAIA;
+
   const handleAnalyzePhotoWithGemini = async () => {
+    if (!foto) return;
     setAnalyzingImage(true);
+    setErrorImagen('');
     try {
-      const prompt = `Actúa como Consultor Senior de Semiótica Visual, Colorimetría e Imagen Pública Política de Proyecto Proteus.
-Candidato: ${candidateProfile.nombre}, Edad: ${candidateProfile.rangoEdad || '35-50 años'}, Tono narrativo: ${candidateProfile.tonoNarrativo || 'Firme y moderno'}.
-
-Realiza una AUDITORÍA INTEGRAL DE IMAGEN POLÍTICA Y COLORIMETRÍA para este candidato:
-1. ESTACIÓN CROMÁTICA & FOTOTIPO: Determina si pertenece a estación Fría (Invierno/Verano) o Cálida (Otoño/Primavera) y el nivel de contraste recomendado.
-2. PALETA DE COLORES DE PODER Y CERCANÍA:
-   - 3 Colores de Autoridad / Formales (con códigos HEX y cómo combinarlos en trajes/camisas).
-   - 2 Colores de Cercanía / Territorio (para visitas comunitarias y camisetas polo/chalecos).
-3. QUÉ COLORES Y TELAS EVITAR ABSOLUTAMENTE: Explicar por qué ciertos tonos lavan el rostro o proyectan debilidad/frialdad.
-4. LENGUAJE CORPORAL ANTE CÁMARAS: Postura de hombros, posición de manos (cúpula de poder de Merkel vs brazos abiertos), microexpresiones faciales y contacto visual con el lente.
-5. ESQUEMA DE ILUMINACIÓN ÓPTIMO: Iluminación de 3 puntos (key light, fill light, rim light) para resaltar facciones y evitar sombras duras en la mirada.`;
-
-      const result = await callGeminiApi({
-        promptText: prompt,
-        systemInstruction: 'Eres el Analista Multimedia y Consultor de Imagen Política de Proteus. Entrega informes ejecutivos detallados con códigos de color exactos y consejos prácticos de vestuario.',
-        useSearch: true
+      const blob = await (await fetch(foto)).blob();
+      const marca = paletaDefinida(identidad).map((c) => ({ hex: c.hex, rol: c.rol }));
+      const m = await medirImagen(blob, marca, identidad.imagen.toleranciaColor);
+      setMedicionFoto(m);
+      const prompt = [
+        `Evalúa la foto de campaña de ${candidateProfile.nombre || 'el candidato del perfil'} para su imagen pública: color, vestuario, encuadre e iluminación.`,
+        '',
+        'MEDICIONES DE LA FOTO (hechas en el navegador sobre los píxeles; son datos):',
+        ...medicionesEnTexto(m),
+        '',
+        conPermiso
+          ? 'Tienes la foto adjunta. Separa lo que ves en ella de lo que interpretas.'
+          : 'NO tienes la foto: la identidad no permite enviar imágenes a la IA. Trabaja solo con las mediciones; no opines sobre el rostro, la piel ni la expresión, y dilo al principio.',
+        '',
+        'Responde en 5 apartados breves:',
+        '1. Qué muestran las mediciones (paleta, contraste, temperatura, composición) y su adherencia a la paleta de marca del perfil, si la hay.',
+        '2. Colores que favorecen y que conviene evitar, con códigos HEX, contrastados con la paleta y las reglas de vestuario de la identidad (si no están definidas, dilo).',
+        '3. Vestuario para entrevista y para territorio, según el perfil.',
+        '4. Encuadre e iluminación: qué corregir en esta foto.',
+        '5. Qué falta para una auditoría completa (más fotos, video, la paleta de marca si no está definida).',
+        'Lo que no se mida en la foto ni esté en el perfil es recomendación general: rotúlalo así.',
+      ].join('\n');
+      const parts: Record<string, unknown>[] = [{ text: prompt }];
+      if (conPermiso) parts.push({ inlineData: { mimeType: blob.type || 'image/jpeg', data: foto.split(',')[1] ?? '' } });
+      const r = await generateContent({
+        model: 'gemini-3.8-flash',
+        contents: [{ role: 'user', parts }],
+        config: { systemInstruction: 'Eres el analista de imagen de Proteus. Escribe en español de Colombia, concreto y sin adornos.' },
+        proteus: { tarea: 'evaluar' },
       });
-
+      const result = r.text;
       setImageAnalysisResult(result);
-      // Update candidate profile
-      onSaveProfile({
-        ...candidateProfile,
-        colorimetryReport: result
-      });
-    } catch (e: any) {
-      setImageAnalysisResult('Error al generar la auditoría de imagen con Gemini.');
+      onSaveProfile({ ...candidateProfile, colorimetryReport: result });
+    } catch (e) {
+      setErrorImagen(formatAiError(e));
     } finally {
       setAnalyzingImage(false);
     }
@@ -101,7 +125,6 @@ Realiza una AUDITORÍA INTEGRAL DE IMAGEN POLÍTICA Y COLORIMETRÍA para este ca
             <div className="p-3 rounded-xl bg-[var(--c-sunken)] text-right">
               <div className="text-xs uppercase text-[var(--c-muted)] font-bold">Diagnóstico Activo</div>
               <div className="text-sm font-bold text-[var(--c-ink)] mt-0.5">{candidateProfile.nombre}</div>
-              <div className="text-xs text-[var(--c-accent)]">Multimodal Ready</div>
             </div>
           </div>
         </div>
@@ -200,18 +223,18 @@ Realiza una AUDITORÍA INTEGRAL DE IMAGEN POLÍTICA Y COLORIMETRÍA para este ca
               ) : (
                 <div className="p-6 rounded-xl bg-[var(--c-sunken)] text-center text-[var(--c-muted)] space-y-2">
                   <User className="w-12 h-12 mx-auto opacity-40" />
-                  <div className="text-xs font-bold text-[var(--c-ink)]">Sin fotografía específica cargada</div>
-                  <div className="text-xs">Carga una foto en el perfil del candidato o ejecuta la auditoría directa con IA.</div>
+                  <div className="text-xs font-bold text-[var(--c-ink)]">Sin foto del candidato</div>
+                  <div className="text-xs">Carga una foto en el perfil del candidato: sin foto no hay nada que medir ni auditar.</div>
                 </div>
               )}
 
               <button
                 onClick={handleAnalyzePhotoWithGemini}
-                disabled={analyzingImage}
+                disabled={analyzingImage || !foto}
                 className="w-full min-h-9 px-3 rounded-lg bg-[var(--c-accent)] text-white font-semibold text-xs flex items-center justify-center gap-2 disabled:opacity-50"
               >
                 <Sparkles className={`w-4 h-4 ${analyzingImage ? 'animate-spin' : ''}`} />
-                <span>{analyzingImage ? 'Analizando Colorimetría...' : 'Auditar Colorimetría & Vestuario con IA'}</span>
+                <span>{analyzingImage ? 'Analizando…' : 'Medir la foto y auditarla con IA'}</span>
               </button>
             </div>
 
@@ -238,21 +261,39 @@ Realiza una AUDITORÍA INTEGRAL DE IMAGEN POLÍTICA Y COLORIMETRÍA para este ca
                 {analyzingImage ? (
                   <div className="flex flex-col items-center justify-center py-24 space-y-3 text-center">
                     <Sparkles className="w-8 h-8 text-[var(--c-accent)] animate-spin" />
-                    <div className="text-sm font-bold">Evaluando Estación Cromática con Gemini Vision...</div>
+                    <div className="text-sm font-bold">Midiendo la foto y consultando a Gemini…</div>
                     <p className="text-xs text-[var(--c-muted)] max-w-sm">
                       Determinando contraste de piel, paleta de códigos HEX recomendados y errores de vestuario a evitar.
                     </p>
                   </div>
-                ) : imageAnalysisResult ? (
-                  <div className="text-xs sm:text-sm whitespace-pre-line leading-relaxed bg-[var(--c-sunken)] p-4 rounded-xl max-h-[500px] overflow-y-auto">
-                    {imageAnalysisResult}
+                ) : imageAnalysisResult || medicionFoto || errorImagen ? (
+                  <div className="space-y-3">
+                    {errorImagen && <p className="text-xs text-[var(--c-warn)]">No se pudo completar: {errorImagen}</p>}
+                    {medicionFoto && (
+                      <div className="space-y-1.5">
+                        <div className="flex items-center gap-2 text-xs"><span className="px-2 py-0.5 rounded-md font-bold bg-[var(--c-ok-soft)] text-[var(--c-ok)]">Medido en la foto</span><span className="text-[var(--c-muted)]">Paleta dominante (píxeles)</span></div>
+                        <div className="flex flex-wrap gap-1.5">
+                          {medicionFoto.paleta.map((c) => (
+                            <span key={c.hex} className="flex items-center gap-1 text-xs"><span className="w-5 h-5 rounded border border-[var(--c-border)]" style={{ background: c.hex }} />{c.hex} · {Math.round(100 * c.peso)} %</span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    {imageAnalysisResult && (
+                      <div className="space-y-1.5">
+                        <div className="flex items-center gap-2 text-xs"><span className="px-2 py-0.5 rounded-md font-bold bg-[var(--c-warn-soft)] text-[var(--c-warn)]">Interpretación de la IA</span><span className="text-[var(--c-muted)]">{conPermiso ? 'Gemini vio la foto y las mediciones' : 'Gemini recibió solo las mediciones (la identidad no permite enviar fotos)'}</span></div>
+                        <div className="text-xs sm:text-sm whitespace-pre-line leading-relaxed bg-[var(--c-sunken)] p-4 rounded-xl max-h-[500px] overflow-y-auto">
+                          {imageAnalysisResult}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 ) : (
                   <div className="flex flex-col items-center justify-center py-20 space-y-2 text-center text-[var(--c-muted)]">
                     <Palette className="w-10 h-10 opacity-40 stroke-1" />
-                    <div className="text-sm font-bold text-[var(--c-ink)]">Auditoría Cromática Pendiente</div>
+                    <div className="text-sm font-bold text-[var(--c-ink)]">Auditoría de imagen pendiente</div>
                     <p className="text-xs max-w-sm">
-                      Haz clic en el botón de la izquierda para que Gemini analice el fototipo del candidato y genere los códigos de color de poder y cercanía para sus piezas gráficas y vestuario.
+                      Con la foto del perfil, Proteus mide su paleta, tonalidad y composición; Gemini las interpreta con el perfil y el marco. Solo ve la foto si la identidad lo permite (Privacidad).
                     </p>
                   </div>
                 )}
@@ -273,7 +314,7 @@ Realiza una AUDITORÍA INTEGRAL DE IMAGEN POLÍTICA Y COLORIMETRÍA para este ca
               </h3>
             </div>
             <span className="px-2.5 py-0.5 rounded-md bg-[var(--c-ok-soft)] text-[var(--c-ok)] text-xs font-bold">
-              Calibrado para {candidateProfile.nombre}
+              Guía general · texto fijo
             </span>
           </div>
 

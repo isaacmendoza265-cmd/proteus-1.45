@@ -1181,16 +1181,16 @@ Debes responder ÚNICAMENTE con un bloque JSON plano estructurado con este esque
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(8.5);
       doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-      doc.text('Scorecards en Cámara:', 16, currentY);
+      doc.text('Puntajes de la IA (juicio, no medición):', 16, currentY);
       currentY += 4.5;
 
       const vScores = [
-        `Dominio Escénico: ${va.metricasScore.dominioEscenico}%`,
-        `Claridad Dicción: ${va.metricasScore.claridadDiccion}%`,
-        `Conexión Emocional: ${va.metricasScore.conexionEmocional}%`,
-        `Composición: ${va.metricasScore.calidadVisualComposicion}%`,
-        `Ritmo Edición: ${va.metricasScore.ritmoEdicion}%`,
-        `Control Muletillas: ${va.metricasScore.controlMuletillas}%`
+        `Dominio Escénico: ${va.metricasScore.dominioEscenico ?? 'Sin dato'}`,
+        `Claridad Dicción: ${va.metricasScore.claridadDiccion ?? 'Sin dato'}`,
+        `Conexión Emocional: ${va.metricasScore.conexionEmocional ?? 'Sin dato'}`,
+        `Composición: ${va.metricasScore.calidadVisualComposicion ?? 'Sin dato'}`,
+        `Ritmo Edición: ${va.metricasScore.ritmoEdicion ?? 'Sin dato'}`,
+        `Control Muletillas: ${va.metricasScore.controlMuletillas ?? 'Sin dato'}`
       ];
 
       doc.setFont('helvetica', 'normal');

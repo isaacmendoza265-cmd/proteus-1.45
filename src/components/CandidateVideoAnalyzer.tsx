@@ -30,17 +30,22 @@ import {
   Sliders,
   Layers
 } from 'lucide-react';
-import { generateContent } from '../services/geminiService';
+import { formatAiError, generateContent } from '../services/geminiService';
+import { identidadActual } from '../services/ia/macrofuentes';
+import { paletaDefinida } from '../services/identidad/identidad';
+import { medicionesEnTexto, medirVideo, type MedicionPieza } from '../services/analisisPiezas/pieza';
+import { INLINE_MAX } from '../services/analisisPiezas/analisis';
 import { jsPDF } from 'jspdf';
 import { motion, AnimatePresence } from 'motion/react';
 
+/** Puntajes que asigna Gemini (0 a 100). No son mediciones; null si la IA no los dio. */
 export interface VideoMetricScores {
-  dominioEscenico: number;
-  claridadDiccion: number;
-  conexionEmocional: number;
-  calidadVisualComposicion: number;
-  ritmoEdicion: number;
-  controlMuletillas: number;
+  dominioEscenico: number | null;
+  claridadDiccion: number | null;
+  conexionEmocional: number | null;
+  calidadVisualComposicion: number | null;
+  ritmoEdicion: number | null;
+  controlMuletillas: number | null;
 }
 
 export interface VideoAnalysisResult {
@@ -89,7 +94,7 @@ export interface VideoAnalysisResult {
   
   // 5. Grado y Calidad de Edición
   gradoEdicion: {
-    nivelProduccion: 'Amateur / Orgánico' | 'Intermedio / Creador Digital' | 'Alta Producción / Agencia';
+    nivelProduccion: string;
     ritmoCortes: string;
     recursosGraficosSubtitulos: string;
     calidadAudioMicrofonia: string;
@@ -109,6 +114,10 @@ export interface VideoAnalysisResult {
   
   // 9. Síntesis y Markdown
   informeMarkdown?: string;
+  /** Qué vio Gemini: el video completo (YouTube o archivo, con audio) */
+  fuenteIA?: string;
+  /** Mediciones locales del archivo (paleta, tonalidad, cortes), en texto; solo para archivos subidos */
+  medicionLocal?: string[];
 }
 
 interface CandidateVideoAnalyzerProps {
@@ -122,37 +131,6 @@ interface CandidateVideoAnalyzerProps {
   }) => void;
   className?: string;
 }
-
-// Preset samples for quick demonstration and tests
-const VIDEO_PRESETS = [
-  {
-    id: 'preset_discurso',
-    label: 'Discurso de Campaña en Plaza Pública (YouTube)',
-    tag: 'Oratoria & Convocatoria',
-    url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', // Generic testable link
-    platform: 'youtube' as const,
-    title: 'Discurso Central de Campaña — Concentración Masiva de Electores',
-    contexto: 'Intervención de 5 minutos ante multitud con atril y micrófono dinámico. Aborda propuestas de seguridad, reactivación económica y llamado a la unidad regional.'
-  },
-  {
-    id: 'preset_entrevista',
-    label: 'Entrevista de TV / Debate en Set (YouTube)',
-    tag: 'Set de TV & Diálogo',
-    url: 'https://youtu.be/3JZ_D3ELwOQ',
-    platform: 'youtube' as const,
-    title: 'Entrevista Central en Emisión Noticiosa Regional',
-    contexto: 'Preguntas incisivas sobre presupuesto departamental y gestión pública. Formato plano y contraplano en estudio iluminado con key-light.'
-  },
-  {
-    id: 'preset_reel',
-    label: 'Reel / Short de Propuestas Electorales (Instagram)',
-    tag: 'Formato Vertical 9:16',
-    url: 'https://www.instagram.com/reel/C8xyz123abc/',
-    platform: 'instagram' as const,
-    title: 'Reel: 3 Propuestas Urgentes para los Jóvenes de Antioquia',
-    contexto: 'Video vertical con subtitulado dinámico de alto impacto, plano medio corto, música de fondo y ritmo ágil para consumo móvil.'
-  }
-];
 
 export const CandidateVideoAnalyzer: React.FC<CandidateVideoAnalyzerProps> = ({
   candidateName = 'Candidato',
@@ -276,14 +254,6 @@ export const CandidateVideoAnalyzer: React.FC<CandidateVideoAnalyzerProps> = ({
     };
   };
 
-  // Preset selector
-  const handleSelectPreset = (preset: typeof VIDEO_PRESETS[0]) => {
-    setVideoSourceType('url');
-    setVideoUrl(preset.url);
-    setVideoContextNotes(preset.contexto);
-    setAnalysisError(null);
-  };
-
   // Main Analysis execution with Gemini 3.8 Flash
   const handleExecuteVideoAnalysis = async () => {
     const activeUrl = videoUrl.trim();
@@ -303,268 +273,122 @@ export const CandidateVideoAnalyzer: React.FC<CandidateVideoAnalyzerProps> = ({
 
     try {
       const platformDetected = detectedPlatform();
-
-      setAnalysisStatus('Extrayendo tono comunicacional, métricas orales, coloración y composición con Gemini 3.8...');
-
-      const promptText = `Actúa como el director supremo de comunicación política, media-training y análisis audiovisual de Proteus Nacional.
-Realiza una AUDITORÍA AUDIOVISUAL PROFUNDA Y RIGUROSA del video del candidato político: "${candidateName}".
-
-DETALLES DE ENTRADA DEL VIDEO:
-- Plataforma: ${platformDetected}
-- Enlace / Archivo: ${videoSourceType === 'url' ? activeUrl : (uploadedVideoFile?.name || 'Archivo de video')}
-${youtubeId ? `- ID de YouTube: ${youtubeId} (Examina la oratoria, tono, contexto electoral y puesta en escena asociada)` : ''}
-${instagramId ? `- ID / Reel de Instagram: ${instagramId}` : ''}
-${videoContextNotes ? `- Contexto / Notas facilitadas por el equipo de campaña: "${videoContextNotes}"` : ''}
-
-DIRECTIVAS CRÍTICAS DEL ANÁLISIS:
-Debes evaluar minuciosamente cada dimensión técnica y comunicacional:
-1. **TONO COMUNICACIONAL**:
-   - Registro dominante (e.g. Pedagógico-Cercano, Institucional-Presidencial, Confrontacional-Enérgico, Tecnocrático, Inspiracional-Emotivo).
-   - Nivel de asertividad y convicción transmitida.
-   - Conexión emocional percibida y coherencia entre mensaje verbal y expresión facial.
-   - Proyección de liderazgo político real.
-
-2. **EXPRESIÓN ORAL Y VERBAL**:
-   - Dicción y claridad fonética (articulación, modulación de vocales y consonantes).
-   - Cadencia y ritmo (palabras por minuto aproximadas, velocidad, monotonía vs ritmo persuasivo).
-   - Manejo de pausas y silencios estratégicos para generar expectación o enfatizar tesis.
-   - Modulación, resonancia y volumen vocal.
-   - Detección exhaustiva de muletillas verbales y vicios de dicción (ej: "ehh", "o sea", "digamos", "verdad", repetición de conectores).
-   - Recursos retóricos empleados (triadas, anáforas, metáforas, antítesis).
-   - Diagnóstico vocal integral.
-
-3. **COLORACIÓN E ILUMINACIÓN**:
-   - Temperatura de color predominante (Cálida, Fría, Neutra; balance de blancos).
-   - Tipo de iluminación (luz suave difusa, luz dura con sombras marcadas, luz de recorte o key-light, contraluz).
-   - Armonía colorimétrica entre la complexión/piel del candidato, su vestuario y el fondo de escena.
-   - Etalonaje y saturación (look cinematográfico, natural televisivo, saturado o lavado).
-   - Paleta de 3 o 4 colores hexadecimales (#HEX) dominantes en el encuadre.
-
-4. **COMPOSICIÓN Y ENCUADRE VISUAL**:
-   - Tipo de plano dominante (Primer plano, Plano medio corto, Plano americano, Plano general).
-   - Ángulo de cámara (A nivel de ojos, contrapicado sutil de empoderamiento, picado).
-   - Estabilidad y movimiento (Trípode estático, travelling, paneo, cámara en mano / selfie).
-   - Fondo y escenografía (Limpio institucional, espacio público concurrido, desenfoque/bokeh, elementos distractores).
-   - Lenguaje corporal y contacto visual (mirada fija a lente, expresión de cejas y hombros, gesticulación manual).
-
-5. **GRADO Y CALIDAD DE EDICIÓN**:
-   - Nivel de producción global ("Amateur / Orgánico", "Intermedio / Creador Digital", o "Alta Producción / Agencia").
-   - Ritmo de cortes y montaje (tomas continuas vs jump-cuts dinámicos para redes).
-   - Recursos gráficos y subtítulos (subtitulado dinámico palabra por palabra, zócalos, infografías de apoyo).
-   - Calidad sonora y microfonía (micrófono de solapa inalámbrico, audio ambiente con eco o reverberación).
-   - Elementos dinámicos (B-roll de apoyo, música de fondo ecualizada, transiciones).
-
-6. **BALANCE DE FORTALEZAS Y DEBILIDADES**:
-   - Mínimo 4 fortalezas comunicacionales y orales claras.
-   - Mínimo 4 debilidades, puntos ciegos o vicios discursivos a corregir de inmediato.
-
-7. **MÉTRICAS SCORE (0 a 100)**:
-   - dominioEscenico (0-100)
-   - claridadDiccion (0-100)
-   - conexionEmocional (0-100)
-   - calidadVisualComposicion (0-100)
-   - ritmoEdicion (0-100)
-   - controlMuletillas (0-100)
-
-8. **RECOMENDACIONES TÁCTICAS**:
-   - 3 recomendaciones para el candidato (oratoria, pausas, mirada).
-   - 3 recomendaciones para el equipo de producción audiovisual (encuadre, luces, edición).
-
-Responde ÚNICAMENTE con un objeto JSON válido con esta estructura exacta (sin texto introductorio ni bloques markdown fuera del JSON):
-{
-  "videoTitle": "Título o descripción sintética del video evaluado",
-  "tonoComunicacional": {
-    "registroDominante": "Nombre del registro",
-    "descripcion": "Descripción detallada del tono",
-    "nivelAsertividad": "Alta / Media / Vacilante",
-    "conexionEmocional": "Fuerte / Moderada / Fría",
-    "proyeccionLiderazgo": "Dictamen de liderazgo"
-  },
-  "expresionOral": {
-    "diccionVocalizacion": "Evaluación de la dicción",
-    "cadenciaRitmo": "Evaluación de velocidad y ritmo",
-    "manejoPausasSilencios": "Evaluación de pausas",
-    "modulacionTono": "Evaluación de tono y volumen",
-    "muletillasDetectadas": ["muletilla 1", "muletilla 2"],
-    "recursosRetoricos": "Recursos retóricos empleados",
-    "diagnosticoVocal": "Diagnóstico de la voz"
-  },
-  "coloracionIluminacion": {
-    "temperaturaColor": "Cálida / Neutra / Fría",
-    "tipoIluminacion": "Tipo y calidad de luz",
-    "armoniaColorimetrica": "Armonía entre vestuario, piel y fondo",
-    "etalonajeSaturacion": "Look visual y saturación",
-    "paletaDominanteHex": ["#0A2540", "#2E7D32", "#F59E0B", "#F1F5F9"]
-  },
-  "composicionEncuadre": {
-    "tipoPlano": "Tipo de plano",
-    "anguloCamara": "Ángulo de cámara",
-    "estabilidadCamara": "Estabilidad del encuadre",
-    "fondoEntorno": "Evaluación del fondo",
-    "contactoVisualLenguaje": "Contacto visual y gestualidad"
-  },
-  "gradoEdicion": {
-    "nivelProduccion": "Intermedio / Creador Digital",
-    "ritmoCortes": "Frecuencia de cortes y montaje",
-    "recursosGraficosSubtitulos": "Uso de subtítulos y gráficos",
-    "calidadAudioMicrofonia": "Calidad acústica y microfonía",
-    "elementosDinamicos": "B-roll, zooms y música"
-  },
-  "fortalezas": [
-    "Fortaleza 1",
-    "Fortaleza 2",
-    "Fortaleza 3",
-    "Fortaleza 4"
-  ],
-  "debilidades": [
-    "Debilidad 1",
-    "Debilidad 2",
-    "Debilidad 3",
-    "Debilidad 4"
-  ],
-  "metricasScore": {
-    "dominioEscenico": 85,
-    "claridadDiccion": 88,
-    "conexionEmocional": 80,
-    "calidadVisualComposicion": 82,
-    "ritmoEdicion": 90,
-    "controlMuletillas": 75
-  },
-  "recomendacionesOratoria": [
-    "Recomendación 1 para el candidato",
-    "Recomendación 2 para el candidato",
-    "Recomendación 3 para el candidato"
-  ],
-  "recomendacionesProduccion": [
-    "Recomendación 1 para el equipo técnico",
-    "Recomendación 2 para el equipo técnico",
-    "Recomendación 3 para el equipo técnico"
-  ],
-  "informeMarkdown": "Texto extenso y formal del dictamen audiovisual completo de campaña en formato markdown..."
-}`;
-
-      // Build multimodal content parts
-      const parts: any[] = [];
-
-      // If captured frames exist from uploaded video, send them as inline data
-      if (capturedFrames.length > 0) {
-        for (const frame of capturedFrames) {
-          const base64Data = frame.split(',')[1];
-          if (base64Data) {
-            parts.push({
-              inlineData: {
-                mimeType: 'image/jpeg',
-                data: base64Data
-              }
-            });
-          }
+      // Revisado oct-2026: antes Gemini recibía solo el ENLACE como texto (no veía ni oía el video) o 3 fotogramas sin
+      // audio, y aun así se le pedían dicción, muletillas y palabras por minuto; si faltaba un campo se rellenaba con
+      // valores inventados (puntajes 84/87…, muletillas "ehh, digamos"). Ahora Gemini recibe el VIDEO COMPLETO, con
+      // audio (YouTube por enlace o el archivo subido, si la identidad lo permite), el archivo se mide en el
+      // navegador (paleta, tonalidad, cortes) y lo que la IA no devuelva queda "Sin dato".
+      const identidad = identidadActual();
+      const partes: Record<string, unknown>[] = [];
+      let fuenteIA = '';
+      let medicion: MedicionPieza | null = null;
+      if (videoSourceType === 'url') {
+        if (platformDetected !== 'youtube') {
+          throw new Error('Gemini solo puede ver por enlace los videos públicos de YouTube. Para Instagram, TikTok u otros, descarga el video y súbelo como archivo.');
         }
+        partes.push({ fileData: { fileUri: activeUrl, mimeType: 'video/*' } });
+        fuenteIA = 'Gemini vio el video completo de YouTube (imagen y audio).';
+      } else {
+        if (!uploadedVideoFile) throw new Error('Sube un archivo de video.');
+        if (!identidad?.privacidad.enviarVideosAIA) {
+          throw new Error('La identidad del candidato no permite enviar videos a la IA (Identidad › Privacidad › Enviar videos a Gemini).');
+        }
+        setAnalysisStatus('Midiendo el video en el navegador (paleta, tonalidad, cortes)…');
+        const marca = identidad ? paletaDefinida(identidad).map((c) => ({ hex: c.hex, rol: c.rol })) : [];
+        medicion = await medirVideo(uploadedVideoFile, marca, identidad?.imagen.toleranciaColor ?? 10).catch(() => null);
+        setAnalysisStatus('Enviando el video a Gemini…');
+        if (uploadedVideoFile.size <= INLINE_MAX) {
+          const base64 = await new Promise<string>((ok, mal) => {
+            const r = new FileReader();
+            r.onload = () => ok(String(r.result).split(',')[1] ?? '');
+            r.onerror = () => mal(new Error('No se pudo leer el archivo.'));
+            r.readAsDataURL(uploadedVideoFile);
+          });
+          partes.push({ inlineData: { mimeType: uploadedVideoFile.type || 'video/mp4', data: base64 } });
+        } else {
+          const r = await fetch('/api/piezas/subir', { method: 'POST', headers: { 'Content-Type': 'application/octet-stream', 'x-mime-type': uploadedVideoFile.type || 'video/mp4' }, body: uploadedVideoFile });
+          const j = await r.json().catch(() => ({}));
+          if (!r.ok) throw new Error(j.error || `No se pudo subir el video (${r.status}).`);
+          partes.push({ fileData: { fileUri: j.uri, mimeType: j.mimeType || uploadedVideoFile.type || 'video/mp4' } });
+        }
+        fuenteIA = 'Gemini vio el archivo de video completo (imagen y audio).';
       }
 
-      parts.push({ text: promptText });
+      setAnalysisStatus('Gemini está viendo el video…');
+      const promptText = `Audita este video de ${candidateName || 'el candidato del perfil'}: tono, expresión oral, color e iluminación, encuadre y edición.
+${videoContextNotes ? `Contexto que dio el equipo: "${videoContextNotes}"` : ''}
+${medicion ? `\nMEDICIONES DEL ARCHIVO (hechas en el navegador sobre los píxeles; son datos, úsalas para color, tonalidad y ritmo de cortes):\n${medicionesEnTexto(medicion).join('\n')}` : ''}
 
-      // Use Gemini 3.8 Flash with googleSearch tool to ground facts and public video references
+REGLAS:
+- Describe solo lo que ves y oyes en el video. Si algo no se puede juzgar (por ejemplo, no hay voz, el audio es malo o no aparece el candidato), escribe "Sin dato" en ese campo.
+- Las palabras por minuto, las muletillas y las pausas se cuentan en el audio; si no las contaste, no las estimes.
+- Los puntajes (0 a 100) son tu juicio, no una medición: dalos solo si puedes justificarlos; si no, null.
+- Las recomendaciones siguen la voz, la imagen y los límites de la identidad del candidato y el marco.
+
+Responde ÚNICAMENTE con un objeto JSON válido con esta estructura (sin texto fuera del JSON):
+{
+  "videoTitle": "", "tonoComunicacional": { "registroDominante": "", "descripcion": "", "nivelAsertividad": "", "conexionEmocional": "", "proyeccionLiderazgo": "" },
+  "expresionOral": { "diccionVocalizacion": "", "cadenciaRitmo": "", "manejoPausasSilencios": "", "modulacionTono": "", "muletillasDetectadas": [], "recursosRetoricos": "", "diagnosticoVocal": "" },
+  "coloracionIluminacion": { "temperaturaColor": "", "tipoIluminacion": "", "armoniaColorimetrica": "", "etalonajeSaturacion": "", "paletaDominanteHex": [] },
+  "composicionEncuadre": { "tipoPlano": "", "anguloCamara": "", "estabilidadCamara": "", "fondoEntorno": "", "contactoVisualLenguaje": "" },
+  "gradoEdicion": { "nivelProduccion": "Amateur / Orgánico | Intermedio / Creador Digital | Alta Producción / Agencia", "ritmoCortes": "", "recursosGraficosSubtitulos": "", "calidadAudioMicrofonia": "", "elementosDinamicos": "" },
+  "fortalezas": [], "debilidades": [],
+  "metricasScore": { "dominioEscenico": null, "claridadDiccion": null, "conexionEmocional": null, "calidadVisualComposicion": null, "ritmoEdicion": null, "controlMuletillas": null },
+  "recomendacionesOratoria": [], "recomendacionesProduccion": [],
+  "informeMarkdown": "dictamen completo en markdown"
+}`;
+      partes.push({ text: promptText });
+
       const response = await generateContent({
         model: 'gemini-3.8-flash',
-        contents: [{ role: 'user', parts }],
-        config: {
-          tools: [{ googleSearch: {} }]
-        }
+        contents: [{ role: 'user', parts: partes }],
+        config: { systemInstruction: 'Eres el analista audiovisual de Proteus. Escribe en español de Colombia, concreto y sin adornos.' },
+        proteus: { tarea: 'evaluar' },
       });
 
       const rawText = response.text || '';
       const jsonMatch = rawText.match(/\{[\s\S]*\}/);
-
-      if (jsonMatch) {
-        const parsed = JSON.parse(jsonMatch[0]);
-        const fullResult: VideoAnalysisResult = {
-          videoUrl: activeUrl || uploadedVideoFile?.name || 'Archivo Local',
-          platform: platformDetected,
-          videoTitle: parsed.videoTitle || (youtubeId ? `Video YouTube [${youtubeId}]` : 'Evaluación Audiovisual'),
-          analyzedAt: new Date().toISOString(),
-          tonoComunicacional: parsed.tonoComunicacional || {
-            registroDominante: 'Institucional y Asertivo',
-            descripcion: 'Discurso estructurado con vocación de liderazgo.',
-            nivelAsertividad: 'Alta',
-            conexionEmocional: 'Moderada',
-            proyeccionLiderazgo: 'Consistente con perfil de Estado'
-          },
-          expresionOral: parsed.expresionOral || {
-            diccionVocalizacion: 'Buena vocalización con articulación clara.',
-            cadenciaRitmo: '130 ppm - Ritmo constante con variaciones moderadas.',
-            manejoPausasSilencios: 'Pausas breves entre ideas centrales.',
-            modulacionTono: 'Tono medio con énfasis en remates.',
-            muletillasDetectadas: ['ehh', 'digamos'],
-            recursosRetoricos: 'Uso de preguntas retóricas y anáforas.',
-            diagnosticoVocal: 'Timbre audible y buena proyección.'
-          },
-          coloracionIluminacion: parsed.coloracionIluminacion || {
-            temperaturaColor: 'Neutra con tendencia cálida',
-            tipoIluminacion: 'Luz difusa frontal',
-            armoniaColorimetrica: 'Adecuado contraste con fondo',
-            etalonajeSaturacion: 'Saturación natural equilibrada',
-            paletaDominanteHex: ['#0A2540', '#2E7D32', '#F59E0B', '#F1F5F9']
-          },
-          composicionEncuadre: parsed.composicionEncuadre || {
-            tipoPlano: 'Plano Medio Corto',
-            anguloCamara: 'A nivel de ojos',
-            estabilidadCamara: 'Fija con trípode',
-            fondoEntorno: 'Espacio institucional con ligero desenfoque',
-            contactoVisualLenguaje: 'Mirada constante al lente y gesticulación mesurada'
-          },
-          gradoEdicion: parsed.gradoEdicion || {
-            nivelProduccion: 'Intermedio / Creador Digital',
-            ritmoCortes: 'Cortes ágiles en silencios',
-            recursosGraficosSubtitulos: 'Subtitulado dinámico de apoyo',
-            calidadAudioMicrofonia: 'Microfonía de solapa nítida',
-            elementosDinamicos: 'Inserts contextuales y música de fondo nivelada'
-          },
-          fortalezas: Array.isArray(parsed.fortalezas) ? parsed.fortalezas : [
-            'Mirada frontal y sostenida al lente de cámara.',
-            'Dicción clara en términos programáticos clave.',
-            'Uso de pausas para fijar compromisos con la comunidad.',
-            'Excelente encuadre que equilibra cercanía y autoridad.'
-          ],
-          debilidades: Array.isArray(parsed.debilidades) ? parsed.debilidades : [
-            'Aceleración en los remates de frases largas.',
-            'Ligera tensión en hombros durante los primeros segundos.',
-            'Uso reiterado de muletillas de transición ("ehh", "digamos").',
-            'Falta de modulación vocal descendente al concluir ideas.'
-          ],
-          metricasScore: parsed.metricasScore || {
-            dominioEscenico: 84,
-            claridadDiccion: 87,
-            conexionEmocional: 79,
-            calidadVisualComposicion: 83,
-            ritmoEdicion: 88,
-            controlMuletillas: 74
-          },
-          recomendacionesOratoria: parsed.recomendacionesOratoria || [
-            'Inhalar con diafragma antes de iniciar cada párrafo.',
-            'Concluir con caída de tono para proyectar firmeza.',
-            'Sostener dos segundos de silencio tras mencionar cifras clave.'
-          ],
-          recomendacionesProduccion: parsed.recomendacionesProduccion || [
-            'Utilizar luz de recorte (hair-light) para separar mejor del fondo.',
-            'Optimizar la microfonía para eliminar leves ecos de sala.',
-            'Mantener los subtítulos dinámicos en el tercio inferior sin tapar gestos.'
-          ],
-          informeMarkdown: parsed.informeMarkdown || rawText
-        };
-
-        setAnalysisResult(fullResult);
-        setAnalysisStatus('¡Auditoría audiovisual completada con éxito!');
-      } else {
-        throw new Error('No se pudo estructurar el JSON del análisis.');
-      }
-    } catch (err: any) {
+      if (!jsonMatch) throw new Error('Gemini no devolvió el análisis en el formato esperado. Intenta de nuevo.');
+      const parsed = JSON.parse(jsonMatch[0]);
+      const SD = 'Sin dato';
+      const txt = (o: Record<string, unknown> | undefined, k: string) => { const v = o?.[k]; return typeof v === 'string' && v.trim() ? v.trim() : SD; };
+      const lista = (v: unknown) => (Array.isArray(v) ? v.filter((x) => typeof x === 'string' && x.trim()) : []) as string[];
+      const num = (o: Record<string, unknown> | undefined, k: string) => { const v = o?.[k]; return typeof v === 'number' && Number.isFinite(v) ? Math.max(0, Math.min(100, Math.round(v))) : null; };
+      const campos = <K extends string>(o: unknown, ks: K[]) => Object.fromEntries(ks.map((k) => [k, txt(o as Record<string, unknown>, k)])) as Record<K, string>;
+      const ms = parsed.metricasScore as Record<string, unknown> | undefined;
+      const fullResult: VideoAnalysisResult = {
+        videoUrl: activeUrl || uploadedVideoFile?.name || 'Archivo local',
+        platform: platformDetected,
+        videoTitle: typeof parsed.videoTitle === 'string' && parsed.videoTitle.trim() ? parsed.videoTitle : (youtubeId ? `Video de YouTube ${youtubeId}` : uploadedVideoFile?.name ?? 'Video'),
+        analyzedAt: new Date().toISOString(),
+        tonoComunicacional: campos(parsed.tonoComunicacional, ['registroDominante', 'descripcion', 'nivelAsertividad', 'conexionEmocional', 'proyeccionLiderazgo']),
+        expresionOral: { ...campos(parsed.expresionOral, ['diccionVocalizacion', 'cadenciaRitmo', 'manejoPausasSilencios', 'modulacionTono', 'recursosRetoricos', 'diagnosticoVocal']), muletillasDetectadas: lista(parsed.expresionOral?.muletillasDetectadas) },
+        coloracionIluminacion: {
+          ...campos(parsed.coloracionIluminacion, ['temperaturaColor', 'tipoIluminacion', 'armoniaColorimetrica', 'etalonajeSaturacion']),
+          // Con archivo, la paleta es la MEDIDA; con YouTube, la que describe Gemini
+          paletaDominanteHex: medicion ? medicion.paleta.map((c) => c.hex) : lista(parsed.coloracionIluminacion?.paletaDominanteHex).filter((h) => /^#[0-9a-f]{6}$/i.test(h)),
+        },
+        composicionEncuadre: campos(parsed.composicionEncuadre, ['tipoPlano', 'anguloCamara', 'estabilidadCamara', 'fondoEntorno', 'contactoVisualLenguaje']),
+        gradoEdicion: campos(parsed.gradoEdicion, ['nivelProduccion', 'ritmoCortes', 'recursosGraficosSubtitulos', 'calidadAudioMicrofonia', 'elementosDinamicos']),
+        fortalezas: lista(parsed.fortalezas),
+        debilidades: lista(parsed.debilidades),
+        metricasScore: {
+          dominioEscenico: num(ms, 'dominioEscenico'), claridadDiccion: num(ms, 'claridadDiccion'), conexionEmocional: num(ms, 'conexionEmocional'),
+          calidadVisualComposicion: num(ms, 'calidadVisualComposicion'), ritmoEdicion: num(ms, 'ritmoEdicion'), controlMuletillas: num(ms, 'controlMuletillas'),
+        },
+        recomendacionesOratoria: lista(parsed.recomendacionesOratoria),
+        recomendacionesProduccion: lista(parsed.recomendacionesProduccion),
+        informeMarkdown: typeof parsed.informeMarkdown === 'string' ? parsed.informeMarkdown : rawText,
+        fuenteIA,
+        medicionLocal: medicion ? medicionesEnTexto(medicion) : undefined,
+      };
+      setAnalysisResult(fullResult);
+      setAnalysisStatus('Análisis terminado.');
+    } catch (err: unknown) {
       console.warn('Error in video analysis with Gemini:', err);
-      const errMsg = err?.message || String(err);
-      if (errMsg.includes('429') || errMsg.includes('quota') || errMsg.includes('RESOURCE_EXHAUSTED')) {
-        setAnalysisError('⚠️ Límite de cuota temporal en la API de Gemini. Por favor espera un minuto y haz clic nuevamente en "Auditar Video".');
-      } else {
-        setAnalysisError(`Error al procesar el video: ${errMsg}. Puedes probar seleccionando uno de los ejemplos preconfigurados.`);
-      }
+      const errMsg = err instanceof Error ? err.message : String(err);
+      setAnalysisError(/429|quota|RESOURCE_EXHAUSTED/i.test(errMsg) ? formatAiError(err) : errMsg);
+      setAnalysisStatus('');
     } finally {
       setIsAnalyzing(false);
     }
@@ -576,7 +400,7 @@ Responde ÚNICAMENTE con un objeto JSON válido con esta estructura exacta (sin 
 
     const suggestedNarrative = `${analysisResult.tonoComunicacional.registroDominante} — ${analysisResult.tonoComunicacional.descripcion.slice(0, 140)}`;
     const suggestedStyle = `Oratoria: ${analysisResult.expresionOral.diccionVocalizacion.slice(0, 100)}. Cadencia: ${analysisResult.expresionOral.cadenciaRitmo.slice(0, 80)}. Nivel de Producción: ${analysisResult.gradoEdicion.nivelProduccion}.`;
-    const suggestedAvoid = `En cámara y oratoria: Evitar muletillas detectadas (${analysisResult.expresionOral.muletillasDetectadas.join(', ') || 'ehh, digamos'}). Corregir: ${analysisResult.debilidades.slice(0, 2).join('; ')}.`;
+    const suggestedAvoid = `En cámara y oratoria: Evitar muletillas detectadas (${analysisResult.expresionOral.muletillasDetectadas.join(', ') || 'ninguna detectada'}). Corregir: ${analysisResult.debilidades.slice(0, 2).join('; ')}.`;
 
     if (onApplyToProfile) {
       onApplyToProfile({
@@ -648,7 +472,7 @@ Responde ÚNICAMENTE con un objeto JSON válido con esta estructura exacta (sin 
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(11);
     doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-    doc.text('1. MÉTRICAS DE DESEMPEÑO EN CÁMARA (0 - 100%)', 14, currentY);
+    doc.text('1. PUNTAJES DE LA IA (0 a 100; juicio de Gemini, no medición)', 14, currentY);
 
     currentY += 6;
     const scores = [
@@ -675,8 +499,9 @@ Responde ÚNICAMENTE con un objeto JSON válido con esta estructura exacta (sin 
       doc.text(`${s.label}:`, x + 3, y + 5.5);
 
       doc.setFont('helvetica', 'bold');
-      doc.setTextColor(s.val >= 80 ? 37 : 225, s.val >= 80 ? 99 : 29, s.val >= 80 ? 235 : 72);
-      doc.text(`${s.val}%`, x + 72, y + 5.5);
+      const ok = s.val != null && s.val >= 80;
+      doc.setTextColor(ok ? 37 : 225, ok ? 99 : 29, ok ? 235 : 72);
+      doc.text(s.val == null ? 'Sin dato' : `${s.val}`, x + 68, y + 5.5);
     });
 
     currentY += 36;
@@ -856,21 +681,6 @@ Responde ÚNICAMENTE con un objeto JSON válido con esta estructura exacta (sin 
             </button>
           </div>
 
-          {/* Quick Presets Dropdown/Badges */}
-          <div className="flex items-center gap-1.5 overflow-x-auto text-[11px]">
-            <span className="text-slate-400 font-medium whitespace-nowrap">Ejemplos Rápidos:</span>
-            {VIDEO_PRESETS.map((p) => (
-              <button
-                key={p.id}
-                type="button"
-                onClick={() => handleSelectPreset(p)}
-                className="bg-slate-900/60 backdrop-blur-xl border border-white/10 shadow-xl hover:bg-rose-50 text-slate-200 hover:text-rose-700 border border-white/10 px-2.5 py-1 rounded-lg font-semibold transition-all whitespace-nowrap cursor-pointer"
-                title={p.label}
-              >
-                {p.tag}
-              </button>
-            ))}
-          </div>
         </div>
 
         {/* Input Fields depending on Mode */}
@@ -882,7 +692,7 @@ Responde ÚNICAMENTE con un objeto JSON válido con esta estructura exacta (sin 
                   type="url"
                   value={videoUrl}
                   onChange={(e) => setVideoUrl(e.target.value)}
-                  placeholder="Pega aquí el enlace del video (ej: https://www.youtube.com/watch?v=... o https://www.instagram.com/reel/...)"
+                  placeholder="Enlace público de YouTube (https://www.youtube.com/watch?v=…). Instagram y TikTok: sube el archivo."
                   className="w-full bg-slate-900/60 backdrop-blur-xl border border-white/10 shadow-xl border border-slate-300 rounded-2xl px-4 py-3 text-xs font-semibold text-white focus:outline-none focus:ring-2 focus:ring-rose-500 pr-10"
                 />
                 {videoUrl && (
@@ -950,7 +760,7 @@ Responde ÚNICAMENTE con un objeto JSON válido con esta estructura exacta (sin 
                     {uploadedVideoFile ? uploadedVideoFile.name : 'Haz clic o arrastra un archivo de video (.mp4, .webm, .mov)'}
                   </p>
                   <p className="text-[11px] text-slate-400 mt-0.5">
-                    Extraeremos fotogramas clave y muestras orales para la auditoría técnica fisonómica y acústica.
+                    Se mide en el navegador (paleta, tonalidad, cortes) y Gemini ve el video completo con audio, si la identidad lo permite.
                   </p>
                 </div>
               </div>
@@ -1108,9 +918,9 @@ Responde ÚNICAMENTE con un objeto JSON válido con esta estructura exacta (sin 
             <div className="flex items-center justify-between mb-3">
               <h4 className="text-xs font-black uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
                 <Activity className="w-4 h-4 text-rose-600" />
-                Scorecards de Desempeño Audiovisual & Media-Training
+                Puntajes de la IA (juicio de Gemini, no medición)
               </h4>
-              <span className="text-[11px] text-slate-400">Escala de 0 a 100%</span>
+              <span className="text-[11px] text-slate-400">{analysisResult.fuenteIA ?? 'Análisis anterior: no consta qué vio Gemini'}</span>
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
@@ -1130,13 +940,13 @@ Responde ÚNICAMENTE con un objeto JSON válido con esta estructura exacta (sin 
                       <IconComp className="w-4 h-4 shrink-0" />
                     </div>
                     <div className="flex items-baseline gap-1">
-                      <span className="text-2xl font-black text-white">{m.score}</span>
-                      <span className="text-[10px] font-bold text-slate-400">%</span>
+                      <span className="text-2xl font-black text-white">{m.score ?? '—'}</span>
+                      <span className="text-[10px] font-bold text-slate-400">{m.score == null ? 'Sin dato' : '/ 100'}</span>
                     </div>
                     <div className="w-full bg-slate-200/80 rounded-full h-1.5 overflow-hidden">
                       <div
                         className="bg-current h-full rounded-full transition-all duration-500"
-                        style={{ width: `${Math.min(100, Math.max(0, m.score))}%` }}
+                        style={{ width: `${Math.min(100, Math.max(0, m.score ?? 0))}%` }}
                       />
                     </div>
                   </div>
@@ -1323,7 +1133,7 @@ Responde ÚNICAMENTE con un objeto JSON válido con esta estructura exacta (sin 
                   </div>
                 </div>
                 <div className="shrink-0 font-bold text-[11px] bg-amber-500/20 text-amber-300 text-amber-900 px-3 py-1.5 rounded-xl border border-amber-300">
-                  Control: {analysisResult.metricasScore.controlMuletillas}%
+                  Puntaje IA: {analysisResult.metricasScore.controlMuletillas ?? 'Sin dato'}
                 </div>
               </div>
             </div>
@@ -1364,7 +1174,7 @@ Responde ÚNICAMENTE con un objeto JSON válido con esta estructura exacta (sin 
                   {analysisResult.coloracionIluminacion.paletaDominanteHex && analysisResult.coloracionIluminacion.paletaDominanteHex.length > 0 && (
                     <div className="pt-2 border-t border-white/10">
                       <span className="text-[10px] font-bold text-slate-400 uppercase block mb-1.5">
-                        Paleta Cromática Dominante en Cuadro:
+                        Paleta dominante · {analysisResult.medicionLocal ? 'medida en el archivo' : 'descrita por la IA (no medida)'}:
                       </span>
                       <div className="flex items-center gap-2">
                         {analysisResult.coloracionIluminacion.paletaDominanteHex.map((hex, i) => (
