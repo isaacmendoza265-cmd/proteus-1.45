@@ -16,7 +16,7 @@ import { getDaneMunicipio } from './daneMunicipalService';
 import { cargarElecciones, sumarEleccion, type EleccionPuestos } from './electionResultsService';
 import { cargarGanadores } from './winnersService';
 import {
-  actoresDeTerritorio, cargarDemografia, cargarEconomia, censoElectoral, demografia, economia, grupos, piramide2026,
+  actoresDeTerritorio, cargarDemografia, cargarEconomia, censoElectoral, demografia, economia, piramide2026,
   territorioFicha, municipioFichaPorDane, type TerritorioFicha,
 } from './territoryProfileService';
 import { estratificacionOficial } from './estratificacionService';
@@ -148,7 +148,7 @@ async function dossierLocal(t: TerritorioFicha): Promise<DossierTerritorial> {
     if (c) alc.push(`Concejo ${y}: ${n(c.curules)} curules a proveer${c.aListas != null ? ` (${n(c.aListas)} repartidas a listas)` : ''} (${c.fuente}).`);
   }
   const r23 = getResultado2023(t.dane);
-  if (r23) alc.push(`Alcaldía 2023, escrutinio oficial: ${r23.alcaldia.candidatos.slice(0, 4).map((c) => `${c.nombre} (${c.partido}) ${p(c.pctValidos)}`).join('; ')}; participación ${p(r23.alcaldia.participacion)} de ${n(r23.alcaldia.censo)} habilitados.`);
+  if (r23) alc.push(`Alcaldía 2023, escrutinio oficial del municipio (prevalece sobre el preconteo por puesto de la sección de resultados): ${r23.alcaldia.candidatos.slice(0, 4).map((c) => `${c.nombre} (${c.partido}) ${p(c.pctValidos)}`).join('; ')}; participación ${p(r23.alcaldia.participacion)} de ${n(r23.alcaldia.censo)} habilitados.`);
   if (alc.length) secciones.push({ titulo: `La alcaldía de ${t.municipio} en cifras`, lineas: alc });
 
   // 6. Censo electoral
@@ -161,8 +161,8 @@ async function dossierLocal(t: TerritorioFicha): Promise<DossierTerritorial> {
   } else cenL.push(`Censo electoral 2026: ${cen.nota}`);
   const serie = serieCenso(t.dane);
   if (serie.length) cenL.push(`Serie del censo electoral del municipio (habilitados de cada jornada): ${serie.map((x) => `${x.etiqueta} ${n(x.censo)}`).join('; ')}.`);
-  const g = grupos(dem, cen);
-  if (g.segmentos.length) cenL.push(`Segmentos estimados (sexo del censo electoral × edad del DANE; ESTIMADO): ${g.segmentos.map((s) => `${s.etiqueta} ${n(s.valor)} ${s.unidad}`).join('; ')}.`);
+  // Sin segmentos sexo × edad de votantes: el censo electoral no trae edad y el reglamento (sección 3) prohíbe
+  // "las mujeres de 30-49 habilitadas"; la edad de la población está en la sección Población (DANE).
   secciones.push({ titulo: 'Censo electoral', lineas: cenL });
 
   // 7. Resultados: todas las elecciones, de la más reciente a la más antigua
@@ -193,7 +193,7 @@ async function dossierLocal(t: TerritorioFicha): Promise<DossierTerritorial> {
   // 8. Actores políticos (base curada)
   const act = actoresDeTerritorio(t);
   secciones.push({ titulo: 'Actores políticos con presencia declarada (base curada del desarrollador, SIN VERIFICAR)', lineas: act.length
-    ? act.map((a) => `${a.nombre}: ${a.cargo}${a.partido ? `, ${a.partido}` : ''}${a.casa ? `, casa ${a.casa}` : ''}.`)
+    ? act.map((a) => `SIN VERIFICAR (base curada, sin fuente ni fecha): ${a.nombre}: ${a.cargo}${a.partido ? `, ${a.partido}` : ''}${a.casa ? `, casa ${a.casa}` : ''}.`)
     : ['Ninguno registrado.'] });
 
   // 9. Lectura de Proteus (reglas del marco, Capa 1)
