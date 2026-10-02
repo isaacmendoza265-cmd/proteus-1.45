@@ -86,7 +86,8 @@ Debes responder ÚNICAMENTE en formato JSON plano con los siguientes campos exac
   "reconocimientoNombre": "Grado de reconocimiento público (Departamental / Municipal / En consolidación)",
   "relacionEstructurasLocales": "Relación con líderes barriales, gremios o estructuras territoriales",
   "resumenEstrategico": "Síntesis estratégica de valor electoral para conectar con los electores"
-}`;
+}
+Si la búsqueda no da un campo, déjalo como cadena vacía "": no lo completes con un ejemplo ni lo supongas.`;
 
       let rawResponse = "";
       try {
@@ -95,7 +96,10 @@ Debes responder ÚNICAMENTE en formato JSON plano con los siguientes campos exac
           contents: [{ role: 'user', parts: [{ text: promptText }] }],
           config: {
             tools: [{ googleSearch: {} }]
-          }
+          },
+          // Captura del perfil (lo que luego ES la macrofuente B): no se le pasan las macrofuentes, para no mezclar
+          // el perfil cargado ni los datos de un territorio con lo que se encuentre de esta persona
+          proteus: { sinMacrofuentes: true },
         });
         rawResponse = geminiRes.text || "";
       } catch (searchErr) {
@@ -103,7 +107,8 @@ Debes responder ÚNICAMENTE en formato JSON plano con los siguientes campos exac
         rawResponse = await callGeminiApi({
           promptText,
           useSearch: true,
-          systemInstruction: "Extrae el perfil político del candidato investigando en Google Search y devuelve únicamente un JSON válido."
+          systemInstruction: "Extrae el perfil político del candidato investigando en Google Search y devuelve únicamente un JSON válido.",
+          proteus: { sinMacrofuentes: true },
         });
       }
 
@@ -171,7 +176,8 @@ Extrae la información estratégica y responde estrictamente en formato JSON pla
   "estiloComunicacion": "Estilo de comunicación",
   "ejeTematicoComodo": "Temas fuertes o propuestas centrales",
   "resumenEstrategico": "Síntesis del perfil de campaña"
-}`;
+}
+Copia solo lo que dice el documento; si un campo no aparece, déjalo como cadena vacía "".`;
 
           const response = await generateContent({
             model: "gemini-3.8-flash",
@@ -188,7 +194,8 @@ Extrae la información estratégica y responde estrictamente en formato JSON pla
                   { text: promptText }
                 ]
               }
-            ]
+            ],
+            proteus: { sinMacrofuentes: true },
           });
 
           const rawText = response.text || "";

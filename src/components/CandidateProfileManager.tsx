@@ -32,6 +32,7 @@ import {
   Video,
   Database
 } from 'lucide-react';
+import { normalizarIdentidad } from '../services/identidad/identidad';
 import { generateContent } from '../services/geminiService';
 import { jsPDF } from 'jspdf';
 import { motion, AnimatePresence } from 'motion/react';
@@ -552,6 +553,12 @@ export const CandidateProfileManager: React.FC<CandidateProfileManagerProps> = (
       return;
     }
 
+    // Privacidad (Identidad › Privacidad): sin permiso no se envían fotos a la IA
+    if (!normalizarIdentidad(activeProfile?.identidad, activeProfile?.nombre ?? '').privacidad.enviarFotosAIA) {
+      setColorimetryError('La identidad del candidato no permite enviar fotos a la IA (Identidad › Privacidad › Enviar imágenes a Gemini).');
+      return;
+    }
+
     setIsAnalyzingColorimetry(true);
     setColorimetryError(null);
 
@@ -637,7 +644,8 @@ Debes responder ÚNICAMENTE con un bloque JSON plano estructurado con este esque
 
       const response = await generateContent({
         model: "gemini-3.8-flash",
-        contents: [{ role: 'user', parts }]
+        contents: [{ role: 'user', parts }],
+        proteus: { tarea: 'evaluar', incluirDatos: false },
       });
 
       const rawText = response.text || "";
@@ -674,14 +682,8 @@ Debes responder ÚNICAMENTE con un bloque JSON plano estructurado con este esque
           setColorimetryReport(rawText);
         }
       } else {
-        setColorimetryReport(rawText || "Informe de colorimetría generado exitosamente.");
-        if (rawText.toLowerCase().includes("femenino") || rawText.toLowerCase().includes("mujer")) {
-          setSexo("Femenino");
-        } else {
-          setSexo("Masculino");
-        }
-        const ageMatch = rawText.match(/(\d{2}\s*-\s*\d{2}\s*años|\d{2}\s*a\s*\d{2}\s*años)/i);
-        if (ageMatch) setRangoEdad(ageMatch[0]);
+        // Sin JSON: se muestra el texto tal cual y no se deduce sexo ni edad (antes se ponía "Masculino" por defecto)
+        setColorimetryReport(rawText || 'Gemini no devolvió el informe en el formato esperado.');
       }
 
     } catch (err: any) {
@@ -724,14 +726,17 @@ Debes responder ÚNICAMENTE con un bloque JSON plano estructurado con este esque
         "reconocimientoNombre": "Grado de reconocimiento de nombre (Local, subregional, departamental o en consolidación)",
         "accesoMedios": "Acceso a medios tradicionales, digitales, columnas de opinión o portales",
         "resumenEstrategico": "Síntesis estratégica de valor electoral para conectar con los electores"
-      }`;
+      }
+      Si la búsqueda no da un campo, déjalo como cadena vacía "": no lo completes ni lo supongas.`;
 
       const response = await generateContent({
         model: "gemini-3.8-flash",
         contents: [{ role: 'user', parts: [{ text: promptText }] }],
         config: {
           tools: [{ googleSearch: {} }]
-        }
+        },
+        // Captura del perfil (lo que luego es la macrofuente B): sin macrofuentes, para no mezclar el perfil cargado
+        proteus: { sinMacrofuentes: true },
       });
 
       const raw = response.text || "";
@@ -791,10 +796,10 @@ Debes responder ÚNICAMENTE con un bloque JSON plano estructurado con este esque
         rangoEdad,
         sexo,
         tonoNarrativo,
-        lugarResidencia: lugarResidencia.trim() || "Medellín, Antioquia",
-        envergaduraEquipo: envergaduraEquipo.trim() || "Equipo mediano (4-10 integrantes)",
+        lugarResidencia: lugarResidencia.trim(),
+        envergaduraEquipo: envergaduraEquipo.trim(),
         experienciaPrevia: updatedExp,
-        afiliacionPartidista: updatedPart || "Centro Democrático",
+        afiliacionPartidista: updatedPart,
         relacionEstructurasLocales: updatedRel,
         formacionOcupacion: updatedForm,
         presenciaRedes: updatedRedes,
@@ -802,7 +807,7 @@ Debes responder ÚNICAMENTE con un bloque JSON plano estructurado con este esque
         ejeTematicoComodo: updatedEje,
         reconocimientoNombre: updatedRec,
         accesoMedios: updatedAcc,
-        resumenEstrategico: updatedResumen || `Perfil de ${trimmedName} activado y calibrado para análisis territorial y subregional.`,
+        resumenEstrategico: updatedResumen,
         paletaColores,
         estiloFotografico,
         quEvitar,
@@ -851,10 +856,10 @@ Debes responder ÚNICAMENTE con un bloque JSON plano estructurado con este esque
         rangoEdad,
         sexo,
         tonoNarrativo,
-        lugarResidencia: lugarResidencia.trim() || "Medellín, Antioquia",
-        envergaduraEquipo: envergaduraEquipo.trim() || "Equipo mediano (4-10 integrantes)",
+        lugarResidencia: lugarResidencia.trim(),
+        envergaduraEquipo: envergaduraEquipo.trim(),
         experienciaPrevia: updatedExp,
-        afiliacionPartidista: updatedPart || "Centro Democrático",
+        afiliacionPartidista: updatedPart,
         relacionEstructurasLocales,
         formacionOcupacion,
         presenciaRedes,
@@ -862,7 +867,7 @@ Debes responder ÚNICAMENTE con un bloque JSON plano estructurado con este esque
         ejeTematicoComodo,
         reconocimientoNombre,
         accesoMedios,
-        resumenEstrategico: resumenEstrategico || `Perfil de ${trimmedName} activado.`,
+        resumenEstrategico,
         paletaColores,
         estiloFotografico,
         quEvitar,
@@ -896,10 +901,11 @@ Debes responder ÚNICAMENTE con un bloque JSON plano estructurado con este esque
       rangoEdad,
       sexo,
       tonoNarrativo,
-      lugarResidencia: lugarResidencia.trim() || "Medellín, Antioquia",
-      envergaduraEquipo: envergaduraEquipo.trim() || "Equipo mediano (4-10 integrantes)",
+      lugarResidencia: lugarResidencia.trim(),
+      envergaduraEquipo: envergaduraEquipo.trim(),
       experienciaPrevia,
-      afiliacionPartidista: afiliacionPartidista || "Centro Democrático",
+      // Sin valores por defecto: lo que el equipo no definió queda vacío (antes: "Centro Democrático" y textos de relleno)
+      afiliacionPartidista,
       relacionEstructurasLocales,
       formacionOcupacion,
       presenciaRedes,
@@ -907,7 +913,7 @@ Debes responder ÚNICAMENTE con un bloque JSON plano estructurado con este esque
       ejeTematicoComodo,
       reconocimientoNombre,
       accesoMedios,
-      resumenEstrategico: resumenEstrategico || "Estrategia calibrada con rigor técnico e identidad visual de alto impacto.",
+      resumenEstrategico,
       paletaColores,
       colorimetryData: {
         fototipoPiel,
@@ -1266,7 +1272,8 @@ Debes responder ÚNICAMENTE con un bloque JSON plano estructurado con este esque
                   { text: promptText }
                 ]
               }
-            ]
+            ],
+            proteus: { sinMacrofuentes: true },
           });
 
           const rawText = response.text || "";
