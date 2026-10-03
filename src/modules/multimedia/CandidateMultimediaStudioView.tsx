@@ -18,7 +18,7 @@ import {
   Download,
   Share2
 } from 'lucide-react';
-import { CandidateProfile } from '../../components/CandidateProfileManager';
+import { CandidateProfile } from '../../types/candidateProfile';
 import { CandidateVideoAnalyzer } from '../../components/CandidateVideoAnalyzer';
 import { formatAiError, generateContent } from '../../services/geminiService';
 import { normalizarIdentidad, paletaDefinida } from '../../services/identidad/identidad';

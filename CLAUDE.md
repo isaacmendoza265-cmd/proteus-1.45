@@ -140,9 +140,9 @@ Isaac (`GOBERNACION_DIR`). En el servidor no hay Python: responde un error claro
 **Estilo**: "sobrio cívico", tokens `--c-*` en `src/index.css` (claro/oscuro con `data-tema`). **Las decisiones de diseño y su porqué están en `docs/DESIGN.md`** (dos tokens de borde, foco, mínimo 12 px, barra inferior en teléfono, sello de procedencia); `src/theme/contraste-tokens.test.ts` mide el contraste leyendo el CSS real. Varios módulos
 viejos conservan el estilo oscuro/cristal anterior; no reescribirlos, unificarlos poco a poco.
 
-**Código muerto conocido** (no imitarlo): `HomePageStructure.tsx`, y en `CandidateProfileManager.tsx` el paso
-"Conexión a Google Drive" (era un Drive simulado; hoy lo reemplazan los Archivos guardados reales). El
-componente se conserva porque de él salen el tipo `CandidateProfile` y el perfil por defecto.
+**Perfil del candidato**: el tipo `CandidateProfile` y el perfil por defecto viven en `src/types/candidateProfile.ts`
+(antes en `CandidateProfileManager.tsx`, un componente inalcanzable con un Google Drive simulado, retirado el 3-oct-2026
+junto con `HomePageStructure.tsx`).
 
 ## Producción
 

@@ -10,7 +10,7 @@
  */
 import React, { useEffect, useMemo, useState } from 'react';
 import { Brain, Filter, MapPin, Save, Search, Users } from 'lucide-react';
-import type { CandidateProfile } from '../../components/CandidateProfileManager';
+import type { CandidateProfile } from '../../types/candidateProfile';
 import { callGeminiApi, formatAiError } from '../../services/geminiService';
 import {
   EDADES, EDUCACIONES, ESTRATOS, ETIQUETAS, SEXOS, segmentacionComoTexto, segmentarTerritorio,

@@ -1,7 +1,7 @@
 import React from 'react';
 import { ShieldCheck, Database, FileText, Cpu, CheckCircle } from 'lucide-react';
 import { PdfScriptGenerator } from '../../../components/PdfScriptGenerator';
-import { CandidateProfile } from '../../../components/CandidateProfileManager';
+import { CandidateProfile } from '../../../types/candidateProfile';
 
 interface GobernacionExecutiveViewProps {
   candidateProfile: CandidateProfile;

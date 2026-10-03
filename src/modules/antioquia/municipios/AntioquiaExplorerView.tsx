@@ -1,7 +1,7 @@
 import React from 'react';
 import { MapPin, Box, Compass, FileSpreadsheet } from 'lucide-react';
 import { AntioquiaMunicipiosManager } from '../../../components/AntioquiaMunicipiosManager';
-import { CandidateProfile } from '../../../components/CandidateProfileManager';
+import { CandidateProfile } from '../../../types/candidateProfile';
 
 interface AntioquiaExplorerViewProps {
   candidateProfile: CandidateProfile;

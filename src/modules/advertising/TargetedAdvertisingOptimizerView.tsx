@@ -13,7 +13,7 @@ import {
 } from '../../services/holisticAdvertisingIntelligenceService';
 import { AdCreativeVariantCard } from '../../components/advertising/AdCreativeVariantCard';
 import { TerritoryIntelligenceBridgeCard } from '../../components/advertising/TerritoryIntelligenceBridgeCard';
-import { CandidateProfile } from '../../components/CandidateProfileManager';
+import { CandidateProfile } from '../../types/candidateProfile';
 import { useActiveTerritory } from '../../services/activeTerritoryContextService';
 import { 
   Megaphone, 

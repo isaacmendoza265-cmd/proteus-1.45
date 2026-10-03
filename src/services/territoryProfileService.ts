@@ -446,8 +446,10 @@ export interface SeccionPolitica {
   fuenteActores: string;
 }
 
-/** Palabras con que la base curada ubica a un actor en cada comuna o zona de Bello */
-const ANCLAS_BELLO: Record<string, (a: string) => boolean> = {
+/** Palabras con que la base curada ubica a un actor en cada comuna o zona de Bello.
+ *  La comuna 12 del POT 2009 no tiene nombre oficial (ni el plano ni la Registraduría lo dan); su único
+ *  barrio es el asentamiento El Pinar, así que se ancla por él sin rebautizar la comuna. */
+export const ANCLAS_BELLO: Record<string, (a: string) => boolean> = {
   'bello-div-1': (a) => /comuna 1\b|par[ií]s/.test(a),
   'bello-div-2': (a) => /comuna 2\b|la madera/.test(a),
   'bello-div-3': (a) => /comuna 3\b|santa ana/.test(a),
@@ -459,7 +461,7 @@ const ANCLAS_BELLO: Record<string, (a: string) => boolean> = {
   'bello-div-9': (a) => /comuna 9\b|guasimalito/.test(a),
   'bello-div-10': (a) => /comuna 10\b|fontidue[nñ]o/.test(a),
   'bello-div-11': (a) => /comuna 11\b|zamora/.test(a),
-  'bello-div-12': (a) => /comuna 12\b/.test(a),
+  'bello-div-12': (a) => /comuna 12\b|el pinar/.test(a),
   'bello-div-SF': (a) => /san f[eé]lix/.test(a),
   'bello-div-RUR': (a) => /vereda/.test(a),
 };

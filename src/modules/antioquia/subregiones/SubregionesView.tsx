@@ -1,7 +1,7 @@
 import React from 'react';
 import { Layers, Map, TrendingUp } from 'lucide-react';
 import { SubregionesManager } from '../../../components/SubregionesManager';
-import { CandidateProfile } from '../../../components/CandidateProfileManager';
+import { CandidateProfile } from '../../../types/candidateProfile';
 
 interface SubregionesViewProps {
   candidateProfile: CandidateProfile;

@@ -49,7 +49,7 @@ import { getMunicipalCensus } from '../services/electoralCensusService';
 import { segmentacionComoTexto, segmentarTerritorio } from '../services/voterDemographicsService';
 import { ANTIOQUIA_125_MUNICIPIOS_GEOJSON } from '../data/geojson';
 import { motion, AnimatePresence } from 'motion/react';
-import { CandidateProfile } from './CandidateProfileManager';
+import { CandidateProfile } from '../types/candidateProfile';
 import { SubregionesStrategicDeepening } from './SubregionesStrategicDeepening';
 import {
   ANTIOQUIA_SUBREGIONS_DATA,

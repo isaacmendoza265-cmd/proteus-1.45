@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll } from 'vitest';
 import {
-  cargarDemografia, territorioBello, territorioFicha, tieneFicha, demografia, censoElectoral, grupos, politica, actoresDeTerritorio, sumarDemografia,
+  cargarDemografia, territorioBello, territorioFicha, tieneFicha, demografia, censoElectoral, grupos, politica, actoresDeTerritorio, sumarDemografia, ANCLAS_BELLO,
 } from '../territoryProfileService';
 import type { PuestoVotacion } from '../pollingStationsService';
 
@@ -93,6 +93,12 @@ describe('política', () => {
     const comuna = territorioBello('bello-div-6')!;
     expect(actoresDeTerritorio(barrio).map((a) => a.id)).toEqual(actoresDeTerritorio(comuna).map((a) => a.id));
     for (const a of actoresDeTerritorio(territorioBello('bello')!)) expect(Object.keys(a)).not.toContain('cedula');
+  });
+  it('la comuna 12 no tiene nombre oficial, pero un actor anclado en El Pinar (su único barrio) cae en ella', () => {
+    expect(territorioBello('bello-div-12')!.nombre).toBe('Comuna 12');
+    expect(ANCLAS_BELLO['bello-div-12']('líderes del asentamiento el pinar')).toBe(true);
+    expect(ANCLAS_BELLO['bello-div-12']('comuna 12 de bello')).toBe(true);
+    expect(ANCLAS_BELLO['bello-div-1']('líderes de el pinar')).toBe(false);
   });
 });
 

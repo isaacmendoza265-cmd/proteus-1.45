@@ -19,7 +19,7 @@ import {
   Sliders,
   RotateCcw
 } from 'lucide-react';
-import { CandidateProfile, DEFAULT_ISAAC_MENDOZA_PROFILE } from './CandidateProfileManager';
+import { CandidateProfile, DEFAULT_ISAAC_MENDOZA_PROFILE } from '../types/candidateProfile';
 import { generateContent, callGeminiApi, formatAiError } from '../services/geminiService';
 
 export type { CandidateProfile };

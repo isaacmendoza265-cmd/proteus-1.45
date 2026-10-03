@@ -7,7 +7,7 @@ import {
 } from '../../data/schemas/electoralMicrodata';
 import { ElectoralForensicsService } from '../../services/electoralForensicsService';
 import { StationDiscrepancyCard } from '../../components/audit/StationDiscrepancyCard';
-import { CandidateProfile } from '../../components/CandidateProfileManager';
+import { CandidateProfile } from '../../types/candidateProfile';
 import { 
   ShieldAlert, 
   Building2, 

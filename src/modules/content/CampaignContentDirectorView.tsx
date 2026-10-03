@@ -30,7 +30,7 @@ import {
   BookOpen
 } from 'lucide-react';
 import { jsPDF } from 'jspdf';
-import { CandidateProfile } from '../../components/CandidateProfileManager';
+import { CandidateProfile } from '../../types/candidateProfile';
 import { callGeminiApi, formatAiError } from '../../services/geminiService';
 import {
   TerritoryHierarchyService,

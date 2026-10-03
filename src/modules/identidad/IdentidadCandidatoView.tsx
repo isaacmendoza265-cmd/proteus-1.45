@@ -5,7 +5,7 @@
  */
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { BookOpen, Check, Fingerprint, ScanSearch } from 'lucide-react';
-import type { CandidateProfile } from '../../components/CandidateProfileManager';
+import type { CandidateProfile } from '../../types/candidateProfile';
 import {
   BLOQUES, completitud, completitudTotal, identidadDesdeLegado, identidadParaIA, paletaDefinida, sincronizarLegado,
   type BloqueId, type IdentidadCandidato,

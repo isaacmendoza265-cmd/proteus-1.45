@@ -25,7 +25,7 @@ import { seleccionDeDane } from '../../services/ia/macrofuentes';
 import { getMunicipalCensus } from '../../services/electoralCensusService';
 import { seleccionDeEstado, useActiveTerritory } from '../../services/activeTerritoryContextService';
 import { territorioFicha } from '../../services/territoryProfileService';
-import { CandidateProfile } from '../../components/CandidateProfileManager';
+import { CandidateProfile } from '../../types/candidateProfile';
 
 interface AgentTeamConsoleViewProps {
   candidateProfile: CandidateProfile;

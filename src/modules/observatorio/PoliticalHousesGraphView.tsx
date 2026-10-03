@@ -30,7 +30,7 @@ import { PoliticalHouse2DGraph } from '../../components/graphs/PoliticalHouse2DG
 import { PoliticalHouse3DGraph } from '../../components/graphs/PoliticalHouse3DGraph';
 import { ActorDossierDrawer } from '../../components/graphs/ActorDossierDrawer';
 import { DialecticalAnalysisCard } from '../../components/graphs/DialecticalAnalysisCard';
-import { CandidateProfile } from '../../components/CandidateProfileManager';
+import { CandidateProfile } from '../../types/candidateProfile';
 import { activeTerritoryService, seleccionDeEstado, useActiveTerritory } from '../../services/activeTerritoryContextService';
 import { municipioFichaPorDane, territorioFicha } from '../../services/territoryProfileService';
 import { getMunicipalCensus } from '../../services/electoralCensusService';

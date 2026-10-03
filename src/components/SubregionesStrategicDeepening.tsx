@@ -51,7 +51,7 @@ import { generateContent } from '../services/geminiService';
 import { seleccionDeSubregion } from '../services/ia/macrofuentes';
 import { normalizarIdentidad } from '../services/identidad/identidad';
 import { SubregionInfo } from '../data/antioquiaSubregionesData';
-import { CandidateProfile } from './CandidateProfileManager';
+import { CandidateProfile } from '../types/candidateProfile';
 import { ProvisionalCandidateProfile } from './SubregionesManager';
 
 let cachedProteusLogoDataUrl: string | null = null;

@@ -37,7 +37,7 @@ import {
 import { normalizarIdentidad } from '../services/identidad/identidad';
 import { generateContent } from '../services/geminiService';
 import { jsPDF } from 'jspdf';
-import { CandidateProfile } from './CandidateProfileManager';
+import { CandidateProfile } from '../types/candidateProfile';
 import {
   ProvisionalCandidateProfile,
   NationalAlignmentType,

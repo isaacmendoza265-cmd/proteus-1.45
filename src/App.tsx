@@ -46,7 +46,7 @@ const UsuariosView = lazy(() => import('./modules/system/UsuariosView').then((m)
 import { 
   CandidateProfile, 
   DEFAULT_ISAAC_MENDOZA_PROFILE 
-} from './components/CandidateProfileManager';
+} from './types/candidateProfile';
 
 import { api, borrarLocal, leerLocal, obtenerUsuario, type UsuarioSesion } from './services/sesionCliente';
 import { categoriaDeTitulo, guardarArchivo } from './services/archivosService';
