@@ -195,9 +195,8 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
 0000. **Análisis de piezas con Gemini**: listo pero sin probar con Gemini real (la clave del servidor sigue en 403).
    Al arreglarla, validar con 3-4 piezas reales (una imagen, un video propio, uno de YouTube, un texto) y ajustar el
    libro. Cuando Isaac cargue la Capa 3 del marco (retórica y creación), integrar sus reglas al libro (sube la versión).
-   Deuda: `CandidateProfileManager`/`CandidateVideoAnalyzer`/`CandidateProfileModal` aún llaman a Gemini desde el
-   navegador con la clave incrustada por Vite (`process.env.GEMINI_API_KEY`); ya no se usan desde Ajustes, pero la
-   clave sigue en el bundle mientras `vite.config.ts` la defina. Migrar lo que falte al servidor y quitar el `define`.
+   (Resuelto, verificado el 2-oct-2026: `vite.config.ts` ya no inyecta `GEMINI_API_KEY` y todas las llamadas pasan
+   por el servidor; el build no contiene claves de Google.)
 000. **Marco metodológico, bloques siguientes**: Isaac los subirá por partes. Capa 1: dossiers de las familias
    1 (temporal), 2 (mismo ciclo) y 3 (ecológica); capas 2, 3 y 4 vacías. Ingesta: `scripts/ingestar_marco.mjs`.
    Reglas del reglamento v1.2 que la app aún no cumple del todo (a revisar con Isaac): regla 5 (los puestos con
@@ -244,6 +243,10 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
   `territoryProfileService.ts`; ficha: `src/components/territorio/`.
 
 ## 5. Bitácora (agregar arriba lo más reciente)
+- 2-oct (Claude Opus, `main`): **auditoría final de las 19 herramientas** (`docs/AUDITORIA_FINAL_HERRAMIENTAS.md`):
+  todas abren sin errores en el navegador; 392 pruebas en verde. Corregido: Día E mostraba actas de ejemplo y
+  generaba minutas "para radicar" sin rótulo de ejemplo; ahora lo dice en la vista, en el modal y en el texto copiado.
+  El bloqueo principal sigue siendo la clave de Gemini de producción (403).
 - 2-oct (Claude Opus, `main`): **noticias por unidad territorial** (opción A de Isaac: bajo demanda desde el mapa).
   - Botón "Noticias" en la consola del mapa y en la columna de herramientas: Gemini con la búsqueda de Google trae
     las noticias de los últimos 60 días de la unidad (titular, medio, fecha, tema, resumen y enlace).

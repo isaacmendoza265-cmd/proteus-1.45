@@ -106,7 +106,7 @@ TESTIGO ELECTORAL Y APODERADO DE ${activeReclamation.candidateName}
 Fecha y Hora de Radicación: ${activeReclamation.timestamp}
     `.trim();
 
-    navigator.clipboard.writeText(text);
+    navigator.clipboard.writeText(`[MINUTA DE EJEMPLO: datos de mesa escritos a mano, no son actas reales. No radicar.]\n\n${text}`);
     setCopied(true);
     setTimeout(() => setCopied(false), 2500);
   };
@@ -129,6 +129,9 @@ Fecha y Hora de Radicación: ${activeReclamation.timestamp}
           </h1>
           <p className="m-0 text-xs sm:text-sm text-[var(--c-muted)] max-w-3xl">
             Control de mesas, detección de alteraciones matemáticas entre actas E-14 y E-24 y generación inmediata de minutas de reclamación legal para el escrutinio de {candidateName}.
+          </p>
+          <p role="note" className="m-0 px-3 py-2 rounded-lg text-xs max-w-3xl bg-[var(--c-warn-soft)] text-[var(--c-warn)] border border-[var(--c-warn-solid)]">
+            <strong>Datos de ejemplo.</strong> Los puestos, mesas y votos de esta pantalla están escritos a mano para mostrar cómo funciona la auditoría; no son actas reales. Las minutas que genera son de ejemplo y no deben radicarse. El Día E se cargarán los E-14 y E-24 reales.
           </p>
         </div>
 
@@ -281,7 +284,7 @@ Fecha y Hora de Radicación: ${activeReclamation.timestamp}
             {/* Modal Body */}
             <div className="p-6 overflow-y-auto space-y-4 text-xs font-mono leading-relaxed bg-[var(--c-sunken)] select-text">
               <div className="p-3 rounded-xl bg-[var(--c-warn-soft)] border border-[var(--c-warn-solid)] text-[var(--c-warn)] text-xs">
-                <strong>Fundamentación Legal Verificada:</strong> Esta minuta está redactada para ser radicada inmediatamente ante la Comisión Escrutadora antes del cierre formal del acta E-26.
+                <strong>Minuta de ejemplo:</strong> se arma con datos de mesa escritos a mano, no con actas reales. No la radiques: sirve para ver el formato de la reclamación (Art. 192 del Código Electoral) que se presentará con los E-14 y E-24 reales.
               </div>
 
               <div className="space-y-1">
