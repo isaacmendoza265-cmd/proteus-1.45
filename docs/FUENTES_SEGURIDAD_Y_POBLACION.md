@@ -4,6 +4,10 @@
 > 2030), la estadística delictiva de la Policía/MinDefensa y las alertas de la Defensoría. Scripts:
 > `importar_proyecciones_medellin.py`, `importar_seguridad.py`, `importar_alertas_defensoria.py`; JSON del motor en
 > `src/data/motor/`. Siguen pendientes Fiscalía, MOE y estudios académicos (pasos 3 a 5 de la propuesta).
+>
+> **Actualización (2-oct, noche):** cargados la Fiscalía (`importar_fiscalia.py` → `fiscalia-spoa.json`) y los estudios
+> de Indepaz e IPA (`importar_estudios.py` → `estudios-academicos.json`, auxiliar). Pendientes: MOE 2027 (no publicado)
+> y la tesis de la U. de Antioquia sobre el Bajo Cauca (descarga bloqueada por anti-robots).
 
 - **Fecha:** 2-oct-2026.
 - **Autor:** Claude, en una sesión de Cowork.

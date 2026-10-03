@@ -1,0 +1,1356 @@
+{
+"meta": {
+"titulo": "Fiscalía: denuncias por delitos electorales, extorsión, desplazamiento, menores, líderes y periodistas (2018-2026)",
+"fuente": "Fiscalía General de la Nación, datos abiertos del SPOA (Procesos V3 y Víctimas V3, datos.gov.co)",
+"nivel": "oficial",
+"categoria": "seguridad",
+"corte": "2026-08-31",
+"nota": "Son denuncias (noticias criminales), no hechos comprobados: hay subregistro y una denuncia puede seguir en indagación o archivarse. Municipio y año del hecho denunciado. Defensores y periodistas son víctimas así registradas por la Fiscalía, por cualquier delito. No se atribuye a un barrio ni se cruza con su voto"
+},
+"municipios": {
+"05001": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 41 · 2019 23 · 2020 8 · 2021 15 · 2022 70 · 2023 57 · 2024 9 · 2025 13 · 2026 (al corte) 39. Años de elecciones territoriales: 2019 23 y 2023 57.",
+"Procesos por extorsión: 2018 881 · 2019 789 · 2020 823 · 2021 1.008 · 2022 1.558 · 2023 1.660 · 2024 1.476 · 2025 1.410 · 2026 (al corte) 986. 2025: 55,8 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 851 · 2019 637 · 2020 290 · 2021 295 · 2022 479 · 2023 592 · 2024 371 · 2025 133 · 2026 (al corte) 67. 2025: 5,3 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 115 · 2019 117 · 2020 98 · 2021 67 · 2022 79 · 2023 84 · 2024 79 · 2025 42 · 2026 (al corte) 16.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 32 · 2019 112 · 2020 70 · 2021 181 · 2022 289 · 2023 296 · 2024 245 · 2025 370 · 2026 (al corte) 119.",
+"Víctimas periodistas (cualquier delito): 2018 74 · 2019 455 · 2020 228 · 2021 421 · 2022 573 · 2023 476 · 2024 183 · 2025 258 · 2026 (al corte) 191."
+]
+},
+"05002": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 1 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 2. Años de elecciones territoriales: 2019 0 y 2023 0.",
+"Procesos por extorsión: 2018 1 · 2019 5 · 2020 1 · 2021 3 · 2022 9 · 2023 2 · 2024 5 · 2025 3 · 2026 (al corte) 4. 2025: 14,2 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 1 · 2019 0 · 2020 0 · 2021 9 · 2022 2 · 2023 5 · 2024 2 · 2025 2 · 2026 (al corte) 1. 2025: 9,5 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 2 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 2 · 2024 0 · 2025 1 · 2026 (al corte) 1.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0."
+]
+},
+"05004": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 0 y 2023 1.",
+"Procesos por extorsión: 2018 1 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 1. 2025: 0,0 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 15 · 2019 3 · 2020 0 · 2021 1 · 2022 1 · 2023 0 · 2024 1 · 2025 0 · 2026 (al corte) 0. 2025: 0,0 por 100.000 habitantes.",
+"Sin denuncias 2018-2026 en Abriaquí de: procesos por reclutamiento o uso de menores, víctimas defensoras de dd. hh. o líderes, víctimas periodistas."
+]
+},
+"05021": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 7 · 2020 0 · 2021 0 · 2022 1 · 2023 1 · 2024 0 · 2025 1 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 7 y 2023 1.",
+"Procesos por extorsión: 2018 0 · 2019 2 · 2020 3 · 2021 0 · 2022 1 · 2023 2 · 2024 0 · 2025 2 · 2026 (al corte) 1. 2025: 37,4 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 0 · 2019 3 · 2020 1 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (al corte) 0. 2025: 0,0 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Sin denuncias 2018-2026 en Alejandría de: víctimas defensoras de dd. hh. o líderes, víctimas periodistas."
+]
+},
+"05030": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 2 · 2019 3 · 2020 0 · 2021 0 · 2022 0 · 2023 12 · 2024 0 · 2025 0 · 2026 (al corte) 1. Años de elecciones territoriales: 2019 3 y 2023 12.",
+"Procesos por extorsión: 2018 7 · 2019 3 · 2020 5 · 2021 8 · 2022 7 · 2023 3 · 2024 9 · 2025 10 · 2026 (al corte) 2. 2025: 30,2 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 4 · 2019 3 · 2020 5 · 2021 5 · 2022 8 · 2023 2 · 2024 2 · 2025 4 · 2026 (al corte) 0. 2025: 12,1 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 7 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 1 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 1 · 2022 0 · 2023 0 · 2024 2 · 2025 0 · 2026 (al corte) 1.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 1 · 2022 0 · 2023 0 · 2024 1 · 2025 0 · 2026 (al corte) 0."
+]
+},
+"05031": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 1 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 2 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 1 y 2023 2.",
+"Procesos por extorsión: 2018 7 · 2019 33 · 2020 7 · 2021 6 · 2022 13 · 2023 8 · 2024 11 · 2025 8 · 2026 (al corte) 12. 2025: 27,2 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 4 · 2019 15 · 2020 4 · 2021 7 · 2022 6 · 2023 6 · 2024 14 · 2025 9 · 2026 (al corte) 1. 2025: 30,6 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 10 · 2020 0 · 2021 1 · 2022 2 · 2023 0 · 2024 1 · 2025 1 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 2 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 2 · 2026 (al corte) 1.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 0 · 2020 1 · 2021 1 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0."
+]
+},
+"05034": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 1 · 2019 3 · 2020 0 · 2021 0 · 2022 2 · 2023 1 · 2024 1 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 3 y 2023 1.",
+"Procesos por extorsión: 2018 7 · 2019 11 · 2020 12 · 2021 20 · 2022 14 · 2023 17 · 2024 22 · 2025 19 · 2026 (al corte) 11. 2025: 41,8 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 11 · 2019 4 · 2020 4 · 2021 11 · 2022 14 · 2023 15 · 2024 4 · 2025 8 · 2026 (al corte) 3. 2025: 17,6 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 1 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 1 · 2019 0 · 2020 0 · 2021 2 · 2022 0 · 2023 2 · 2024 3 · 2025 0 · 2026 (al corte) 1.",
+"Víctimas periodistas (cualquier delito): 2018 1 · 2019 0 · 2020 1 · 2021 0 · 2022 1 · 2023 1 · 2024 1 · 2025 1 · 2026 (al corte) 1."
+]
+},
+"05036": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 3 · 2020 0 · 2021 0 · 2022 0 · 2023 5 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 3 y 2023 5.",
+"Procesos por extorsión: 2018 2 · 2019 2 · 2020 2 · 2021 4 · 2022 2 · 2023 5 · 2024 1 · 2025 0 · 2026 (al corte) 1. 2025: 0,0 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 1 · 2019 0 · 2020 1 · 2021 0 · 2022 1 · 2023 1 · 2024 2 · 2025 0 · 2026 (al corte) 0. 2025: 0,0 por 100.000 habitantes.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 1 · 2021 0 · 2022 0 · 2023 0 · 2024 1 · 2025 0 · 2026 (al corte) 0.",
+"Sin denuncias 2018-2026 en Angelópolis de: procesos por reclutamiento o uso de menores, víctimas periodistas."
+]
+},
+"05038": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 3 · 2020 0 · 2021 0 · 2022 1 · 2023 1 · 2024 0 · 2025 0 · 2026 (al corte) 1. Años de elecciones territoriales: 2019 3 y 2023 1.",
+"Procesos por extorsión: 2018 0 · 2019 6 · 2020 4 · 2021 4 · 2022 11 · 2023 9 · 2024 3 · 2025 4 · 2026 (al corte) 1. 2025: 31,9 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 5 · 2019 7 · 2020 3 · 2021 2 · 2022 9 · 2023 3 · 2024 4 · 2025 3 · 2026 (al corte) 2. 2025: 23,9 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 2 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (al corte) 1.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Sin denuncias 2018-2026 en Angostura de: víctimas defensoras de dd. hh. o líderes."
+]
+},
+"05040": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (al corte) 2. Años de elecciones territoriales: 2019 1 y 2023 1.",
+"Procesos por extorsión: 2018 10 · 2019 4 · 2020 2 · 2021 8 · 2022 9 · 2023 8 · 2024 4 · 2025 5 · 2026 (al corte) 1. 2025: 23,5 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 4 · 2019 12 · 2020 4 · 2021 2 · 2022 7 · 2023 8 · 2024 8 · 2025 12 · 2026 (al corte) 8. 2025: 56,3 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 1 · 2019 1 · 2020 1 · 2021 0 · 2022 3 · 2023 6 · 2024 1 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 1 · 2019 0 · 2020 0 · 2021 0 · 2022 2 · 2023 1 · 2024 3 · 2025 2 · 2026 (al corte) 2.",
+"Sin denuncias 2018-2026 en Anorí de: víctimas periodistas."
+]
+},
+"05042": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 2 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 0 y 2023 2.",
+"Procesos por extorsión: 2018 10 · 2019 9 · 2020 8 · 2021 10 · 2022 8 · 2023 11 · 2024 12 · 2025 15 · 2026 (al corte) 5. 2025: 52,3 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 6 · 2019 6 · 2020 0 · 2021 7 · 2022 4 · 2023 0 · 2024 5 · 2025 2 · 2026 (al corte) 0. 2025: 7,0 por 100.000 habitantes.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 1 · 2025 1 · 2026 (al corte) 0.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 0 · 2020 2 · 2021 0 · 2022 3 · 2023 0 · 2024 1 · 2025 1 · 2026 (al corte) 1.",
+"Sin denuncias 2018-2026 en Santafé de Antioquia de: procesos por reclutamiento o uso de menores."
+]
+},
+"05044": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 2 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 2 y 2023 0.",
+"Procesos por extorsión: 2018 2 · 2019 1 · 2020 0 · 2021 6 · 2022 4 · 2023 1 · 2024 0 · 2025 3 · 2026 (al corte) 1. 2025: 38,8 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 3 · 2024 0 · 2025 0 · 2026 (al corte) 0. 2025: 0,0 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 1 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 1 · 2022 0 · 2023 1 · 2024 1 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0."
+]
+},
+"05045": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 4 · 2019 3 · 2020 0 · 2021 0 · 2022 1 · 2023 4 · 2024 0 · 2025 1 · 2026 (al corte) 2. Años de elecciones territoriales: 2019 3 y 2023 4.",
+"Procesos por extorsión: 2018 25 · 2019 18 · 2020 12 · 2021 11 · 2022 26 · 2023 20 · 2024 22 · 2025 8 · 2026 (al corte) 8. 2025: 6,4 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 32 · 2019 31 · 2020 12 · 2021 17 · 2022 32 · 2023 21 · 2024 15 · 2025 15 · 2026 (al corte) 5. 2025: 11,9 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 1 · 2019 4 · 2020 5 · 2021 0 · 2022 1 · 2023 2 · 2024 1 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 5 · 2019 10 · 2020 7 · 2021 20 · 2022 14 · 2023 4 · 2024 14 · 2025 5 · 2026 (al corte) 5.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 3 · 2020 2 · 2021 3 · 2022 4 · 2023 1 · 2024 6 · 2025 1 · 2026 (al corte) 4."
+]
+},
+"05051": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 4 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 1 y 2023 4.",
+"Procesos por extorsión: 2018 5 · 2019 5 · 2020 1 · 2021 2 · 2022 5 · 2023 2 · 2024 8 · 2025 4 · 2026 (al corte) 1. 2025: 12,5 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 4 · 2019 5 · 2020 1 · 2021 3 · 2022 7 · 2023 5 · 2024 6 · 2025 1 · 2026 (al corte) 1. 2025: 3,1 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 1.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 1 · 2021 2 · 2022 2 · 2023 1 · 2024 1 · 2025 0 · 2026 (al corte) 0.",
+"Sin denuncias 2018-2026 en Arboletes de: víctimas periodistas."
+]
+},
+"05055": {
+"lineas": [
+"Procesos por extorsión: 2018 1 · 2019 3 · 2020 1 · 2021 2 · 2022 4 · 2023 5 · 2024 4 · 2025 1 · 2026 (al corte) 0. 2025: 12,1 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 4 · 2019 2 · 2020 5 · 2021 2 · 2022 3 · 2023 7 · 2024 7 · 2025 2 · 2026 (al corte) 0. 2025: 24,3 por 100.000 habitantes.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 1 · 2021 0 · 2022 0 · 2023 0 · 2024 1 · 2025 3 · 2026 (al corte) 0.",
+"Sin denuncias 2018-2026 en Argelia de: delitos electorales denunciados, procesos por reclutamiento o uso de menores, víctimas periodistas."
+]
+},
+"05059": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 1 y 2023 1.",
+"Procesos por extorsión: 2018 0 · 2019 4 · 2020 0 · 2021 2 · 2022 4 · 2023 6 · 2024 4 · 2025 0 · 2026 (al corte) 0. 2025: 0,0 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 3 · 2019 6 · 2020 0 · 2021 1 · 2022 1 · 2023 0 · 2024 2 · 2025 0 · 2026 (al corte) 0. 2025: 0,0 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 1 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Sin denuncias 2018-2026 en Armenia de: víctimas periodistas."
+]
+},
+"05079": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 1 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 7 · 2024 0 · 2025 0 · 2026 (al corte) 1. Años de elecciones territoriales: 2019 0 y 2023 7.",
+"Procesos por extorsión: 2018 16 · 2019 13 · 2020 10 · 2021 16 · 2022 54 · 2023 43 · 2024 31 · 2025 22 · 2026 (al corte) 15. 2025: 34,2 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 15 · 2019 8 · 2020 4 · 2021 15 · 2022 13 · 2023 14 · 2024 5 · 2025 5 · 2026 (al corte) 1. 2025: 7,8 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 3 · 2019 3 · 2020 2 · 2021 0 · 2022 1 · 2023 1 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 1 · 2019 5 · 2020 4 · 2021 4 · 2022 19 · 2023 10 · 2024 1 · 2025 2 · 2026 (al corte) 2.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 1 · 2020 1 · 2021 4 · 2022 1 · 2023 3 · 2024 0 · 2025 2 · 2026 (al corte) 2."
+]
+},
+"05086": {
+"lineas": [
+"Procesos por extorsión: 2018 1 · 2019 0 · 2020 2 · 2021 2 · 2022 3 · 2023 4 · 2024 1 · 2025 1 · 2026 (al corte) 0. 2025: 16,3 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 3 · 2019 4 · 2020 3 · 2021 0 · 2022 2 · 2023 0 · 2024 1 · 2025 1 · 2026 (al corte) 0. 2025: 16,3 por 100.000 habitantes.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 2 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Sin denuncias 2018-2026 en Belmira de: delitos electorales denunciados, procesos por reclutamiento o uso de menores, víctimas defensoras de dd. hh. o líderes."
+]
+},
+"05088": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 7 · 2019 1 · 2020 1 · 2021 0 · 2022 7 · 2023 11 · 2024 5 · 2025 2 · 2026 (al corte) 14. Años de elecciones territoriales: 2019 1 y 2023 11.",
+"Procesos por extorsión: 2018 135 · 2019 157 · 2020 152 · 2021 119 · 2022 376 · 2023 386 · 2024 319 · 2025 299 · 2026 (al corte) 184. 2025: 49,1 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 104 · 2019 198 · 2020 79 · 2021 72 · 2022 130 · 2023 137 · 2024 89 · 2025 25 · 2026 (al corte) 14. 2025: 4,1 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 7 · 2019 10 · 2020 4 · 2021 12 · 2022 13 · 2023 19 · 2024 13 · 2025 4 · 2026 (al corte) 1.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 4 · 2019 14 · 2020 8 · 2021 21 · 2022 35 · 2023 28 · 2024 40 · 2025 23 · 2026 (al corte) 17.",
+"Víctimas periodistas (cualquier delito): 2018 3 · 2019 23 · 2020 14 · 2021 26 · 2022 39 · 2023 25 · 2024 9 · 2025 14 · 2026 (al corte) 14."
+]
+},
+"05091": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 2 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 1 y 2023 2.",
+"Procesos por extorsión: 2018 0 · 2019 1 · 2020 4 · 2021 2 · 2022 4 · 2023 6 · 2024 3 · 2025 3 · 2026 (al corte) 3. 2025: 27,9 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 2 · 2019 1 · 2020 0 · 2021 0 · 2022 2 · 2023 1 · 2024 1 · 2025 0 · 2026 (al corte) 0. 2025: 0,0 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 0 · 2020 3 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 1 · 2022 0 · 2023 2 · 2024 1 · 2025 0 · 2026 (al corte) 1.",
+"Víctimas periodistas (cualquier delito): 2018 1 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0."
+]
+},
+"05093": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 6 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 1 y 2023 6.",
+"Procesos por extorsión: 2018 4 · 2019 15 · 2020 9 · 2021 7 · 2022 10 · 2023 3 · 2024 4 · 2025 4 · 2026 (al corte) 3. 2025: 23,4 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 6 · 2019 3 · 2020 5 · 2021 2 · 2022 7 · 2023 5 · 2024 5 · 2025 2 · 2026 (al corte) 1. 2025: 11,7 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 1 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 2 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 1 · 2025 1 · 2026 (al corte) 1.",
+"Sin denuncias 2018-2026 en Betulia de: víctimas periodistas."
+]
+},
+"05101": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 1 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 1 y 2023 1.",
+"Procesos por extorsión: 2018 2 · 2019 3 · 2020 10 · 2021 22 · 2022 16 · 2023 11 · 2024 6 · 2025 11 · 2026 (al corte) 3. 2025: 39,7 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 7 · 2019 7 · 2020 2 · 2021 13 · 2022 6 · 2023 7 · 2024 3 · 2025 5 · 2026 (al corte) 0. 2025: 18,0 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 0 · 2020 0 · 2021 2 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 1 · 2022 0 · 2023 0 · 2024 1 · 2025 1 · 2026 (al corte) 0.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 0 · 2020 1 · 2021 1 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0."
+]
+},
+"05107": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 1 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 0 y 2023 0.",
+"Procesos por extorsión: 2018 3 · 2019 0 · 2020 2 · 2021 5 · 2022 5 · 2023 4 · 2024 4 · 2025 2 · 2026 (al corte) 0. 2025: 25,3 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 10 · 2019 16 · 2020 4 · 2021 5 · 2022 10 · 2023 7 · 2024 9 · 2025 10 · 2026 (al corte) 7. 2025: 126,5 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 0 · 2020 1 · 2021 0 · 2022 2 · 2023 1 · 2024 6 · 2025 1 · 2026 (al corte) 2.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 4 · 2022 1 · 2023 2 · 2024 1 · 2025 12 · 2026 (al corte) 5.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 1."
+]
+},
+"05113": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 1 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 3 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 0 y 2023 3.",
+"Procesos por extorsión: 2018 1 · 2019 0 · 2020 1 · 2021 3 · 2022 5 · 2023 4 · 2024 4 · 2025 1 · 2026 (al corte) 1. 2025: 9,0 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 2 · 2019 0 · 2020 2 · 2021 2 · 2022 1 · 2023 6 · 2024 1 · 2025 2 · 2026 (al corte) 1. 2025: 17,9 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 1 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 2 · 2024 0 · 2025 1 · 2026 (al corte) 0.",
+"Sin denuncias 2018-2026 en Buriticá de: víctimas periodistas."
+]
+},
+"05120": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 2 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 1 y 2023 2.",
+"Procesos por extorsión: 2018 18 · 2019 19 · 2020 12 · 2021 11 · 2022 2 · 2023 9 · 2024 9 · 2025 5 · 2026 (al corte) 2. 2025: 17,3 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 80 · 2019 91 · 2020 39 · 2021 29 · 2022 21 · 2023 17 · 2024 12 · 2025 5 · 2026 (al corte) 0. 2025: 17,3 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 7 · 2019 12 · 2020 7 · 2021 8 · 2022 4 · 2023 9 · 2024 0 · 2025 0 · 2026 (al corte) 1.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 2 · 2019 8 · 2020 9 · 2021 7 · 2022 2 · 2023 5 · 2024 2 · 2025 3 · 2026 (al corte) 4.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 1 · 2026 (al corte) 0."
+]
+},
+"05125": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 1 y 2023 1.",
+"Procesos por extorsión: 2018 0 · 2019 3 · 2020 2 · 2021 3 · 2022 7 · 2023 4 · 2024 2 · 2025 4 · 2026 (al corte) 1. 2025: 43,8 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 2 · 2019 5 · 2020 0 · 2021 2 · 2022 2 · 2023 4 · 2024 0 · 2025 1 · 2026 (al corte) 1. 2025: 10,9 por 100.000 habitantes.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 1.",
+"Sin denuncias 2018-2026 en Caicedo de: procesos por reclutamiento o uso de menores, víctimas periodistas."
+]
+},
+"05129": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 6 · 2020 0 · 2021 0 · 2022 1 · 2023 2 · 2024 0 · 2025 0 · 2026 (al corte) 2. Años de elecciones territoriales: 2019 6 y 2023 2.",
+"Procesos por extorsión: 2018 5 · 2019 11 · 2020 17 · 2021 24 · 2022 31 · 2023 38 · 2024 35 · 2025 51 · 2026 (al corte) 25. 2025: 56,9 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 10 · 2019 7 · 2020 6 · 2021 2 · 2022 8 · 2023 9 · 2024 6 · 2025 1 · 2026 (al corte) 3. 2025: 1,1 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 4 · 2023 1 · 2024 2 · 2025 2 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 1 · 2020 2 · 2021 4 · 2022 6 · 2023 1 · 2024 5 · 2025 3 · 2026 (al corte) 2.",
+"Víctimas periodistas (cualquier delito): 2018 1 · 2019 2 · 2020 1 · 2021 5 · 2022 5 · 2023 11 · 2024 3 · 2025 2 · 2026 (al corte) 2."
+]
+},
+"05134": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 3 · 2020 0 · 2021 0 · 2022 1 · 2023 3 · 2024 0 · 2025 0 · 2026 (al corte) 3. Años de elecciones territoriales: 2019 3 y 2023 3.",
+"Procesos por extorsión: 2018 2 · 2019 1 · 2020 2 · 2021 2 · 2022 3 · 2023 2 · 2024 2 · 2025 0 · 2026 (al corte) 0. 2025: 0,0 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 1 · 2019 2 · 2020 3 · 2021 0 · 2022 1 · 2023 2 · 2024 2 · 2025 2 · 2026 (al corte) 0. 2025: 19,9 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 2 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 1 · 2025 0 · 2026 (al corte) 2.",
+"Víctimas periodistas (cualquier delito): 2018 1 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0."
+]
+},
+"05138": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 1 · 2019 1 · 2020 0 · 2021 0 · 2022 3 · 2023 7 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 1 y 2023 7.",
+"Procesos por extorsión: 2018 0 · 2019 0 · 2020 3 · 2021 2 · 2022 12 · 2023 3 · 2024 4 · 2025 3 · 2026 (al corte) 2. 2025: 19,6 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 1 · 2019 6 · 2020 3 · 2021 4 · 2022 7 · 2023 2 · 2024 1 · 2025 1 · 2026 (al corte) 0. 2025: 6,5 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 1 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 1 · 2022 0 · 2023 0 · 2024 1 · 2025 2 · 2026 (al corte) 0.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (al corte) 0."
+]
+},
+"05142": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 1 y 2023 1.",
+"Procesos por extorsión: 2018 0 · 2019 2 · 2020 0 · 2021 1 · 2022 2 · 2023 0 · 2024 2 · 2025 1 · 2026 (al corte) 1. 2025: 22,3 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 2 · 2019 1 · 2020 0 · 2021 1 · 2022 0 · 2023 3 · 2024 4 · 2025 0 · 2026 (al corte) 1. 2025: 0,0 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 0 · 2020 1 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Sin denuncias 2018-2026 en Caracolí de: víctimas defensoras de dd. hh. o líderes, víctimas periodistas."
+]
+},
+"05145": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 2 · 2019 0 · 2020 0 · 2021 1 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 0 y 2023 0.",
+"Procesos por extorsión: 2018 0 · 2019 1 · 2020 0 · 2021 4 · 2022 1 · 2023 2 · 2024 2 · 2025 0 · 2026 (al corte) 0. 2025: 0,0 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 0 · 2019 2 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 2 · 2025 0 · 2026 (al corte) 0. 2025: 0,0 por 100.000 habitantes.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 2 · 2023 0 · 2024 0 · 2025 1 · 2026 (al corte) 1.",
+"Sin denuncias 2018-2026 en Caramanta de: procesos por reclutamiento o uso de menores, víctimas periodistas."
+]
+},
+"05147": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 1 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 4 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 0 y 2023 4.",
+"Procesos por extorsión: 2018 7 · 2019 5 · 2020 4 · 2021 1 · 2022 8 · 2023 10 · 2024 7 · 2025 12 · 2026 (al corte) 8. 2025: 23,4 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 14 · 2019 4 · 2020 5 · 2021 5 · 2022 3 · 2023 9 · 2024 9 · 2025 5 · 2026 (al corte) 1. 2025: 9,7 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 1 · 2019 0 · 2020 1 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 1 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 1 · 2019 1 · 2020 0 · 2021 1 · 2022 1 · 2023 0 · 2024 5 · 2025 5 · 2026 (al corte) 3.",
+"Víctimas periodistas (cualquier delito): 2018 1 · 2019 0 · 2020 1 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 2 · 2026 (al corte) 1."
+]
+},
+"05148": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 4 · 2024 0 · 2025 0 · 2026 (al corte) 1. Años de elecciones territoriales: 2019 0 y 2023 4.",
+"Procesos por extorsión: 2018 7 · 2019 2 · 2020 9 · 2021 7 · 2022 13 · 2023 14 · 2024 25 · 2025 25 · 2026 (al corte) 14. 2025: 35,3 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 3 · 2019 4 · 2020 4 · 2021 3 · 2022 3 · 2023 1 · 2024 5 · 2025 1 · 2026 (al corte) 0. 2025: 1,4 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 5 · 2019 9 · 2020 0 · 2021 3 · 2022 0 · 2023 0 · 2024 2 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 1 · 2021 0 · 2022 3 · 2023 6 · 2024 3 · 2025 1 · 2026 (al corte) 2.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 1 · 2020 1 · 2021 2 · 2022 2 · 2023 1 · 2024 0 · 2025 1 · 2026 (al corte) 1."
+]
+},
+"05150": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 1 · 2023 1 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 1 y 2023 1.",
+"Procesos por extorsión: 2018 3 · 2019 0 · 2020 0 · 2021 0 · 2022 3 · 2023 2 · 2024 3 · 2025 3 · 2026 (al corte) 0. 2025: 76,3 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 1 · 2026 (al corte) 1. 2025: 25,4 por 100.000 habitantes.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 2 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 1.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 3 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Sin denuncias 2018-2026 en Carolina de: procesos por reclutamiento o uso de menores."
+]
+},
+"05154": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 4 · 2019 2 · 2020 0 · 2021 1 · 2022 2 · 2023 2 · 2024 1 · 2025 1 · 2026 (al corte) 1. Años de elecciones territoriales: 2019 2 y 2023 2.",
+"Procesos por extorsión: 2018 42 · 2019 65 · 2020 60 · 2021 120 · 2022 92 · 2023 52 · 2024 45 · 2025 34 · 2026 (al corte) 21. 2025: 36,2 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 89 · 2019 105 · 2020 55 · 2021 28 · 2022 25 · 2023 35 · 2024 22 · 2025 14 · 2026 (al corte) 0. 2025: 14,9 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 7 · 2019 7 · 2020 5 · 2021 2 · 2022 3 · 2023 2 · 2024 2 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 5 · 2019 4 · 2020 9 · 2021 12 · 2022 17 · 2023 11 · 2024 7 · 2025 4 · 2026 (al corte) 3.",
+"Víctimas periodistas (cualquier delito): 2018 1 · 2019 4 · 2020 4 · 2021 5 · 2022 13 · 2023 10 · 2024 4 · 2025 6 · 2026 (al corte) 3."
+]
+},
+"05172": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 1 · 2019 1 · 2020 0 · 2021 0 · 2022 1 · 2023 2 · 2024 2 · 2025 0 · 2026 (al corte) 1. Años de elecciones territoriales: 2019 1 y 2023 2.",
+"Procesos por extorsión: 2018 6 · 2019 4 · 2020 7 · 2021 3 · 2022 7 · 2023 11 · 2024 15 · 2025 5 · 2026 (al corte) 5. 2025: 8,8 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 6 · 2019 10 · 2020 6 · 2021 18 · 2022 16 · 2023 16 · 2024 11 · 2025 5 · 2026 (al corte) 3. 2025: 8,8 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 0 · 2020 3 · 2021 1 · 2022 0 · 2023 0 · 2024 1 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 3 · 2023 2 · 2024 2 · 2025 1 · 2026 (al corte) 3.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 1 · 2020 1 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0."
+]
+},
+"05190": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 2 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 0 y 2023 2.",
+"Procesos por extorsión: 2018 5 · 2019 1 · 2020 5 · 2021 1 · 2022 2 · 2023 12 · 2024 5 · 2025 5 · 2026 (al corte) 1. 2025: 49,3 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 1 · 2019 0 · 2020 0 · 2021 1 · 2022 5 · 2023 4 · 2024 0 · 2025 5 · 2026 (al corte) 0. 2025: 49,3 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 1 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 2 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 1 · 2023 2 · 2024 0 · 2025 0 · 2026 (al corte) 0."
+]
+},
+"05197": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 1 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 3 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 1 y 2023 3.",
+"Procesos por extorsión: 2018 4 · 2019 1 · 2020 3 · 2021 3 · 2022 3 · 2023 9 · 2024 6 · 2025 1 · 2026 (al corte) 1. 2025: 6,2 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 4 · 2019 4 · 2020 6 · 2021 12 · 2022 11 · 2023 3 · 2024 2 · 2025 2 · 2026 (al corte) 3. 2025: 12,4 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 1 · 2020 1 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 1 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Sin denuncias 2018-2026 en Cocorná de: víctimas periodistas."
+]
+},
+"05206": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (al corte) 2. Años de elecciones territoriales: 2019 0 y 2023 1.",
+"Procesos por extorsión: 2018 0 · 2019 0 · 2020 3 · 2021 4 · 2022 4 · 2023 1 · 2024 2 · 2025 0 · 2026 (al corte) 2. 2025: 0,0 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 1 · 2019 2 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 1 · 2026 (al corte) 0. 2025: 19,5 por 100.000 habitantes.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 1 · 2026 (al corte) 0.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 2 · 2025 0 · 2026 (al corte) 0.",
+"Sin denuncias 2018-2026 en Concepción de: procesos por reclutamiento o uso de menores."
+]
+},
+"05209": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 5 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 0 y 2023 5.",
+"Procesos por extorsión: 2018 2 · 2019 4 · 2020 2 · 2021 7 · 2022 1 · 2023 5 · 2024 1 · 2025 5 · 2026 (al corte) 0. 2025: 22,6 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 4 · 2019 3 · 2020 2 · 2021 2 · 2022 2 · 2023 3 · 2024 4 · 2025 0 · 2026 (al corte) 1. 2025: 0,0 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 2 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 2 · 2024 1 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 1 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Sin denuncias 2018-2026 en Concordia de: víctimas periodistas."
+]
+},
+"05212": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 1 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 3 · 2024 0 · 2025 0 · 2026 (al corte) 1. Años de elecciones territoriales: 2019 0 y 2023 3.",
+"Procesos por extorsión: 2018 18 · 2019 6 · 2020 25 · 2021 17 · 2022 57 · 2023 43 · 2024 40 · 2025 42 · 2026 (al corte) 35. 2025: 45,6 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 7 · 2019 10 · 2020 3 · 2021 11 · 2022 13 · 2023 15 · 2024 10 · 2025 3 · 2026 (al corte) 0. 2025: 3,3 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 1 · 2020 1 · 2021 0 · 2022 0 · 2023 2 · 2024 3 · 2025 1 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 2 · 2021 0 · 2022 5 · 2023 6 · 2024 8 · 2025 3 · 2026 (al corte) 3.",
+"Víctimas periodistas (cualquier delito): 2018 1 · 2019 3 · 2020 1 · 2021 1 · 2022 10 · 2023 3 · 2024 1 · 2025 1 · 2026 (al corte) 1."
+]
+},
+"05234": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 2 · 2019 2 · 2020 0 · 2021 0 · 2022 2 · 2023 6 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 2 y 2023 6.",
+"Procesos por extorsión: 2018 3 · 2019 2 · 2020 1 · 2021 0 · 2022 2 · 2023 1 · 2024 3 · 2025 2 · 2026 (al corte) 3. 2025: 8,0 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 14 · 2019 3 · 2020 7 · 2021 6 · 2022 10 · 2023 5 · 2024 6 · 2025 1 · 2026 (al corte) 1. 2025: 4,0 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 3 · 2019 3 · 2020 2 · 2021 1 · 2022 0 · 2023 0 · 2024 0 · 2025 1 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 4 · 2022 4 · 2023 0 · 2024 2 · 2025 2 · 2026 (al corte) 1.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (al corte) 0."
+]
+},
+"05237": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 4 · 2024 1 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 1 y 2023 4.",
+"Procesos por extorsión: 2018 3 · 2019 6 · 2020 4 · 2021 9 · 2022 27 · 2023 16 · 2024 9 · 2025 8 · 2026 (al corte) 6. 2025: 40,3 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 1 · 2019 1 · 2020 0 · 2021 2 · 2022 12 · 2023 2 · 2024 1 · 2025 0 · 2026 (al corte) 0. 2025: 0,0 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 0 · 2020 4 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 1 · 2022 0 · 2023 11 · 2024 0 · 2025 1 · 2026 (al corte) 0.",
+"Sin denuncias 2018-2026 en Donmatías de: víctimas periodistas."
+]
+},
+"05240": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 1 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 3 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 0 y 2023 3.",
+"Procesos por extorsión: 2018 1 · 2019 1 · 2020 7 · 2021 1 · 2022 4 · 2023 2 · 2024 5 · 2025 7 · 2026 (al corte) 3. 2025: 55,7 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 1 · 2019 1 · 2020 4 · 2021 1 · 2022 5 · 2023 2 · 2024 0 · 2025 2 · 2026 (al corte) 1. 2025: 15,9 por 100.000 habitantes.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 3 · 2021 1 · 2022 0 · 2023 0 · 2024 0 · 2025 2 · 2026 (al corte) 0.",
+"Sin denuncias 2018-2026 en Ebéjico de: procesos por reclutamiento o uso de menores, víctimas periodistas."
+]
+},
+"05250": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 1 · 2019 4 · 2020 0 · 2021 0 · 2022 2 · 2023 3 · 2024 0 · 2025 0 · 2026 (al corte) 3. Años de elecciones territoriales: 2019 4 y 2023 3.",
+"Procesos por extorsión: 2018 15 · 2019 8 · 2020 9 · 2021 22 · 2022 15 · 2023 16 · 2024 4 · 2025 7 · 2026 (al corte) 11. 2025: 12,4 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 32 · 2019 56 · 2020 13 · 2021 11 · 2022 25 · 2023 14 · 2024 14 · 2025 2 · 2026 (al corte) 2. 2025: 3,5 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 2 · 2019 2 · 2020 5 · 2021 1 · 2022 2 · 2023 2 · 2024 1 · 2025 0 · 2026 (al corte) 1.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 1 · 2019 2 · 2020 9 · 2021 0 · 2022 3 · 2023 2 · 2024 0 · 2025 4 · 2026 (al corte) 2.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0."
+]
+},
+"05264": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 1 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 0 y 2023 1.",
+"Procesos por extorsión: 2018 2 · 2019 4 · 2020 0 · 2021 4 · 2022 5 · 2023 7 · 2024 7 · 2025 5 · 2026 (al corte) 5. 2025: 38,8 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 0 · 2019 0 · 2020 0 · 2021 2 · 2022 0 · 2023 0 · 2024 1 · 2025 0 · 2026 (al corte) 0. 2025: 0,0 por 100.000 habitantes.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 2 · 2022 0 · 2023 0 · 2024 0 · 2025 1 · 2026 (al corte) 0.",
+"Sin denuncias 2018-2026 en Entrerríos de: procesos por reclutamiento o uso de menores, víctimas defensoras de dd. hh. o líderes."
+]
+},
+"05266": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 6 · 2019 1 · 2020 0 · 2021 0 · 2022 5 · 2023 9 · 2024 0 · 2025 1 · 2026 (al corte) 1. Años de elecciones territoriales: 2019 1 y 2023 9.",
+"Procesos por extorsión: 2018 31 · 2019 28 · 2020 41 · 2021 43 · 2022 83 · 2023 79 · 2024 81 · 2025 77 · 2026 (al corte) 61. 2025: 28,7 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 8 · 2019 6 · 2020 4 · 2021 2 · 2022 20 · 2023 9 · 2024 8 · 2025 1 · 2026 (al corte) 2. 2025: 0,4 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 4 · 2019 4 · 2020 1 · 2021 4 · 2022 3 · 2023 4 · 2024 2 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 2 · 2020 3 · 2021 4 · 2022 15 · 2023 11 · 2024 9 · 2025 11 · 2026 (al corte) 9.",
+"Víctimas periodistas (cualquier delito): 2018 12 · 2019 30 · 2020 24 · 2021 18 · 2022 58 · 2023 30 · 2024 20 · 2025 30 · 2026 (al corte) 13."
+]
+},
+"05282": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 4 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 0 y 2023 4.",
+"Procesos por extorsión: 2018 11 · 2019 0 · 2020 9 · 2021 4 · 2022 6 · 2023 2 · 2024 13 · 2025 9 · 2026 (al corte) 6. 2025: 33,9 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 1 · 2019 0 · 2020 2 · 2021 1 · 2022 1 · 2023 1 · 2024 1 · 2025 1 · 2026 (al corte) 1. 2025: 3,8 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 4 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 2 · 2025 1 · 2026 (al corte) 0.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 3 · 2026 (al corte) 0.",
+"Sin denuncias 2018-2026 en Fredonia de: víctimas defensoras de dd. hh. o líderes."
+]
+},
+"05284": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 1 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 0 y 2023 0.",
+"Procesos por extorsión: 2018 2 · 2019 2 · 2020 6 · 2021 1 · 2022 2 · 2023 4 · 2024 4 · 2025 1 · 2026 (al corte) 1. 2025: 4,6 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 1 · 2019 6 · 2020 6 · 2021 6 · 2022 8 · 2023 4 · 2024 2 · 2025 1 · 2026 (al corte) 2. 2025: 4,6 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 1.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 1 · 2026 (al corte) 0.",
+"Sin denuncias 2018-2026 en Frontino de: víctimas periodistas."
+]
+},
+"05306": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 1 · 2019 1 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 1 y 2023 0.",
+"Procesos por extorsión: 2018 1 · 2019 3 · 2020 2 · 2021 3 · 2022 1 · 2023 2 · 2024 2 · 2025 1 · 2026 (al corte) 2. 2025: 15,4 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 1 · 2019 0 · 2020 1 · 2021 0 · 2022 1 · 2023 1 · 2024 0 · 2025 1 · 2026 (al corte) 0. 2025: 15,4 por 100.000 habitantes.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Sin denuncias 2018-2026 en Giraldo de: procesos por reclutamiento o uso de menores, víctimas periodistas."
+]
+},
+"05308": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 1 · 2023 3 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 1 y 2023 3.",
+"Procesos por extorsión: 2018 6 · 2019 16 · 2020 18 · 2021 15 · 2022 31 · 2023 29 · 2024 33 · 2025 38 · 2026 (al corte) 23. 2025: 61,2 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 4 · 2019 5 · 2020 3 · 2021 3 · 2022 7 · 2023 3 · 2024 6 · 2025 1 · 2026 (al corte) 1. 2025: 1,6 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 0 · 2020 5 · 2021 0 · 2022 1 · 2023 1 · 2024 1 · 2025 7 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 1 · 2020 3 · 2021 1 · 2022 3 · 2023 5 · 2024 2 · 2025 3 · 2026 (al corte) 4.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 2 · 2022 0 · 2023 2 · 2024 1 · 2025 1 · 2026 (al corte) 2."
+]
+},
+"05310": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 2 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 1 y 2023 2.",
+"Procesos por extorsión: 2018 0 · 2019 0 · 2020 3 · 2021 2 · 2022 2 · 2023 1 · 2024 9 · 2025 4 · 2026 (al corte) 1. 2025: 38,4 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 3 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 2 · 2024 2 · 2025 1 · 2026 (al corte) 0. 2025: 9,6 por 100.000 habitantes.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 1 · 2026 (al corte) 0.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 2 · 2023 3 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Sin denuncias 2018-2026 en Gómez Plata de: procesos por reclutamiento o uso de menores."
+]
+},
+"05313": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 3 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 0 y 2023 3.",
+"Procesos por extorsión: 2018 6 · 2019 3 · 2020 2 · 2021 2 · 2022 7 · 2023 4 · 2024 8 · 2025 6 · 2026 (al corte) 2. 2025: 57,1 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 5 · 2019 6 · 2020 7 · 2021 8 · 2022 15 · 2023 3 · 2024 8 · 2025 2 · 2026 (al corte) 1. 2025: 19,0 por 100.000 habitantes.",
+"Sin denuncias 2018-2026 en Granada de: procesos por reclutamiento o uso de menores, víctimas defensoras de dd. hh. o líderes, víctimas periodistas."
+]
+},
+"05315": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 1 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 2 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 1 y 2023 2.",
+"Procesos por extorsión: 2018 3 · 2019 4 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 2 · 2025 0 · 2026 (al corte) 0. 2025: 0,0 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 4 · 2019 3 · 2020 0 · 2021 0 · 2022 4 · 2023 0 · 2024 2 · 2025 4 · 2026 (al corte) 1. 2025: 56,9 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 1.",
+"Sin denuncias 2018-2026 en Guadalupe de: víctimas defensoras de dd. hh. o líderes, víctimas periodistas."
+]
+},
+"05318": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 3 · 2023 2 · 2024 0 · 2025 0 · 2026 (al corte) 2. Años de elecciones territoriales: 2019 1 y 2023 2.",
+"Procesos por extorsión: 2018 10 · 2019 8 · 2020 14 · 2021 10 · 2022 19 · 2023 27 · 2024 14 · 2025 34 · 2026 (al corte) 27. 2025: 51,4 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 3 · 2019 2 · 2020 5 · 2021 2 · 2022 3 · 2023 4 · 2024 5 · 2025 3 · 2026 (al corte) 0. 2025: 4,5 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 0 · 2020 0 · 2021 1 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 2 · 2026 (al corte) 4.",
+"Víctimas periodistas (cualquier delito): 2018 1 · 2019 2 · 2020 4 · 2021 2 · 2022 4 · 2023 6 · 2024 2 · 2025 2 · 2026 (al corte) 3."
+]
+},
+"05321": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 2 · 2020 0 · 2021 0 · 2022 1 · 2023 2 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 2 y 2023 2.",
+"Procesos por extorsión: 2018 1 · 2019 3 · 2020 0 · 2021 4 · 2022 2 · 2023 6 · 2024 1 · 2025 8 · 2026 (al corte) 5. 2025: 81,3 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 2 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0. 2025: 0,0 por 100.000 habitantes.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 1 · 2019 0 · 2020 0 · 2021 1 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 0 · 2020 1 · 2021 0 · 2022 1 · 2023 3 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Sin denuncias 2018-2026 en Guatapé de: procesos por reclutamiento o uso de menores."
+]
+},
+"05347": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 1 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 2 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 0 y 2023 2.",
+"Procesos por extorsión: 2018 3 · 2019 1 · 2020 1 · 2021 2 · 2022 4 · 2023 6 · 2024 6 · 2025 5 · 2026 (al corte) 7. 2025: 100,8 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 2 · 2019 1 · 2020 3 · 2021 0 · 2022 0 · 2023 2 · 2024 2 · 2025 1 · 2026 (al corte) 2. 2025: 20,2 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 3 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 2 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 1 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0."
+]
+},
+"05353": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 2 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 0 y 2023 2.",
+"Procesos por extorsión: 2018 1 · 2019 1 · 2020 0 · 2021 0 · 2022 1 · 2023 2 · 2024 3 · 2025 0 · 2026 (al corte) 1. 2025: 0,0 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 1 · 2019 0 · 2020 0 · 2021 0 · 2022 2 · 2023 0 · 2024 1 · 2025 1 · 2026 (al corte) 0. 2025: 16,8 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 2 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Sin denuncias 2018-2026 en Hispania de: víctimas defensoras de dd. hh. o líderes."
+]
+},
+"05360": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 7 · 2019 3 · 2020 1 · 2021 0 · 2022 4 · 2023 6 · 2024 1 · 2025 6 · 2026 (al corte) 3. Años de elecciones territoriales: 2019 3 y 2023 6.",
+"Procesos por extorsión: 2018 71 · 2019 84 · 2020 76 · 2021 64 · 2022 167 · 2023 135 · 2024 132 · 2025 114 · 2026 (al corte) 79. 2025: 37,2 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 39 · 2019 21 · 2020 37 · 2021 26 · 2022 48 · 2023 56 · 2024 27 · 2025 11 · 2026 (al corte) 4. 2025: 3,6 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 13 · 2019 2 · 2020 6 · 2021 2 · 2022 6 · 2023 19 · 2024 7 · 2025 5 · 2026 (al corte) 1.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 2 · 2019 10 · 2020 2 · 2021 9 · 2022 20 · 2023 15 · 2024 20 · 2025 18 · 2026 (al corte) 12.",
+"Víctimas periodistas (cualquier delito): 2018 3 · 2019 18 · 2020 7 · 2021 21 · 2022 34 · 2023 18 · 2024 11 · 2025 19 · 2026 (al corte) 7."
+]
+},
+"05361": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 1 · 2025 0 · 2026 (al corte) 1. Años de elecciones territoriales: 2019 0 y 2023 1.",
+"Procesos por extorsión: 2018 12 · 2019 9 · 2020 7 · 2021 5 · 2022 5 · 2023 10 · 2024 5 · 2025 3 · 2026 (al corte) 3. 2025: 10,1 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 65 · 2019 40 · 2020 42 · 2021 30 · 2022 27 · 2023 20 · 2024 14 · 2025 12 · 2026 (al corte) 9. 2025: 40,5 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 7 · 2019 4 · 2020 4 · 2021 11 · 2022 4 · 2023 6 · 2024 4 · 2025 3 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 11 · 2019 6 · 2020 1 · 2021 4 · 2022 4 · 2023 4 · 2024 0 · 2025 3 · 2026 (al corte) 1.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 0 · 2020 1 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0."
+]
+},
+"05364": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 1 y 2023 0.",
+"Procesos por extorsión: 2018 3 · 2019 6 · 2020 2 · 2021 4 · 2022 5 · 2023 9 · 2024 9 · 2025 11 · 2026 (al corte) 6. 2025: 70,8 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 3 · 2019 4 · 2020 2 · 2021 5 · 2022 1 · 2023 1 · 2024 3 · 2025 0 · 2026 (al corte) 1. 2025: 0,0 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 3 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 2 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 1 · 2022 0 · 2023 0 · 2024 4 · 2025 2 · 2026 (al corte) 1.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 1 · 2026 (al corte) 0."
+]
+},
+"05368": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 1 · 2023 3 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 1 y 2023 3.",
+"Procesos por extorsión: 2018 1 · 2019 0 · 2020 2 · 2021 4 · 2022 2 · 2023 5 · 2024 7 · 2025 6 · 2026 (al corte) 1. 2025: 41,6 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 1 · 2026 (al corte) 0. 2025: 6,9 por 100.000 habitantes.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 2 · 2024 0 · 2025 2 · 2026 (al corte) 1.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 2 · 2022 1 · 2023 1 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Sin denuncias 2018-2026 en Jericó de: procesos por reclutamiento o uso de menores."
+]
+},
+"05376": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 6 · 2020 0 · 2021 0 · 2022 2 · 2023 3 · 2024 0 · 2025 0 · 2026 (al corte) 1. Años de elecciones territoriales: 2019 6 y 2023 3.",
+"Procesos por extorsión: 2018 18 · 2019 9 · 2020 13 · 2021 11 · 2022 24 · 2023 30 · 2024 16 · 2025 29 · 2026 (al corte) 14. 2025: 39,0 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 2 · 2019 1 · 2020 0 · 2021 2 · 2022 0 · 2023 2 · 2024 0 · 2025 2 · 2026 (al corte) 0. 2025: 2,7 por 100.000 habitantes.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 2 · 2023 1 · 2024 0 · 2025 0 · 2026 (al corte) 1.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 0 · 2020 2 · 2021 1 · 2022 4 · 2023 5 · 2024 0 · 2025 1 · 2026 (al corte) 0.",
+"Sin denuncias 2018-2026 en La Ceja de: procesos por reclutamiento o uso de menores."
+]
+},
+"05380": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 3 · 2019 1 · 2020 0 · 2021 0 · 2022 2 · 2023 7 · 2024 0 · 2025 0 · 2026 (al corte) 4. Años de elecciones territoriales: 2019 1 y 2023 7.",
+"Procesos por extorsión: 2018 14 · 2019 10 · 2020 13 · 2021 22 · 2022 36 · 2023 46 · 2024 42 · 2025 57 · 2026 (al corte) 25. 2025: 67,8 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 6 · 2019 6 · 2020 2 · 2021 5 · 2022 10 · 2023 11 · 2024 11 · 2025 3 · 2026 (al corte) 0. 2025: 3,6 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 1 · 2019 1 · 2020 4 · 2021 3 · 2022 0 · 2023 1 · 2024 2 · 2025 1 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 1 · 2021 1 · 2022 4 · 2023 1 · 2024 5 · 2025 6 · 2026 (al corte) 1.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 3 · 2020 1 · 2021 5 · 2022 7 · 2023 6 · 2024 4 · 2025 7 · 2026 (al corte) 3."
+]
+},
+"05390": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 0 y 2023 1.",
+"Procesos por extorsión: 2018 4 · 2019 0 · 2020 2 · 2021 2 · 2022 1 · 2023 1 · 2024 0 · 2025 8 · 2026 (al corte) 1. 2025: 91,7 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 1 · 2019 2 · 2020 0 · 2021 0 · 2022 1 · 2023 3 · 2024 2 · 2025 2 · 2026 (al corte) 0. 2025: 22,9 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 5 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Sin denuncias 2018-2026 en La Pintada de: víctimas defensoras de dd. hh. o líderes, víctimas periodistas."
+]
+},
+"05400": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 2 · 2020 0 · 2021 0 · 2022 0 · 2023 2 · 2024 1 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 2 y 2023 2.",
+"Procesos por extorsión: 2018 3 · 2019 5 · 2020 2 · 2021 5 · 2022 7 · 2023 11 · 2024 13 · 2025 9 · 2026 (al corte) 9. 2025: 36,9 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 4 · 2019 2 · 2020 0 · 2021 1 · 2022 1 · 2023 1 · 2024 1 · 2025 1 · 2026 (al corte) 0. 2025: 4,1 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 2 · 2020 0 · 2021 2 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 1 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 1 · 2026 (al corte) 2.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 2 · 2026 (al corte) 1."
+]
+},
+"05411": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 0 y 2023 0.",
+"Procesos por extorsión: 2018 3 · 2019 2 · 2020 2 · 2021 2 · 2022 1 · 2023 1 · 2024 7 · 2025 2 · 2026 (al corte) 2. 2025: 18,4 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 4 · 2019 10 · 2020 2 · 2021 4 · 2022 5 · 2023 10 · 2024 0 · 2025 1 · 2026 (al corte) 0. 2025: 9,2 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 1 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 1.",
+"Sin denuncias 2018-2026 en Liborina de: víctimas periodistas."
+]
+},
+"05425": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 3 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 0 y 2023 3.",
+"Procesos por extorsión: 2018 3 · 2019 3 · 2020 3 · 2021 2 · 2022 4 · 2023 8 · 2024 5 · 2025 9 · 2026 (al corte) 5. 2025: 101,1 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 2 · 2019 3 · 2020 1 · 2021 0 · 2022 3 · 2023 6 · 2024 4 · 2025 1 · 2026 (al corte) 1. 2025: 11,2 por 100.000 habitantes.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 2 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 1 · 2025 0 · 2026 (al corte) 0.",
+"Sin denuncias 2018-2026 en Maceo de: procesos por reclutamiento o uso de menores, víctimas periodistas."
+]
+},
+"05440": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 2 · 2023 1 · 2024 0 · 2025 0 · 2026 (al corte) 1. Años de elecciones territoriales: 2019 0 y 2023 1.",
+"Procesos por extorsión: 2018 9 · 2019 11 · 2020 13 · 2021 16 · 2022 22 · 2023 29 · 2024 22 · 2025 29 · 2026 (al corte) 15. 2025: 38,4 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 2 · 2019 5 · 2020 0 · 2021 2 · 2022 2 · 2023 3 · 2024 3 · 2025 0 · 2026 (al corte) 2. 2025: 0,0 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 4 · 2019 1 · 2020 1 · 2021 2 · 2022 3 · 2023 4 · 2024 2 · 2025 0 · 2026 (al corte) 1.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 1 · 2022 1 · 2023 0 · 2024 1 · 2025 4 · 2026 (al corte) 2.",
+"Víctimas periodistas (cualquier delito): 2018 1 · 2019 0 · 2020 1 · 2021 0 · 2022 4 · 2023 5 · 2024 3 · 2025 3 · 2026 (al corte) 1."
+]
+},
+"05467": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 4 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 0 y 2023 4.",
+"Procesos por extorsión: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 3 · 2023 1 · 2024 5 · 2025 4 · 2026 (al corte) 3. 2025: 61,8 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 2 · 2019 1 · 2020 0 · 2021 2 · 2022 2 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0. 2025: 0,0 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 1 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 1 · 2025 0 · 2026 (al corte) 0."
+]
+},
+"05475": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 6 · 2020 0 · 2021 1 · 2022 0 · 2023 4 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 6 y 2023 4.",
+"Procesos por extorsión: 2018 4 · 2019 3 · 2020 2 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (al corte) 1. 2025: 0,0 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 2 · 2019 1 · 2020 2 · 2021 4 · 2022 1 · 2023 0 · 2024 0 · 2025 3 · 2026 (al corte) 0. 2025: 49,8 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 0 · 2020 3 · 2021 0 · 2022 0 · 2023 2 · 2024 0 · 2025 0 · 2026 (al corte) 1.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 2.",
+"Sin denuncias 2018-2026 en Murindó de: víctimas periodistas."
+]
+},
+"05480": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 2 · 2019 2 · 2020 0 · 2021 0 · 2022 1 · 2023 4 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 2 y 2023 4.",
+"Procesos por extorsión: 2018 4 · 2019 0 · 2020 1 · 2021 5 · 2022 5 · 2023 4 · 2024 0 · 2025 2 · 2026 (al corte) 4. 2025: 14,6 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 7 · 2019 6 · 2020 3 · 2021 5 · 2022 5 · 2023 11 · 2024 6 · 2025 3 · 2026 (al corte) 0. 2025: 21,9 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 0 · 2020 1 · 2021 0 · 2022 0 · 2023 0 · 2024 1 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 2 · 2019 2 · 2020 1 · 2021 4 · 2022 2 · 2023 3 · 2024 4 · 2025 3 · 2026 (al corte) 12.",
+"Sin denuncias 2018-2026 en Mutatá de: víctimas periodistas."
+]
+},
+"05483": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 1 y 2023 0.",
+"Procesos por extorsión: 2018 1 · 2019 4 · 2020 2 · 2021 4 · 2022 15 · 2023 1 · 2024 9 · 2025 5 · 2026 (al corte) 4. 2025: 45,2 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 1 · 2019 3 · 2020 3 · 2021 5 · 2022 9 · 2023 9 · 2024 5 · 2025 4 · 2026 (al corte) 1. 2025: 36,2 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 1 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 1 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 5 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 1 · 2026 (al corte) 0."
+]
+},
+"05490": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 5 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 0 y 2023 5.",
+"Procesos por extorsión: 2018 2 · 2019 2 · 2020 2 · 2021 1 · 2022 15 · 2023 6 · 2024 7 · 2025 3 · 2026 (al corte) 2. 2025: 7,1 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 5 · 2019 6 · 2020 6 · 2021 0 · 2022 7 · 2023 8 · 2024 2 · 2025 1 · 2026 (al corte) 0. 2025: 2,4 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 0 · 2020 0 · 2021 1 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 2 · 2022 2 · 2023 3 · 2024 0 · 2025 3 · 2026 (al corte) 3.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 0 · 2020 1 · 2021 0 · 2022 0 · 2023 1 · 2024 1 · 2025 0 · 2026 (al corte) 0."
+]
+},
+"05495": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 3 · 2020 1 · 2021 0 · 2022 1 · 2023 10 · 2024 1 · 2025 1 · 2026 (al corte) 7. Años de elecciones territoriales: 2019 3 y 2023 10.",
+"Procesos por extorsión: 2018 4 · 2019 5 · 2020 2 · 2021 3 · 2022 4 · 2023 3 · 2024 0 · 2025 3 · 2026 (al corte) 1. 2025: 10,0 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 8 · 2019 20 · 2020 2 · 2021 1 · 2022 7 · 2023 0 · 2024 4 · 2025 4 · 2026 (al corte) 0. 2025: 13,4 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 1 · 2025 1 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 2 · 2024 0 · 2025 6 · 2026 (al corte) 2.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 1 · 2023 1 · 2024 1 · 2025 0 · 2026 (al corte) 0."
+]
+},
+"05501": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 0 y 2023 1.",
+"Procesos por extorsión: 2018 0 · 2019 2 · 2020 2 · 2021 2 · 2022 1 · 2023 0 · 2024 1 · 2025 2 · 2026 (al corte) 0. 2025: 57,2 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 5 · 2019 0 · 2020 0 · 2021 1 · 2022 1 · 2023 1 · 2024 2 · 2025 0 · 2026 (al corte) 0. 2025: 0,0 por 100.000 habitantes.",
+"Sin denuncias 2018-2026 en Olaya de: procesos por reclutamiento o uso de menores, víctimas defensoras de dd. hh. o líderes, víctimas periodistas."
+]
+},
+"05541": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 2 · 2024 0 · 2025 0 · 2026 (al corte) 1. Años de elecciones territoriales: 2019 0 y 2023 2.",
+"Procesos por extorsión: 2018 1 · 2019 4 · 2020 3 · 2021 2 · 2022 5 · 2023 15 · 2024 9 · 2025 8 · 2026 (al corte) 2. 2025: 33,2 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 2 · 2019 2 · 2020 0 · 2021 3 · 2022 3 · 2023 2 · 2024 4 · 2025 4 · 2026 (al corte) 0. 2025: 16,6 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 3 · 2021 0 · 2022 6 · 2023 0 · 2024 0 · 2025 2 · 2026 (al corte) 0.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 2 · 2026 (al corte) 0."
+]
+},
+"05543": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 2 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 1 y 2023 2.",
+"Procesos por extorsión: 2018 1 · 2019 0 · 2020 0 · 2021 1 · 2022 0 · 2023 0 · 2024 0 · 2025 1 · 2026 (al corte) 0. 2025: 11,3 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 5 · 2019 6 · 2020 2 · 2021 3 · 2022 1 · 2023 2 · 2024 1 · 2025 0 · 2026 (al corte) 1. 2025: 0,0 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Sin denuncias 2018-2026 en Peque de: víctimas defensoras de dd. hh. o líderes, víctimas periodistas."
+]
+},
+"05576": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 2 · 2023 7 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 0 y 2023 7.",
+"Procesos por extorsión: 2018 0 · 2019 0 · 2020 0 · 2021 2 · 2022 0 · 2023 2 · 2024 1 · 2025 3 · 2026 (al corte) 0. 2025: 33,1 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 1 · 2019 1 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 2. 2025: 0,0 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 0 · 2020 0 · 2021 1 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 1.",
+"Sin denuncias 2018-2026 en Pueblorrico de: víctimas periodistas."
+]
+},
+"05579": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 1 · 2019 0 · 2020 0 · 2021 1 · 2022 3 · 2023 4 · 2024 0 · 2025 0 · 2026 (al corte) 1. Años de elecciones territoriales: 2019 0 y 2023 4.",
+"Procesos por extorsión: 2018 8 · 2019 15 · 2020 12 · 2021 17 · 2022 15 · 2023 24 · 2024 20 · 2025 16 · 2026 (al corte) 9. 2025: 40,9 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 9 · 2019 30 · 2020 3 · 2021 14 · 2022 16 · 2023 25 · 2024 8 · 2025 4 · 2026 (al corte) 0. 2025: 10,2 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 2 · 2020 4 · 2021 6 · 2022 2 · 2023 7 · 2024 1 · 2025 0 · 2026 (al corte) 1.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 3 · 2019 1 · 2020 0 · 2021 2 · 2022 4 · 2023 2 · 2024 3 · 2025 9 · 2026 (al corte) 6.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 1."
+]
+},
+"05585": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 1 · 2023 1 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 1 y 2023 1.",
+"Procesos por extorsión: 2018 2 · 2019 0 · 2020 1 · 2021 1 · 2022 1 · 2023 0 · 2024 1 · 2025 3 · 2026 (al corte) 3. 2025: 19,1 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 1 · 2019 4 · 2020 3 · 2021 0 · 2022 0 · 2023 3 · 2024 4 · 2025 3 · 2026 (al corte) 1. 2025: 19,1 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 2 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 1 · 2025 1 · 2026 (al corte) 0."
+]
+},
+"05591": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 3 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 0 y 2023 3.",
+"Procesos por extorsión: 2018 7 · 2019 7 · 2020 9 · 2021 5 · 2022 10 · 2023 7 · 2024 8 · 2025 9 · 2026 (al corte) 5. 2025: 44,3 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 5 · 2019 3 · 2020 0 · 2021 3 · 2022 2 · 2023 3 · 2024 0 · 2025 3 · 2026 (al corte) 2. 2025: 14,8 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 0 · 2020 0 · 2021 1 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 2 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 4 · 2023 0 · 2024 1 · 2025 0 · 2026 (al corte) 0."
+]
+},
+"05604": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 1 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 3 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 1 y 2023 3.",
+"Procesos por extorsión: 2018 11 · 2019 9 · 2020 16 · 2021 8 · 2022 10 · 2023 12 · 2024 8 · 2025 13 · 2026 (al corte) 9. 2025: 38,8 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 25 · 2019 23 · 2020 13 · 2021 13 · 2022 18 · 2023 18 · 2024 22 · 2025 23 · 2026 (al corte) 9. 2025: 68,6 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 0 · 2020 4 · 2021 2 · 2022 2 · 2023 3 · 2024 3 · 2025 4 · 2026 (al corte) 1.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 3 · 2022 4 · 2023 6 · 2024 8 · 2025 7 · 2026 (al corte) 7.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 1."
+]
+},
+"05607": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 6 · 2023 2 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 0 y 2023 2.",
+"Procesos por extorsión: 2018 3 · 2019 3 · 2020 4 · 2021 2 · 2022 6 · 2023 8 · 2024 14 · 2025 18 · 2026 (al corte) 6. 2025: 65,2 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 1 · 2019 1 · 2020 0 · 2021 1 · 2022 1 · 2023 0 · 2024 0 · 2025 1 · 2026 (al corte) 0. 2025: 3,6 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 3 · 2019 1 · 2020 1 · 2021 0 · 2022 1 · 2023 0 · 2024 3 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 1 · 2026 (al corte) 1.",
+"Víctimas periodistas (cualquier delito): 2018 3 · 2019 0 · 2020 1 · 2021 2 · 2022 0 · 2023 2 · 2024 1 · 2025 3 · 2026 (al corte) 0."
+]
+},
+"05615": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 2 · 2019 3 · 2020 1 · 2021 0 · 2022 1 · 2023 9 · 2024 1 · 2025 2 · 2026 (al corte) 5. Años de elecciones territoriales: 2019 3 y 2023 9.",
+"Procesos por extorsión: 2018 41 · 2019 34 · 2020 76 · 2021 54 · 2022 96 · 2023 61 · 2024 75 · 2025 102 · 2026 (al corte) 62. 2025: 65,3 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 8 · 2019 16 · 2020 13 · 2021 2 · 2022 11 · 2023 11 · 2024 4 · 2025 4 · 2026 (al corte) 4. 2025: 2,6 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 13 · 2019 2 · 2020 5 · 2021 1 · 2022 1 · 2023 12 · 2024 1 · 2025 1 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 1 · 2021 2 · 2022 4 · 2023 3 · 2024 1 · 2025 9 · 2026 (al corte) 5.",
+"Víctimas periodistas (cualquier delito): 2018 5 · 2019 12 · 2020 10 · 2021 18 · 2022 22 · 2023 18 · 2024 9 · 2025 16 · 2026 (al corte) 5."
+]
+},
+"05628": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 1. Años de elecciones territoriales: 2019 1 y 2023 0.",
+"Procesos por extorsión: 2018 5 · 2019 2 · 2020 2 · 2021 0 · 2022 5 · 2023 0 · 2024 1 · 2025 1 · 2026 (al corte) 0. 2025: 10,0 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 9 · 2019 3 · 2020 4 · 2021 12 · 2022 3 · 2023 2 · 2024 3 · 2025 0 · 2026 (al corte) 0. 2025: 0,0 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 1 · 2019 0 · 2020 0 · 2021 3 · 2022 0 · 2023 0 · 2024 0 · 2025 1 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 4 · 2023 0 · 2024 4 · 2025 0 · 2026 (al corte) 5.",
+"Sin denuncias 2018-2026 en Sabanalarga de: víctimas periodistas."
+]
+},
+"05631": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 1 · 2019 3 · 2020 0 · 2021 0 · 2022 0 · 2023 4 · 2024 0 · 2025 0 · 2026 (al corte) 3. Años de elecciones territoriales: 2019 3 y 2023 4.",
+"Procesos por extorsión: 2018 10 · 2019 13 · 2020 20 · 2021 16 · 2022 48 · 2023 56 · 2024 48 · 2025 45 · 2026 (al corte) 36. 2025: 41,2 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 0 · 2019 2 · 2020 2 · 2021 4 · 2022 3 · 2023 4 · 2024 5 · 2025 2 · 2026 (al corte) 0. 2025: 1,8 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 1 · 2019 3 · 2020 0 · 2021 6 · 2022 3 · 2023 2 · 2024 2 · 2025 0 · 2026 (al corte) 2.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 1 · 2020 1 · 2021 3 · 2022 10 · 2023 5 · 2024 7 · 2025 7 · 2026 (al corte) 0.",
+"Víctimas periodistas (cualquier delito): 2018 2 · 2019 14 · 2020 4 · 2021 22 · 2022 18 · 2023 9 · 2024 12 · 2025 8 · 2026 (al corte) 5."
+]
+},
+"05642": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 2 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 0 y 2023 2.",
+"Procesos por extorsión: 2018 3 · 2019 7 · 2020 2 · 2021 2 · 2022 4 · 2023 3 · 2024 12 · 2025 2 · 2026 (al corte) 5. 2025: 10,6 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 1 · 2019 5 · 2020 2 · 2021 3 · 2022 4 · 2023 3 · 2024 11 · 2025 4 · 2026 (al corte) 2. 2025: 21,2 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 3 · 2020 2 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 1 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 1."
+]
+},
+"05647": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 1 · 2019 2 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 2 y 2023 0.",
+"Procesos por extorsión: 2018 5 · 2019 4 · 2020 1 · 2021 5 · 2022 0 · 2023 1 · 2024 7 · 2025 7 · 2026 (al corte) 3. 2025: 94,9 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 7 · 2019 4 · 2020 3 · 2021 1 · 2022 0 · 2023 5 · 2024 5 · 2025 4 · 2026 (al corte) 1. 2025: 54,2 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 0 · 2020 8 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 5 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 1 · 2026 (al corte) 1.",
+"Sin denuncias 2018-2026 en San Andrés de Cuerquía de: víctimas periodistas."
+]
+},
+"05649": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 2 · 2020 0 · 2021 0 · 2022 1 · 2023 2 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 2 y 2023 2.",
+"Procesos por extorsión: 2018 6 · 2019 5 · 2020 2 · 2021 4 · 2022 2 · 2023 5 · 2024 9 · 2025 2 · 2026 (al corte) 2. 2025: 11,8 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 0 · 2019 8 · 2020 3 · 2021 10 · 2022 17 · 2023 7 · 2024 4 · 2025 1 · 2026 (al corte) 0. 2025: 5,9 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 1 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 2 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 4 · 2026 (al corte) 0.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 1 · 2025 0 · 2026 (al corte) 0."
+]
+},
+"05652": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 2 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 2 y 2023 0.",
+"Procesos por extorsión: 2018 0 · 2019 4 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 4 · 2026 (al corte) 0. 2025: 65,7 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 1 · 2019 2 · 2020 0 · 2021 2 · 2022 2 · 2023 3 · 2024 4 · 2025 1 · 2026 (al corte) 0. 2025: 16,4 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 1 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Sin denuncias 2018-2026 en San Francisco de: víctimas defensoras de dd. hh. o líderes, víctimas periodistas."
+]
+},
+"05656": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 2 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 0 y 2023 0.",
+"Procesos por extorsión: 2018 2 · 2019 1 · 2020 5 · 2021 9 · 2022 6 · 2023 4 · 2024 7 · 2025 5 · 2026 (al corte) 2. 2025: 26,7 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 1 · 2019 2 · 2020 1 · 2021 0 · 2022 2 · 2023 1 · 2024 5 · 2025 0 · 2026 (al corte) 0. 2025: 0,0 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 1 · 2020 1 · 2021 0 · 2022 2 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 1.",
+"Sin denuncias 2018-2026 en San Jerónimo de: víctimas defensoras de dd. hh. o líderes."
+]
+},
+"05658": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 0 y 2023 0.",
+"Procesos por extorsión: 2018 1 · 2019 2 · 2020 0 · 2021 0 · 2022 3 · 2023 1 · 2024 1 · 2025 1 · 2026 (al corte) 1. 2025: 24,6 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 1 · 2019 5 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 2 · 2026 (al corte) 0. 2025: 49,1 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 2 · 2019 0 · 2020 0 · 2021 2 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Sin denuncias 2018-2026 en San José de La Montaña de: víctimas defensoras de dd. hh. o líderes, víctimas periodistas."
+]
+},
+"05659": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 2 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 0 y 2023 0.",
+"Procesos por extorsión: 2018 1 · 2019 2 · 2020 1 · 2021 0 · 2022 1 · 2023 0 · 2024 2 · 2025 3 · 2026 (al corte) 1. 2025: 15,1 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 3 · 2019 3 · 2020 0 · 2021 3 · 2022 1 · 2023 4 · 2024 2 · 2025 1 · 2026 (al corte) 0. 2025: 5,0 por 100.000 habitantes.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 4 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Sin denuncias 2018-2026 en San Juan de Urabá de: procesos por reclutamiento o uso de menores, víctimas periodistas."
+]
+},
+"05660": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 0 y 2023 1.",
+"Procesos por extorsión: 2018 8 · 2019 1 · 2020 2 · 2021 2 · 2022 2 · 2023 2 · 2024 8 · 2025 5 · 2026 (al corte) 3. 2025: 34,3 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 4 · 2019 2 · 2020 6 · 2021 5 · 2022 6 · 2023 5 · 2024 7 · 2025 1 · 2026 (al corte) 1. 2025: 6,9 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 1 · 2021 2 · 2022 3 · 2023 1 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 1 · 2025 0 · 2026 (al corte) 0."
+]
+},
+"05664": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 3 · 2023 1 · 2024 0 · 2025 2 · 2026 (al corte) 1. Años de elecciones territoriales: 2019 0 y 2023 1.",
+"Procesos por extorsión: 2018 6 · 2019 5 · 2020 15 · 2021 19 · 2022 41 · 2023 11 · 2024 21 · 2025 17 · 2026 (al corte) 4. 2025: 76,4 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 1 · 2019 2 · 2020 8 · 2021 1 · 2022 12 · 2023 3 · 2024 2 · 2025 0 · 2026 (al corte) 0. 2025: 0,0 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 0 · 2020 0 · 2021 1 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 1 · 2019 0 · 2020 0 · 2021 1 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 2 · 2020 0 · 2021 1 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (al corte) 0."
+]
+},
+"05665": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 0 y 2023 0.",
+"Procesos por extorsión: 2018 0 · 2019 1 · 2020 1 · 2021 1 · 2022 2 · 2023 4 · 2024 2 · 2025 1 · 2026 (al corte) 0. 2025: 3,1 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 7 · 2019 8 · 2020 3 · 2021 1 · 2022 5 · 2023 9 · 2024 2 · 2025 1 · 2026 (al corte) 1. 2025: 3,1 por 100.000 habitantes.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 1 · 2019 0 · 2020 0 · 2021 1 · 2022 1 · 2023 0 · 2024 1 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Sin denuncias 2018-2026 en San Pedro de Urabá de: procesos por reclutamiento o uso de menores."
+]
+},
+"05667": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 2 · 2023 1 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 0 y 2023 1.",
+"Procesos por extorsión: 2018 6 · 2019 4 · 2020 0 · 2021 4 · 2022 3 · 2023 4 · 2024 7 · 2025 3 · 2026 (al corte) 5. 2025: 17,1 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 0 · 2019 3 · 2020 1 · 2021 4 · 2022 6 · 2023 3 · 2024 2 · 2025 0 · 2026 (al corte) 0. 2025: 0,0 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 1 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 1 · 2022 2 · 2023 0 · 2024 1 · 2025 5 · 2026 (al corte) 2.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 1 · 2025 0 · 2026 (al corte) 0."
+]
+},
+"05670": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 1 · 2023 2 · 2024 0 · 2025 0 · 2026 (al corte) 4. Años de elecciones territoriales: 2019 1 y 2023 2.",
+"Procesos por extorsión: 2018 7 · 2019 10 · 2020 5 · 2021 9 · 2022 9 · 2023 7 · 2024 9 · 2025 10 · 2026 (al corte) 4. 2025: 40,2 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 2 · 2019 5 · 2020 1 · 2021 1 · 2022 7 · 2023 5 · 2024 1 · 2025 2 · 2026 (al corte) 5. 2025: 8,0 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 2 · 2020 0 · 2021 1 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 1 · 2023 1 · 2024 1 · 2025 8 · 2026 (al corte) 4.",
+"Sin denuncias 2018-2026 en San Roque de: víctimas periodistas."
+]
+},
+"05674": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 3 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 0 y 2023 3.",
+"Procesos por extorsión: 2018 1 · 2019 3 · 2020 2 · 2021 2 · 2022 4 · 2023 7 · 2024 2 · 2025 8 · 2026 (al corte) 6. 2025: 32,0 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 3 · 2019 1 · 2020 3 · 2021 1 · 2022 3 · 2023 3 · 2024 2 · 2025 0 · 2026 (al corte) 2. 2025: 0,0 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 2 · 2025 1 · 2026 (al corte) 0.",
+"Sin denuncias 2018-2026 en San Vicente de: víctimas periodistas."
+]
+},
+"05679": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 2 · 2020 0 · 2021 0 · 2022 0 · 2023 2 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 2 y 2023 2.",
+"Procesos por extorsión: 2018 1 · 2019 3 · 2020 5 · 2021 2 · 2022 8 · 2023 9 · 2024 15 · 2025 8 · 2026 (al corte) 2. 2025: 26,9 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 2 · 2019 2 · 2020 0 · 2021 0 · 2022 1 · 2023 4 · 2024 4 · 2025 3 · 2026 (al corte) 1. 2025: 10,1 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 0 · 2020 1 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 2.",
+"Sin denuncias 2018-2026 en Santa Bárbara de: víctimas periodistas."
+]
+},
+"05686": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 1 · 2019 5 · 2020 0 · 2021 0 · 2022 1 · 2023 4 · 2024 0 · 2025 0 · 2026 (al corte) 9. Años de elecciones territoriales: 2019 5 y 2023 4.",
+"Procesos por extorsión: 2018 7 · 2019 7 · 2020 25 · 2021 29 · 2022 81 · 2023 30 · 2024 19 · 2025 14 · 2026 (al corte) 7. 2025: 34,4 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 3 · 2019 4 · 2020 12 · 2021 0 · 2022 14 · 2023 3 · 2024 7 · 2025 3 · 2026 (al corte) 3. 2025: 7,4 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 2 · 2020 5 · 2021 0 · 2022 2 · 2023 0 · 2024 3 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 1 · 2022 4 · 2023 1 · 2024 2 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 2 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 1."
+]
+},
+"05690": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 1 · 2019 4 · 2020 0 · 2021 0 · 2022 2 · 2023 2 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 4 y 2023 2.",
+"Procesos por extorsión: 2018 2 · 2019 4 · 2020 9 · 2021 5 · 2022 10 · 2023 7 · 2024 3 · 2025 2 · 2026 (al corte) 4. 2025: 14,7 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 3 · 2019 2 · 2020 0 · 2021 2 · 2022 6 · 2023 4 · 2024 1 · 2025 1 · 2026 (al corte) 0. 2025: 7,4 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 2 · 2024 2 · 2025 0 · 2026 (al corte) 1.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 2 · 2024 4 · 2025 0 · 2026 (al corte) 0.",
+"Sin denuncias 2018-2026 en Santo Domingo de: víctimas periodistas."
+]
+},
+"05697": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 3. Años de elecciones territoriales: 2019 0 y 2023 0.",
+"Procesos por extorsión: 2018 1 · 2019 3 · 2020 5 · 2021 5 · 2022 4 · 2023 7 · 2024 15 · 2025 8 · 2026 (al corte) 2. 2025: 19,7 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 1 · 2019 1 · 2020 1 · 2021 1 · 2022 2 · 2023 2 · 2024 2 · 2025 0 · 2026 (al corte) 0. 2025: 0,0 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 0 · 2020 1 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 1 · 2024 4 · 2025 0 · 2026 (al corte) 1.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 1 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 1."
+]
+},
+"05736": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 0 · 2020 0 · 2021 1 · 2022 1 · 2023 1 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 0 y 2023 1.",
+"Procesos por extorsión: 2018 19 · 2019 36 · 2020 27 · 2021 25 · 2022 25 · 2023 12 · 2024 21 · 2025 20 · 2026 (al corte) 15. 2025: 50,6 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 44 · 2019 29 · 2020 7 · 2021 12 · 2022 26 · 2023 28 · 2024 22 · 2025 14 · 2026 (al corte) 6. 2025: 35,4 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 1 · 2019 3 · 2020 5 · 2021 4 · 2022 5 · 2023 3 · 2024 2 · 2025 4 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 12 · 2019 1 · 2020 0 · 2021 1 · 2022 1 · 2023 8 · 2024 22 · 2025 0 · 2026 (al corte) 4.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 2 · 2025 1 · 2026 (al corte) 0."
+]
+},
+"05756": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 4 · 2020 0 · 2021 2 · 2022 0 · 2023 2 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 4 y 2023 2.",
+"Procesos por extorsión: 2018 3 · 2019 4 · 2020 1 · 2021 10 · 2022 12 · 2023 8 · 2024 7 · 2025 10 · 2026 (al corte) 7. 2025: 28,0 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 6 · 2019 3 · 2020 3 · 2021 7 · 2022 12 · 2023 4 · 2024 14 · 2025 6 · 2026 (al corte) 1. 2025: 16,8 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 0 · 2020 2 · 2021 0 · 2022 1 · 2023 1 · 2024 2 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 4 · 2020 0 · 2021 1 · 2022 0 · 2023 2 · 2024 4 · 2025 4 · 2026 (al corte) 1.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 1 · 2025 2 · 2026 (al corte) 1."
+]
+},
+"05761": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 1 y 2023 1.",
+"Procesos por extorsión: 2018 5 · 2019 1 · 2020 5 · 2021 4 · 2022 2 · 2023 5 · 2024 12 · 2025 6 · 2026 (al corte) 0. 2025: 36,0 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 5 · 2019 0 · 2020 0 · 2021 0 · 2022 2 · 2023 5 · 2024 3 · 2025 0 · 2026 (al corte) 1. 2025: 0,0 por 100.000 habitantes.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 1 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 2 · 2022 2 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Sin denuncias 2018-2026 en Sopetrán de: procesos por reclutamiento o uso de menores."
+]
+},
+"05789": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 1 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 0 y 2023 1.",
+"Procesos por extorsión: 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 4 · 2023 1 · 2024 1 · 2025 2 · 2026 (al corte) 1. 2025: 12,0 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 2 · 2019 1 · 2020 0 · 2021 2 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0. 2025: 0,0 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 0 · 2020 0 · 2021 2 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 2 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 1 · 2025 0 · 2026 (al corte) 0."
+]
+},
+"05790": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 2 · 2020 0 · 2021 0 · 2022 3 · 2023 3 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 2 y 2023 3.",
+"Procesos por extorsión: 2018 19 · 2019 5 · 2020 12 · 2021 9 · 2022 12 · 2023 8 · 2024 2 · 2025 5 · 2026 (al corte) 2. 2025: 16,9 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 226 · 2019 151 · 2020 78 · 2021 36 · 2022 22 · 2023 16 · 2024 23 · 2025 11 · 2026 (al corte) 6. 2025: 37,2 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 9 · 2019 8 · 2020 12 · 2021 2 · 2022 0 · 2023 0 · 2024 2 · 2025 2 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 7 · 2019 5 · 2020 13 · 2021 4 · 2022 1 · 2023 2 · 2024 0 · 2025 2 · 2026 (al corte) 2.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (al corte) 1."
+]
+},
+"05792": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 5 · 2020 0 · 2021 0 · 2022 1 · 2023 1 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 5 y 2023 1.",
+"Procesos por extorsión: 2018 1 · 2019 5 · 2020 3 · 2021 0 · 2022 0 · 2023 0 · 2024 1 · 2025 3 · 2026 (al corte) 2. 2025: 45,5 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 1 · 2019 1 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 1 · 2025 1 · 2026 (al corte) 0. 2025: 15,2 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 1 · 2025 0 · 2026 (al corte) 0.",
+"Sin denuncias 2018-2026 en Tarso de: víctimas defensoras de dd. hh. o líderes, víctimas periodistas."
+]
+},
+"05809": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 0 · 2020 0 · 2021 1 · 2022 1 · 2023 3 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 0 y 2023 3.",
+"Procesos por extorsión: 2018 2 · 2019 1 · 2020 4 · 2021 3 · 2022 4 · 2023 3 · 2024 5 · 2025 3 · 2026 (al corte) 0. 2025: 25,9 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 0 · 2019 0 · 2020 1 · 2021 0 · 2022 7 · 2023 1 · 2024 0 · 2025 3 · 2026 (al corte) 1. 2025: 25,9 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 0 · 2020 2 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 1 · 2026 (al corte) 1.",
+"Sin denuncias 2018-2026 en Titiribí de: víctimas periodistas."
+]
+},
+"05819": {
+"lineas": [
+"Procesos por extorsión: 2018 3 · 2019 1 · 2020 2 · 2021 2 · 2022 4 · 2023 3 · 2024 8 · 2025 4 · 2026 (al corte) 0. 2025: 83,9 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 4 · 2019 5 · 2020 2 · 2021 2 · 2022 2 · 2023 7 · 2024 4 · 2025 3 · 2026 (al corte) 3. 2025: 62,9 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 2 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 2 · 2020 1 · 2021 6 · 2022 2 · 2023 4 · 2024 9 · 2025 6 · 2026 (al corte) 2.",
+"Sin denuncias 2018-2026 en Toledo de: delitos electorales denunciados, víctimas periodistas."
+]
+},
+"05837": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 3 · 2019 7 · 2020 0 · 2021 0 · 2022 1 · 2023 2 · 2024 0 · 2025 0 · 2026 (al corte) 5. Años de elecciones territoriales: 2019 7 y 2023 2.",
+"Procesos por extorsión: 2018 21 · 2019 21 · 2020 6 · 2021 9 · 2022 6 · 2023 9 · 2024 13 · 2025 15 · 2026 (al corte) 7. 2025: 11,5 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 38 · 2019 30 · 2020 13 · 2021 14 · 2022 31 · 2023 14 · 2024 18 · 2025 4 · 2026 (al corte) 3. 2025: 3,1 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 4 · 2019 1 · 2020 3 · 2021 2 · 2022 2 · 2023 1 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 1 · 2019 1 · 2020 2 · 2021 1 · 2022 7 · 2023 3 · 2024 2 · 2025 6 · 2026 (al corte) 11.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 1 · 2020 0 · 2021 4 · 2022 3 · 2023 0 · 2024 0 · 2025 1 · 2026 (al corte) 0."
+]
+},
+"05842": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 1 · 2019 3 · 2020 0 · 2021 0 · 2022 1 · 2023 4 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 3 y 2023 4.",
+"Procesos por extorsión: 2018 0 · 2019 0 · 2020 0 · 2021 1 · 2022 2 · 2023 3 · 2024 0 · 2025 1 · 2026 (al corte) 0. 2025: 13,3 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 1 · 2019 1 · 2020 0 · 2021 1 · 2022 6 · 2023 1 · 2024 0 · 2025 1 · 2026 (al corte) 1. 2025: 13,3 por 100.000 habitantes.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 1 · 2026 (al corte) 0.",
+"Sin denuncias 2018-2026 en Uramita de: procesos por reclutamiento o uso de menores, víctimas periodistas."
+]
+},
+"05847": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 1 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 0 y 2023 1.",
+"Procesos por extorsión: 2018 9 · 2019 8 · 2020 12 · 2021 8 · 2022 5 · 2023 6 · 2024 5 · 2025 7 · 2026 (al corte) 6. 2025: 21,8 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 5 · 2019 5 · 2020 13 · 2021 5 · 2022 16 · 2023 7 · 2024 8 · 2025 6 · 2026 (al corte) 5. 2025: 18,7 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 5 · 2020 4 · 2021 0 · 2022 1 · 2023 3 · 2024 1 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 1 · 2022 1 · 2023 2 · 2024 3 · 2025 1 · 2026 (al corte) 6.",
+"Sin denuncias 2018-2026 en Urrao de: víctimas periodistas."
+]
+},
+"05854": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 2 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 3 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 0 y 2023 3.",
+"Procesos por extorsión: 2018 7 · 2019 4 · 2020 4 · 2021 5 · 2022 11 · 2023 2 · 2024 4 · 2025 5 · 2026 (al corte) 2. 2025: 33,1 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 41 · 2019 28 · 2020 7 · 2021 12 · 2022 13 · 2023 7 · 2024 8 · 2025 11 · 2026 (al corte) 1. 2025: 72,8 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 1 · 2019 4 · 2020 2 · 2021 5 · 2022 2 · 2023 0 · 2024 0 · 2025 2 · 2026 (al corte) 1.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 1 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 3 · 2024 2 · 2025 1 · 2026 (al corte) 2.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 1."
+]
+},
+"05856": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (al corte) 2. Años de elecciones territoriales: 2019 0 y 2023 1.",
+"Procesos por extorsión: 2018 2 · 2019 0 · 2020 1 · 2021 0 · 2022 0 · 2023 1 · 2024 2 · 2025 1 · 2026 (al corte) 1. 2025: 14,9 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 0 · 2019 1 · 2020 0 · 2021 1 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0. 2025: 0,0 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 3 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Sin denuncias 2018-2026 en Valparaíso de: víctimas defensoras de dd. hh. o líderes, víctimas periodistas."
+]
+},
+"05858": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 1 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 0 y 2023 1.",
+"Procesos por extorsión: 2018 4 · 2019 5 · 2020 2 · 2021 16 · 2022 6 · 2023 8 · 2024 6 · 2025 8 · 2026 (al corte) 3. 2025: 65,7 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 4 · 2019 7 · 2020 4 · 2021 4 · 2022 12 · 2023 5 · 2024 5 · 2025 1 · 2026 (al corte) 2. 2025: 8,2 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 0 · 2020 1 · 2021 0 · 2022 0 · 2023 0 · 2024 2 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 1 · 2025 0 · 2026 (al corte) 0.",
+"Sin denuncias 2018-2026 en Vegachí de: víctimas periodistas."
+]
+},
+"05861": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 7 · 2024 0 · 2025 0 · 2026 (al corte) 1. Años de elecciones territoriales: 2019 0 y 2023 7.",
+"Procesos por extorsión: 2018 2 · 2019 3 · 2020 7 · 2021 15 · 2022 6 · 2023 0 · 2024 6 · 2025 4 · 2026 (al corte) 6. 2025: 32,0 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 1 · 2019 0 · 2020 1 · 2021 3 · 2022 4 · 2023 10 · 2024 6 · 2025 0 · 2026 (al corte) 1. 2025: 0,0 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 0 · 2020 4 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 1 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 1 · 2022 1 · 2023 4 · 2024 0 · 2025 0 · 2026 (al corte) 3.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 1 · 2020 0 · 2021 1 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 2."
+]
+},
+"05873": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 2 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 1 y 2023 1.",
+"Procesos por extorsión: 2018 1 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 1 · 2026 (al corte) 0. 2025: 8,6 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 2 · 2019 3 · 2020 7 · 2021 1 · 2022 0 · 2023 1 · 2024 1 · 2025 3 · 2026 (al corte) 0. 2025: 25,7 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 1 · 2025 2 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 1 · 2019 3 · 2020 1 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 1 · 2026 (al corte) 0.",
+"Sin denuncias 2018-2026 en Vigía del Fuerte de: víctimas periodistas."
+]
+},
+"05885": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 1 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 1 y 2023 0.",
+"Procesos por extorsión: 2018 3 · 2019 3 · 2020 4 · 2021 4 · 2022 2 · 2023 3 · 2024 5 · 2025 2 · 2026 (al corte) 1. 2025: 25,9 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 4 · 2019 1 · 2020 1 · 2021 1 · 2022 4 · 2023 2 · 2024 3 · 2025 1 · 2026 (al corte) 0. 2025: 12,9 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 0 · 2020 1 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 4 · 2025 5 · 2026 (al corte) 0.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 1 · 2025 0 · 2026 (al corte) 0."
+]
+},
+"05887": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 4 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 0 y 2023 4.",
+"Procesos por extorsión: 2018 27 · 2019 31 · 2020 6 · 2021 29 · 2022 31 · 2023 32 · 2024 31 · 2025 22 · 2026 (al corte) 20. 2025: 52,6 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 38 · 2019 17 · 2020 7 · 2021 11 · 2022 24 · 2023 8 · 2024 9 · 2025 5 · 2026 (al corte) 0. 2025: 11,9 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 9 · 2019 1 · 2020 1 · 2021 4 · 2022 0 · 2023 6 · 2024 3 · 2025 1 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 2 · 2021 0 · 2022 1 · 2023 2 · 2024 1 · 2025 4 · 2026 (al corte) 2.",
+"Sin denuncias 2018-2026 en Yarumal de: víctimas periodistas."
+]
+},
+"05890": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 1 y 2023 0.",
+"Procesos por extorsión: 2018 8 · 2019 4 · 2020 11 · 2021 8 · 2022 11 · 2023 27 · 2024 19 · 2025 8 · 2026 (al corte) 2. 2025: 31,7 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 2 · 2019 1 · 2020 2 · 2021 3 · 2022 16 · 2023 6 · 2024 3 · 2025 2 · 2026 (al corte) 3. 2025: 7,9 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 0 · 2020 0 · 2021 1 · 2022 0 · 2023 0 · 2024 0 · 2025 1 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 3 · 2022 2 · 2023 4 · 2024 0 · 2025 1 · 2026 (al corte) 0.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 1."
+]
+},
+"05893": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 4 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 2 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 0 y 2023 2.",
+"Procesos por extorsión: 2018 8 · 2019 9 · 2020 3 · 2021 9 · 2022 23 · 2023 14 · 2024 16 · 2025 13 · 2026 (al corte) 14. 2025: 58,0 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 8 · 2019 13 · 2020 5 · 2021 5 · 2022 7 · 2023 7 · 2024 9 · 2025 30 · 2026 (al corte) 6. 2025: 133,8 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 0 · 2020 0 · 2021 3 · 2022 0 · 2023 0 · 2024 1 · 2025 2 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 1 · 2020 0 · 2021 6 · 2022 2 · 2023 1 · 2024 4 · 2025 8 · 2026 (al corte) 7.",
+"Sin denuncias 2018-2026 en Yondó de: víctimas periodistas."
+]
+},
+"05895": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (al corte) 0. Años de elecciones territoriales: 2019 0 y 2023 1.",
+"Procesos por extorsión: 2018 7 · 2019 6 · 2020 6 · 2021 1 · 2022 13 · 2023 5 · 2024 2 · 2025 3 · 2026 (al corte) 3. 2025: 11,1 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 23 · 2019 37 · 2020 9 · 2021 6 · 2022 9 · 2023 4 · 2024 6 · 2025 3 · 2026 (al corte) 3. 2025: 11,1 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 3 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 2.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 2 · 2024 0 · 2025 3 · 2026 (al corte) 1.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (al corte) 2."
+]
+}
+},
+"subregiones": {
+"Bajo Cauca": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 5 · 2019 12 · 2020 1 · 2021 1 · 2022 8 · 2023 21 · 2024 2 · 2025 2 · 2026 (al corte) 11. Años de elecciones territoriales: 2019 12 y 2023 21.",
+"Procesos por extorsión: 2018 105 · 2019 108 · 2020 101 · 2021 166 · 2022 138 · 2023 93 · 2024 62 · 2025 57 · 2026 (al corte) 40. 2025: 21,4 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 458 · 2019 460 · 2020 196 · 2021 111 · 2022 109 · 2023 86 · 2024 81 · 2025 39 · 2026 (al corte) 11. 2025: 14,7 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 25 · 2019 29 · 2020 29 · 2021 13 · 2022 12 · 2023 14 · 2024 6 · 2025 3 · 2026 (al corte) 4.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 15 · 2019 20 · 2020 40 · 2021 23 · 2022 24 · 2023 24 · 2024 9 · 2025 22 · 2026 (al corte) 14.",
+"Víctimas periodistas (cualquier delito): 2018 1 · 2019 6 · 2020 4 · 2021 5 · 2022 14 · 2023 12 · 2024 5 · 2025 7 · 2026 (al corte) 6.",
+"Municipios de la subregión con más delitos electorales denunciados 2018-2026: Nechí 24; Caucasia 14; El Bagre 13; Tarazá 8; Cáceres 3.",
+"Municipios de la subregión con más víctimas defensoras de DD. HH. o líderes 2018-2026: Caucasia 72; Cáceres 42; Tarazá 36; El Bagre 23; Nechí 11."
+]
+},
+"Magdalena Medio": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 5 · 2019 2 · 2020 0 · 2021 1 · 2022 5 · 2023 14 · 2024 0 · 2025 0 · 2026 (al corte) 1. Años de elecciones territoriales: 2019 2 y 2023 14.",
+"Procesos por extorsión: 2018 28 · 2019 36 · 2020 28 · 2021 35 · 2022 55 · 2023 53 · 2024 52 · 2025 51 · 2026 (al corte) 37. 2025: 46,0 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 27 · 2019 54 · 2020 12 · 2021 23 · 2022 28 · 2023 47 · 2024 29 · 2025 41 · 2026 (al corte) 11. 2025: 36,9 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 0 · 2019 3 · 2020 5 · 2021 10 · 2022 2 · 2023 8 · 2024 2 · 2025 2 · 2026 (al corte) 1.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 3 · 2019 4 · 2020 0 · 2021 10 · 2022 6 · 2023 3 · 2024 10 · 2025 17 · 2026 (al corte) 13.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 2 · 2020 0 · 2021 0 · 2022 4 · 2023 0 · 2024 2 · 2025 1 · 2026 (al corte) 1.",
+"Municipios de la subregión con más delitos electorales denunciados 2018-2026: Puerto Berrío 10; Yondó 7; Maceo 3; Puerto Nare 3; Puerto Triunfo 3.",
+"Municipios de la subregión con más víctimas defensoras de DD. HH. o líderes 2018-2026: Puerto Berrío 30; Yondó 29; Maceo 3; Puerto Nare 2; Puerto Triunfo 2."
+]
+},
+"Nordeste": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 5 · 2019 10 · 2020 0 · 2021 1 · 2022 4 · 2023 14 · 2024 0 · 2025 0 · 2026 (al corte) 6. Años de elecciones territoriales: 2019 10 y 2023 14.",
+"Procesos por extorsión: 2018 76 · 2019 109 · 2020 88 · 2021 90 · 2022 97 · 2023 104 · 2024 91 · 2025 81 · 2026 (al corte) 52. 2025: 37,2 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 93 · 2019 95 · 2020 36 · 2021 46 · 2022 107 · 2023 86 · 2024 79 · 2025 70 · 2026 (al corte) 34. 2025: 32,2 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 3 · 2019 16 · 2020 12 · 2021 9 · 2022 12 · 2023 14 · 2024 11 · 2025 10 · 2026 (al corte) 2.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 13 · 2019 4 · 2020 0 · 2021 7 · 2022 12 · 2023 24 · 2024 43 · 2025 25 · 2026 (al corte) 18.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 1 · 2020 1 · 2021 1 · 2022 1 · 2023 2 · 2024 3 · 2025 1 · 2026 (al corte) 2.",
+"Municipios de la subregión con más delitos electorales denunciados 2018-2026: Santo Domingo 9; San Roque 8; Remedios 5; Amalfi 4; Anorí 4.",
+"Municipios de la subregión con más víctimas defensoras de DD. HH. o líderes 2018-2026: Segovia 49; Remedios 35; San Roque 16; Anorí 11; Yolombó 10."
+]
+},
+"Norte": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 6 · 2019 17 · 2020 0 · 2021 0 · 2022 13 · 2023 27 · 2024 2 · 2025 2 · 2026 (al corte) 15. Años de elecciones territoriales: 2019 17 y 2023 27.",
+"Procesos por extorsión: 2018 85 · 2019 84 · 2020 77 · 2021 122 · 2022 235 · 2023 136 · 2024 136 · 2025 100 · 2026 (al corte) 53. 2025: 39,0 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 187 · 2019 138 · 2020 94 · 2021 68 · 2022 132 · 2023 70 · 2024 71 · 2025 62 · 2026 (al corte) 28. 2025: 24,2 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 21 · 2019 13 · 2020 25 · 2021 23 · 2022 12 · 2023 15 · 2024 16 · 2025 14 · 2026 (al corte) 5.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 13 · 2019 9 · 2020 4 · 2021 17 · 2022 17 · 2023 27 · 2024 16 · 2025 29 · 2026 (al corte) 16.",
+"Víctimas periodistas (cualquier delito): 2018 1 · 2019 7 · 2020 1 · 2021 3 · 2022 4 · 2023 5 · 2024 0 · 2025 1 · 2026 (al corte) 3.",
+"Municipios de la subregión con más delitos electorales denunciados 2018-2026: Santa Rosa de Osos 20; Campamento 10; San Pedro de Los Milagros 7; Angostura 6; Donmatías 6.",
+"Municipios de la subregión con más víctimas defensoras de DD. HH. o líderes 2018-2026: Ituango 34; Toledo 32; Briceño 25; Donmatías 13; Yarumal 12."
+]
+},
+"Occidente": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 11 · 2019 14 · 2020 0 · 2021 0 · 2022 11 · 2023 34 · 2024 0 · 2025 0 · 2026 (al corte) 1. Años de elecciones territoriales: 2019 14 y 2023 34.",
+"Procesos por extorsión: 2018 40 · 2019 34 · 2020 47 · 2021 52 · 2022 71 · 2023 57 · 2024 74 · 2025 60 · 2026 (al corte) 31. 2025: 26,4 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 78 · 2019 59 · 2020 35 · 2021 51 · 2022 60 · 2023 51 · 2024 34 · 2025 14 · 2026 (al corte) 11. 2025: 6,2 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 7 · 2019 7 · 2020 2 · 2021 4 · 2022 1 · 2023 0 · 2024 4 · 2025 3 · 2026 (al corte) 1.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 0 · 2019 4 · 2020 3 · 2021 7 · 2022 9 · 2023 7 · 2024 10 · 2025 10 · 2026 (al corte) 8.",
+"Víctimas periodistas (cualquier delito): 2018 0 · 2019 2 · 2020 3 · 2021 3 · 2022 7 · 2023 2 · 2024 1 · 2025 1 · 2026 (al corte) 2.",
+"Municipios de la subregión con más delitos electorales denunciados 2018-2026: Cañasgordas 12; Dabeiba 12; Uramita 9; Buriticá 4; Ebéjico 4.",
+"Municipios de la subregión con más víctimas defensoras de DD. HH. o líderes 2018-2026: Dabeiba 13; Sabanalarga 13; Ebéjico 6; Santafé de Antioquia 4; Cañasgordas 4."
+]
+},
+"Oriente": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 4 · 2019 31 · 2020 1 · 2021 2 · 2022 25 · 2023 44 · 2024 2 · 2025 3 · 2026 (al corte) 18. Años de elecciones territoriales: 2019 31 y 2023 44.",
+"Procesos por extorsión: 2018 131 · 2019 121 · 2020 161 · 2021 156 · 2022 264 · 2023 259 · 2024 271 · 2025 320 · 2026 (al corte) 193. 2025: 41,9 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 58 · 2019 73 · 2020 61 · 2021 82 · 2022 113 · 2023 80 · 2024 81 · 2025 38 · 2026 (al corte) 16. 2025: 5,0 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 27 · 2019 19 · 2020 11 · 2021 9 · 2022 7 · 2023 19 · 2024 10 · 2025 5 · 2026 (al corte) 1.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 3 · 2019 7 · 2020 8 · 2021 8 · 2022 25 · 2023 24 · 2024 17 · 2025 39 · 2026 (al corte) 22.",
+"Víctimas periodistas (cualquier delito): 2018 10 · 2019 16 · 2020 20 · 2021 26 · 2022 40 · 2023 44 · 2024 21 · 2025 33 · 2026 (al corte) 13.",
+"Municipios de la subregión con más delitos electorales denunciados 2018-2026: Rionegro 24; La Ceja 12; Alejandría 10; Guarne 8; Retiro 8.",
+"Municipios de la subregión con más víctimas defensoras de DD. HH. o líderes 2018-2026: Rionegro 25; El Carmen de Viboral 16; Sonsón 16; Peñol 11; San Rafael 11."
+]
+},
+"Suroeste": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 7 · 2019 21 · 2020 0 · 2021 2 · 2022 8 · 2023 71 · 2024 1 · 2025 0 · 2026 (al corte) 4. Años de elecciones territoriales: 2019 21 y 2023 71.",
+"Procesos por extorsión: 2018 64 · 2019 75 · 2020 93 · 2021 120 · 2022 104 · 2023 97 · 2024 133 · 2025 123 · 2026 (al corte) 64. 2025: 31,7 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 56 · 2019 46 · 2020 40 · 2021 55 · 2022 83 · 2023 64 · 2024 60 · 2025 41 · 2026 (al corte) 19. 2025: 10,6 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 17 · 2019 14 · 2020 16 · 2021 5 · 2022 3 · 2023 10 · 2024 13 · 2025 2 · 2026 (al corte) 0.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 1 · 2019 0 · 2020 2 · 2021 8 · 2022 10 · 2023 14 · 2024 17 · 2025 9 · 2026 (al corte) 20.",
+"Víctimas periodistas (cualquier delito): 2018 2 · 2019 2 · 2020 2 · 2021 5 · 2022 3 · 2023 4 · 2024 4 · 2025 5 · 2026 (al corte) 4.",
+"Municipios de la subregión con más delitos electorales denunciados 2018-2026: Amagá 18; Pueblorrico 9; Andes 8; Angelópolis 8; Venecia 8.",
+"Municipios de la subregión con más víctimas defensoras de DD. HH. o líderes 2018-2026: Urrao 14; Andes 9; Venecia 9; Jardín 8; Jericó 6."
+]
+},
+"Urabá": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 13 · 2019 21 · 2020 0 · 2021 1 · 2022 8 · 2023 30 · 2024 2 · 2025 1 · 2026 (al corte) 8. Años de elecciones territoriales: 2019 21 y 2023 30.",
+"Procesos por extorsión: 2018 76 · 2019 61 · 2020 37 · 2021 33 · 2022 75 · 2023 67 · 2024 76 · 2025 54 · 2026 (al corte) 37. 2025: 10,3 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 120 · 2019 107 · 2020 58 · 2021 71 · 2022 108 · 2023 98 · 2024 72 · 2025 42 · 2026 (al corte) 14. 2025: 8,0 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 6 · 2019 6 · 2020 16 · 2021 4 · 2022 4 · 2023 5 · 2024 4 · 2025 3 · 2026 (al corte) 2.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 11 · 2019 17 · 2020 12 · 2021 31 · 2022 33 · 2023 20 · 2024 29 · 2025 24 · 2026 (al corte) 39.",
+"Víctimas periodistas (cualquier delito): 2018 1 · 2019 5 · 2020 5 · 2021 7 · 2022 8 · 2023 3 · 2024 7 · 2025 4 · 2026 (al corte) 5.",
+"Municipios de la subregión con más delitos electorales denunciados 2018-2026: Turbo 18; Apartadó 15; Murindó 11; Mutatá 9; Chigorodó 8.",
+"Municipios de la subregión con más víctimas defensoras de DD. HH. o líderes 2018-2026: Apartadó 84; Turbo 34; Mutatá 33; Carepa 17; Necoclí 13."
+]
+},
+"Valle de Aburrá": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 67 · 2019 39 · 2020 10 · 2021 15 · 2022 90 · 2023 109 · 2024 15 · 2025 22 · 2026 (al corte) 68. Años de elecciones territoriales: 2019 39 y 2023 109.",
+"Procesos por extorsión: 2018 1.187 · 2019 1.127 · 2020 1.195 · 2021 1.344 · 2022 2.441 · 2023 2.515 · 2024 2.237 · 2025 2.155 · 2026 (al corte) 1.469. 2025: 51,2 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 1.044 · 2019 900 · 2020 430 · 2021 435 · 2022 731 · 2023 850 · 2024 538 · 2025 185 · 2026 (al corte) 92. 2025: 4,4 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 144 · 2019 142 · 2020 121 · 2021 94 · 2022 110 · 2023 134 · 2024 111 · 2025 62 · 2026 (al corte) 20.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 39 · 2019 146 · 2020 96 · 2021 228 · 2022 406 · 2023 378 · 2024 342 · 2025 446 · 2026 (al corte) 169.",
+"Víctimas periodistas (cualquier delito): 2018 96 · 2019 549 · 2020 281 · 2021 525 · 2022 745 · 2023 583 · 2024 244 · 2025 342 · 2026 (al corte) 240.",
+"Municipios de la subregión con más delitos electorales denunciados 2018-2026: Medellín 275; Bello 48; Itagüí 31; Envigado 23; La Estrella 17.",
+"Municipios de la subregión con más víctimas defensoras de DD. HH. o líderes 2018-2026: Medellín 1.714; Bello 190; Itagüí 108; Envigado 64; Barbosa 48."
+]
+}
+},
+"departamento": {
+"lineas": [
+"Delitos electorales denunciados (contra mecanismos de participación democrática): 2018 123 · 2019 167 · 2020 12 · 2021 23 · 2022 172 · 2023 364 · 2024 24 · 2025 30 · 2026 (al corte) 132. Años de elecciones territoriales: 2019 167 y 2023 364.",
+"Procesos por extorsión: 2018 1.792 · 2019 1.755 · 2020 1.827 · 2021 2.118 · 2022 3.480 · 2023 3.381 · 2024 3.132 · 2025 3.001 · 2026 (al corte) 1.976. 2025: 43,1 por 100.000 habitantes.",
+"Procesos por desplazamiento forzado: 2018 2.121 · 2019 1.932 · 2020 962 · 2021 942 · 2022 1.471 · 2023 1.432 · 2024 1.045 · 2025 532 · 2026 (al corte) 236. 2025: 7,6 por 100.000 habitantes.",
+"Procesos por reclutamiento o uso de menores: 2018 250 · 2019 249 · 2020 237 · 2021 171 · 2022 163 · 2023 219 · 2024 177 · 2025 104 · 2026 (al corte) 36.",
+"Víctimas defensoras de DD. HH. o líderes (cualquier delito): 2018 98 · 2019 211 · 2020 165 · 2021 339 · 2022 542 · 2023 521 · 2024 493 · 2025 621 · 2026 (al corte) 319.",
+"Víctimas periodistas (cualquier delito): 2018 111 · 2019 590 · 2020 317 · 2021 575 · 2022 826 · 2023 655 · 2024 287 · 2025 395 · 2026 (al corte) 276.",
+"Delitos electorales más denunciados en Antioquia 2018-2026: Constreñimiento Al Sufragante Art. 387 C.P. 192; Fraude En La Inscripcion De Cedulas Art. 389 C.P. 183; Corrupcion De Sufragante Art. 390 C.P. 175; Voto Fraudulento Art. 391 C.P 133; Ocultamiento, Retencion Y Posesion Ilicita De Cedula Art. 395 C.P. 91; Alteracion De Resultados Electorales Art. 394  C.P. 72; Fraude Al Sufragante Art. 388 C.P. 67; Trafico De Votos Art. 390a 34.",
+"Delitos más denunciados contra defensores de DD. HH. y líderes en Antioquia 2018-2026: Amenazas Contra Defensores De Derechos Humanos Y Servidores Publicos Art. 188e 1.364; Amenazas Art. 347 C.P. 272; Homicidio Art. 103 C.P. 160; Calumnia. Art. 221 C.P. 94; Desplazamiento Forzado Art. 180  C.P. 70.",
+"Municipios con más delitos electorales denunciados 2018-2026: Medellín 275; Bello 48; Itagüí 31; Nechí 24; Rionegro 24; Envigado 23; Santa Rosa de Osos 20; Amagá 18; Turbo 18; La Estrella 17."
+]
+}
+}

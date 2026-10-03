@@ -5,7 +5,7 @@ import { fuentesRegistradas, registrarFuente, versionFuentes } from '../ia/motor
 import { validarDeclarativo } from '../ia/motor/fuentesDeclarativas';
 import { _fijarNoticias } from '../noticias/noticiasCliente';
 import { coincideNombre, historialCandidato } from '../ia/motor/historialCandidato';
-import { armarMacrofuentes } from '../ia/macrofuentes';
+import { armarMacrofuentes, seleccionDeDane } from '../ia/macrofuentes';
 import { registrarPerfil } from '../ia/registroPerfil';
 import { identidadVacia } from '../identidad/identidad';
 
@@ -83,6 +83,19 @@ describe('motor de análisis: fuentes por unidad', () => {
     _fijarNoticias('comuna-14', null);
     _fijarNoticias('muni:05001', null);
     expect(dossierComoTexto(await dossierTerritorio(sel('medellin', 'comuna-14')))).not.toMatch(/Operativo en la comuna 14/);
+  }, 60_000);
+
+  it('estudios académicos (auxiliar, con cita y página) y Fiscalía (denuncias) entran al dossier', async () => {
+    const carmen = dossierComoTexto(await dossierTerritorio(seleccionDeDane('05148')));
+    expect(carmen).toMatch(/AUXILIAR \(sin verificar\) · Estudios sobre violencia y gobernanza criminal/);
+    expect(carmen).toMatch(/Indepaz.*p\. 16: El Carmen de Viboral registró 2 masacres en 2025/);
+    const ant = dossierComoTexto(await dossierTerritorio({ subregion: null, muniId: null, comunaId: null, barrioId: null }));
+    expect(ant).toMatch(/p\. 8: Antioquia fue en 2025 el segundo departamento con más asesinatos de líderes/);
+    expect(ant).toMatch(/## Fiscalía: denuncias por delitos electorales/);
+    expect(ant).toMatch(/Delitos electorales denunciados .*2023 [\d.]+/);
+    const med = dossierComoTexto(await dossierTerritorio(sel('medellin')));
+    expect(med).toMatch(/entre 150 y 300 "combos"/);
+    expect(med).toMatch(/Víctimas defensoras de DD\. HH\. o líderes/);
   }, 60_000);
 
   it('contrato de los JSON declarativos de src/data/motor/', () => {

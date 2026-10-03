@@ -151,6 +151,8 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
 
 ## 3. Pendientes (en orden sugerido)
 
+> **Lista consolidada y vigente: `docs/PENDIENTES.md` (2-oct-2026).** Lo que sigue es el detalle histórico.
+
 ### Pendientes de Jose (Network IA Solutions) — anotados el 29-sep-2026
 1. **Login con landing page**, similar a la de Casa Korea (`Casa Korea/CasaKoreaProject/apps/web/src/pages/InicioPage.tsx`),
    usando el prompt maestro `D:\Network IA Solutions\Clientes\dexprolaw\docs\PROMPT-MAESTRO-INICIO-PAGINA.md`
@@ -238,11 +240,20 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
   `_originales/registraduria/Concejo_Antioquia_2023_Todos_los_resultados.xlsx`), `build_resultados_puesto_2023.py`, `build_resultados_historicos.py <2015|2018|2019|2022>`,
   `build_presidencial_2026.py`, `indice_resultados_puesto.py`, `indice_ganadores.py`, `build_e24_medellin_zonas.py`.
 - Demografía: `build_censo_electoral.mjs`, `build_proyeccion_sexo_edad.py`, `importar_proyecciones_medellin.py` (Distrito 2018-2030).
-- Seguridad: `importar_seguridad.py` (Policía/MinDefensa, API de datos.gov.co; `--local` recalcula desde `_originales/seguridad/`), `importar_alertas_defensoria.py` (SAT; `_originales/defensoria/`).
+- Seguridad: `importar_fiscalia.py` (Fiscalía, SPOA), `importar_estudios.py` (Indepaz, IPA), `importar_seguridad.py` (Policía/MinDefensa, API de datos.gov.co; `--local` recalcula desde `_originales/seguridad/`), `importar_alertas_defensoria.py` (SAT; `_originales/defensoria/`).
 - Servicios clave: `src/services/pollingStationsService.ts`, `electionResultsService.ts`, `winnersService.ts`,
   `territoryProfileService.ts`; ficha: `src/components/territorio/`.
 
 ## 5. Bitácora (agregar arriba lo más reciente)
+- 2-oct (Claude Opus, `main`): **Fiscalía y estudios académicos en el motor; pendientes consolidados.**
+  - Fiscalía (SPOA, datos.gov.co, corte 31-ago-2026): por municipio y año 2018-2026, procesos por delitos electorales,
+    extorsión, desplazamiento forzado y reclutamiento o uso de menores, y víctimas defensoras de DD. HH. o periodistas.
+    Rotulado como denuncias. `scripts/importar_fiscalia.py` (reanudable: la API de Víctimas es lenta).
+  - Estudios (auxiliar, con cita y página): Indepaz, balance 2025 (Antioquia, El Carmen de Viboral y Yondó) e IPA sobre
+    gobernanza criminal en Medellín. `scripts/importar_estudios.py`. Pendiente: tesis de la U. de Antioquia (Bajo Cauca),
+    bloqueada por anti-robots; descargarla a mano.
+  - MOE: sigue pendiente (el mapa de 2027 no se ha publicado).
+  - `docs/PENDIENTES.md`: lista consolidada de lo hecho hoy y lo pendiente por responsable.
 - 2-oct (Claude Opus, `main`): **auditoría final de las 19 herramientas** (`docs/AUDITORIA_FINAL_HERRAMIENTAS.md`):
   todas abren sin errores en el navegador; 392 pruebas en verde. Corregido: Día E mostraba actas de ejemplo y
   generaba minutas "para radicar" sin rótulo de ejemplo; ahora lo dice en la vista, en el modal y en el texto copiado.
