@@ -1,6 +1,6 @@
 # Proteus — estado del proyecto (memoria compartida entre agentes)
 
-Última actualización: 2-oct-2026 (Claude Opus: motor de análisis con tres macrofuentes en toda llamada a IA `c06bfb5`…`61402e6`, auditoría de datos escritos a mano y retiro de cédulas `4e893ef`; antes: estratificación `e9a59bc`, analista y dossier `b0ec6ae`/`ba9ed7c`). **Todo agente debe actualizar este archivo al terminar.**
+Última actualización: 3-oct-2026 (Claude Opus: código muerto del perfil y comuna 12 de Bello `151d159`; 2-oct: motor de análisis con tres macrofuentes en toda llamada a IA `c06bfb5`…`61402e6`, auditoría de datos escritos a mano y retiro de cédulas `4e893ef`; antes: estratificación `e9a59bc`, analista y dossier `b0ec6ae`/`ba9ed7c`). **Todo agente debe actualizar este archivo al terminar.**
 Repositorio local: `C:\Users\isaac\OneDrive\Documentos\Proyecto Proteus`. Remoto: github.com/isaacmendoza265-cmd/proteus-1.45.
 Ramas `codex/navegacion-mapa`, `claude/inicio` y `claude/encuestas-2026` ya fusionadas en `main` (28-sep). No subir bundles a GitHub por la web: se aplican con `git fetch <bundle>`.
 Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en el PATH de los agentes
@@ -189,8 +189,7 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
 - **`GEMINI_API_KEY` válida** en Coolify (la actual da 403): sin ella la IA no funciona en producción.
 - **Cambiar la clave del admin `kali@kali.com`** (es `kali`) desde Ajustes › Usuarios y acceso.
 - **Gobernación → PostgreSQL** (hoy SQLite en el PC de Isaac; en el servidor da un error controlado).
-- Código muerto por limpiar: `HomePageStructure.tsx` y el "Paso 1: Conexión a Google Drive" simulado dentro de
-  `CandidateProfileManager.tsx` (inalcanzable desde que se borró `CandidateProfilesView`).
+- ~~Código muerto por limpiar~~: retirado el 3-oct (ver bitácora).
 - `www.polimetrics.app` redirige a `http://polimetrics.app` y de ahí a https (dos saltos): funciona, se puede pulir.
 - Pruebas más lentas: `electionResultsService` (4,8 s), `municipalDivisions` (3,6 s), `faseB` (3,3 s): cargan los
   JSON grandes. Postgres no es el cuello (suite completa: HDD 10,7 s vs NVMe 10,1 s).
@@ -222,7 +221,7 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
 4. **57 puestos sin ubicar**: probar capa de sedes educativas georreferenciadas (Gobernación/MEN), con permiso.
 5. **Barrios con nombre** en Girardota, El Retiro, La Unión, Nechí, Zaragoza, San Pedro de los Milagros,
    Santa Fe de Antioquia, Amagá y El Santuario: no hay capa pública; pedir a las alcaldías.
-6. Bello: nombre de la comuna 12 (El Pinar); componentes con datos a mano (BelloInteractiveMap.tsx,
+6. Bello: ~~nombre de la comuna 12~~ (3-oct: no tiene nombre oficial, se queda "Comuna 12"); componentes con datos a mano (BelloInteractiveMap.tsx,
    analystOtherMunisData.ts).
 7. Deuda técnica: clave de Gemini en el cliente; Google Drive simulado; JSX monolítico.
 8. ~~Séptimo de "los 7 puntos de la app" (26-sep)~~: cerrado el 2-oct, fue un error humano (no hay séptimo punto).
@@ -245,6 +244,13 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
   `territoryProfileService.ts`; ficha: `src/components/territorio/`.
 
 ## 5. Bitácora (agregar arriba lo más reciente)
+- 3-oct (Claude Opus, sesión en la nube, `main`): **tareas cortas** (`151d159`).
+  - Código muerto retirado: `CandidateProfileManager.tsx` entero (nadie lo renderizaba; dentro iba el paso de Google
+    Drive simulado) y `HomePageStructure.tsx`. `CandidateProfile` y el perfil por defecto pasan a `src/types/candidateProfile.ts`.
+  - Bello, comuna 12: sin nombre oficial en ninguna fuente; se queda "Comuna 12". Su único barrio es el asentamiento
+    El Pinar y la base curada ya ancla ahí a quien diga "El Pinar". La Alcaldía tramita formalizar Granizal como
+    comuna 12 (modificación excepcional del POT): si sale, rehacer la capa con el plano nuevo.
+  - La aplicación de Claude ya está en el repositorio: las sesiones en la nube empujan sin bundles.
 - 2-oct (Claude Opus, `main`): **Fiscalía y estudios académicos en el motor; pendientes consolidados.**
   - Fiscalía (SPOA, datos.gov.co, corte 31-ago-2026): por municipio y año 2018-2026, procesos por delitos electorales,
     extorsión, desplazamiento forzado y reclutamiento o uso de menores, y víctimas defensoras de DD. HH. o periodistas.

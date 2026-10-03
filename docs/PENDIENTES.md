@@ -1,6 +1,6 @@
 # Pendientes de Proteus
 
-**Actualizado:** 2 de octubre de 2026, al cierre de la sesión de Claude en Cowork.
+**Actualizado:** 3 de octubre de 2026 (tareas cortas: código muerto, comuna 12 de Bello, aplicación de Claude).
 
 Esta es la lista consolidada. El detalle histórico está en `docs/ESTADO_PROYECTO.md` (secciones 3 y 5) y el estado de cada herramienta, en `docs/AUDITORIA_FINAL_HERRAMIENTAS.md`.
 
@@ -39,8 +39,7 @@ Esta es la lista consolidada. El detalle histórico está en `docs/ESTADO_PROYEC
 - **Dossiers de las familias 1, 2 y 3 y Capa 3**: en producción; se cargan cuando estén. Las reglas de la Capa 3 se integran luego al libro de reglas de piezas.
 - **Respaldo de modelos** ante saturación de Gemini: por definir (opción: DeepSeek).
 - **GitHub, como dueño del repositorio:**
-  - crear el webhook de auto-deploy;
-  - instalar la aplicación de Claude en el repositorio, para que las sesiones suban cambios sin bundles.
+  - crear el webhook de auto-deploy.
 - **Privacidad de la identidad:** activar "Enviar imágenes/videos a Gemini" si se quiere que la IA vea fotos y videos del candidato.
 - **Estudios académicos adicionales:** elegir si se agregan otros, además de los cargados hoy.
 - **Reglas del reglamento v1.2 que la app aún no cumple del todo**, a revisar con Isaac:
@@ -84,12 +83,11 @@ Esta es la lista consolidada. El detalle histórico está en `docs/ESTADO_PROYEC
 - **P4, casas políticas:** cruzar los ganadores 2015-2023 con Cuentas Claras; cada vínculo con fuente citada y revisión humana.
 - **57 puestos sin ubicar:** probar con la capa de sedes educativas georreferenciadas (con permiso).
 - **Barrios con nombre** en Girardota, El Retiro, La Unión, Nechí, Zaragoza, San Pedro de los Milagros, Santa Fe de Antioquia, Amagá y El Santuario: pedirlos a las alcaldías.
-- **Bello:** nombre de la comuna 12 (El Pinar) y componentes con datos a mano.
+- **Bello:** componentes con datos a mano (`BelloInteractiveMap.tsx`, `analystOtherMunisData.ts`).
 - **Gobernación a PostgreSQL:** hoy es una SQLite en el PC de Isaac; en el servidor da un error controlado.
 
 ## 6. Deuda técnica
 
-- Código muerto: `HomePageStructure.tsx` y el paso "Conexión a Google Drive" simulado en `CandidateProfileManager.tsx`.
 - Componentes JSX monolíticos (Gobernación, Subregiones, Contenido) y módulos con el estilo oscuro anterior.
 - Pruebas lentas por carga de JSON grandes (`electionResultsService`, `municipalDivisions`, `faseB`).
 
@@ -102,3 +100,9 @@ Esta es la lista consolidada. El detalle histórico está en `docs/ESTADO_PROYEC
 - Día E sin rótulo de ejemplo en su propia vista: rotulado.
 - Seguridad (Policía, Defensoría, Fiscalía y estudios): cargada, salvo la MOE y la tesis de la U. de Antioquia.
 - Séptimo de "los 7 puntos de la app": error humano, cerrado.
+
+## 8. Cerrados el 3-oct-2026
+
+- Aplicación de Claude instalada en el repositorio: las sesiones en la nube ya empujan a `main` sin bundles.
+- Código muerto retirado: `HomePageStructure.tsx` y `CandidateProfileManager.tsx` entero (nadie lo renderizaba; el paso de Google Drive simulado iba dentro). El tipo `CandidateProfile` y el perfil por defecto pasan a `src/types/candidateProfile.ts`.
+- Bello, comuna 12: **no tiene nombre oficial** (el plano del POT 2009 la numera sin nombre y la Registraduría llama "Comuna 12" al corregimiento San Félix). Se queda como "Comuna 12"; su único barrio es el asentamiento El Pinar, y un actor anclado en "El Pinar" ya cae en ella. Ojo: la Alcaldía tramita una modificación excepcional del POT para formalizar Granizal como comuna 12 (El Colombiano); si se aprueba, hay que rehacer la capa con el nuevo plano.
