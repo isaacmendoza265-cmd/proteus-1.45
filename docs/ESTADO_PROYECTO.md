@@ -137,6 +137,13 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
   toda la app; al lado del mapa hay una columna con todas las herramientas de generación y análisis. Las herramientas con
   selector propio arrancan en la unidad del mapa y conservan su selector. El menú izquierdo se puede compactar u ocultar.
 
+- 2-oct: **análisis del territorio**: se amplía el cálculo sin IA a todo Antioquia (125 municipios y sus comunas,
+  zonas, barrios y veredas) y se agrega "Redactar con Gemini", que convierte las cifras en texto con las tres
+  macrofuentes; las cifras siguen visibles aparte y, si Gemini falla, queda la versión calculada.
+- 2-oct: **fuentes nuevas a verificar**: población por sexo de la Alcaldía de Medellín y seguridad (Fiscalía,
+  Defensoría, MOE, estudios académicos). Resultado en `docs/FUENTES_SEGURIDAD_Y_POBLACION.md`; la carga espera
+  el permiso de descarga por lote.
+
 ## 3. Pendientes (en orden sugerido)
 
 ### Pendientes de Jose (Network IA Solutions) — anotados el 29-sep-2026
