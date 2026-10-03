@@ -27,6 +27,10 @@ export interface PiezaAnalizada {
 }
 
 export const INLINE_MAX = 9 * 1024 * 1024; // ~9 MB en base64 cabe en el límite de 15 MB del servidor
+/** Cloudflare corta en producción los cuerpos de más de 100 MB (CLAUDE.md): por encima, enlace de YouTube o recorte. */
+export const SUBIDA_MAX = 95 * 1024 * 1024;
+export const mensajeSubidaMax = (bytes: number) =>
+  `El archivo pesa ${Math.round(bytes / 1024 / 1024)} MB y el servidor acepta hasta 95 MB. Súbelo a YouTube como video público y pega el enlace, o recórtalo o comprímelo.`;
 
 export const tipoDeArchivo = (f: File): TipoPieza | null =>
   f.type.startsWith('image/') ? 'imagen' : f.type.startsWith('video/') ? 'video' : f.type.startsWith('audio/') ? 'audio' : null;
@@ -72,6 +76,7 @@ export async function analizarConGemini(args: {
   if (fuente.clase === 'archivo') {
     if (fuente.archivo.size <= INLINE_MAX) cuerpo.archivo = { mimeType: fuente.archivo.type, base64: await aBase64(fuente.archivo) };
     else {
+      if (fuente.archivo.size > SUBIDA_MAX) throw new Error(mensajeSubidaMax(fuente.archivo.size));
       cuerpo.subido = await json(await fetch('/api/piezas/subir', { method: 'POST', headers: { 'Content-Type': 'application/octet-stream', 'x-mime-type': fuente.archivo.type }, body: fuente.archivo }));
     }
   }

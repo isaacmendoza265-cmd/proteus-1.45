@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { pesoBase64, reducirImagen, TOPE_FOTOS_BASE64 } from '../services/imagenes';
 import { 
   Upload, 
   FileText, 
@@ -481,14 +482,8 @@ export const CandidateProfileManager: React.FC<CandidateProfileManagerProps> = (
       return;
     }
 
-    const readPromises = validFiles.map(file => {
-      return new Promise<string>((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      });
-    });
+    // Reducidas al subirlas (lado mayor 1.600 px): sin esto, unas pocas fotos de teléfono superan el límite de 15 MB
+    const readPromises = validFiles.map((file) => reducirImagen(file));
 
     Promise.all(readPromises).then(base64List => {
       setUploadedPhotos(prev => {
@@ -628,6 +623,9 @@ Debes responder ÚNICAMENTE con un bloque JSON plano estructurado con este esque
   "informeMarkdown": "Texto completo y persuasivo del informe de colorimetría e identidad visual estructurado con títulos y viñetas."
 }`;
 
+      if (pesoBase64(photosToAnalyze) > TOPE_FOTOS_BASE64) {
+        throw new Error('Las fotos juntas superan el tamaño que acepta el servidor. Quita alguna o súbelas de nuevo (al subirlas se reducen).');
+      }
       // Build multimodal parts array with all uploaded photos
       const parts: any[] = [];
       for (const photoStr of photosToAnalyze) {

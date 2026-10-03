@@ -34,7 +34,7 @@ import { formatAiError, generateContent } from '../services/geminiService';
 import { identidadActual } from '../services/ia/macrofuentes';
 import { paletaDefinida } from '../services/identidad/identidad';
 import { medicionesEnTexto, medirVideo, type MedicionPieza } from '../services/analisisPiezas/pieza';
-import { INLINE_MAX } from '../services/analisisPiezas/analisis';
+import { INLINE_MAX, SUBIDA_MAX, mensajeSubidaMax } from '../services/analisisPiezas/analisis';
 import { jsPDF } from 'jspdf';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -306,6 +306,7 @@ export const CandidateVideoAnalyzer: React.FC<CandidateVideoAnalyzerProps> = ({
           });
           partes.push({ inlineData: { mimeType: uploadedVideoFile.type || 'video/mp4', data: base64 } });
         } else {
+          if (uploadedVideoFile.size > SUBIDA_MAX) throw new Error(mensajeSubidaMax(uploadedVideoFile.size));
           const r = await fetch('/api/piezas/subir', { method: 'POST', headers: { 'Content-Type': 'application/octet-stream', 'x-mime-type': uploadedVideoFile.type || 'video/mp4' }, body: uploadedVideoFile });
           const j = await r.json().catch(() => ({}));
           if (!r.ok) throw new Error(j.error || `No se pudo subir el video (${r.status}).`);

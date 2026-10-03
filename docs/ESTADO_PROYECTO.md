@@ -244,6 +244,16 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
   `territoryProfileService.ts`; ficha: `src/components/territorio/`.
 
 ## 5. Bitácora (agregar arriba lo más reciente)
+- 2-oct (Claude Opus, `main`): **revisión del motor de personalización** (analista de imagen, perfil y multimedia).
+  - Bien: todas las llamadas pasan por el servidor con `gemini-3.8-flash` (único en `MODELOS_PERMITIDOS`), llevan las
+    macrofuentes con su tarea (`evaluar`; la captura del perfil va sin ellas a propósito) y respetan Privacidad
+    (`enviarFotosAIA` y `enviarVideosAIA`, apagadas por defecto: sin ellas, Multimedia trabaja solo con mediciones y
+    colorimetría, video y piezas con archivo se niegan con un mensaje claro).
+  - Corregido: las fotos del candidato se enviaban sin reducir y tres de teléfono superaban los 15 MB del servidor
+    (413); ahora se reducen al subirlas (1.600 px, JPEG) y hay tope antes de enviar. Videos de más de 95 MB se frenan
+    antes de subir con el aviso de usar YouTube (Cloudflare corta a 100 MB).
+  - Bloqueante que no es código: la `GEMINI_API_KEY` de producción sigue dando 403; sin clave válida nada de esto
+    responde. Isaac debe activar Privacidad en Identidad para que Gemini vea fotos y videos.
 - 2-oct (Claude Opus, `main`): **proyecciones del Distrito hasta 2030 y seguridad en el motor.**
   - Distrito de Medellín (actualización 2025 con el DANE; total 2026 = DANE): 351 unidades (comunas, corregimientos,
     barrios y veredas) con sexo × 17 grupos de edad, 2018-2030. Segmentos de una comuna o barrio de Medellín usa la
