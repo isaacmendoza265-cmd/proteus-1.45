@@ -11,6 +11,7 @@ import { rutasUsuarios } from './src/server/usuarios';
 import { rutasDatos } from './src/server/datos';
 import { rutasNoticias } from './src/server/noticias';
 import { limitarPeticiones, MODELOS_PERMITIDOS } from './src/server/limite';
+import { cadenaDesde, generarConRespaldo, statusGemini } from './src/server/geminiRespaldo';
 
 dotenv.config();
 
@@ -64,15 +65,37 @@ async function startServer() {
     return client;
   }
 
+  // Traduce el error de Google a algo legible. Las rutas pasan por la cadena de respaldo (geminiRespaldo.ts):
+  // si aun así llega una saturación, es que fallaron todos los modelos.
+  const errorGemini = (err: any, contexto: string) => {
+    const status = statusGemini(err);
+    let detalle = String(err?.message || '');
+    try {
+      const g = JSON.parse(detalle)?.error;
+      if (g) detalle = `${g.status ?? ''} ${g.message ?? ''}`.trim();
+    } catch { /* el mensaje no era JSON */ }
+    const intentados: string[] | undefined = err?.modelosIntentados;
+    const motivo =
+      status === 401 || status === 403
+        ? 'Google rechazó la clave de Gemini del servidor (sin permiso). Revisa GEMINI_API_KEY en .env y que el proyecto de Google AI Studio tenga acceso a la API.'
+        : status === 503 || status === 429
+          ? `Gemini está saturado o sin cuota en este momento${intentados ? ` (se intentó con ${intentados.join(', ')})` : ''}. Intenta de nuevo en unos minutos.`
+          : contexto;
+    return { status, error: `${motivo} (${status}${detalle ? `: ${detalle}` : ''})` };
+  };
+
   // Noticias por unidad territorial (botón "Noticias" del mapa): Gemini con la búsqueda de Google
   const MODELO_NOTICIAS = 'gemini-3.8-flash';
   app.use('/api/noticias', rutasNoticias(prisma, {
     modelo: MODELO_NOTICIAS,
-    buscar: (prompt) => getGenAI().models.generateContent({
-      model: MODELO_NOTICIAS,
-      contents: prompt,
-      config: { tools: [{ googleSearch: {} }], temperature: 0.2 },
-    }),
+    buscar: async (prompt) => {
+      const { respuesta, modelo } = await generarConRespaldo((model) => getGenAI().models.generateContent({
+        model,
+        contents: prompt,
+        config: { tools: [{ googleSearch: {} }], temperature: 0.2 },
+      }), { cadena: cadenaDesde(MODELO_NOTICIAS) });
+      return Object.assign(respuesta, { modelo });
+    },
   }));
 
   // Helper para ejecutar el bridge de Python del Subproyecto Gobernación.
@@ -309,28 +332,16 @@ async function startServer() {
         return;
       }
       const ai = getGenAI(req.headers['x-gemini-api-key'] as string | undefined);
-      const respuesta = await ai.models.generateContent({
-        model: MODELO_CONTENIDO,
+      const { respuesta, modelo } = await generarConRespaldo((model) => ai.models.generateContent({
+        model,
         contents: instruccion,
         config: typeof sistema === 'string' && sistema.trim() ? { systemInstruction: sistema } : undefined,
-      });
-      res.json({ texto: respuesta.text ?? '', modelo: MODELO_CONTENIDO });
+      }), { cadena: cadenaDesde(MODELO_CONTENIDO) });
+      res.json({ texto: respuesta.text ?? '', modelo });
     } catch (err: any) {
       console.error('Error en /api/contenido/generar:', err);
-      // El SDK entrega el error de Google como JSON dentro del mensaje: se traduce a algo legible
-      let status = Number(err.status) || 500;
-      let detalle = String(err.message || '');
-      try {
-        const g = JSON.parse(detalle)?.error;
-        if (g) { status = Number(g.code) || status; detalle = `${g.status ?? ''} ${g.message ?? ''}`.trim(); }
-      } catch { /* el mensaje no era JSON */ }
-      const motivo =
-        status === 401 || status === 403
-          ? 'Google rechazó la clave de Gemini del servidor (sin permiso). Revisa GEMINI_API_KEY en .env y que el proyecto de Google AI Studio tenga acceso a la API.'
-          : status === 429
-            ? 'Se agotó la cuota de Gemini. Intenta más tarde.'
-            : 'No se pudo generar el contenido.';
-      res.status(status).json({ error: `${motivo} (${status}${detalle ? `: ${detalle}` : ''})` });
+      const e = errorGemini(err, 'No se pudo generar el contenido.');
+      res.status(e.status).json({ error: e.error });
     }
   });
 
@@ -338,19 +349,6 @@ async function startServer() {
   // reglas (sistema), la instrucción con la identidad y las mediciones, el esquema JSON y la pieza: un enlace
   // público de YouTube, un archivo pequeño en base64 o un archivo ya subido con /api/piezas/subir.
   const MODELO_PIEZAS = 'gemini-3.8-flash';
-  const errorGemini = (err: any, contexto: string) => {
-    let status = Number(err?.status) || 500;
-    let detalle = String(err?.message || '');
-    try {
-      const g = JSON.parse(detalle)?.error;
-      if (g) { status = Number(g.code) || status; detalle = `${g.status ?? ''} ${g.message ?? ''}`.trim(); }
-    } catch { /* el mensaje no era JSON */ }
-    const motivo =
-      status === 401 || status === 403
-        ? 'Google rechazó la clave de Gemini del servidor (sin permiso). Revisa GEMINI_API_KEY en .env y que el proyecto de Google AI Studio tenga acceso a la API.'
-        : status === 429 ? 'Se agotó la cuota de Gemini. Intenta más tarde.' : contexto;
-    return { status, error: `${motivo} (${status}${detalle ? `: ${detalle}` : ''})` };
-  };
 
   // Analista territorial (src/components/territorio/AnalistaTerritorial.tsx). El cliente manda las reglas del analista
   // (sistema), el dossier completo de la unidad territorial (todo lo que Proteus tiene de ella: dossierTerritorialService)
@@ -376,12 +374,12 @@ async function startServer() {
         ...turnos.map((t) => ({ role: t.rol === 'analista' ? 'model' : 'user', parts: [{ text: t.texto }] })),
         { role: 'user', parts: [{ text: pregunta }] },
       ];
-      const respuesta = await ai.models.generateContent({
-        model: MODELO_ANALISTA,
+      const { respuesta, modelo } = await generarConRespaldo((model) => ai.models.generateContent({
+        model,
         contents,
         config: typeof sistema === 'string' && sistema.trim() ? { systemInstruction: sistema } : undefined,
-      });
-      res.json({ texto: respuesta.text ?? '', modelo: MODELO_ANALISTA });
+      }), { cadena: cadenaDesde(MODELO_ANALISTA) });
+      res.json({ texto: respuesta.text ?? '', modelo });
     } catch (err: any) {
       console.error('Error en /api/analista/preguntar:', err);
       const e = errorGemini(err, 'El analista no pudo responder.');
@@ -445,18 +443,18 @@ async function startServer() {
       }
       partes.push({ text: instruccion });
       const ai = getGenAI(req.headers['x-gemini-api-key'] as string | undefined);
-      const r = await ai.models.generateContent({
-        model: MODELO_PIEZAS,
+      const { respuesta: r, modelo } = await generarConRespaldo((model) => ai.models.generateContent({
+        model,
         contents: [{ role: 'user', parts: partes }],
         config: { systemInstruction: sistema, responseMimeType: 'application/json', responseJsonSchema: esquema, temperature: 0.2 },
-      });
+      }), { cadena: cadenaDesde(MODELO_PIEZAS) });
       const texto = r.text ?? '';
       let analisis: unknown;
       try { analisis = JSON.parse(texto); } catch {
         res.status(502).json({ error: 'Gemini no devolvió un JSON válido.', texto });
         return;
       }
-      res.json({ analisis, modelo: MODELO_PIEZAS, uso: r.usageMetadata ?? null });
+      res.json({ analisis, modelo, uso: r.usageMetadata ?? null });
     } catch (err: any) {
       console.error('Error en /api/piezas/analizar:', err);
       const e = errorGemini(err, 'No se pudo analizar la pieza.');
@@ -485,13 +483,14 @@ async function startServer() {
         return;
       }
       const ai = getGenAI(req.headers['x-gemini-api-key'] as string | undefined);
-      const respuesta = await ai.models.generateContent({
-        model: model ?? MODELO_GENERICO,
+      const { respuesta, modelo } = await generarConRespaldo((m) => ai.models.generateContent({
+        model: m,
         contents,
         config,
-      });
+      }), { cadena: cadenaDesde(model ?? MODELO_GENERICO) });
       res.json({
         text: respuesta.text ?? '',
+        modelo,
         candidates: respuesta.candidates ?? null,
         usageMetadata: respuesta.usageMetadata ?? null,
       });

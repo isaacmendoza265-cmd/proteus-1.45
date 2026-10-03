@@ -9,8 +9,8 @@ import {
 } from '../services/noticias/noticias';
 
 export interface DepsNoticias {
-  /** Llama a Gemini con la herramienta googleSearch */
-  buscar: (prompt: string) => Promise<RespuestaBusqueda>;
+  /** Llama a Gemini con la herramienta googleSearch; `modelo` dice cuál respondió (puede ser uno de respaldo) */
+  buscar: (prompt: string) => Promise<RespuestaBusqueda & { modelo?: string }>;
   modelo: string;
   /** Destino final de un enlace de redirección de Google (los de vertexaisearch caducan) */
   resolver?: (uri: string) => Promise<string>;
@@ -70,7 +70,7 @@ export function rutasNoticias(prisma: PrismaClient, deps: DepsNoticias) {
       const r = await deps.buscar(promptNoticias(consulta.trim(), hoyBogota()));
       const ext = extraerNoticias(r);
       const noticias = await Promise.all(ext.noticias.map(async (n) => ({ ...n, enlace: await resolver(n.enlace) })));
-      const datos = { noticias, descartadas: ext.descartadas, consultas: ext.consultas, sugerenciasHtml: ext.sugerenciasHtml, modelo: deps.modelo };
+      const datos = { noticias, descartadas: ext.descartadas, consultas: ext.consultas, sugerenciasHtml: ext.sugerenciasHtml, modelo: r.modelo ?? deps.modelo };
       const fila = await prisma.noticiasUnidad.create({
         data: { unidadId, nombre: nombre.trim(), datos: datos as unknown as Prisma.InputJsonObject, buscadoPor: usuarioDe(res).email },
       });
@@ -81,7 +81,7 @@ export function rutasNoticias(prisma: PrismaClient, deps: DepsNoticias) {
       console.error('Error en /api/noticias/buscar:', err);
       const motivo = status === 401 || status === 403
         ? 'Google rechazó la clave de Gemini del servidor (sin permiso).'
-        : status === 429 ? 'Se agotó la cuota de Gemini. Intenta más tarde.' : 'No se pudo buscar noticias.';
+        : status === 503 || status === 429 ? 'Gemini está saturado o sin cuota en este momento. Intenta de nuevo en unos minutos.' : 'No se pudo buscar noticias.';
       res.status(status).json({ error: `${motivo} (${status}${e?.message ? `: ${String(e.message).slice(0, 200)}` : ''})` });
     }
   });
