@@ -23,9 +23,12 @@ describe('Segmentos de población con datos del territorio', () => {
     expect(med.educacion.reparto!.superior).toBeGreaterThan(rural.educacion.reparto!.superior);
   });
 
-  it('una comuna usa el CNPV 2018 rotulado Estimado y el censo de la comuna', async () => {
+  it('una comuna de Medellín usa la proyección oficial del Distrito (2026) y trae la proyección a 2030', async () => {
     const s = await segmentarTerritorio(sel('medellin', 'comuna-14'));
-    expect(s.sexoEdad.estado).toBe('estimado');
+    expect(s.sexoEdad.estado).toBe('oficial');
+    expect(s.sexoEdad.fuente).toMatch(/Planeación/);
+    expect(s.proyeccion2030!.adultos).toBeGreaterThan(s.proyeccion2030!.adultos2026);
+    expect(s.proyeccion2030!.porEdad.adulto_mayor).toBeGreaterThan(s.proyeccion2030!.porEdad2026.adulto_mayor);
     expect(s.cohortes).toHaveLength(54);
     expect(s.estrato.reparto!.alto).toBeGreaterThan(0.8); // El Poblado
     expect(s.electoral.alcance).toMatch(/Poblado/);

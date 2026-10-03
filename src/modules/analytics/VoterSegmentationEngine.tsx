@@ -184,6 +184,16 @@ export const VoterSegmentationEngine: React.FC<VoterSegmentationEngineProps> = (
               <div className="flex items-center justify-between gap-2"><span className="text-xs uppercase font-bold text-[var(--c-muted)]">Personas de 18 años o más</span><Sello estado={seg.sexoEdad.estado} /></div>
               <div className="text-2xl font-titulo mt-1">{fmt(seg.adultos)}</div>
               <p className="text-xs text-[var(--c-muted)] mt-1">{seg.sexoEdad.fuente}</p>
+              {seg.proyeccion2030 && (() => {
+                const q = seg.proyeccion2030;
+                const c = (a: number, b: number) => (a ? `${b >= a ? '+' : ''}${((100 * (b - a)) / a).toFixed(1).replace('.', ',')} %` : '—');
+                return (
+                  <div className="mt-2 pt-2 border-t border-[var(--c-border)] text-xs">
+                    <span className="font-bold">Proyección 2030:</span> {fmt(q.adultos)} ({c(q.adultos2026, q.adultos)})
+                    <span className="block text-[var(--c-muted)]">18 a 29: {c(q.porEdad2026.joven, q.porEdad.joven)} · 30 a 59: {c(q.porEdad2026.adulto, q.porEdad.adulto)} · 60 o más: {c(q.porEdad2026.adulto_mayor, q.porEdad.adulto_mayor)} (Distrito de Medellín)</span>
+                  </div>
+                );
+              })()}
             </div>
             <div className={tarjeta}>
               <div className="flex items-center justify-between gap-2"><span className="text-xs uppercase font-bold text-[var(--c-muted)]">Censo electoral</span><Sello estado={seg.electoral.censo ? 'oficial' : 'sin-informacion'} /></div>

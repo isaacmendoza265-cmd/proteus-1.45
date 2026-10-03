@@ -1,0 +1,1509 @@
+{
+"meta": {
+"titulo": "Seguridad: delitos registrados por la Policía (2018-2026)",
+"fuente": "Policía Nacional y Ministerio de Defensa, estadística delictiva (datos.gov.co)",
+"nivel": "oficial",
+"categoria": "seguridad",
+"corte": "2026-08-31",
+"nota": "Municipio donde ocurrió el hecho. Extorsión y amenazas son denuncias (hay subregistro). Tasas con la población DANE 2026 (la de 2025 es aproximada). 2026 llega hasta el corte. Es un dato del municipio: no se atribuye a un barrio ni se cruza con su voto sin la advertencia de falacia ecológica"
+},
+"municipios": {
+"05001": {
+"lineas": [
+"Tasa de homicidio 2025: 13,2 por 100.000 habitantes, por debajo de la de Antioquia (25,2).",
+"Homicidios: 2018 625 · 2019 576 · 2020 366 · 2021 391 · 2022 358 · 2023 359 · 2024 309 · 2025 333 · 2026 (enero-agosto) 176. Enero-agosto: 223 en 2025 y 176 en 2026 (-21 %).",
+"Extorsiones denunciadas: 2018 578 · 2019 648 · 2020 634 · 2021 636 · 2022 671 · 2023 941 · 2024 950 · 2025 972 · 2026 (enero-agosto) 719. Tasa 2025: 38,5 por 100.000 habitantes. Enero-agosto: 601 en 2025 y 719 en 2026 (+20 %).",
+"Secuestros: 2018 5 · 2019 5 · 2020 17 · 2021 9 · 2022 10 · 2023 18 · 2024 12 · 2025 28 · 2026 (enero-agosto) 9. Tasa 2025: 1,1 por 100.000 habitantes. Enero-agosto: 15 en 2025 y 9 en 2026 (-40 %).",
+"Masacres: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 1 · 2025 0 · 2026 (enero-agosto) 0. Víctimas de masacres 2018-2026: 6.",
+"Actos de terrorismo: 2018 3 · 2019 10 · 2020 3 · 2021 26 · 2022 7 · 2023 2 · 2024 6 · 2025 3 · 2026 (enero-agosto) 3. Enero-agosto: 1 en 2025 y 3 en 2026 (+200 %).",
+"Miembros de la fuerza pública asesinados o heridos: 2018 18 · 2019 9 · 2020 9 · 2021 13 · 2022 10 · 2023 2 · 2024 5 · 2025 3 · 2026 (enero-agosto) 4. De ellos, asesinados 2018-2026: 5. Enero-agosto: 2 en 2025 y 4 en 2026 (+100 %).",
+"Amenazas denunciadas: 2018 769 · 2019 595 · 2020 825 · 2021 1.003 · 2022 1.711 · 2023 1.660 · 2024 1.816 · 2025 1.525 · 2026 (parcial) 1.177. Tasa 2025: 60,4 por 100.000 habitantes."
+]
+},
+"05002": {
+"lineas": [
+"Tasa de homicidio 2025: 28,4 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 5 · 2019 4 · 2020 5 · 2021 2 · 2022 4 · 2023 12 · 2024 10 · 2025 6 · 2026 (enero-agosto) 15. Enero-agosto: 4 en 2025 y 15 en 2026 (+275 %).",
+"Extorsiones denunciadas: 2018 2 · 2019 5 · 2020 1 · 2021 3 · 2022 5 · 2023 0 · 2024 5 · 2025 2 · 2026 (enero-agosto) 2. Tasa 2025: 9,5 por 100.000 habitantes. Enero-agosto: 1 en 2025 y 2 en 2026 (+100 %).",
+"Masacres: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (enero-agosto) 2. Víctimas de masacres 2018-2026: 9. Enero-agosto: 0 en 2025 y 2 en 2026 (sin base de comparación).",
+"Actos de terrorismo: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0.",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 0.",
+"Amenazas denunciadas: 2018 1 · 2019 1 · 2020 5 · 2021 9 · 2022 8 · 2023 14 · 2024 13 · 2025 10 · 2026 (parcial) 1. Tasa 2025: 47,3 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Abejorral: secuestros."
+]
+},
+"05004": {
+"lineas": [
+"Tasa de homicidio 2025: 0,0 por 100.000 habitantes, por debajo de la de Antioquia (25,2).",
+"Extorsiones denunciadas: 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 1. Tasa 2025: 0,0 por 100.000 habitantes. Enero-agosto: 0 en 2025 y 1 en 2026 (sin base de comparación).",
+"Actos de terrorismo: 2018 0 · 2019 0 · 2020 0 · 2021 1 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0.",
+"Amenazas denunciadas: 2018 0 · 2019 1 · 2020 1 · 2021 1 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (parcial) 0. Tasa 2025: 0,0 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Abriaquí: homicidios, secuestros, masacres, miembros de la fuerza pública asesinados o heridos."
+]
+},
+"05021": {
+"lineas": [
+"Tasa de homicidio 2025: 18,7 por 100.000 habitantes, por debajo de la de Antioquia (25,2).",
+"Homicidios: 2018 0 · 2019 0 · 2020 1 · 2021 0 · 2022 0 · 2023 2 · 2024 1 · 2025 1 · 2026 (enero-agosto) 1. Enero-agosto: 0 en 2025 y 1 en 2026 (sin base de comparación).",
+"Extorsiones denunciadas: 2018 0 · 2019 2 · 2020 2 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 1 · 2026 (enero-agosto) 1. Tasa 2025: 18,7 por 100.000 habitantes. Enero-agosto: 1 en 2025 y 1 en 2026 (+0 %).",
+"Secuestros: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. Tasa 2025: 0,0 por 100.000 habitantes.",
+"Amenazas denunciadas: 2018 2 · 2019 2 · 2020 1 · 2021 2 · 2022 4 · 2023 2 · 2024 2 · 2025 4 · 2026 (parcial) 4. Tasa 2025: 74,8 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Alejandría: masacres, actos de terrorismo, miembros de la fuerza pública asesinados o heridos."
+]
+},
+"05030": {
+"lineas": [
+"Tasa de homicidio 2025: 36,3 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 5 · 2019 15 · 2020 20 · 2021 20 · 2022 9 · 2023 19 · 2024 12 · 2025 12 · 2026 (enero-agosto) 5. Enero-agosto: 9 en 2025 y 5 en 2026 (-44 %).",
+"Extorsiones denunciadas: 2018 1 · 2019 2 · 2020 4 · 2021 5 · 2022 2 · 2023 2 · 2024 6 · 2025 10 · 2026 (enero-agosto) 2. Tasa 2025: 30,2 por 100.000 habitantes. Enero-agosto: 3 en 2025 y 2 en 2026 (-33 %).",
+"Secuestros: 2018 1 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. Tasa 2025: 0,0 por 100.000 habitantes.",
+"Actos de terrorismo: 2018 1 · 2019 0 · 2020 1 · 2021 1 · 2022 2 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0.",
+"Miembros de la fuerza pública asesinados o heridos: 2018 2 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 0.",
+"Amenazas denunciadas: 2018 21 · 2019 31 · 2020 17 · 2021 12 · 2022 24 · 2023 31 · 2024 28 · 2025 14 · 2026 (parcial) 16. Tasa 2025: 42,3 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Amagá: masacres."
+]
+},
+"05031": {
+"lineas": [
+"Tasa de homicidio 2025: 112,3 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 8 · 2019 15 · 2020 7 · 2021 19 · 2022 13 · 2023 14 · 2024 35 · 2025 33 · 2026 (enero-agosto) 22. Enero-agosto: 28 en 2025 y 22 en 2026 (-21 %).",
+"Extorsiones denunciadas: 2018 7 · 2019 13 · 2020 4 · 2021 4 · 2022 5 · 2023 3 · 2024 6 · 2025 7 · 2026 (enero-agosto) 12. Tasa 2025: 23,8 por 100.000 habitantes. Enero-agosto: 5 en 2025 y 12 en 2026 (+140 %).",
+"Secuestros: 2018 0 · 2019 0 · 2020 0 · 2021 1 · 2022 0 · 2023 0 · 2024 0 · 2025 1 · 2026 (enero-agosto) 0. Tasa 2025: 3,4 por 100.000 habitantes. Enero-agosto: 1 en 2025 y 0 en 2026 (-100 %).",
+"Masacres: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 2 · 2025 1 · 2026 (enero-agosto) 0. Víctimas de masacres 2018-2026: 19. Enero-agosto: 1 en 2025 y 0 en 2026 (-100 %).",
+"Actos de terrorismo: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 2 · 2025 3 · 2026 (enero-agosto) 1. Enero-agosto: 0 en 2025 y 1 en 2026 (sin base de comparación).",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 2 · 2023 0 · 2024 0 · 2025 14 · 2026 (enero-agosto) 2. De ellos, asesinados 2018-2026: 14. Enero-agosto: 14 en 2025 y 2 en 2026 (-86 %).",
+"Amenazas denunciadas: 2018 15 · 2019 20 · 2020 6 · 2021 13 · 2022 4 · 2023 17 · 2024 10 · 2025 9 · 2026 (parcial) 7. Tasa 2025: 30,6 por 100.000 habitantes."
+]
+},
+"05034": {
+"lineas": [
+"Tasa de homicidio 2025: 147,5 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 43 · 2019 34 · 2020 40 · 2021 45 · 2022 33 · 2023 40 · 2024 20 · 2025 67 · 2026 (enero-agosto) 32. Enero-agosto: 37 en 2025 y 32 en 2026 (-14 %).",
+"Extorsiones denunciadas: 2018 5 · 2019 9 · 2020 8 · 2021 15 · 2022 9 · 2023 11 · 2024 15 · 2025 17 · 2026 (enero-agosto) 9. Tasa 2025: 37,4 por 100.000 habitantes. Enero-agosto: 9 en 2025 y 9 en 2026 (+0 %).",
+"Masacres: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 1 · 2026 (enero-agosto) 0. Víctimas de masacres 2018-2026: 4. Enero-agosto: 1 en 2025 y 0 en 2026 (-100 %).",
+"Actos de terrorismo: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 2 · 2026 (enero-agosto) 2. Enero-agosto: 1 en 2025 y 2 en 2026 (+100 %).",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 1 · 2020 2 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 2 · 2026 (enero-agosto) 4. De ellos, asesinados 2018-2026: 1. Enero-agosto: 2 en 2025 y 4 en 2026 (+100 %).",
+"Amenazas denunciadas: 2018 19 · 2019 21 · 2020 10 · 2021 28 · 2022 38 · 2023 43 · 2024 24 · 2025 14 · 2026 (parcial) 11. Tasa 2025: 30,8 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Andes: secuestros."
+]
+},
+"05036": {
+"lineas": [
+"Tasa de homicidio 2025: 48,3 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 4 · 2019 1 · 2020 7 · 2021 3 · 2022 3 · 2023 5 · 2024 4 · 2025 3 · 2026 (enero-agosto) 9. Enero-agosto: 2 en 2025 y 9 en 2026 (+350 %).",
+"Extorsiones denunciadas: 2018 2 · 2019 0 · 2020 2 · 2021 4 · 2022 4 · 2023 2 · 2024 1 · 2025 0 · 2026 (enero-agosto) 1. Tasa 2025: 0,0 por 100.000 habitantes. Enero-agosto: 0 en 2025 y 1 en 2026 (sin base de comparación).",
+"Amenazas denunciadas: 2018 3 · 2019 2 · 2020 6 · 2021 4 · 2022 4 · 2023 8 · 2024 1 · 2025 0 · 2026 (parcial) 4. Tasa 2025: 0,0 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Angelópolis: secuestros, masacres, actos de terrorismo, miembros de la fuerza pública asesinados o heridos."
+]
+},
+"05038": {
+"lineas": [
+"Tasa de homicidio 2025: 55,7 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 4 · 2019 8 · 2020 7 · 2021 14 · 2022 14 · 2023 8 · 2024 4 · 2025 7 · 2026 (enero-agosto) 5. Enero-agosto: 3 en 2025 y 5 en 2026 (+67 %).",
+"Extorsiones denunciadas: 2018 0 · 2019 4 · 2020 2 · 2021 4 · 2022 6 · 2023 6 · 2024 0 · 2025 3 · 2026 (enero-agosto) 1. Tasa 2025: 23,9 por 100.000 habitantes. Enero-agosto: 1 en 2025 y 1 en 2026 (+0 %).",
+"Masacres: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. Víctimas de masacres 2018-2026: 3.",
+"Actos de terrorismo: 2018 0 · 2019 0 · 2020 1 · 2021 1 · 2022 6 · 2023 4 · 2024 2 · 2025 0 · 2026 (enero-agosto) 2. Enero-agosto: 0 en 2025 y 2 en 2026 (sin base de comparación).",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 4 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 0.",
+"Amenazas denunciadas: 2018 15 · 2019 3 · 2020 4 · 2021 8 · 2022 9 · 2023 16 · 2024 6 · 2025 0 · 2026 (parcial) 5. Tasa 2025: 0,0 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Angostura: secuestros."
+]
+},
+"05040": {
+"lineas": [
+"Tasa de homicidio 2025: 215,9 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 26 · 2019 7 · 2020 18 · 2021 20 · 2022 24 · 2023 31 · 2024 32 · 2025 46 · 2026 (enero-agosto) 24. Enero-agosto: 26 en 2025 y 24 en 2026 (-8 %).",
+"Extorsiones denunciadas: 2018 8 · 2019 4 · 2020 3 · 2021 5 · 2022 3 · 2023 7 · 2024 3 · 2025 4 · 2026 (enero-agosto) 1. Tasa 2025: 18,8 por 100.000 habitantes. Enero-agosto: 4 en 2025 y 1 en 2026 (-75 %).",
+"Secuestros: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 2 · 2026 (enero-agosto) 0. Tasa 2025: 9,4 por 100.000 habitantes.",
+"Masacres: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 1 · 2025 0 · 2026 (enero-agosto) 0. Víctimas de masacres 2018-2026: 5.",
+"Actos de terrorismo: 2018 2 · 2019 12 · 2020 3 · 2021 6 · 2022 5 · 2023 18 · 2024 3 · 2025 16 · 2026 (enero-agosto) 8. Enero-agosto: 5 en 2025 y 8 en 2026 (+60 %).",
+"Miembros de la fuerza pública asesinados o heridos: 2018 1 · 2019 5 · 2020 6 · 2021 13 · 2022 4 · 2023 8 · 2024 16 · 2025 16 · 2026 (enero-agosto) 9. De ellos, asesinados 2018-2026: 15. Enero-agosto: 3 en 2025 y 9 en 2026 (+200 %).",
+"Amenazas denunciadas: 2018 5 · 2019 16 · 2020 20 · 2021 14 · 2022 17 · 2023 20 · 2024 13 · 2025 16 · 2026 (parcial) 9. Tasa 2025: 75,1 por 100.000 habitantes."
+]
+},
+"05042": {
+"lineas": [
+"Tasa de homicidio 2025: 31,4 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 10 · 2019 23 · 2020 6 · 2021 15 · 2022 16 · 2023 19 · 2024 7 · 2025 9 · 2026 (enero-agosto) 5. Enero-agosto: 9 en 2025 y 5 en 2026 (-44 %).",
+"Extorsiones denunciadas: 2018 6 · 2019 10 · 2020 9 · 2021 6 · 2022 4 · 2023 4 · 2024 7 · 2025 10 · 2026 (enero-agosto) 5. Tasa 2025: 34,9 por 100.000 habitantes. Enero-agosto: 6 en 2025 y 5 en 2026 (-17 %).",
+"Secuestros: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 3 · 2026 (enero-agosto) 0. Tasa 2025: 10,5 por 100.000 habitantes. Enero-agosto: 3 en 2025 y 0 en 2026 (-100 %).",
+"Masacres: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. Víctimas de masacres 2018-2026: 7.",
+"Actos de terrorismo: 2018 0 · 2019 0 · 2020 0 · 2021 1 · 2022 11 · 2023 0 · 2024 0 · 2025 1 · 2026 (enero-agosto) 0. Enero-agosto: 1 en 2025 y 0 en 2026 (-100 %).",
+"Miembros de la fuerza pública asesinados o heridos: 2018 1 · 2019 1 · 2020 0 · 2021 2 · 2022 3 · 2023 1 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 4.",
+"Amenazas denunciadas: 2018 7 · 2019 5 · 2020 12 · 2021 11 · 2022 19 · 2023 26 · 2024 19 · 2025 17 · 2026 (parcial) 10. Tasa 2025: 59,3 por 100.000 habitantes."
+]
+},
+"05044": {
+"lineas": [
+"Tasa de homicidio 2025: 51,7 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 3 · 2019 1 · 2020 4 · 2021 3 · 2022 1 · 2023 5 · 2024 5 · 2025 4 · 2026 (enero-agosto) 7. Enero-agosto: 3 en 2025 y 7 en 2026 (+133 %).",
+"Extorsiones denunciadas: 2018 2 · 2019 1 · 2020 0 · 2021 4 · 2022 2 · 2023 0 · 2024 0 · 2025 3 · 2026 (enero-agosto) 1. Tasa 2025: 38,8 por 100.000 habitantes. Enero-agosto: 3 en 2025 y 1 en 2026 (-67 %).",
+"Actos de terrorismo: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 1 · 2025 0 · 2026 (enero-agosto) 0.",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 0 · 2020 1 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 0.",
+"Amenazas denunciadas: 2018 1 · 2019 3 · 2020 3 · 2021 4 · 2022 5 · 2023 7 · 2024 13 · 2025 2 · 2026 (parcial) 5. Tasa 2025: 25,8 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Anzá: secuestros, masacres."
+]
+},
+"05045": {
+"lineas": [
+"Tasa de homicidio 2025: 14,3 por 100.000 habitantes, por debajo de la de Antioquia (25,2).",
+"Homicidios: 2018 54 · 2019 44 · 2020 36 · 2021 60 · 2022 53 · 2023 44 · 2024 33 · 2025 18 · 2026 (enero-agosto) 11. Enero-agosto: 13 en 2025 y 11 en 2026 (-15 %).",
+"Extorsiones denunciadas: 2018 9 · 2019 13 · 2020 6 · 2021 7 · 2022 10 · 2023 10 · 2024 13 · 2025 8 · 2026 (enero-agosto) 7. Tasa 2025: 6,4 por 100.000 habitantes. Enero-agosto: 5 en 2025 y 7 en 2026 (+40 %).",
+"Actos de terrorismo: 2018 2 · 2019 0 · 2020 3 · 2021 0 · 2022 2 · 2023 3 · 2024 2 · 2025 0 · 2026 (enero-agosto) 0.",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 2 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 1 · 2026 (enero-agosto) 1. De ellos, asesinados 2018-2026: 0. Enero-agosto: 1 en 2025 y 1 en 2026 (+0 %).",
+"Amenazas denunciadas: 2018 102 · 2019 102 · 2020 80 · 2021 79 · 2022 91 · 2023 91 · 2024 91 · 2025 69 · 2026 (parcial) 42. Tasa 2025: 54,8 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Apartadó: secuestros, masacres."
+]
+},
+"05051": {
+"lineas": [
+"Tasa de homicidio 2025: 6,3 por 100.000 habitantes, por debajo de la de Antioquia (25,2).",
+"Homicidios: 2018 2 · 2019 4 · 2020 2 · 2021 1 · 2022 2 · 2023 0 · 2024 3 · 2025 2 · 2026 (enero-agosto) 0. Enero-agosto: 1 en 2025 y 0 en 2026 (-100 %).",
+"Extorsiones denunciadas: 2018 3 · 2019 2 · 2020 1 · 2021 0 · 2022 2 · 2023 1 · 2024 4 · 2025 4 · 2026 (enero-agosto) 1. Tasa 2025: 12,5 por 100.000 habitantes. Enero-agosto: 3 en 2025 y 1 en 2026 (-67 %).",
+"Actos de terrorismo: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0.",
+"Amenazas denunciadas: 2018 12 · 2019 10 · 2020 7 · 2021 9 · 2022 12 · 2023 5 · 2024 13 · 2025 6 · 2026 (parcial) 6. Tasa 2025: 18,8 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Arboletes: secuestros, masacres, miembros de la fuerza pública asesinados o heridos."
+]
+},
+"05055": {
+"lineas": [
+"Tasa de homicidio 2025: 12,1 por 100.000 habitantes, por debajo de la de Antioquia (25,2).",
+"Homicidios: 2018 2 · 2019 4 · 2020 6 · 2021 2 · 2022 11 · 2023 4 · 2024 6 · 2025 1 · 2026 (enero-agosto) 0. Enero-agosto: 1 en 2025 y 0 en 2026 (-100 %).",
+"Extorsiones denunciadas: 2018 1 · 2019 3 · 2020 1 · 2021 1 · 2022 1 · 2023 3 · 2024 3 · 2025 1 · 2026 (enero-agosto) 0. Tasa 2025: 12,1 por 100.000 habitantes. Enero-agosto: 1 en 2025 y 0 en 2026 (-100 %).",
+"Actos de terrorismo: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0.",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 1 · 2025 0 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 1.",
+"Amenazas denunciadas: 2018 1 · 2019 2 · 2020 2 · 2021 2 · 2022 4 · 2023 8 · 2024 5 · 2025 12 · 2026 (parcial) 3. Tasa 2025: 145,6 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Argelia: secuestros, masacres."
+]
+},
+"05059": {
+"lineas": [
+"Tasa de homicidio 2025: 0,0 por 100.000 habitantes, por debajo de la de Antioquia (25,2).",
+"Homicidios: 2018 4 · 2019 4 · 2020 1 · 2021 3 · 2022 1 · 2023 2 · 2024 0 · 2025 0 · 2026 (enero-agosto) 1. Enero-agosto: 0 en 2025 y 1 en 2026 (sin base de comparación).",
+"Extorsiones denunciadas: 2018 0 · 2019 3 · 2020 0 · 2021 1 · 2022 3 · 2023 3 · 2024 1 · 2025 0 · 2026 (enero-agosto) 0. Tasa 2025: 0,0 por 100.000 habitantes.",
+"Secuestros: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 2 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. Tasa 2025: 0,0 por 100.000 habitantes.",
+"Amenazas denunciadas: 2018 1 · 2019 0 · 2020 1 · 2021 3 · 2022 3 · 2023 3 · 2024 3 · 2025 3 · 2026 (parcial) 1. Tasa 2025: 56,7 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Armenia: masacres, actos de terrorismo, miembros de la fuerza pública asesinados o heridos."
+]
+},
+"05079": {
+"lineas": [
+"Tasa de homicidio 2025: 17,1 por 100.000 habitantes, por debajo de la de Antioquia (25,2).",
+"Homicidios: 2018 21 · 2019 14 · 2020 31 · 2021 30 · 2022 15 · 2023 19 · 2024 16 · 2025 11 · 2026 (enero-agosto) 6. Enero-agosto: 9 en 2025 y 6 en 2026 (-33 %).",
+"Extorsiones denunciadas: 2018 11 · 2019 11 · 2020 4 · 2021 9 · 2022 27 · 2023 28 · 2024 14 · 2025 14 · 2026 (enero-agosto) 12. Tasa 2025: 21,8 por 100.000 habitantes. Enero-agosto: 12 en 2025 y 12 en 2026 (+0 %).",
+"Secuestros: 2018 0 · 2019 0 · 2020 1 · 2021 0 · 2022 1 · 2023 1 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. Tasa 2025: 0,0 por 100.000 habitantes.",
+"Actos de terrorismo: 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0.",
+"Amenazas denunciadas: 2018 13 · 2019 13 · 2020 52 · 2021 52 · 2022 156 · 2023 33 · 2024 68 · 2025 78 · 2026 (parcial) 46. Tasa 2025: 121,3 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Barbosa: masacres, miembros de la fuerza pública asesinados o heridos."
+]
+},
+"05086": {
+"lineas": [
+"Tasa de homicidio 2025: 81,3 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 0 · 2019 1 · 2020 0 · 2021 5 · 2022 2 · 2023 5 · 2024 4 · 2025 5 · 2026 (enero-agosto) 2. Enero-agosto: 5 en 2025 y 2 en 2026 (-60 %).",
+"Extorsiones denunciadas: 2018 0 · 2019 0 · 2020 2 · 2021 0 · 2022 1 · 2023 1 · 2024 1 · 2025 0 · 2026 (enero-agosto) 0. Tasa 2025: 0,0 por 100.000 habitantes.",
+"Actos de terrorismo: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0.",
+"Amenazas denunciadas: 2018 2 · 2019 2 · 2020 3 · 2021 2 · 2022 3 · 2023 3 · 2024 3 · 2025 4 · 2026 (parcial) 3. Tasa 2025: 65,1 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Belmira: secuestros, masacres, miembros de la fuerza pública asesinados o heridos."
+]
+},
+"05088": {
+"lineas": [
+"Tasa de homicidio 2025: 7,6 por 100.000 habitantes, por debajo de la de Antioquia (25,2).",
+"Homicidios: 2018 79 · 2019 134 · 2020 115 · 2021 58 · 2022 55 · 2023 55 · 2024 50 · 2025 46 · 2026 (enero-agosto) 23. Enero-agosto: 27 en 2025 y 23 en 2026 (-15 %).",
+"Extorsiones denunciadas: 2018 100 · 2019 134 · 2020 115 · 2021 90 · 2022 196 · 2023 244 · 2024 194 · 2025 214 · 2026 (enero-agosto) 140. Tasa 2025: 35,1 por 100.000 habitantes. Enero-agosto: 135 en 2025 y 140 en 2026 (+4 %).",
+"Secuestros: 2018 0 · 2019 0 · 2020 3 · 2021 1 · 2022 6 · 2023 1 · 2024 5 · 2025 1 · 2026 (enero-agosto) 5. Tasa 2025: 0,2 por 100.000 habitantes. Enero-agosto: 1 en 2025 y 5 en 2026 (+400 %).",
+"Masacres: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. Víctimas de masacres 2018-2026: 3.",
+"Actos de terrorismo: 2018 0 · 2019 1 · 2020 0 · 2021 2 · 2022 0 · 2023 0 · 2024 0 · 2025 1 · 2026 (enero-agosto) 0.",
+"Miembros de la fuerza pública asesinados o heridos: 2018 2 · 2019 4 · 2020 0 · 2021 0 · 2022 2 · 2023 1 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 3.",
+"Amenazas denunciadas: 2018 108 · 2019 103 · 2020 169 · 2021 133 · 2022 254 · 2023 295 · 2024 246 · 2025 184 · 2026 (parcial) 175. Tasa 2025: 30,2 por 100.000 habitantes."
+]
+},
+"05091": {
+"lineas": [
+"Tasa de homicidio 2025: 176,9 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 14 · 2019 13 · 2020 40 · 2021 21 · 2022 6 · 2023 8 · 2024 16 · 2025 19 · 2026 (enero-agosto) 10. Enero-agosto: 14 en 2025 y 10 en 2026 (-29 %).",
+"Extorsiones denunciadas: 2018 0 · 2019 1 · 2020 3 · 2021 2 · 2022 1 · 2023 2 · 2024 3 · 2025 3 · 2026 (enero-agosto) 2. Tasa 2025: 27,9 por 100.000 habitantes. Enero-agosto: 2 en 2025 y 2 en 2026 (+0 %).",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 0.",
+"Amenazas denunciadas: 2018 4 · 2019 0 · 2020 4 · 2021 1 · 2022 14 · 2023 16 · 2024 9 · 2025 3 · 2026 (parcial) 8. Tasa 2025: 27,9 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Betania: secuestros, masacres, actos de terrorismo."
+]
+},
+"05093": {
+"lineas": [
+"Tasa de homicidio 2025: 205,1 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 9 · 2019 12 · 2020 18 · 2021 29 · 2022 5 · 2023 12 · 2024 11 · 2025 35 · 2026 (enero-agosto) 4. Enero-agosto: 23 en 2025 y 4 en 2026 (-83 %).",
+"Extorsiones denunciadas: 2018 2 · 2019 8 · 2020 3 · 2021 2 · 2022 2 · 2023 2 · 2024 3 · 2025 1 · 2026 (enero-agosto) 2. Tasa 2025: 5,9 por 100.000 habitantes. Enero-agosto: 0 en 2025 y 2 en 2026 (sin base de comparación).",
+"Secuestros: 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. Tasa 2025: 0,0 por 100.000 habitantes.",
+"Actos de terrorismo: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 1 · 2025 0 · 2026 (enero-agosto) 0.",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 2 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 2 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 2.",
+"Amenazas denunciadas: 2018 8 · 2019 7 · 2020 5 · 2021 3 · 2022 12 · 2023 16 · 2024 26 · 2025 9 · 2026 (parcial) 10. Tasa 2025: 52,7 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Betulia: masacres."
+]
+},
+"05101": {
+"lineas": [
+"Tasa de homicidio 2025: 137,1 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 42 · 2019 29 · 2020 46 · 2021 46 · 2022 23 · 2023 20 · 2024 39 · 2025 38 · 2026 (enero-agosto) 31. Enero-agosto: 28 en 2025 y 31 en 2026 (+11 %).",
+"Extorsiones denunciadas: 2018 2 · 2019 3 · 2020 7 · 2021 9 · 2022 7 · 2023 3 · 2024 6 · 2025 10 · 2026 (enero-agosto) 2. Tasa 2025: 36,1 por 100.000 habitantes. Enero-agosto: 7 en 2025 y 2 en 2026 (-71 %).",
+"Secuestros: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 1 · 2026 (enero-agosto) 0. Tasa 2025: 3,6 por 100.000 habitantes. Enero-agosto: 1 en 2025 y 0 en 2026 (-100 %).",
+"Masacres: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 2 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. Víctimas de masacres 2018-2026: 6.",
+"Actos de terrorismo: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 1 · 2025 0 · 2026 (enero-agosto) 0.",
+"Amenazas denunciadas: 2018 16 · 2019 10 · 2020 8 · 2021 7 · 2022 11 · 2023 12 · 2024 14 · 2025 12 · 2026 (parcial) 7. Tasa 2025: 43,3 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Ciudad Bolívar: miembros de la fuerza pública asesinados o heridos."
+]
+},
+"05107": {
+"lineas": [
+"Tasa de homicidio 2025: 227,7 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 6 · 2019 10 · 2020 4 · 2021 6 · 2022 11 · 2023 8 · 2024 5 · 2025 18 · 2026 (enero-agosto) 25. Enero-agosto: 8 en 2025 y 25 en 2026 (+212 %).",
+"Extorsiones denunciadas: 2018 3 · 2019 0 · 2020 2 · 2021 2 · 2022 5 · 2023 2 · 2024 2 · 2025 1 · 2026 (enero-agosto) 0. Tasa 2025: 12,7 por 100.000 habitantes.",
+"Actos de terrorismo: 2018 1 · 2019 2 · 2020 0 · 2021 0 · 2022 1 · 2023 7 · 2024 4 · 2025 1 · 2026 (enero-agosto) 6. Enero-agosto: 1 en 2025 y 6 en 2026 (+500 %).",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 2 · 2023 4 · 2024 1 · 2025 1 · 2026 (enero-agosto) 10. De ellos, asesinados 2018-2026: 5. Enero-agosto: 1 en 2025 y 10 en 2026 (+900 %).",
+"Amenazas denunciadas: 2018 12 · 2019 2 · 2020 3 · 2021 2 · 2022 7 · 2023 5 · 2024 11 · 2025 13 · 2026 (parcial) 5. Tasa 2025: 164,5 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Briceño: secuestros, masacres."
+]
+},
+"05113": {
+"lineas": [
+"Tasa de homicidio 2025: 89,5 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 8 · 2019 2 · 2020 4 · 2021 14 · 2022 8 · 2023 10 · 2024 3 · 2025 10 · 2026 (enero-agosto) 5. Enero-agosto: 10 en 2025 y 5 en 2026 (-50 %).",
+"Extorsiones denunciadas: 2018 0 · 2019 0 · 2020 1 · 2021 2 · 2022 0 · 2023 1 · 2024 3 · 2025 1 · 2026 (enero-agosto) 1. Tasa 2025: 9,0 por 100.000 habitantes. Enero-agosto: 1 en 2025 y 1 en 2026 (+0 %).",
+"Actos de terrorismo: 2018 1 · 2019 0 · 2020 1 · 2021 2 · 2022 6 · 2023 4 · 2024 4 · 2025 13 · 2026 (enero-agosto) 1. Enero-agosto: 11 en 2025 y 1 en 2026 (-91 %).",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 0 · 2020 0 · 2021 1 · 2022 0 · 2023 5 · 2024 0 · 2025 1 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 0.",
+"Amenazas denunciadas: 2018 6 · 2019 2 · 2020 7 · 2021 2 · 2022 7 · 2023 21 · 2024 6 · 2025 3 · 2026 (parcial) 3. Tasa 2025: 26,9 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Buriticá: secuestros, masacres."
+]
+},
+"05120": {
+"lineas": [
+"Tasa de homicidio 2025: 96,7 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 54 · 2019 80 · 2020 77 · 2021 41 · 2022 26 · 2023 18 · 2024 37 · 2025 28 · 2026 (enero-agosto) 14. Enero-agosto: 16 en 2025 y 14 en 2026 (-12 %).",
+"Extorsiones denunciadas: 2018 10 · 2019 3 · 2020 10 · 2021 3 · 2022 2 · 2023 6 · 2024 7 · 2025 3 · 2026 (enero-agosto) 1. Tasa 2025: 10,4 por 100.000 habitantes. Enero-agosto: 2 en 2025 y 1 en 2026 (-50 %).",
+"Secuestros: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. Tasa 2025: 0,0 por 100.000 habitantes.",
+"Masacres: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. Víctimas de masacres 2018-2026: 4.",
+"Actos de terrorismo: 2018 14 · 2019 5 · 2020 2 · 2021 2 · 2022 7 · 2023 7 · 2024 4 · 2025 0 · 2026 (enero-agosto) 0.",
+"Miembros de la fuerza pública asesinados o heridos: 2018 4 · 2019 2 · 2020 6 · 2021 2 · 2022 6 · 2023 0 · 2024 3 · 2025 0 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 3.",
+"Amenazas denunciadas: 2018 27 · 2019 15 · 2020 27 · 2021 18 · 2022 17 · 2023 19 · 2024 7 · 2025 2 · 2026 (parcial) 9. Tasa 2025: 6,9 por 100.000 habitantes."
+]
+},
+"05125": {
+"lineas": [
+"Tasa de homicidio 2025: 32,8 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 2 · 2019 4 · 2020 3 · 2021 4 · 2022 3 · 2023 2 · 2024 2 · 2025 3 · 2026 (enero-agosto) 2. Enero-agosto: 2 en 2025 y 2 en 2026 (+0 %).",
+"Extorsiones denunciadas: 2018 1 · 2019 3 · 2020 2 · 2021 2 · 2022 1 · 2023 2 · 2024 2 · 2025 1 · 2026 (enero-agosto) 1. Tasa 2025: 10,9 por 100.000 habitantes. Enero-agosto: 1 en 2025 y 1 en 2026 (+0 %).",
+"Actos de terrorismo: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 2 · 2026 (enero-agosto) 0. Enero-agosto: 2 en 2025 y 0 en 2026 (-100 %).",
+"Miembros de la fuerza pública asesinados o heridos: 2018 1 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 0.",
+"Amenazas denunciadas: 2018 4 · 2019 1 · 2020 6 · 2021 4 · 2022 2 · 2023 3 · 2024 7 · 2025 9 · 2026 (parcial) 6. Tasa 2025: 98,5 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Caicedo: secuestros, masacres."
+]
+},
+"05129": {
+"lineas": [
+"Tasa de homicidio 2025: 12,3 por 100.000 habitantes, por debajo de la de Antioquia (25,2).",
+"Homicidios: 2018 30 · 2019 27 · 2020 16 · 2021 18 · 2022 19 · 2023 27 · 2024 16 · 2025 11 · 2026 (enero-agosto) 7. Enero-agosto: 6 en 2025 y 7 en 2026 (+17 %).",
+"Extorsiones denunciadas: 2018 5 · 2019 10 · 2020 16 · 2021 20 · 2022 17 · 2023 32 · 2024 26 · 2025 37 · 2026 (enero-agosto) 23. Tasa 2025: 41,3 por 100.000 habitantes. Enero-agosto: 22 en 2025 y 23 en 2026 (+5 %).",
+"Secuestros: 2018 0 · 2019 0 · 2020 1 · 2021 0 · 2022 0 · 2023 1 · 2024 2 · 2025 1 · 2026 (enero-agosto) 0. Tasa 2025: 1,1 por 100.000 habitantes. Enero-agosto: 1 en 2025 y 0 en 2026 (-100 %).",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 0 · 2020 0 · 2021 4 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 1. De ellos, asesinados 2018-2026: 0. Enero-agosto: 0 en 2025 y 1 en 2026 (sin base de comparación).",
+"Amenazas denunciadas: 2018 21 · 2019 18 · 2020 27 · 2021 62 · 2022 56 · 2023 24 · 2024 26 · 2025 11 · 2026 (parcial) 23. Tasa 2025: 12,3 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Caldas: masacres, actos de terrorismo."
+]
+},
+"05134": {
+"lineas": [
+"Tasa de homicidio 2025: 99,4 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 2 · 2019 3 · 2020 4 · 2021 3 · 2022 5 · 2023 10 · 2024 8 · 2025 10 · 2026 (enero-agosto) 2. Enero-agosto: 7 en 2025 y 2 en 2026 (-71 %).",
+"Extorsiones denunciadas: 2018 1 · 2019 2 · 2020 2 · 2021 0 · 2022 2 · 2023 2 · 2024 1 · 2025 0 · 2026 (enero-agosto) 0. Tasa 2025: 0,0 por 100.000 habitantes.",
+"Masacres: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. Víctimas de masacres 2018-2026: 4.",
+"Actos de terrorismo: 2018 0 · 2019 0 · 2020 1 · 2021 0 · 2022 0 · 2023 2 · 2024 1 · 2025 0 · 2026 (enero-agosto) 0.",
+"Amenazas denunciadas: 2018 0 · 2019 1 · 2020 5 · 2021 8 · 2022 4 · 2023 3 · 2024 3 · 2025 0 · 2026 (parcial) 2. Tasa 2025: 0,0 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Campamento: secuestros, miembros de la fuerza pública asesinados o heridos."
+]
+},
+"05138": {
+"lineas": [
+"Tasa de homicidio 2025: 39,1 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 3 · 2019 9 · 2020 8 · 2021 5 · 2022 8 · 2023 6 · 2024 10 · 2025 6 · 2026 (enero-agosto) 1. Enero-agosto: 5 en 2025 y 1 en 2026 (-80 %).",
+"Extorsiones denunciadas: 2018 0 · 2019 1 · 2020 1 · 2021 1 · 2022 3 · 2023 0 · 2024 3 · 2025 2 · 2026 (enero-agosto) 2. Tasa 2025: 13,0 por 100.000 habitantes. Enero-agosto: 0 en 2025 y 2 en 2026 (sin base de comparación).",
+"Actos de terrorismo: 2018 0 · 2019 0 · 2020 0 · 2021 1 · 2022 10 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0.",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 0 · 2020 1 · 2021 4 · 2022 11 · 2023 0 · 2024 0 · 2025 3 · 2026 (enero-agosto) 5. De ellos, asesinados 2018-2026: 7. Enero-agosto: 3 en 2025 y 5 en 2026 (+67 %).",
+"Amenazas denunciadas: 2018 5 · 2019 8 · 2020 9 · 2021 17 · 2022 13 · 2023 13 · 2024 9 · 2025 13 · 2026 (parcial) 0. Tasa 2025: 84,8 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Cañasgordas: secuestros, masacres."
+]
+},
+"05142": {
+"lineas": [
+"Tasa de homicidio 2025: 22,3 por 100.000 habitantes, por debajo de la de Antioquia (25,2).",
+"Homicidios: 2018 1 · 2019 2 · 2020 0 · 2021 1 · 2022 1 · 2023 0 · 2024 2 · 2025 1 · 2026 (enero-agosto) 0. Enero-agosto: 1 en 2025 y 0 en 2026 (-100 %).",
+"Extorsiones denunciadas: 2018 0 · 2019 2 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 2 · 2025 1 · 2026 (enero-agosto) 1. Tasa 2025: 22,3 por 100.000 habitantes. Enero-agosto: 0 en 2025 y 1 en 2026 (sin base de comparación).",
+"Amenazas denunciadas: 2018 3 · 2019 2 · 2020 8 · 2021 0 · 2022 2 · 2023 5 · 2024 3 · 2025 7 · 2026 (parcial) 2. Tasa 2025: 156,2 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Caracolí: secuestros, masacres, actos de terrorismo, miembros de la fuerza pública asesinados o heridos."
+]
+},
+"05145": {
+"lineas": [
+"Tasa de homicidio 2025: 22,5 por 100.000 habitantes, por debajo de la de Antioquia (25,2).",
+"Homicidios: 2018 0 · 2019 0 · 2020 1 · 2021 1 · 2022 2 · 2023 0 · 2024 1 · 2025 1 · 2026 (enero-agosto) 0.",
+"Extorsiones denunciadas: 2018 0 · 2019 1 · 2020 0 · 2021 3 · 2022 0 · 2023 0 · 2024 2 · 2025 0 · 2026 (enero-agosto) 0. Tasa 2025: 0,0 por 100.000 habitantes.",
+"Amenazas denunciadas: 2018 0 · 2019 0 · 2020 1 · 2021 1 · 2022 1 · 2023 4 · 2024 6 · 2025 2 · 2026 (parcial) 0. Tasa 2025: 45,0 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Caramanta: secuestros, masacres, actos de terrorismo, miembros de la fuerza pública asesinados o heridos."
+]
+},
+"05147": {
+"lineas": [
+"Tasa de homicidio 2025: 9,7 por 100.000 habitantes, por debajo de la de Antioquia (25,2).",
+"Homicidios: 2018 25 · 2019 21 · 2020 18 · 2021 21 · 2022 11 · 2023 19 · 2024 9 · 2025 5 · 2026 (enero-agosto) 8. Enero-agosto: 4 en 2025 y 8 en 2026 (+100 %).",
+"Extorsiones denunciadas: 2018 2 · 2019 2 · 2020 3 · 2021 1 · 2022 3 · 2023 4 · 2024 4 · 2025 9 · 2026 (enero-agosto) 7. Tasa 2025: 17,5 por 100.000 habitantes. Enero-agosto: 5 en 2025 y 7 en 2026 (+40 %).",
+"Actos de terrorismo: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 1 · 2025 0 · 2026 (enero-agosto) 0.",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 0.",
+"Amenazas denunciadas: 2018 59 · 2019 36 · 2020 33 · 2021 49 · 2022 42 · 2023 23 · 2024 26 · 2025 18 · 2026 (parcial) 10. Tasa 2025: 35,1 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Carepa: secuestros, masacres."
+]
+},
+"05148": {
+"lineas": [
+"Tasa de homicidio 2025: 36,8 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 13 · 2019 14 · 2020 23 · 2021 13 · 2022 13 · 2023 25 · 2024 19 · 2025 26 · 2026 (enero-agosto) 17. Enero-agosto: 11 en 2025 y 17 en 2026 (+55 %).",
+"Extorsiones denunciadas: 2018 4 · 2019 4 · 2020 8 · 2021 5 · 2022 8 · 2023 6 · 2024 13 · 2025 19 · 2026 (enero-agosto) 14. Tasa 2025: 26,9 por 100.000 habitantes. Enero-agosto: 15 en 2025 y 14 en 2026 (-7 %).",
+"Secuestros: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. Tasa 2025: 0,0 por 100.000 habitantes.",
+"Masacres: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 2 · 2026 (enero-agosto) 0. Víctimas de masacres 2018-2026: 7.",
+"Actos de terrorismo: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0.",
+"Miembros de la fuerza pública asesinados o heridos: 2018 1 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 0.",
+"Amenazas denunciadas: 2018 8 · 2019 6 · 2020 8 · 2021 24 · 2022 41 · 2023 40 · 2024 40 · 2025 23 · 2026 (parcial) 23. Tasa 2025: 32,5 por 100.000 habitantes."
+]
+},
+"05150": {
+"lineas": [
+"Tasa de homicidio 2025: 76,3 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 0 · 2019 1 · 2020 0 · 2021 2 · 2022 0 · 2023 0 · 2024 1 · 2025 3 · 2026 (enero-agosto) 2. Enero-agosto: 1 en 2025 y 2 en 2026 (+100 %).",
+"Extorsiones denunciadas: 2018 1 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 2 · 2024 2 · 2025 3 · 2026 (enero-agosto) 0. Tasa 2025: 76,3 por 100.000 habitantes. Enero-agosto: 2 en 2025 y 0 en 2026 (-100 %).",
+"Secuestros: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. Tasa 2025: 0,0 por 100.000 habitantes.",
+"Actos de terrorismo: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 1. Enero-agosto: 0 en 2025 y 1 en 2026 (sin base de comparación).",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 1. De ellos, asesinados 2018-2026: 0. Enero-agosto: 0 en 2025 y 1 en 2026 (sin base de comparación).",
+"Amenazas denunciadas: 2018 0 · 2019 1 · 2020 0 · 2021 2 · 2022 2 · 2023 2 · 2024 7 · 2025 1 · 2026 (parcial) 2. Tasa 2025: 25,4 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Carolina: masacres."
+]
+},
+"05154": {
+"lineas": [
+"Tasa de homicidio 2025: 67,0 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 153 · 2019 137 · 2020 84 · 2021 62 · 2022 60 · 2023 48 · 2024 75 · 2025 63 · 2026 (enero-agosto) 32. Enero-agosto: 40 en 2025 y 32 en 2026 (-20 %).",
+"Extorsiones denunciadas: 2018 28 · 2019 53 · 2020 28 · 2021 32 · 2022 22 · 2023 18 · 2024 25 · 2025 24 · 2026 (enero-agosto) 19. Tasa 2025: 25,5 por 100.000 habitantes. Enero-agosto: 17 en 2025 y 19 en 2026 (+12 %).",
+"Secuestros: 2018 1 · 2019 0 · 2020 0 · 2021 1 · 2022 1 · 2023 2 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. Tasa 2025: 0,0 por 100.000 habitantes.",
+"Masacres: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. Víctimas de masacres 2018-2026: 3.",
+"Actos de terrorismo: 2018 8 · 2019 3 · 2020 1 · 2021 1 · 2022 6 · 2023 2 · 2024 0 · 2025 2 · 2026 (enero-agosto) 3. Enero-agosto: 2 en 2025 y 3 en 2026 (+50 %).",
+"Miembros de la fuerza pública asesinados o heridos: 2018 3 · 2019 7 · 2020 5 · 2021 16 · 2022 0 · 2023 2 · 2024 1 · 2025 2 · 2026 (enero-agosto) 1. De ellos, asesinados 2018-2026: 9. Enero-agosto: 2 en 2025 y 1 en 2026 (-50 %).",
+"Amenazas denunciadas: 2018 70 · 2019 63 · 2020 70 · 2021 73 · 2022 65 · 2023 116 · 2024 98 · 2025 62 · 2026 (parcial) 35. Tasa 2025: 66,0 por 100.000 habitantes."
+]
+},
+"05172": {
+"lineas": [
+"Tasa de homicidio 2025: 19,4 por 100.000 habitantes, por debajo de la de Antioquia (25,2).",
+"Homicidios: 2018 42 · 2019 27 · 2020 29 · 2021 26 · 2022 25 · 2023 30 · 2024 16 · 2025 11 · 2026 (enero-agosto) 9. Enero-agosto: 6 en 2025 y 9 en 2026 (+50 %).",
+"Extorsiones denunciadas: 2018 6 · 2019 2 · 2020 5 · 2021 1 · 2022 2 · 2023 3 · 2024 10 · 2025 5 · 2026 (enero-agosto) 5. Tasa 2025: 8,8 por 100.000 habitantes. Enero-agosto: 3 en 2025 y 5 en 2026 (+67 %).",
+"Actos de terrorismo: 2018 0 · 2019 0 · 2020 0 · 2021 1 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0.",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 5 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 1.",
+"Amenazas denunciadas: 2018 36 · 2019 41 · 2020 28 · 2021 25 · 2022 37 · 2023 43 · 2024 24 · 2025 32 · 2026 (parcial) 5. Tasa 2025: 56,5 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Chigorodó: secuestros, masacres."
+]
+},
+"05190": {
+"lineas": [
+"Tasa de homicidio 2025: 0,0 por 100.000 habitantes, por debajo de la de Antioquia (25,2).",
+"Homicidios: 2018 8 · 2019 8 · 2020 1 · 2021 6 · 2022 8 · 2023 5 · 2024 4 · 2025 0 · 2026 (enero-agosto) 2. Enero-agosto: 0 en 2025 y 2 en 2026 (sin base de comparación).",
+"Extorsiones denunciadas: 2018 5 · 2019 1 · 2020 1 · 2021 1 · 2022 0 · 2023 4 · 2024 4 · 2025 5 · 2026 (enero-agosto) 1. Tasa 2025: 49,3 por 100.000 habitantes. Enero-agosto: 4 en 2025 y 1 en 2026 (-75 %).",
+"Secuestros: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. Tasa 2025: 0,0 por 100.000 habitantes.",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 0.",
+"Amenazas denunciadas: 2018 5 · 2019 3 · 2020 9 · 2021 5 · 2022 9 · 2023 9 · 2024 7 · 2025 11 · 2026 (parcial) 8. Tasa 2025: 108,5 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Cisneros: masacres, actos de terrorismo."
+]
+},
+"05197": {
+"lineas": [
+"Tasa de homicidio 2025: 24,8 por 100.000 habitantes, cerca de la de Antioquia (25,2).",
+"Homicidios: 2018 7 · 2019 4 · 2020 4 · 2021 6 · 2022 6 · 2023 5 · 2024 7 · 2025 4 · 2026 (enero-agosto) 5. Enero-agosto: 2 en 2025 y 5 en 2026 (+150 %).",
+"Extorsiones denunciadas: 2018 3 · 2019 2 · 2020 3 · 2021 2 · 2022 2 · 2023 2 · 2024 3 · 2025 1 · 2026 (enero-agosto) 1. Tasa 2025: 6,2 por 100.000 habitantes. Enero-agosto: 1 en 2025 y 1 en 2026 (+0 %).",
+"Secuestros: 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 4. Tasa 2025: 0,0 por 100.000 habitantes. Enero-agosto: 0 en 2025 y 4 en 2026 (sin base de comparación).",
+"Masacres: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 1 · 2025 0 · 2026 (enero-agosto) 0. Víctimas de masacres 2018-2026: 4.",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 0.",
+"Amenazas denunciadas: 2018 5 · 2019 3 · 2020 8 · 2021 5 · 2022 13 · 2023 6 · 2024 9 · 2025 1 · 2026 (parcial) 4. Tasa 2025: 6,2 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Cocorná: actos de terrorismo."
+]
+},
+"05206": {
+"lineas": [
+"Tasa de homicidio 2025: 38,9 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 0 · 2019 0 · 2020 2 · 2021 0 · 2022 2 · 2023 1 · 2024 1 · 2025 2 · 2026 (enero-agosto) 0. Enero-agosto: 1 en 2025 y 0 en 2026 (-100 %).",
+"Extorsiones denunciadas: 2018 0 · 2019 0 · 2020 0 · 2021 2 · 2022 4 · 2023 0 · 2024 2 · 2025 1 · 2026 (enero-agosto) 1. Tasa 2025: 19,5 por 100.000 habitantes. Enero-agosto: 1 en 2025 y 1 en 2026 (+0 %).",
+"Amenazas denunciadas: 2018 1 · 2019 3 · 2020 5 · 2021 0 · 2022 1 · 2023 5 · 2024 2 · 2025 5 · 2026 (parcial) 3. Tasa 2025: 97,4 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Concepción: secuestros, masacres, actos de terrorismo, miembros de la fuerza pública asesinados o heridos."
+]
+},
+"05209": {
+"lineas": [
+"Tasa de homicidio 2025: 99,3 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 4 · 2019 13 · 2020 14 · 2021 17 · 2022 6 · 2023 19 · 2024 20 · 2025 22 · 2026 (enero-agosto) 15. Enero-agosto: 15 en 2025 y 15 en 2026 (+0 %).",
+"Extorsiones denunciadas: 2018 1 · 2019 4 · 2020 2 · 2021 5 · 2022 1 · 2023 0 · 2024 1 · 2025 4 · 2026 (enero-agosto) 0. Tasa 2025: 18,1 por 100.000 habitantes. Enero-agosto: 2 en 2025 y 0 en 2026 (-100 %).",
+"Secuestros: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 1 · 2026 (enero-agosto) 0. Tasa 2025: 4,5 por 100.000 habitantes. Enero-agosto: 1 en 2025 y 0 en 2026 (-100 %).",
+"Actos de terrorismo: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 4 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0.",
+"Amenazas denunciadas: 2018 14 · 2019 17 · 2020 23 · 2021 6 · 2022 8 · 2023 19 · 2024 4 · 2025 7 · 2026 (parcial) 9. Tasa 2025: 31,6 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Concordia: masacres, miembros de la fuerza pública asesinados o heridos."
+]
+},
+"05212": {
+"lineas": [
+"Tasa de homicidio 2025: 16,3 por 100.000 habitantes, por debajo de la de Antioquia (25,2).",
+"Homicidios: 2018 19 · 2019 21 · 2020 19 · 2021 26 · 2022 21 · 2023 21 · 2024 20 · 2025 15 · 2026 (enero-agosto) 13. Enero-agosto: 8 en 2025 y 13 en 2026 (+62 %).",
+"Extorsiones denunciadas: 2018 16 · 2019 5 · 2020 19 · 2021 12 · 2022 41 · 2023 32 · 2024 25 · 2025 26 · 2026 (enero-agosto) 24. Tasa 2025: 28,2 por 100.000 habitantes. Enero-agosto: 17 en 2025 y 24 en 2026 (+41 %).",
+"Secuestros: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 7 · 2024 0 · 2025 1 · 2026 (enero-agosto) 0. Tasa 2025: 1,1 por 100.000 habitantes. Enero-agosto: 1 en 2025 y 0 en 2026 (-100 %).",
+"Actos de terrorismo: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0.",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 3 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 0. Enero-agosto: 1 en 2025 y 0 en 2026 (-100 %).",
+"Amenazas denunciadas: 2018 18 · 2019 16 · 2020 32 · 2021 32 · 2022 43 · 2023 34 · 2024 45 · 2025 25 · 2026 (parcial) 22. Tasa 2025: 27,2 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Copacabana: masacres."
+]
+},
+"05234": {
+"lineas": [
+"Tasa de homicidio 2025: 52,1 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 7 · 2019 12 · 2020 16 · 2021 21 · 2022 11 · 2023 18 · 2024 9 · 2025 13 · 2026 (enero-agosto) 12. Enero-agosto: 6 en 2025 y 12 en 2026 (+100 %).",
+"Extorsiones denunciadas: 2018 1 · 2019 1 · 2020 2 · 2021 1 · 2022 0 · 2023 0 · 2024 3 · 2025 2 · 2026 (enero-agosto) 2. Tasa 2025: 8,0 por 100.000 habitantes. Enero-agosto: 0 en 2025 y 2 en 2026 (sin base de comparación).",
+"Actos de terrorismo: 2018 3 · 2019 0 · 2020 1 · 2021 2 · 2022 8 · 2023 1 · 2024 0 · 2025 2 · 2026 (enero-agosto) 1. Enero-agosto: 1 en 2025 y 1 en 2026 (+0 %).",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 2 · 2020 3 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 9 · 2026 (enero-agosto) 2. De ellos, asesinados 2018-2026: 4. Enero-agosto: 1 en 2025 y 2 en 2026 (+100 %).",
+"Amenazas denunciadas: 2018 13 · 2019 5 · 2020 9 · 2021 17 · 2022 26 · 2023 10 · 2024 10 · 2025 7 · 2026 (parcial) 4. Tasa 2025: 28,1 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Dabeiba: secuestros, masacres."
+]
+},
+"05237": {
+"lineas": [
+"Tasa de homicidio 2025: 25,2 por 100.000 habitantes, cerca de la de Antioquia (25,2).",
+"Homicidios: 2018 7 · 2019 6 · 2020 2 · 2021 10 · 2022 3 · 2023 4 · 2024 4 · 2025 5 · 2026 (enero-agosto) 5. Enero-agosto: 4 en 2025 y 5 en 2026 (+25 %).",
+"Extorsiones denunciadas: 2018 2 · 2019 5 · 2020 6 · 2021 7 · 2022 7 · 2023 6 · 2024 8 · 2025 3 · 2026 (enero-agosto) 4. Tasa 2025: 15,1 por 100.000 habitantes. Enero-agosto: 1 en 2025 y 4 en 2026 (+300 %).",
+"Actos de terrorismo: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 4 · 2023 0 · 2024 1 · 2025 0 · 2026 (enero-agosto) 0.",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 2 · 2020 0 · 2021 0 · 2022 0 · 2023 2 · 2024 3 · 2025 1 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 0. Enero-agosto: 1 en 2025 y 0 en 2026 (-100 %).",
+"Amenazas denunciadas: 2018 9 · 2019 15 · 2020 16 · 2021 13 · 2022 52 · 2023 37 · 2024 22 · 2025 7 · 2026 (parcial) 17. Tasa 2025: 35,3 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Donmatías: secuestros, masacres."
+]
+},
+"05240": {
+"lineas": [
+"Tasa de homicidio 2025: 0,0 por 100.000 habitantes, por debajo de la de Antioquia (25,2).",
+"Homicidios: 2018 2 · 2019 6 · 2020 6 · 2021 4 · 2022 3 · 2023 6 · 2024 1 · 2025 0 · 2026 (enero-agosto) 10. Enero-agosto: 0 en 2025 y 10 en 2026 (sin base de comparación).",
+"Extorsiones denunciadas: 2018 1 · 2019 2 · 2020 1 · 2021 1 · 2022 0 · 2023 1 · 2024 3 · 2025 6 · 2026 (enero-agosto) 3. Tasa 2025: 47,7 por 100.000 habitantes. Enero-agosto: 5 en 2025 y 3 en 2026 (-40 %).",
+"Actos de terrorismo: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0.",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 2 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 0. Enero-agosto: 2 en 2025 y 0 en 2026 (-100 %).",
+"Amenazas denunciadas: 2018 15 · 2019 3 · 2020 7 · 2021 5 · 2022 0 · 2023 10 · 2024 25 · 2025 3 · 2026 (parcial) 5. Tasa 2025: 23,9 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Ebéjico: secuestros, masacres."
+]
+},
+"05250": {
+"lineas": [
+"Tasa de homicidio 2025: 51,2 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 46 · 2019 39 · 2020 51 · 2021 35 · 2022 41 · 2023 20 · 2024 29 · 2025 29 · 2026 (enero-agosto) 17. Enero-agosto: 22 en 2025 y 17 en 2026 (-23 %).",
+"Extorsiones denunciadas: 2018 7 · 2019 7 · 2020 7 · 2021 1 · 2022 5 · 2023 10 · 2024 3 · 2025 6 · 2026 (enero-agosto) 10. Tasa 2025: 10,6 por 100.000 habitantes. Enero-agosto: 3 en 2025 y 10 en 2026 (+233 %).",
+"Secuestros: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 2. Tasa 2025: 0,0 por 100.000 habitantes. Enero-agosto: 0 en 2025 y 2 en 2026 (sin base de comparación).",
+"Masacres: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. Víctimas de masacres 2018-2026: 3.",
+"Actos de terrorismo: 2018 4 · 2019 1 · 2020 2 · 2021 2 · 2022 3 · 2023 4 · 2024 3 · 2025 0 · 2026 (enero-agosto) 0.",
+"Miembros de la fuerza pública asesinados o heridos: 2018 1 · 2019 0 · 2020 1 · 2021 5 · 2022 5 · 2023 1 · 2024 0 · 2025 2 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 5.",
+"Amenazas denunciadas: 2018 22 · 2019 19 · 2020 25 · 2021 14 · 2022 33 · 2023 30 · 2024 24 · 2025 15 · 2026 (parcial) 18. Tasa 2025: 26,5 por 100.000 habitantes."
+]
+},
+"05264": {
+"lineas": [
+"Tasa de homicidio 2025: 15,5 por 100.000 habitantes, por debajo de la de Antioquia (25,2).",
+"Homicidios: 2018 1 · 2019 4 · 2020 0 · 2021 3 · 2022 1 · 2023 4 · 2024 2 · 2025 2 · 2026 (enero-agosto) 2. Enero-agosto: 2 en 2025 y 2 en 2026 (+0 %).",
+"Extorsiones denunciadas: 2018 0 · 2019 4 · 2020 0 · 2021 4 · 2022 3 · 2023 2 · 2024 0 · 2025 3 · 2026 (enero-agosto) 5. Tasa 2025: 23,3 por 100.000 habitantes. Enero-agosto: 2 en 2025 y 5 en 2026 (+150 %).",
+"Actos de terrorismo: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 2 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0.",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 2 · 2025 1 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 0. Enero-agosto: 1 en 2025 y 0 en 2026 (-100 %).",
+"Amenazas denunciadas: 2018 6 · 2019 2 · 2020 1 · 2021 0 · 2022 3 · 2023 4 · 2024 3 · 2025 2 · 2026 (parcial) 12. Tasa 2025: 15,5 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Entrerríos: secuestros, masacres."
+]
+},
+"05266": {
+"lineas": [
+"Tasa de homicidio 2025: 3,0 por 100.000 habitantes, por debajo de la de Antioquia (25,2).",
+"Homicidios: 2018 17 · 2019 10 · 2020 7 · 2021 3 · 2022 9 · 2023 9 · 2024 12 · 2025 8 · 2026 (enero-agosto) 3. Enero-agosto: 7 en 2025 y 3 en 2026 (-57 %).",
+"Extorsiones denunciadas: 2018 23 · 2019 28 · 2020 41 · 2021 28 · 2022 50 · 2023 50 · 2024 56 · 2025 53 · 2026 (enero-agosto) 50. Tasa 2025: 19,7 por 100.000 habitantes. Enero-agosto: 37 en 2025 y 50 en 2026 (+35 %).",
+"Secuestros: 2018 0 · 2019 1 · 2020 0 · 2021 2 · 2022 0 · 2023 0 · 2024 1 · 2025 0 · 2026 (enero-agosto) 1. Tasa 2025: 0,0 por 100.000 habitantes. Enero-agosto: 0 en 2025 y 1 en 2026 (sin base de comparación).",
+"Actos de terrorismo: 2018 0 · 2019 0 · 2020 0 · 2021 1 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0.",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 0.",
+"Amenazas denunciadas: 2018 37 · 2019 31 · 2020 33 · 2021 39 · 2022 80 · 2023 106 · 2024 125 · 2025 79 · 2026 (parcial) 72. Tasa 2025: 29,4 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Envigado: masacres."
+]
+},
+"05282": {
+"lineas": [
+"Tasa de homicidio 2025: 22,6 por 100.000 habitantes, por debajo de la de Antioquia (25,2).",
+"Homicidios: 2018 19 · 2019 6 · 2020 16 · 2021 9 · 2022 16 · 2023 9 · 2024 3 · 2025 6 · 2026 (enero-agosto) 3. Enero-agosto: 3 en 2025 y 3 en 2026 (+0 %).",
+"Extorsiones denunciadas: 2018 2 · 2019 0 · 2020 7 · 2021 4 · 2022 1 · 2023 1 · 2024 8 · 2025 8 · 2026 (enero-agosto) 4. Tasa 2025: 30,2 por 100.000 habitantes. Enero-agosto: 7 en 2025 y 4 en 2026 (-43 %).",
+"Actos de terrorismo: 2018 0 · 2019 0 · 2020 0 · 2021 1 · 2022 2 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0.",
+"Amenazas denunciadas: 2018 15 · 2019 4 · 2020 11 · 2021 11 · 2022 4 · 2023 6 · 2024 7 · 2025 7 · 2026 (parcial) 4. Tasa 2025: 26,4 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Fredonia: secuestros, masacres, miembros de la fuerza pública asesinados o heridos."
+]
+},
+"05284": {
+"lineas": [
+"Tasa de homicidio 2025: 32,1 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 4 · 2019 12 · 2020 8 · 2021 12 · 2022 14 · 2023 5 · 2024 7 · 2025 7 · 2026 (enero-agosto) 3. Enero-agosto: 3 en 2025 y 3 en 2026 (+0 %).",
+"Extorsiones denunciadas: 2018 2 · 2019 2 · 2020 2 · 2021 0 · 2022 2 · 2023 1 · 2024 4 · 2025 1 · 2026 (enero-agosto) 1. Tasa 2025: 4,6 por 100.000 habitantes. Enero-agosto: 1 en 2025 y 1 en 2026 (+0 %).",
+"Masacres: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. Víctimas de masacres 2018-2026: 7.",
+"Actos de terrorismo: 2018 0 · 2019 2 · 2020 0 · 2021 0 · 2022 3 · 2023 0 · 2024 1 · 2025 2 · 2026 (enero-agosto) 0.",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 16 · 2023 0 · 2024 0 · 2025 9 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 8. Enero-agosto: 4 en 2025 y 0 en 2026 (-100 %).",
+"Amenazas denunciadas: 2018 5 · 2019 13 · 2020 20 · 2021 7 · 2022 14 · 2023 10 · 2024 8 · 2025 3 · 2026 (parcial) 3. Tasa 2025: 13,8 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Frontino: secuestros."
+]
+},
+"05306": {
+"lineas": [
+"Tasa de homicidio 2025: 15,4 por 100.000 habitantes, por debajo de la de Antioquia (25,2).",
+"Homicidios: 2018 3 · 2019 2 · 2020 1 · 2021 5 · 2022 5 · 2023 4 · 2024 1 · 2025 1 · 2026 (enero-agosto) 2. Enero-agosto: 0 en 2025 y 2 en 2026 (sin base de comparación).",
+"Extorsiones denunciadas: 2018 1 · 2019 2 · 2020 2 · 2021 1 · 2022 0 · 2023 1 · 2024 2 · 2025 1 · 2026 (enero-agosto) 2. Tasa 2025: 15,4 por 100.000 habitantes. Enero-agosto: 1 en 2025 y 2 en 2026 (+100 %).",
+"Actos de terrorismo: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 2 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0.",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 2 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 0.",
+"Amenazas denunciadas: 2018 1 · 2019 3 · 2020 0 · 2021 0 · 2022 4 · 2023 17 · 2024 3 · 2025 1 · 2026 (parcial) 0. Tasa 2025: 15,4 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Giraldo: secuestros, masacres."
+]
+},
+"05308": {
+"lineas": [
+"Tasa de homicidio 2025: 4,8 por 100.000 habitantes, por debajo de la de Antioquia (25,2).",
+"Homicidios: 2018 13 · 2019 12 · 2020 11 · 2021 9 · 2022 8 · 2023 15 · 2024 13 · 2025 3 · 2026 (enero-agosto) 2. Enero-agosto: 3 en 2025 y 2 en 2026 (-33 %).",
+"Extorsiones denunciadas: 2018 4 · 2019 15 · 2020 15 · 2021 9 · 2022 22 · 2023 19 · 2024 21 · 2025 30 · 2026 (enero-agosto) 19. Tasa 2025: 48,3 por 100.000 habitantes. Enero-agosto: 18 en 2025 y 19 en 2026 (+6 %).",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 0 · 2020 0 · 2021 1 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 0.",
+"Amenazas denunciadas: 2018 7 · 2019 6 · 2020 19 · 2021 22 · 2022 45 · 2023 31 · 2024 22 · 2025 21 · 2026 (parcial) 24. Tasa 2025: 33,8 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Girardota: secuestros, masacres, actos de terrorismo."
+]
+},
+"05310": {
+"lineas": [
+"Tasa de homicidio 2025: 57,6 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 2 · 2019 1 · 2020 3 · 2021 5 · 2022 5 · 2023 4 · 2024 4 · 2025 6 · 2026 (enero-agosto) 4. Enero-agosto: 5 en 2025 y 4 en 2026 (-20 %).",
+"Extorsiones denunciadas: 2018 0 · 2019 0 · 2020 3 · 2021 2 · 2022 1 · 2023 0 · 2024 5 · 2025 2 · 2026 (enero-agosto) 0. Tasa 2025: 19,2 por 100.000 habitantes. Enero-agosto: 1 en 2025 y 0 en 2026 (-100 %).",
+"Actos de terrorismo: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0.",
+"Miembros de la fuerza pública asesinados o heridos: 2018 1 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 1 · 2025 0 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 0.",
+"Amenazas denunciadas: 2018 2 · 2019 3 · 2020 3 · 2021 6 · 2022 3 · 2023 9 · 2024 8 · 2025 5 · 2026 (parcial) 2. Tasa 2025: 48,0 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Gómez Plata: secuestros, masacres."
+]
+},
+"05313": {
+"lineas": [
+"Tasa de homicidio 2025: 19,0 por 100.000 habitantes, por debajo de la de Antioquia (25,2).",
+"Homicidios: 2018 0 · 2019 0 · 2020 0 · 2021 2 · 2022 4 · 2023 4 · 2024 4 · 2025 2 · 2026 (enero-agosto) 1. Enero-agosto: 2 en 2025 y 1 en 2026 (-50 %).",
+"Extorsiones denunciadas: 2018 2 · 2019 3 · 2020 4 · 2021 1 · 2022 3 · 2023 2 · 2024 6 · 2025 5 · 2026 (enero-agosto) 2. Tasa 2025: 47,6 por 100.000 habitantes. Enero-agosto: 4 en 2025 y 2 en 2026 (-50 %).",
+"Secuestros: 2018 1 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. Tasa 2025: 0,0 por 100.000 habitantes.",
+"Actos de terrorismo: 2018 0 · 2019 0 · 2020 1 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0.",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 2 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 0. Enero-agosto: 2 en 2025 y 0 en 2026 (-100 %).",
+"Amenazas denunciadas: 2018 2 · 2019 0 · 2020 1 · 2021 2 · 2022 9 · 2023 13 · 2024 3 · 2025 2 · 2026 (parcial) 2. Tasa 2025: 19,0 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Granada: masacres."
+]
+},
+"05315": {
+"lineas": [
+"Tasa de homicidio 2025: 42,7 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 0 · 2019 3 · 2020 1 · 2021 4 · 2022 1 · 2023 2 · 2024 2 · 2025 3 · 2026 (enero-agosto) 0. Enero-agosto: 2 en 2025 y 0 en 2026 (-100 %).",
+"Extorsiones denunciadas: 2018 0 · 2019 5 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 2 · 2025 0 · 2026 (enero-agosto) 0. Tasa 2025: 0,0 por 100.000 habitantes.",
+"Actos de terrorismo: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 3 · 2023 3 · 2024 1 · 2025 0 · 2026 (enero-agosto) 1. Enero-agosto: 0 en 2025 y 1 en 2026 (sin base de comparación).",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 3 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 0.",
+"Amenazas denunciadas: 2018 1 · 2019 0 · 2020 1 · 2021 2 · 2022 5 · 2023 6 · 2024 6 · 2025 5 · 2026 (parcial) 2. Tasa 2025: 71,1 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Guadalupe: secuestros, masacres."
+]
+},
+"05318": {
+"lineas": [
+"Tasa de homicidio 2025: 31,7 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 3 · 2019 20 · 2020 9 · 2021 9 · 2022 9 · 2023 17 · 2024 18 · 2025 21 · 2026 (enero-agosto) 8. Enero-agosto: 15 en 2025 y 8 en 2026 (-47 %).",
+"Extorsiones denunciadas: 2018 8 · 2019 10 · 2020 12 · 2021 10 · 2022 10 · 2023 10 · 2024 12 · 2025 28 · 2026 (enero-agosto) 24. Tasa 2025: 42,3 por 100.000 habitantes. Enero-agosto: 18 en 2025 y 24 en 2026 (+33 %).",
+"Secuestros: 2018 0 · 2019 0 · 2020 0 · 2021 4 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. Tasa 2025: 0,0 por 100.000 habitantes.",
+"Amenazas denunciadas: 2018 17 · 2019 11 · 2020 17 · 2021 33 · 2022 52 · 2023 63 · 2024 36 · 2025 43 · 2026 (parcial) 32. Tasa 2025: 65,0 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Guarne: masacres, actos de terrorismo, miembros de la fuerza pública asesinados o heridos."
+]
+},
+"05321": {
+"lineas": [
+"Tasa de homicidio 2025: 30,5 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 0 · 2019 2 · 2020 3 · 2021 3 · 2022 1 · 2023 0 · 2024 2 · 2025 3 · 2026 (enero-agosto) 0. Enero-agosto: 1 en 2025 y 0 en 2026 (-100 %).",
+"Extorsiones denunciadas: 2018 1 · 2019 4 · 2020 0 · 2021 1 · 2022 1 · 2023 4 · 2024 1 · 2025 5 · 2026 (enero-agosto) 3. Tasa 2025: 50,8 por 100.000 habitantes. Enero-agosto: 2 en 2025 y 3 en 2026 (+50 %).",
+"Secuestros: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. Tasa 2025: 0,0 por 100.000 habitantes.",
+"Actos de terrorismo: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 1. Enero-agosto: 0 en 2025 y 1 en 2026 (sin base de comparación).",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 1 · 2025 0 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 0.",
+"Amenazas denunciadas: 2018 2 · 2019 5 · 2020 6 · 2021 6 · 2022 2 · 2023 7 · 2024 8 · 2025 7 · 2026 (parcial) 8. Tasa 2025: 71,1 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Guatapé: masacres."
+]
+},
+"05347": {
+"lineas": [
+"Tasa de homicidio 2025: 40,3 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 2 · 2019 5 · 2020 5 · 2021 3 · 2022 3 · 2023 2 · 2024 2 · 2025 2 · 2026 (enero-agosto) 4. Enero-agosto: 1 en 2025 y 4 en 2026 (+300 %).",
+"Extorsiones denunciadas: 2018 1 · 2019 1 · 2020 1 · 2021 2 · 2022 2 · 2023 1 · 2024 5 · 2025 3 · 2026 (enero-agosto) 0. Tasa 2025: 60,5 por 100.000 habitantes. Enero-agosto: 3 en 2025 y 0 en 2026 (-100 %).",
+"Secuestros: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 2 · 2026 (enero-agosto) 0. Tasa 2025: 40,3 por 100.000 habitantes.",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 0.",
+"Amenazas denunciadas: 2018 3 · 2019 5 · 2020 1 · 2021 1 · 2022 3 · 2023 2 · 2024 2 · 2025 1 · 2026 (parcial) 2. Tasa 2025: 20,2 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Heliconia: masacres, actos de terrorismo."
+]
+},
+"05353": {
+"lineas": [
+"Tasa de homicidio 2025: 167,6 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 9 · 2019 1 · 2020 5 · 2021 2 · 2022 3 · 2023 2 · 2024 10 · 2025 10 · 2026 (enero-agosto) 7. Enero-agosto: 7 en 2025 y 7 en 2026 (+0 %).",
+"Extorsiones denunciadas: 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 1 · 2023 2 · 2024 3 · 2025 0 · 2026 (enero-agosto) 0. Tasa 2025: 0,0 por 100.000 habitantes.",
+"Amenazas denunciadas: 2018 1 · 2019 0 · 2020 3 · 2021 0 · 2022 1 · 2023 3 · 2024 1 · 2025 4 · 2026 (parcial) 0. Tasa 2025: 67,0 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Hispania: secuestros, masacres, actos de terrorismo, miembros de la fuerza pública asesinados o heridos."
+]
+},
+"05360": {
+"lineas": [
+"Tasa de homicidio 2025: 3,6 por 100.000 habitantes, por debajo de la de Antioquia (25,2).",
+"Homicidios: 2018 48 · 2019 38 · 2020 44 · 2021 27 · 2022 24 · 2023 13 · 2024 15 · 2025 11 · 2026 (enero-agosto) 19. Enero-agosto: 8 en 2025 y 19 en 2026 (+138 %).",
+"Extorsiones denunciadas: 2018 47 · 2019 63 · 2020 68 · 2021 53 · 2022 118 · 2023 101 · 2024 99 · 2025 81 · 2026 (enero-agosto) 57. Tasa 2025: 26,4 por 100.000 habitantes. Enero-agosto: 56 en 2025 y 57 en 2026 (+2 %).",
+"Secuestros: 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. Tasa 2025: 0,0 por 100.000 habitantes.",
+"Miembros de la fuerza pública asesinados o heridos: 2018 1 · 2019 0 · 2020 1 · 2021 0 · 2022 3 · 2023 0 · 2024 1 · 2025 0 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 0.",
+"Amenazas denunciadas: 2018 100 · 2019 124 · 2020 88 · 2021 99 · 2022 136 · 2023 119 · 2024 86 · 2025 112 · 2026 (parcial) 108. Tasa 2025: 36,6 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Itagüí: masacres, actos de terrorismo."
+]
+},
+"05361": {
+"lineas": [
+"Tasa de homicidio 2025: 70,8 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 60 · 2019 28 · 2020 31 · 2021 35 · 2022 29 · 2023 23 · 2024 14 · 2025 21 · 2026 (enero-agosto) 20. Enero-agosto: 16 en 2025 y 20 en 2026 (+25 %).",
+"Extorsiones denunciadas: 2018 9 · 2019 6 · 2020 4 · 2021 5 · 2022 2 · 2023 5 · 2024 3 · 2025 2 · 2026 (enero-agosto) 3. Tasa 2025: 6,7 por 100.000 habitantes. Enero-agosto: 2 en 2025 y 3 en 2026 (+50 %).",
+"Secuestros: 2018 1 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 3 · 2024 2 · 2025 0 · 2026 (enero-agosto) 0. Tasa 2025: 0,0 por 100.000 habitantes.",
+"Masacres: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. Víctimas de masacres 2018-2026: 3.",
+"Actos de terrorismo: 2018 5 · 2019 10 · 2020 9 · 2021 4 · 2022 6 · 2023 3 · 2024 1 · 2025 4 · 2026 (enero-agosto) 2. Enero-agosto: 4 en 2025 y 2 en 2026 (-50 %).",
+"Miembros de la fuerza pública asesinados o heridos: 2018 3 · 2019 2 · 2020 4 · 2021 8 · 2022 25 · 2023 2 · 2024 3 · 2025 5 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 16. Enero-agosto: 3 en 2025 y 0 en 2026 (-100 %).",
+"Amenazas denunciadas: 2018 21 · 2019 11 · 2020 14 · 2021 37 · 2022 14 · 2023 26 · 2024 24 · 2025 12 · 2026 (parcial) 13. Tasa 2025: 40,5 por 100.000 habitantes."
+]
+},
+"05364": {
+"lineas": [
+"Tasa de homicidio 2025: 70,8 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 25 · 2019 13 · 2020 7 · 2021 15 · 2022 6 · 2023 11 · 2024 2 · 2025 11 · 2026 (enero-agosto) 16. Enero-agosto: 6 en 2025 y 16 en 2026 (+167 %).",
+"Extorsiones denunciadas: 2018 2 · 2019 6 · 2020 3 · 2021 4 · 2022 1 · 2023 4 · 2024 5 · 2025 9 · 2026 (enero-agosto) 4. Tasa 2025: 57,9 por 100.000 habitantes. Enero-agosto: 7 en 2025 y 4 en 2026 (-43 %).",
+"Secuestros: 2018 0 · 2019 0 · 2020 1 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. Tasa 2025: 0,0 por 100.000 habitantes.",
+"Actos de terrorismo: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 1. Enero-agosto: 0 en 2025 y 1 en 2026 (sin base de comparación).",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 0.",
+"Amenazas denunciadas: 2018 6 · 2019 12 · 2020 4 · 2021 11 · 2022 8 · 2023 21 · 2024 22 · 2025 5 · 2026 (parcial) 8. Tasa 2025: 32,2 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Jardín: masacres."
+]
+},
+"05368": {
+"lineas": [
+"Tasa de homicidio 2025: 69,4 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 2 · 2019 4 · 2020 5 · 2021 2 · 2022 5 · 2023 3 · 2024 2 · 2025 10 · 2026 (enero-agosto) 8. Enero-agosto: 5 en 2025 y 8 en 2026 (+60 %).",
+"Extorsiones denunciadas: 2018 0 · 2019 0 · 2020 1 · 2021 4 · 2022 0 · 2023 2 · 2024 4 · 2025 5 · 2026 (enero-agosto) 0. Tasa 2025: 34,7 por 100.000 habitantes. Enero-agosto: 1 en 2025 y 0 en 2026 (-100 %).",
+"Amenazas denunciadas: 2018 2 · 2019 7 · 2020 3 · 2021 4 · 2022 2 · 2023 17 · 2024 12 · 2025 15 · 2026 (parcial) 12. Tasa 2025: 104,1 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Jericó: secuestros, masacres, actos de terrorismo, miembros de la fuerza pública asesinados o heridos."
+]
+},
+"05376": {
+"lineas": [
+"Tasa de homicidio 2025: 10,8 por 100.000 habitantes, por debajo de la de Antioquia (25,2).",
+"Homicidios: 2018 6 · 2019 12 · 2020 5 · 2021 8 · 2022 6 · 2023 8 · 2024 7 · 2025 8 · 2026 (enero-agosto) 6. Enero-agosto: 3 en 2025 y 6 en 2026 (+100 %).",
+"Extorsiones denunciadas: 2018 10 · 2019 10 · 2020 9 · 2021 5 · 2022 16 · 2023 14 · 2024 11 · 2025 25 · 2026 (enero-agosto) 14. Tasa 2025: 33,6 por 100.000 habitantes. Enero-agosto: 18 en 2025 y 14 en 2026 (-22 %).",
+"Secuestros: 2018 1 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. Tasa 2025: 0,0 por 100.000 habitantes.",
+"Amenazas denunciadas: 2018 13 · 2019 12 · 2020 16 · 2021 7 · 2022 23 · 2023 24 · 2024 43 · 2025 29 · 2026 (parcial) 16. Tasa 2025: 39,0 por 100.000 habitantes.",
+"Sin registros 2018-2026 en La Ceja: masacres, actos de terrorismo, miembros de la fuerza pública asesinados o heridos."
+]
+},
+"05380": {
+"lineas": [
+"Tasa de homicidio 2025: 9,5 por 100.000 habitantes, por debajo de la de Antioquia (25,2).",
+"Homicidios: 2018 12 · 2019 19 · 2020 13 · 2021 17 · 2022 13 · 2023 6 · 2024 10 · 2025 8 · 2026 (enero-agosto) 4. Enero-agosto: 5 en 2025 y 4 en 2026 (-20 %).",
+"Extorsiones denunciadas: 2018 13 · 2019 7 · 2020 14 · 2021 17 · 2022 18 · 2023 27 · 2024 27 · 2025 37 · 2026 (enero-agosto) 21. Tasa 2025: 44,0 por 100.000 habitantes. Enero-agosto: 28 en 2025 y 21 en 2026 (-25 %).",
+"Secuestros: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 5 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. Tasa 2025: 0,0 por 100.000 habitantes.",
+"Masacres: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 1 · 2025 0 · 2026 (enero-agosto) 0. Víctimas de masacres 2018-2026: 3.",
+"Actos de terrorismo: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0.",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 1 · 2020 2 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 1.",
+"Amenazas denunciadas: 2018 18 · 2019 20 · 2020 12 · 2021 33 · 2022 39 · 2023 48 · 2024 45 · 2025 36 · 2026 (parcial) 31. Tasa 2025: 42,8 por 100.000 habitantes."
+]
+},
+"05390": {
+"lineas": [
+"Tasa de homicidio 2025: 80,3 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 7 · 2019 9 · 2020 6 · 2021 6 · 2022 6 · 2023 3 · 2024 0 · 2025 7 · 2026 (enero-agosto) 0. Enero-agosto: 7 en 2025 y 0 en 2026 (-100 %).",
+"Extorsiones denunciadas: 2018 2 · 2019 1 · 2020 1 · 2021 2 · 2022 1 · 2023 1 · 2024 1 · 2025 6 · 2026 (enero-agosto) 1. Tasa 2025: 68,8 por 100.000 habitantes. Enero-agosto: 3 en 2025 y 1 en 2026 (-67 %).",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 0.",
+"Amenazas denunciadas: 2018 2 · 2019 2 · 2020 8 · 2021 4 · 2022 4 · 2023 7 · 2024 11 · 2025 4 · 2026 (parcial) 4. Tasa 2025: 45,9 por 100.000 habitantes.",
+"Sin registros 2018-2026 en La Pintada: secuestros, masacres, actos de terrorismo."
+]
+},
+"05400": {
+"lineas": [
+"Tasa de homicidio 2025: 69,7 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 5 · 2019 1 · 2020 2 · 2021 11 · 2022 13 · 2023 4 · 2024 6 · 2025 17 · 2026 (enero-agosto) 12. Enero-agosto: 13 en 2025 y 12 en 2026 (-8 %).",
+"Extorsiones denunciadas: 2018 2 · 2019 0 · 2020 2 · 2021 3 · 2022 3 · 2023 2 · 2024 10 · 2025 7 · 2026 (enero-agosto) 8. Tasa 2025: 28,7 por 100.000 habitantes. Enero-agosto: 6 en 2025 y 8 en 2026 (+33 %).",
+"Secuestros: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 1 · 2025 0 · 2026 (enero-agosto) 0. Tasa 2025: 0,0 por 100.000 habitantes.",
+"Masacres: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 1 · 2026 (enero-agosto) 0. Víctimas de masacres 2018-2026: 4. Enero-agosto: 1 en 2025 y 0 en 2026 (-100 %).",
+"Actos de terrorismo: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 1. Enero-agosto: 0 en 2025 y 1 en 2026 (sin base de comparación).",
+"Amenazas denunciadas: 2018 2 · 2019 3 · 2020 0 · 2021 1 · 2022 14 · 2023 8 · 2024 18 · 2025 10 · 2026 (parcial) 12. Tasa 2025: 41,0 por 100.000 habitantes.",
+"Sin registros 2018-2026 en La Unión: miembros de la fuerza pública asesinados o heridos."
+]
+},
+"05411": {
+"lineas": [
+"Tasa de homicidio 2025: 36,7 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 2 · 2019 8 · 2020 2 · 2021 2 · 2022 1 · 2023 1 · 2024 5 · 2025 4 · 2026 (enero-agosto) 1. Enero-agosto: 3 en 2025 y 1 en 2026 (-67 %).",
+"Extorsiones denunciadas: 2018 2 · 2019 4 · 2020 1 · 2021 2 · 2022 0 · 2023 1 · 2024 5 · 2025 1 · 2026 (enero-agosto) 1. Tasa 2025: 9,2 por 100.000 habitantes. Enero-agosto: 1 en 2025 y 1 en 2026 (+0 %).",
+"Secuestros: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 1 · 2026 (enero-agosto) 0. Tasa 2025: 9,2 por 100.000 habitantes. Enero-agosto: 1 en 2025 y 0 en 2026 (-100 %).",
+"Miembros de la fuerza pública asesinados o heridos: 2018 1 · 2019 0 · 2020 0 · 2021 1 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 1.",
+"Amenazas denunciadas: 2018 4 · 2019 1 · 2020 2 · 2021 5 · 2022 1 · 2023 5 · 2024 9 · 2025 0 · 2026 (parcial) 0. Tasa 2025: 0,0 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Liborina: masacres, actos de terrorismo."
+]
+},
+"05425": {
+"lineas": [
+"Tasa de homicidio 2025: 11,2 por 100.000 habitantes, por debajo de la de Antioquia (25,2).",
+"Homicidios: 2018 5 · 2019 11 · 2020 5 · 2021 8 · 2022 9 · 2023 7 · 2024 5 · 2025 1 · 2026 (enero-agosto) 2. Enero-agosto: 1 en 2025 y 2 en 2026 (+100 %).",
+"Extorsiones denunciadas: 2018 1 · 2019 2 · 2020 2 · 2021 2 · 2022 2 · 2023 6 · 2024 4 · 2025 8 · 2026 (enero-agosto) 3. Tasa 2025: 89,9 por 100.000 habitantes. Enero-agosto: 8 en 2025 y 3 en 2026 (-62 %).",
+"Secuestros: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. Tasa 2025: 0,0 por 100.000 habitantes.",
+"Actos de terrorismo: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 1 · 2026 (enero-agosto) 0. Enero-agosto: 1 en 2025 y 0 en 2026 (-100 %).",
+"Amenazas denunciadas: 2018 11 · 2019 2 · 2020 6 · 2021 4 · 2022 12 · 2023 27 · 2024 17 · 2025 9 · 2026 (parcial) 4. Tasa 2025: 101,1 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Maceo: masacres, miembros de la fuerza pública asesinados o heridos."
+]
+},
+"05440": {
+"lineas": [
+"Tasa de homicidio 2025: 33,1 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 12 · 2019 13 · 2020 8 · 2021 8 · 2022 18 · 2023 24 · 2024 16 · 2025 25 · 2026 (enero-agosto) 19. Enero-agosto: 12 en 2025 y 19 en 2026 (+58 %).",
+"Extorsiones denunciadas: 2018 7 · 2019 10 · 2020 11 · 2021 14 · 2022 13 · 2023 15 · 2024 9 · 2025 22 · 2026 (enero-agosto) 15. Tasa 2025: 29,1 por 100.000 habitantes. Enero-agosto: 17 en 2025 y 15 en 2026 (-12 %).",
+"Secuestros: 2018 1 · 2019 0 · 2020 0 · 2021 1 · 2022 0 · 2023 0 · 2024 0 · 2025 7 · 2026 (enero-agosto) 0. Tasa 2025: 9,3 por 100.000 habitantes. Enero-agosto: 7 en 2025 y 0 en 2026 (-100 %).",
+"Masacres: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 1. Víctimas de masacres 2018-2026: 4. Enero-agosto: 0 en 2025 y 1 en 2026 (sin base de comparación).",
+"Actos de terrorismo: 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0.",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 1 · 2025 0 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 0.",
+"Amenazas denunciadas: 2018 2 · 2019 7 · 2020 21 · 2021 15 · 2022 7 · 2023 12 · 2024 12 · 2025 1 · 2026 (parcial) 0. Tasa 2025: 1,3 por 100.000 habitantes."
+]
+},
+"05467": {
+"lineas": [
+"Tasa de homicidio 2025: 46,3 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 2 · 2019 1 · 2020 2 · 2021 2 · 2022 1 · 2023 0 · 2024 1 · 2025 3 · 2026 (enero-agosto) 0. Enero-agosto: 1 en 2025 y 0 en 2026 (-100 %).",
+"Extorsiones denunciadas: 2018 1 · 2019 1 · 2020 0 · 2021 0 · 2022 2 · 2023 0 · 2024 4 · 2025 4 · 2026 (enero-agosto) 2. Tasa 2025: 61,8 por 100.000 habitantes. Enero-agosto: 2 en 2025 y 2 en 2026 (+0 %).",
+"Amenazas denunciadas: 2018 1 · 2019 0 · 2020 2 · 2021 3 · 2022 1 · 2023 3 · 2024 2 · 2025 1 · 2026 (parcial) 3. Tasa 2025: 15,4 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Montebello: secuestros, masacres, actos de terrorismo, miembros de la fuerza pública asesinados o heridos."
+]
+},
+"05475": {
+"lineas": [
+"Tasa de homicidio 2025: 16,6 por 100.000 habitantes, por debajo de la de Antioquia (25,2).",
+"Homicidios: 2018 2 · 2019 0 · 2020 2 · 2021 0 · 2022 1 · 2023 0 · 2024 1 · 2025 1 · 2026 (enero-agosto) 0. Enero-agosto: 1 en 2025 y 0 en 2026 (-100 %).",
+"Extorsiones denunciadas: 2018 4 · 2019 1 · 2020 1 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (enero-agosto) 1. Tasa 2025: 0,0 por 100.000 habitantes. Enero-agosto: 0 en 2025 y 1 en 2026 (sin base de comparación).",
+"Actos de terrorismo: 2018 2 · 2019 1 · 2020 7 · 2021 3 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0.",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 0 · 2020 1 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 1 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 0. Enero-agosto: 1 en 2025 y 0 en 2026 (-100 %).",
+"Amenazas denunciadas: 2018 7 · 2019 6 · 2020 12 · 2021 9 · 2022 1 · 2023 1 · 2024 2 · 2025 4 · 2026 (parcial) 3. Tasa 2025: 66,4 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Murindó: secuestros, masacres."
+]
+},
+"05480": {
+"lineas": [
+"Tasa de homicidio 2025: 43,7 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 17 · 2019 24 · 2020 11 · 2021 13 · 2022 11 · 2023 16 · 2024 3 · 2025 6 · 2026 (enero-agosto) 1. Enero-agosto: 2 en 2025 y 1 en 2026 (-50 %).",
+"Extorsiones denunciadas: 2018 3 · 2019 0 · 2020 1 · 2021 3 · 2022 1 · 2023 2 · 2024 0 · 2025 1 · 2026 (enero-agosto) 2. Tasa 2025: 7,3 por 100.000 habitantes. Enero-agosto: 0 en 2025 y 2 en 2026 (sin base de comparación).",
+"Actos de terrorismo: 2018 0 · 2019 0 · 2020 0 · 2021 1 · 2022 0 · 2023 2 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0.",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 4 · 2020 0 · 2021 0 · 2022 0 · 2023 2 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 1.",
+"Amenazas denunciadas: 2018 34 · 2019 20 · 2020 15 · 2021 17 · 2022 12 · 2023 12 · 2024 44 · 2025 25 · 2026 (parcial) 20. Tasa 2025: 182,3 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Mutatá: secuestros, masacres."
+]
+},
+"05483": {
+"lineas": [
+"Tasa de homicidio 2025: 63,3 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 3 · 2019 1 · 2020 4 · 2021 7 · 2022 4 · 2023 6 · 2024 4 · 2025 7 · 2026 (enero-agosto) 4. Enero-agosto: 4 en 2025 y 4 en 2026 (+0 %).",
+"Extorsiones denunciadas: 2018 0 · 2019 2 · 2020 2 · 2021 3 · 2022 7 · 2023 0 · 2024 5 · 2025 4 · 2026 (enero-agosto) 4. Tasa 2025: 36,2 por 100.000 habitantes. Enero-agosto: 3 en 2025 y 4 en 2026 (+33 %).",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 2 · 2020 1 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 0.",
+"Amenazas denunciadas: 2018 9 · 2019 1 · 2020 1 · 2021 2 · 2022 12 · 2023 9 · 2024 6 · 2025 1 · 2026 (parcial) 1. Tasa 2025: 9,0 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Nariño: secuestros, masacres, actos de terrorismo."
+]
+},
+"05490": {
+"lineas": [
+"Tasa de homicidio 2025: 9,4 por 100.000 habitantes, por debajo de la de Antioquia (25,2).",
+"Homicidios: 2018 12 · 2019 5 · 2020 7 · 2021 11 · 2022 7 · 2023 9 · 2024 7 · 2025 4 · 2026 (enero-agosto) 1. Enero-agosto: 4 en 2025 y 1 en 2026 (-75 %).",
+"Extorsiones denunciadas: 2018 2 · 2019 1 · 2020 2 · 2021 0 · 2022 4 · 2023 5 · 2024 6 · 2025 3 · 2026 (enero-agosto) 1. Tasa 2025: 7,1 por 100.000 habitantes. Enero-agosto: 0 en 2025 y 1 en 2026 (sin base de comparación).",
+"Secuestros: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 2 · 2025 0 · 2026 (enero-agosto) 0. Tasa 2025: 0,0 por 100.000 habitantes.",
+"Actos de terrorismo: 2018 0 · 2019 0 · 2020 0 · 2021 1 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0.",
+"Miembros de la fuerza pública asesinados o heridos: 2018 2 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 0.",
+"Amenazas denunciadas: 2018 13 · 2019 11 · 2020 8 · 2021 11 · 2022 9 · 2023 16 · 2024 25 · 2025 6 · 2026 (parcial) 6. Tasa 2025: 14,2 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Necoclí: masacres."
+]
+},
+"05495": {
+"lineas": [
+"Tasa de homicidio 2025: 16,7 por 100.000 habitantes, por debajo de la de Antioquia (25,2).",
+"Homicidios: 2018 9 · 2019 7 · 2020 11 · 2021 14 · 2022 3 · 2023 7 · 2024 4 · 2025 5 · 2026 (enero-agosto) 2. Enero-agosto: 5 en 2025 y 2 en 2026 (-60 %).",
+"Extorsiones denunciadas: 2018 2 · 2019 5 · 2020 1 · 2021 2 · 2022 2 · 2023 1 · 2024 0 · 2025 3 · 2026 (enero-agosto) 1. Tasa 2025: 10,0 por 100.000 habitantes. Enero-agosto: 1 en 2025 y 1 en 2026 (+0 %).",
+"Secuestros: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 1 · 2025 0 · 2026 (enero-agosto) 0. Tasa 2025: 0,0 por 100.000 habitantes.",
+"Actos de terrorismo: 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0.",
+"Amenazas denunciadas: 2018 8 · 2019 4 · 2020 14 · 2021 6 · 2022 6 · 2023 6 · 2024 13 · 2025 3 · 2026 (parcial) 2. Tasa 2025: 10,0 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Nechí: masacres, miembros de la fuerza pública asesinados o heridos."
+]
+},
+"05501": {
+"lineas": [
+"Tasa de homicidio 2025: 0,0 por 100.000 habitantes, por debajo de la de Antioquia (25,2).",
+"Homicidios: 2018 3 · 2019 5 · 2020 1 · 2021 4 · 2022 2 · 2023 2 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0.",
+"Extorsiones denunciadas: 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 1 · 2025 1 · 2026 (enero-agosto) 0. Tasa 2025: 28,6 por 100.000 habitantes. Enero-agosto: 1 en 2025 y 0 en 2026 (-100 %).",
+"Amenazas denunciadas: 2018 1 · 2019 0 · 2020 0 · 2021 1 · 2022 1 · 2023 1 · 2024 1 · 2025 0 · 2026 (parcial) 2. Tasa 2025: 0,0 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Olaya: secuestros, masacres, actos de terrorismo, miembros de la fuerza pública asesinados o heridos."
+]
+},
+"05541": {
+"lineas": [
+"Tasa de homicidio 2025: 41,5 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 7 · 2019 7 · 2020 10 · 2021 10 · 2022 7 · 2023 7 · 2024 10 · 2025 10 · 2026 (enero-agosto) 7. Enero-agosto: 6 en 2025 y 7 en 2026 (+17 %).",
+"Extorsiones denunciadas: 2018 2 · 2019 4 · 2020 2 · 2021 3 · 2022 3 · 2023 6 · 2024 7 · 2025 5 · 2026 (enero-agosto) 1. Tasa 2025: 20,7 por 100.000 habitantes. Enero-agosto: 3 en 2025 y 1 en 2026 (-67 %).",
+"Amenazas denunciadas: 2018 8 · 2019 7 · 2020 10 · 2021 11 · 2022 15 · 2023 11 · 2024 27 · 2025 15 · 2026 (parcial) 15. Tasa 2025: 62,2 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Peñol: secuestros, masacres, actos de terrorismo, miembros de la fuerza pública asesinados o heridos."
+]
+},
+"05543": {
+"lineas": [
+"Tasa de homicidio 2025: 11,3 por 100.000 habitantes, por debajo de la de Antioquia (25,2).",
+"Homicidios: 2018 6 · 2019 3 · 2020 4 · 2021 2 · 2022 3 · 2023 3 · 2024 2 · 2025 1 · 2026 (enero-agosto) 2. Enero-agosto: 1 en 2025 y 2 en 2026 (+100 %).",
+"Extorsiones denunciadas: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 1 · 2026 (enero-agosto) 0. Tasa 2025: 11,3 por 100.000 habitantes. Enero-agosto: 1 en 2025 y 0 en 2026 (-100 %).",
+"Actos de terrorismo: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0.",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 0.",
+"Amenazas denunciadas: 2018 3 · 2019 3 · 2020 4 · 2021 2 · 2022 3 · 2023 4 · 2024 2 · 2025 1 · 2026 (parcial) 1. Tasa 2025: 11,3 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Peque: secuestros, masacres."
+]
+},
+"05576": {
+"lineas": [
+"Tasa de homicidio 2025: 99,2 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 3 · 2019 3 · 2020 3 · 2021 4 · 2022 4 · 2023 2 · 2024 14 · 2025 9 · 2026 (enero-agosto) 11. Enero-agosto: 7 en 2025 y 11 en 2026 (+57 %).",
+"Extorsiones denunciadas: 2018 0 · 2019 0 · 2020 1 · 2021 2 · 2022 0 · 2023 1 · 2024 1 · 2025 2 · 2026 (enero-agosto) 0. Tasa 2025: 22,0 por 100.000 habitantes. Enero-agosto: 1 en 2025 y 0 en 2026 (-100 %).",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 1 · 2025 0 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 1.",
+"Amenazas denunciadas: 2018 0 · 2019 0 · 2020 0 · 2021 2 · 2022 1 · 2023 3 · 2024 4 · 2025 4 · 2026 (parcial) 11. Tasa 2025: 44,1 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Pueblorrico: secuestros, masacres, actos de terrorismo."
+]
+},
+"05579": {
+"lineas": [
+"Tasa de homicidio 2025: 51,1 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 18 · 2019 45 · 2020 33 · 2021 35 · 2022 44 · 2023 44 · 2024 19 · 2025 20 · 2026 (enero-agosto) 18. Enero-agosto: 14 en 2025 y 18 en 2026 (+29 %).",
+"Extorsiones denunciadas: 2018 4 · 2019 13 · 2020 11 · 2021 8 · 2022 3 · 2023 8 · 2024 12 · 2025 10 · 2026 (enero-agosto) 9. Tasa 2025: 25,5 por 100.000 habitantes. Enero-agosto: 7 en 2025 y 9 en 2026 (+29 %).",
+"Secuestros: 2018 1 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 2 · 2026 (enero-agosto) 1. Tasa 2025: 5,1 por 100.000 habitantes. Enero-agosto: 1 en 2025 y 1 en 2026 (+0 %).",
+"Masacres: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. Víctimas de masacres 2018-2026: 4.",
+"Actos de terrorismo: 2018 1 · 2019 0 · 2020 1 · 2021 0 · 2022 1 · 2023 1 · 2024 0 · 2025 2 · 2026 (enero-agosto) 0.",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 0 · 2020 0 · 2021 1 · 2022 0 · 2023 0 · 2024 2 · 2025 1 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 0. Enero-agosto: 1 en 2025 y 0 en 2026 (-100 %).",
+"Amenazas denunciadas: 2018 125 · 2019 98 · 2020 98 · 2021 99 · 2022 105 · 2023 112 · 2024 88 · 2025 54 · 2026 (parcial) 24. Tasa 2025: 137,9 por 100.000 habitantes."
+]
+},
+"05585": {
+"lineas": [
+"Tasa de homicidio 2025: 31,9 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 4 · 2019 5 · 2020 4 · 2021 7 · 2022 6 · 2023 3 · 2024 2 · 2025 5 · 2026 (enero-agosto) 1. Enero-agosto: 4 en 2025 y 1 en 2026 (-75 %).",
+"Extorsiones denunciadas: 2018 1 · 2019 0 · 2020 1 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 3 · 2026 (enero-agosto) 3. Tasa 2025: 19,1 por 100.000 habitantes. Enero-agosto: 3 en 2025 y 3 en 2026 (+0 %).",
+"Amenazas denunciadas: 2018 8 · 2019 8 · 2020 2 · 2021 6 · 2022 4 · 2023 7 · 2024 5 · 2025 3 · 2026 (parcial) 1. Tasa 2025: 19,1 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Puerto Nare: secuestros, masacres, actos de terrorismo, miembros de la fuerza pública asesinados o heridos."
+]
+},
+"05591": {
+"lineas": [
+"Tasa de homicidio 2025: 14,8 por 100.000 habitantes, por debajo de la de Antioquia (25,2).",
+"Homicidios: 2018 13 · 2019 17 · 2020 17 · 2021 8 · 2022 8 · 2023 4 · 2024 3 · 2025 3 · 2026 (enero-agosto) 2. Enero-agosto: 3 en 2025 y 2 en 2026 (-33 %).",
+"Extorsiones denunciadas: 2018 3 · 2019 8 · 2020 7 · 2021 2 · 2022 8 · 2023 6 · 2024 7 · 2025 7 · 2026 (enero-agosto) 4. Tasa 2025: 34,4 por 100.000 habitantes. Enero-agosto: 5 en 2025 y 4 en 2026 (-20 %).",
+"Secuestros: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 2 · 2025 0 · 2026 (enero-agosto) 0. Tasa 2025: 0,0 por 100.000 habitantes.",
+"Actos de terrorismo: 2018 0 · 2019 0 · 2020 0 · 2021 1 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0.",
+"Amenazas denunciadas: 2018 40 · 2019 23 · 2020 31 · 2021 29 · 2022 48 · 2023 25 · 2024 19 · 2025 17 · 2026 (parcial) 8. Tasa 2025: 83,7 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Puerto Triunfo: masacres, miembros de la fuerza pública asesinados o heridos."
+]
+},
+"05604": {
+"lineas": [
+"Tasa de homicidio 2025: 116,3 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 34 · 2019 37 · 2020 47 · 2021 49 · 2022 75 · 2023 25 · 2024 50 · 2025 39 · 2026 (enero-agosto) 49. Enero-agosto: 36 en 2025 y 49 en 2026 (+36 %).",
+"Extorsiones denunciadas: 2018 10 · 2019 9 · 2020 11 · 2021 7 · 2022 5 · 2023 5 · 2024 7 · 2025 11 · 2026 (enero-agosto) 5. Tasa 2025: 32,8 por 100.000 habitantes. Enero-agosto: 6 en 2025 y 5 en 2026 (-17 %).",
+"Secuestros: 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 1 · 2025 0 · 2026 (enero-agosto) 0. Tasa 2025: 0,0 por 100.000 habitantes.",
+"Masacres: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 1. Víctimas de masacres 2018-2026: 7. Enero-agosto: 0 en 2025 y 1 en 2026 (sin base de comparación).",
+"Actos de terrorismo: 2018 1 · 2019 1 · 2020 0 · 2021 1 · 2022 8 · 2023 5 · 2024 4 · 2025 2 · 2026 (enero-agosto) 2. Enero-agosto: 1 en 2025 y 2 en 2026 (+100 %).",
+"Miembros de la fuerza pública asesinados o heridos: 2018 1 · 2019 0 · 2020 1 · 2021 1 · 2022 1 · 2023 0 · 2024 0 · 2025 6 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 3. Enero-agosto: 6 en 2025 y 0 en 2026 (-100 %).",
+"Amenazas denunciadas: 2018 32 · 2019 24 · 2020 32 · 2021 40 · 2022 37 · 2023 43 · 2024 38 · 2025 10 · 2026 (parcial) 17. Tasa 2025: 29,8 por 100.000 habitantes."
+]
+},
+"05607": {
+"lineas": [
+"Tasa de homicidio 2025: 3,6 por 100.000 habitantes, por debajo de la de Antioquia (25,2).",
+"Homicidios: 2018 2 · 2019 2 · 2020 1 · 2021 2 · 2022 7 · 2023 2 · 2024 5 · 2025 1 · 2026 (enero-agosto) 1. Enero-agosto: 0 en 2025 y 1 en 2026 (sin base de comparación).",
+"Extorsiones denunciadas: 2018 3 · 2019 5 · 2020 4 · 2021 2 · 2022 3 · 2023 3 · 2024 11 · 2025 12 · 2026 (enero-agosto) 6. Tasa 2025: 43,4 por 100.000 habitantes. Enero-agosto: 9 en 2025 y 6 en 2026 (-33 %).",
+"Miembros de la fuerza pública asesinados o heridos: 2018 2 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 0.",
+"Amenazas denunciadas: 2018 5 · 2019 4 · 2020 6 · 2021 4 · 2022 12 · 2023 6 · 2024 8 · 2025 30 · 2026 (parcial) 12. Tasa 2025: 108,6 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Retiro: secuestros, masacres, actos de terrorismo."
+]
+},
+"05615": {
+"lineas": [
+"Tasa de homicidio 2025: 23,0 por 100.000 habitantes, cerca de la de Antioquia (25,2).",
+"Homicidios: 2018 23 · 2019 10 · 2020 19 · 2021 17 · 2022 35 · 2023 38 · 2024 35 · 2025 36 · 2026 (enero-agosto) 17. Enero-agosto: 19 en 2025 y 17 en 2026 (-11 %).",
+"Extorsiones denunciadas: 2018 33 · 2019 38 · 2020 57 · 2021 51 · 2022 64 · 2023 25 · 2024 46 · 2025 88 · 2026 (enero-agosto) 53. Tasa 2025: 56,3 por 100.000 habitantes. Enero-agosto: 59 en 2025 y 53 en 2026 (-10 %).",
+"Secuestros: 2018 1 · 2019 1 · 2020 1 · 2021 7 · 2022 0 · 2023 2 · 2024 1 · 2025 0 · 2026 (enero-agosto) 0. Tasa 2025: 0,0 por 100.000 habitantes.",
+"Masacres: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 1 · 2025 0 · 2026 (enero-agosto) 0. Víctimas de masacres 2018-2026: 10.",
+"Actos de terrorismo: 2018 1 · 2019 0 · 2020 0 · 2021 0 · 2022 3 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0.",
+"Miembros de la fuerza pública asesinados o heridos: 2018 1 · 2019 2 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 0.",
+"Amenazas denunciadas: 2018 29 · 2019 35 · 2020 39 · 2021 57 · 2022 69 · 2023 110 · 2024 92 · 2025 80 · 2026 (parcial) 85. Tasa 2025: 51,2 por 100.000 habitantes."
+]
+},
+"05628": {
+"lineas": [
+"Tasa de homicidio 2025: 80,3 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 5 · 2019 5 · 2020 6 · 2021 3 · 2022 6 · 2023 6 · 2024 3 · 2025 8 · 2026 (enero-agosto) 3. Enero-agosto: 8 en 2025 y 3 en 2026 (-62 %).",
+"Extorsiones denunciadas: 2018 1 · 2019 1 · 2020 2 · 2021 0 · 2022 1 · 2023 0 · 2024 2 · 2025 1 · 2026 (enero-agosto) 0. Tasa 2025: 10,0 por 100.000 habitantes. Enero-agosto: 1 en 2025 y 0 en 2026 (-100 %).",
+"Secuestros: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. Tasa 2025: 0,0 por 100.000 habitantes.",
+"Miembros de la fuerza pública asesinados o heridos: 2018 2 · 2019 2 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 0.",
+"Amenazas denunciadas: 2018 3 · 2019 0 · 2020 1 · 2021 5 · 2022 1 · 2023 9 · 2024 12 · 2025 4 · 2026 (parcial) 4. Tasa 2025: 40,1 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Sabanalarga: masacres, actos de terrorismo."
+]
+},
+"05631": {
+"lineas": [
+"Tasa de homicidio 2025: 2,7 por 100.000 habitantes, por debajo de la de Antioquia (25,2).",
+"Homicidios: 2018 10 · 2019 7 · 2020 1 · 2021 3 · 2022 6 · 2023 2 · 2024 2 · 2025 3 · 2026 (enero-agosto) 2. Enero-agosto: 2 en 2025 y 2 en 2026 (+0 %).",
+"Extorsiones denunciadas: 2018 6 · 2019 14 · 2020 15 · 2021 14 · 2022 34 · 2023 43 · 2024 36 · 2025 34 · 2026 (enero-agosto) 26. Tasa 2025: 31,1 por 100.000 habitantes. Enero-agosto: 24 en 2025 y 26 en 2026 (+8 %).",
+"Secuestros: 2018 0 · 2019 0 · 2020 0 · 2021 1 · 2022 1 · 2023 0 · 2024 0 · 2025 1 · 2026 (enero-agosto) 0. Tasa 2025: 0,9 por 100.000 habitantes. Enero-agosto: 1 en 2025 y 0 en 2026 (-100 %).",
+"Actos de terrorismo: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 2 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0.",
+"Miembros de la fuerza pública asesinados o heridos: 2018 1 · 2019 0 · 2020 0 · 2021 1 · 2022 0 · 2023 1 · 2024 0 · 2025 1 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 0. Enero-agosto: 1 en 2025 y 0 en 2026 (-100 %).",
+"Amenazas denunciadas: 2018 18 · 2019 11 · 2020 20 · 2021 49 · 2022 72 · 2023 104 · 2024 83 · 2025 44 · 2026 (parcial) 45. Tasa 2025: 40,3 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Sabaneta: masacres."
+]
+},
+"05642": {
+"lineas": [
+"Tasa de homicidio 2025: 100,5 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 15 · 2019 12 · 2020 19 · 2021 21 · 2022 20 · 2023 13 · 2024 29 · 2025 19 · 2026 (enero-agosto) 18. Enero-agosto: 14 en 2025 y 18 en 2026 (+29 %).",
+"Extorsiones denunciadas: 2018 0 · 2019 7 · 2020 2 · 2021 1 · 2022 1 · 2023 1 · 2024 2 · 2025 1 · 2026 (enero-agosto) 3. Tasa 2025: 5,3 por 100.000 habitantes. Enero-agosto: 0 en 2025 y 3 en 2026 (sin base de comparación).",
+"Secuestros: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. Tasa 2025: 0,0 por 100.000 habitantes.",
+"Masacres: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. Víctimas de masacres 2018-2026: 3.",
+"Actos de terrorismo: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 1. Enero-agosto: 0 en 2025 y 1 en 2026 (sin base de comparación).",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 2 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 3 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 3. Enero-agosto: 3 en 2025 y 0 en 2026 (-100 %).",
+"Amenazas denunciadas: 2018 6 · 2019 8 · 2020 4 · 2021 5 · 2022 5 · 2023 4 · 2024 8 · 2025 6 · 2026 (parcial) 4. Tasa 2025: 31,7 por 100.000 habitantes."
+]
+},
+"05647": {
+"lineas": [
+"Tasa de homicidio 2025: 393,0 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 1 · 2019 5 · 2020 4 · 2021 4 · 2022 3 · 2023 6 · 2024 13 · 2025 29 · 2026 (enero-agosto) 12. Enero-agosto: 25 en 2025 y 12 en 2026 (-52 %).",
+"Extorsiones denunciadas: 2018 4 · 2019 3 · 2020 1 · 2021 2 · 2022 0 · 2023 1 · 2024 5 · 2025 2 · 2026 (enero-agosto) 2. Tasa 2025: 27,1 por 100.000 habitantes. Enero-agosto: 2 en 2025 y 2 en 2026 (+0 %).",
+"Actos de terrorismo: 2018 2 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 3 · 2025 2 · 2026 (enero-agosto) 0. Enero-agosto: 2 en 2025 y 0 en 2026 (-100 %).",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 2 · 2020 2 · 2021 1 · 2022 0 · 2023 3 · 2024 0 · 2025 9 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 6. Enero-agosto: 8 en 2025 y 0 en 2026 (-100 %).",
+"Amenazas denunciadas: 2018 5 · 2019 3 · 2020 10 · 2021 2 · 2022 8 · 2023 2 · 2024 10 · 2025 6 · 2026 (parcial) 0. Tasa 2025: 81,3 por 100.000 habitantes.",
+"Sin registros 2018-2026 en San Andrés de Cuerquía: secuestros, masacres."
+]
+},
+"05649": {
+"lineas": [
+"Tasa de homicidio 2025: 11,8 por 100.000 habitantes, por debajo de la de Antioquia (25,2).",
+"Homicidios: 2018 3 · 2019 2 · 2020 7 · 2021 10 · 2022 4 · 2023 8 · 2024 7 · 2025 2 · 2026 (enero-agosto) 5. Enero-agosto: 1 en 2025 y 5 en 2026 (+400 %).",
+"Extorsiones denunciadas: 2018 3 · 2019 7 · 2020 0 · 2021 0 · 2022 1 · 2023 2 · 2024 7 · 2025 2 · 2026 (enero-agosto) 1. Tasa 2025: 11,8 por 100.000 habitantes. Enero-agosto: 0 en 2025 y 1 en 2026 (sin base de comparación).",
+"Secuestros: 2018 0 · 2019 0 · 2020 0 · 2021 1 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. Tasa 2025: 0,0 por 100.000 habitantes.",
+"Actos de terrorismo: 2018 0 · 2019 0 · 2020 0 · 2021 2 · 2022 0 · 2023 0 · 2024 0 · 2025 1 · 2026 (enero-agosto) 0. Enero-agosto: 1 en 2025 y 0 en 2026 (-100 %).",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 0 · 2020 1 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 0.",
+"Amenazas denunciadas: 2018 9 · 2019 4 · 2020 10 · 2021 8 · 2022 8 · 2023 18 · 2024 13 · 2025 8 · 2026 (parcial) 9. Tasa 2025: 47,2 por 100.000 habitantes.",
+"Sin registros 2018-2026 en San Carlos: masacres."
+]
+},
+"05652": {
+"lineas": [
+"Tasa de homicidio 2025: 32,8 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 0 · 2019 0 · 2020 6 · 2021 5 · 2022 8 · 2023 2 · 2024 0 · 2025 2 · 2026 (enero-agosto) 1. Enero-agosto: 2 en 2025 y 1 en 2026 (-50 %).",
+"Extorsiones denunciadas: 2018 0 · 2019 1 · 2020 0 · 2021 1 · 2022 0 · 2023 1 · 2024 0 · 2025 2 · 2026 (enero-agosto) 0. Tasa 2025: 32,8 por 100.000 habitantes. Enero-agosto: 2 en 2025 y 0 en 2026 (-100 %).",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 0.",
+"Amenazas denunciadas: 2018 1 · 2019 1 · 2020 4 · 2021 2 · 2022 2 · 2023 5 · 2024 2 · 2025 0 · 2026 (parcial) 0. Tasa 2025: 0,0 por 100.000 habitantes.",
+"Sin registros 2018-2026 en San Francisco: secuestros, masacres, actos de terrorismo."
+]
+},
+"05656": {
+"lineas": [
+"Tasa de homicidio 2025: 80,0 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 11 · 2019 14 · 2020 3 · 2021 4 · 2022 6 · 2023 9 · 2024 7 · 2025 15 · 2026 (enero-agosto) 8. Enero-agosto: 9 en 2025 y 8 en 2026 (-11 %).",
+"Extorsiones denunciadas: 2018 1 · 2019 1 · 2020 4 · 2021 3 · 2022 2 · 2023 2 · 2024 6 · 2025 5 · 2026 (enero-agosto) 2. Tasa 2025: 26,7 por 100.000 habitantes. Enero-agosto: 2 en 2025 y 2 en 2026 (+0 %).",
+"Actos de terrorismo: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0.",
+"Amenazas denunciadas: 2018 3 · 2019 4 · 2020 10 · 2021 3 · 2022 3 · 2023 10 · 2024 13 · 2025 6 · 2026 (parcial) 7. Tasa 2025: 32,0 por 100.000 habitantes.",
+"Sin registros 2018-2026 en San Jerónimo: secuestros, masacres, miembros de la fuerza pública asesinados o heridos."
+]
+},
+"05658": {
+"lineas": [
+"Tasa de homicidio 2025: 73,7 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 0 · 2019 0 · 2020 0 · 2021 3 · 2022 1 · 2023 1 · 2024 3 · 2025 3 · 2026 (enero-agosto) 1. Enero-agosto: 3 en 2025 y 1 en 2026 (-67 %).",
+"Extorsiones denunciadas: 2018 0 · 2019 2 · 2020 0 · 2021 0 · 2022 2 · 2023 0 · 2024 1 · 2025 2 · 2026 (enero-agosto) 1. Tasa 2025: 49,1 por 100.000 habitantes. Enero-agosto: 1 en 2025 y 1 en 2026 (+0 %).",
+"Actos de terrorismo: 2018 1 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0.",
+"Amenazas denunciadas: 2018 2 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 3 · 2024 1 · 2025 1 · 2026 (parcial) 0. Tasa 2025: 24,6 por 100.000 habitantes.",
+"Sin registros 2018-2026 en San José de La Montaña: secuestros, masacres, miembros de la fuerza pública asesinados o heridos."
+]
+},
+"05659": {
+"lineas": [
+"Tasa de homicidio 2025: 10,1 por 100.000 habitantes, por debajo de la de Antioquia (25,2).",
+"Homicidios: 2018 4 · 2019 5 · 2020 3 · 2021 0 · 2022 1 · 2023 0 · 2024 1 · 2025 2 · 2026 (enero-agosto) 0. Enero-agosto: 2 en 2025 y 0 en 2026 (-100 %).",
+"Extorsiones denunciadas: 2018 0 · 2019 3 · 2020 1 · 2021 0 · 2022 1 · 2023 0 · 2024 2 · 2025 3 · 2026 (enero-agosto) 1. Tasa 2025: 15,1 por 100.000 habitantes. Enero-agosto: 2 en 2025 y 1 en 2026 (-50 %).",
+"Amenazas denunciadas: 2018 4 · 2019 3 · 2020 2 · 2021 4 · 2022 3 · 2023 8 · 2024 12 · 2025 5 · 2026 (parcial) 2. Tasa 2025: 25,2 por 100.000 habitantes.",
+"Sin registros 2018-2026 en San Juan de Urabá: secuestros, masacres, actos de terrorismo, miembros de la fuerza pública asesinados o heridos."
+]
+},
+"05660": {
+"lineas": [
+"Tasa de homicidio 2025: 61,7 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 6 · 2019 7 · 2020 6 · 2021 14 · 2022 10 · 2023 3 · 2024 1 · 2025 9 · 2026 (enero-agosto) 8. Enero-agosto: 6 en 2025 y 8 en 2026 (+33 %).",
+"Extorsiones denunciadas: 2018 5 · 2019 2 · 2020 2 · 2021 1 · 2022 1 · 2023 1 · 2024 6 · 2025 4 · 2026 (enero-agosto) 3. Tasa 2025: 27,4 por 100.000 habitantes. Enero-agosto: 3 en 2025 y 3 en 2026 (+0 %).",
+"Secuestros: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 3 · 2026 (enero-agosto) 2. Tasa 2025: 20,6 por 100.000 habitantes. Enero-agosto: 3 en 2025 y 2 en 2026 (-33 %).",
+"Amenazas denunciadas: 2018 4 · 2019 6 · 2020 6 · 2021 2 · 2022 22 · 2023 18 · 2024 19 · 2025 1 · 2026 (parcial) 9. Tasa 2025: 6,9 por 100.000 habitantes.",
+"Sin registros 2018-2026 en San Luis: masacres, actos de terrorismo, miembros de la fuerza pública asesinados o heridos."
+]
+},
+"05664": {
+"lineas": [
+"Tasa de homicidio 2025: 31,5 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 14 · 2019 10 · 2020 9 · 2021 6 · 2022 3 · 2023 7 · 2024 9 · 2025 7 · 2026 (enero-agosto) 2. Enero-agosto: 6 en 2025 y 2 en 2026 (-67 %).",
+"Extorsiones denunciadas: 2018 3 · 2019 3 · 2020 8 · 2021 9 · 2022 13 · 2023 7 · 2024 15 · 2025 2 · 2026 (enero-agosto) 3. Tasa 2025: 9,0 por 100.000 habitantes. Enero-agosto: 2 en 2025 y 3 en 2026 (+50 %).",
+"Actos de terrorismo: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 6 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0.",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 4 · 2023 0 · 2024 0 · 2025 3 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 0. Enero-agosto: 3 en 2025 y 0 en 2026 (-100 %).",
+"Amenazas denunciadas: 2018 6 · 2019 5 · 2020 12 · 2021 5 · 2022 12 · 2023 21 · 2024 17 · 2025 6 · 2026 (parcial) 4. Tasa 2025: 27,0 por 100.000 habitantes.",
+"Sin registros 2018-2026 en San Pedro de Los Milagros: secuestros, masacres."
+]
+},
+"05665": {
+"lineas": [
+"Tasa de homicidio 2025: 15,4 por 100.000 habitantes, por debajo de la de Antioquia (25,2).",
+"Homicidios: 2018 14 · 2019 2 · 2020 4 · 2021 1 · 2022 5 · 2023 1 · 2024 3 · 2025 5 · 2026 (enero-agosto) 0. Enero-agosto: 4 en 2025 y 0 en 2026 (-100 %).",
+"Extorsiones denunciadas: 2018 1 · 2019 1 · 2020 1 · 2021 0 · 2022 1 · 2023 2 · 2024 2 · 2025 1 · 2026 (enero-agosto) 0. Tasa 2025: 3,1 por 100.000 habitantes. Enero-agosto: 1 en 2025 y 0 en 2026 (-100 %).",
+"Masacres: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 1 · 2026 (enero-agosto) 0. Víctimas de masacres 2018-2026: 3. Enero-agosto: 1 en 2025 y 0 en 2026 (-100 %).",
+"Actos de terrorismo: 2018 0 · 2019 0 · 2020 0 · 2021 2 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0.",
+"Miembros de la fuerza pública asesinados o heridos: 2018 8 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 8.",
+"Amenazas denunciadas: 2018 7 · 2019 6 · 2020 6 · 2021 5 · 2022 6 · 2023 10 · 2024 15 · 2025 4 · 2026 (parcial) 1. Tasa 2025: 12,3 por 100.000 habitantes.",
+"Sin registros 2018-2026 en San Pedro de Urabá: secuestros."
+]
+},
+"05667": {
+"lineas": [
+"Tasa de homicidio 2025: 22,8 por 100.000 habitantes, cerca de la de Antioquia (25,2).",
+"Homicidios: 2018 0 · 2019 0 · 2020 8 · 2021 11 · 2022 3 · 2023 5 · 2024 6 · 2025 4 · 2026 (enero-agosto) 11. Enero-agosto: 4 en 2025 y 11 en 2026 (+175 %).",
+"Extorsiones denunciadas: 2018 3 · 2019 5 · 2020 0 · 2021 5 · 2022 3 · 2023 3 · 2024 4 · 2025 3 · 2026 (enero-agosto) 4. Tasa 2025: 17,1 por 100.000 habitantes. Enero-agosto: 2 en 2025 y 4 en 2026 (+100 %).",
+"Miembros de la fuerza pública asesinados o heridos: 2018 1 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 0.",
+"Amenazas denunciadas: 2018 2 · 2019 0 · 2020 2 · 2021 1 · 2022 2 · 2023 10 · 2024 8 · 2025 2 · 2026 (parcial) 0. Tasa 2025: 11,4 por 100.000 habitantes.",
+"Sin registros 2018-2026 en San Rafael: secuestros, masacres, actos de terrorismo."
+]
+},
+"05670": {
+"lineas": [
+"Tasa de homicidio 2025: 76,4 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 10 · 2019 14 · 2020 9 · 2021 14 · 2022 15 · 2023 9 · 2024 5 · 2025 19 · 2026 (enero-agosto) 10. Enero-agosto: 14 en 2025 y 10 en 2026 (-29 %).",
+"Extorsiones denunciadas: 2018 7 · 2019 5 · 2020 4 · 2021 5 · 2022 1 · 2023 5 · 2024 6 · 2025 8 · 2026 (enero-agosto) 4. Tasa 2025: 32,2 por 100.000 habitantes. Enero-agosto: 6 en 2025 y 4 en 2026 (-33 %).",
+"Actos de terrorismo: 2018 0 · 2019 0 · 2020 0 · 2021 1 · 2022 2 · 2023 0 · 2024 0 · 2025 2 · 2026 (enero-agosto) 0. Enero-agosto: 2 en 2025 y 0 en 2026 (-100 %).",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 1 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 1. Enero-agosto: 1 en 2025 y 0 en 2026 (-100 %).",
+"Amenazas denunciadas: 2018 8 · 2019 5 · 2020 14 · 2021 10 · 2022 20 · 2023 8 · 2024 17 · 2025 12 · 2026 (parcial) 3. Tasa 2025: 48,3 por 100.000 habitantes.",
+"Sin registros 2018-2026 en San Roque: secuestros, masacres."
+]
+},
+"05674": {
+"lineas": [
+"Tasa de homicidio 2025: 40,0 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 2 · 2019 7 · 2020 4 · 2021 5 · 2022 5 · 2023 8 · 2024 5 · 2025 10 · 2026 (enero-agosto) 6. Enero-agosto: 8 en 2025 y 6 en 2026 (-25 %).",
+"Extorsiones denunciadas: 2018 1 · 2019 3 · 2020 2 · 2021 1 · 2022 3 · 2023 3 · 2024 3 · 2025 5 · 2026 (enero-agosto) 6. Tasa 2025: 20,0 por 100.000 habitantes. Enero-agosto: 3 en 2025 y 6 en 2026 (+100 %).",
+"Secuestros: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 1 · 2025 2 · 2026 (enero-agosto) 0. Tasa 2025: 8,0 por 100.000 habitantes. Enero-agosto: 2 en 2025 y 0 en 2026 (-100 %).",
+"Amenazas denunciadas: 2018 15 · 2019 7 · 2020 5 · 2021 9 · 2022 17 · 2023 33 · 2024 24 · 2025 18 · 2026 (parcial) 14. Tasa 2025: 72,0 por 100.000 habitantes.",
+"Sin registros 2018-2026 en San Vicente: masacres, actos de terrorismo, miembros de la fuerza pública asesinados o heridos."
+]
+},
+"05679": {
+"lineas": [
+"Tasa de homicidio 2025: 33,6 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 14 · 2019 18 · 2020 9 · 2021 11 · 2022 15 · 2023 11 · 2024 9 · 2025 10 · 2026 (enero-agosto) 5. Enero-agosto: 7 en 2025 y 5 en 2026 (-29 %).",
+"Extorsiones denunciadas: 2018 1 · 2019 2 · 2020 4 · 2021 1 · 2022 3 · 2023 3 · 2024 11 · 2025 5 · 2026 (enero-agosto) 2. Tasa 2025: 16,8 por 100.000 habitantes. Enero-agosto: 3 en 2025 y 2 en 2026 (-33 %).",
+"Secuestros: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 1 · 2025 0 · 2026 (enero-agosto) 0. Tasa 2025: 0,0 por 100.000 habitantes.",
+"Amenazas denunciadas: 2018 4 · 2019 1 · 2020 5 · 2021 2 · 2022 11 · 2023 19 · 2024 14 · 2025 13 · 2026 (parcial) 11. Tasa 2025: 43,7 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Santa Bárbara: masacres, actos de terrorismo, miembros de la fuerza pública asesinados o heridos."
+]
+},
+"05686": {
+"lineas": [
+"Tasa de homicidio 2025: 22,1 por 100.000 habitantes, por debajo de la de Antioquia (25,2).",
+"Homicidios: 2018 10 · 2019 19 · 2020 8 · 2021 21 · 2022 25 · 2023 15 · 2024 12 · 2025 9 · 2026 (enero-agosto) 12. Enero-agosto: 5 en 2025 y 12 en 2026 (+140 %).",
+"Extorsiones denunciadas: 2018 6 · 2019 5 · 2020 12 · 2021 11 · 2022 30 · 2023 12 · 2024 10 · 2025 9 · 2026 (enero-agosto) 4. Tasa 2025: 22,1 por 100.000 habitantes. Enero-agosto: 5 en 2025 y 4 en 2026 (-20 %).",
+"Secuestros: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 1 · 2026 (enero-agosto) 0. Tasa 2025: 2,5 por 100.000 habitantes. Enero-agosto: 1 en 2025 y 0 en 2026 (-100 %).",
+"Actos de terrorismo: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 2 · 2025 0 · 2026 (enero-agosto) 1. Enero-agosto: 0 en 2025 y 1 en 2026 (sin base de comparación).",
+"Miembros de la fuerza pública asesinados o heridos: 2018 1 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 1 · 2025 1 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 0.",
+"Amenazas denunciadas: 2018 16 · 2019 12 · 2020 30 · 2021 25 · 2022 41 · 2023 39 · 2024 35 · 2025 20 · 2026 (parcial) 8. Tasa 2025: 49,1 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Santa Rosa de Osos: masacres."
+]
+},
+"05690": {
+"lineas": [
+"Tasa de homicidio 2025: 88,4 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 2 · 2019 4 · 2020 4 · 2021 9 · 2022 12 · 2023 3 · 2024 4 · 2025 12 · 2026 (enero-agosto) 6. Enero-agosto: 7 en 2025 y 6 en 2026 (-14 %).",
+"Extorsiones denunciadas: 2018 1 · 2019 4 · 2020 10 · 2021 2 · 2022 4 · 2023 2 · 2024 3 · 2025 2 · 2026 (enero-agosto) 4. Tasa 2025: 14,7 por 100.000 habitantes. Enero-agosto: 1 en 2025 y 4 en 2026 (+300 %).",
+"Secuestros: 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. Tasa 2025: 0,0 por 100.000 habitantes.",
+"Masacres: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. Víctimas de masacres 2018-2026: 4.",
+"Amenazas denunciadas: 2018 11 · 2019 2 · 2020 7 · 2021 4 · 2022 9 · 2023 16 · 2024 20 · 2025 5 · 2026 (parcial) 3. Tasa 2025: 36,9 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Santo Domingo: actos de terrorismo, miembros de la fuerza pública asesinados o heridos."
+]
+},
+"05697": {
+"lineas": [
+"Tasa de homicidio 2025: 19,7 por 100.000 habitantes, por debajo de la de Antioquia (25,2).",
+"Homicidios: 2018 6 · 2019 3 · 2020 6 · 2021 5 · 2022 8 · 2023 5 · 2024 10 · 2025 8 · 2026 (enero-agosto) 1. Enero-agosto: 4 en 2025 y 1 en 2026 (-75 %).",
+"Extorsiones denunciadas: 2018 2 · 2019 2 · 2020 3 · 2021 6 · 2022 4 · 2023 3 · 2024 7 · 2025 7 · 2026 (enero-agosto) 2. Tasa 2025: 17,3 por 100.000 habitantes. Enero-agosto: 7 en 2025 y 2 en 2026 (-71 %).",
+"Secuestros: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 2 · 2026 (enero-agosto) 0. Tasa 2025: 4,9 por 100.000 habitantes. Enero-agosto: 2 en 2025 y 0 en 2026 (-100 %).",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 0.",
+"Amenazas denunciadas: 2018 11 · 2019 6 · 2020 6 · 2021 13 · 2022 9 · 2023 5 · 2024 9 · 2025 5 · 2026 (parcial) 9. Tasa 2025: 12,3 por 100.000 habitantes.",
+"Sin registros 2018-2026 en El Santuario: masacres, actos de terrorismo."
+]
+},
+"05736": {
+"lineas": [
+"Tasa de homicidio 2025: 65,7 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 40 · 2019 83 · 2020 59 · 2021 52 · 2022 52 · 2023 40 · 2024 45 · 2025 26 · 2026 (enero-agosto) 35. Enero-agosto: 18 en 2025 y 35 en 2026 (+94 %).",
+"Extorsiones denunciadas: 2018 12 · 2019 20 · 2020 13 · 2021 15 · 2022 14 · 2023 5 · 2024 7 · 2025 19 · 2026 (enero-agosto) 13. Tasa 2025: 48,0 por 100.000 habitantes. Enero-agosto: 14 en 2025 y 13 en 2026 (-7 %).",
+"Secuestros: 2018 0 · 2019 0 · 2020 2 · 2021 0 · 2022 0 · 2023 0 · 2024 4 · 2025 2 · 2026 (enero-agosto) 1. Tasa 2025: 5,1 por 100.000 habitantes. Enero-agosto: 0 en 2025 y 1 en 2026 (sin base de comparación).",
+"Masacres: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 1. Víctimas de masacres 2018-2026: 3. Enero-agosto: 0 en 2025 y 1 en 2026 (sin base de comparación).",
+"Actos de terrorismo: 2018 1 · 2019 1 · 2020 2 · 2021 3 · 2022 8 · 2023 7 · 2024 12 · 2025 2 · 2026 (enero-agosto) 10. Enero-agosto: 2 en 2025 y 10 en 2026 (+400 %).",
+"Miembros de la fuerza pública asesinados o heridos: 2018 1 · 2019 1 · 2020 0 · 2021 3 · 2022 2 · 2023 4 · 2024 24 · 2025 1 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 8. Enero-agosto: 1 en 2025 y 0 en 2026 (-100 %).",
+"Amenazas denunciadas: 2018 33 · 2019 32 · 2020 48 · 2021 60 · 2022 58 · 2023 51 · 2024 64 · 2025 22 · 2026 (parcial) 24. Tasa 2025: 55,6 por 100.000 habitantes."
+]
+},
+"05756": {
+"lineas": [
+"Tasa de homicidio 2025: 39,2 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 10 · 2019 7 · 2020 7 · 2021 28 · 2022 29 · 2023 10 · 2024 30 · 2025 14 · 2026 (enero-agosto) 15. Enero-agosto: 6 en 2025 y 15 en 2026 (+150 %).",
+"Extorsiones denunciadas: 2018 4 · 2019 2 · 2020 0 · 2021 6 · 2022 8 · 2023 5 · 2024 4 · 2025 8 · 2026 (enero-agosto) 5. Tasa 2025: 22,4 por 100.000 habitantes. Enero-agosto: 6 en 2025 y 5 en 2026 (-17 %).",
+"Actos de terrorismo: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 1 · 2025 1 · 2026 (enero-agosto) 0. Enero-agosto: 1 en 2025 y 0 en 2026 (-100 %).",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 2 · 2020 1 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 2 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 1. Enero-agosto: 1 en 2025 y 0 en 2026 (-100 %).",
+"Amenazas denunciadas: 2018 19 · 2019 13 · 2020 7 · 2021 16 · 2022 9 · 2023 8 · 2024 13 · 2025 10 · 2026 (parcial) 8. Tasa 2025: 28,0 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Sonsón: secuestros, masacres."
+]
+},
+"05761": {
+"lineas": [
+"Tasa de homicidio 2025: 36,0 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 10 · 2019 11 · 2020 4 · 2021 9 · 2022 4 · 2023 9 · 2024 9 · 2025 6 · 2026 (enero-agosto) 3. Enero-agosto: 5 en 2025 y 3 en 2026 (-40 %).",
+"Extorsiones denunciadas: 2018 2 · 2019 1 · 2020 3 · 2021 3 · 2022 1 · 2023 2 · 2024 6 · 2025 5 · 2026 (enero-agosto) 0. Tasa 2025: 30,0 por 100.000 habitantes. Enero-agosto: 1 en 2025 y 0 en 2026 (-100 %).",
+"Secuestros: 2018 0 · 2019 0 · 2020 0 · 2021 2 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. Tasa 2025: 0,0 por 100.000 habitantes.",
+"Actos de terrorismo: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 3 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0.",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 0.",
+"Amenazas denunciadas: 2018 8 · 2019 4 · 2020 3 · 2021 8 · 2022 7 · 2023 9 · 2024 8 · 2025 3 · 2026 (parcial) 1. Tasa 2025: 18,0 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Sopetrán: masacres."
+]
+},
+"05789": {
+"lineas": [
+"Tasa de homicidio 2025: 6,0 por 100.000 habitantes, por debajo de la de Antioquia (25,2).",
+"Homicidios: 2018 3 · 2019 4 · 2020 4 · 2021 6 · 2022 1 · 2023 4 · 2024 0 · 2025 1 · 2026 (enero-agosto) 4. Enero-agosto: 0 en 2025 y 4 en 2026 (sin base de comparación).",
+"Extorsiones denunciadas: 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 2 · 2023 1 · 2024 1 · 2025 1 · 2026 (enero-agosto) 1. Tasa 2025: 6,0 por 100.000 habitantes. Enero-agosto: 1 en 2025 y 1 en 2026 (+0 %).",
+"Miembros de la fuerza pública asesinados o heridos: 2018 1 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 1 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 0. Enero-agosto: 1 en 2025 y 0 en 2026 (-100 %).",
+"Amenazas denunciadas: 2018 1 · 2019 1 · 2020 1 · 2021 4 · 2022 4 · 2023 6 · 2024 2 · 2025 1 · 2026 (parcial) 3. Tasa 2025: 6,0 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Támesis: secuestros, masacres, actos de terrorismo."
+]
+},
+"05790": {
+"lineas": [
+"Tasa de homicidio 2025: 33,9 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 110 · 2019 84 · 2020 70 · 2021 64 · 2022 19 · 2023 12 · 2024 29 · 2025 10 · 2026 (enero-agosto) 19. Enero-agosto: 8 en 2025 y 19 en 2026 (+138 %).",
+"Extorsiones denunciadas: 2018 8 · 2019 2 · 2020 5 · 2021 0 · 2022 4 · 2023 7 · 2024 1 · 2025 4 · 2026 (enero-agosto) 2. Tasa 2025: 13,5 por 100.000 habitantes. Enero-agosto: 3 en 2025 y 2 en 2026 (-33 %).",
+"Secuestros: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 4 · 2024 2 · 2025 0 · 2026 (enero-agosto) 0. Tasa 2025: 0,0 por 100.000 habitantes.",
+"Actos de terrorismo: 2018 12 · 2019 35 · 2020 10 · 2021 11 · 2022 2 · 2023 9 · 2024 4 · 2025 5 · 2026 (enero-agosto) 0. Enero-agosto: 3 en 2025 y 0 en 2026 (-100 %).",
+"Miembros de la fuerza pública asesinados o heridos: 2018 5 · 2019 14 · 2020 7 · 2021 2 · 2022 1 · 2023 0 · 2024 0 · 2025 1 · 2026 (enero-agosto) 2. De ellos, asesinados 2018-2026: 12. Enero-agosto: 1 en 2025 y 2 en 2026 (+100 %).",
+"Amenazas denunciadas: 2018 31 · 2019 16 · 2020 10 · 2021 23 · 2022 27 · 2023 31 · 2024 25 · 2025 11 · 2026 (parcial) 23. Tasa 2025: 37,2 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Tarazá: masacres."
+]
+},
+"05792": {
+"lineas": [
+"Tasa de homicidio 2025: 75,8 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 3 · 2019 4 · 2020 3 · 2021 1 · 2022 1 · 2023 4 · 2024 5 · 2025 5 · 2026 (enero-agosto) 9. Enero-agosto: 3 en 2025 y 9 en 2026 (+200 %).",
+"Extorsiones denunciadas: 2018 0 · 2019 3 · 2020 2 · 2021 0 · 2022 0 · 2023 0 · 2024 1 · 2025 2 · 2026 (enero-agosto) 2. Tasa 2025: 30,3 por 100.000 habitantes. Enero-agosto: 1 en 2025 y 2 en 2026 (+100 %).",
+"Masacres: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 1. Víctimas de masacres 2018-2026: 3. Enero-agosto: 0 en 2025 y 1 en 2026 (sin base de comparación).",
+"Amenazas denunciadas: 2018 0 · 2019 2 · 2020 3 · 2021 0 · 2022 2 · 2023 1 · 2024 2 · 2025 2 · 2026 (parcial) 3. Tasa 2025: 30,3 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Tarso: secuestros, actos de terrorismo, miembros de la fuerza pública asesinados o heridos."
+]
+},
+"05809": {
+"lineas": [
+"Tasa de homicidio 2025: 60,4 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 2 · 2019 3 · 2020 2 · 2021 4 · 2022 1 · 2023 7 · 2024 13 · 2025 7 · 2026 (enero-agosto) 12. Enero-agosto: 5 en 2025 y 12 en 2026 (+140 %).",
+"Extorsiones denunciadas: 2018 0 · 2019 1 · 2020 2 · 2021 2 · 2022 4 · 2023 2 · 2024 5 · 2025 3 · 2026 (enero-agosto) 0. Tasa 2025: 25,9 por 100.000 habitantes. Enero-agosto: 1 en 2025 y 0 en 2026 (-100 %).",
+"Masacres: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 1 · 2025 0 · 2026 (enero-agosto) 1. Víctimas de masacres 2018-2026: 6. Enero-agosto: 0 en 2025 y 1 en 2026 (sin base de comparación).",
+"Amenazas denunciadas: 2018 6 · 2019 1 · 2020 2 · 2021 3 · 2022 29 · 2023 29 · 2024 34 · 2025 13 · 2026 (parcial) 7. Tasa 2025: 112,2 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Titiribí: secuestros, actos de terrorismo, miembros de la fuerza pública asesinados o heridos."
+]
+},
+"05819": {
+"lineas": [
+"Tasa de homicidio 2025: 125,9 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 4 · 2019 5 · 2020 3 · 2021 7 · 2022 6 · 2023 2 · 2024 12 · 2025 6 · 2026 (enero-agosto) 5. Enero-agosto: 5 en 2025 y 5 en 2026 (+0 %).",
+"Extorsiones denunciadas: 2018 3 · 2019 2 · 2020 1 · 2021 2 · 2022 2 · 2023 1 · 2024 5 · 2025 4 · 2026 (enero-agosto) 0. Tasa 2025: 83,9 por 100.000 habitantes. Enero-agosto: 1 en 2025 y 0 en 2026 (-100 %).",
+"Actos de terrorismo: 2018 5 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 3 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0.",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 1 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 0. Enero-agosto: 1 en 2025 y 0 en 2026 (-100 %).",
+"Amenazas denunciadas: 2018 4 · 2019 7 · 2020 7 · 2021 4 · 2022 8 · 2023 20 · 2024 17 · 2025 7 · 2026 (parcial) 4. Tasa 2025: 146,8 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Toledo: secuestros, masacres."
+]
+},
+"05837": {
+"lineas": [
+"Tasa de homicidio 2025: 21,5 por 100.000 habitantes, por debajo de la de Antioquia (25,2).",
+"Homicidios: 2018 104 · 2019 69 · 2020 53 · 2021 78 · 2022 75 · 2023 67 · 2024 25 · 2025 28 · 2026 (enero-agosto) 17. Enero-agosto: 15 en 2025 y 17 en 2026 (+13 %).",
+"Extorsiones denunciadas: 2018 9 · 2019 13 · 2020 4 · 2021 5 · 2022 4 · 2023 7 · 2024 13 · 2025 11 · 2026 (enero-agosto) 7. Tasa 2025: 8,4 por 100.000 habitantes. Enero-agosto: 10 en 2025 y 7 en 2026 (-30 %).",
+"Secuestros: 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. Tasa 2025: 0,0 por 100.000 habitantes.",
+"Actos de terrorismo: 2018 1 · 2019 1 · 2020 0 · 2021 3 · 2022 7 · 2023 1 · 2024 1 · 2025 1 · 2026 (enero-agosto) 0. Enero-agosto: 1 en 2025 y 0 en 2026 (-100 %).",
+"Miembros de la fuerza pública asesinados o heridos: 2018 12 · 2019 4 · 2020 0 · 2021 11 · 2022 10 · 2023 2 · 2024 13 · 2025 0 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 13.",
+"Amenazas denunciadas: 2018 91 · 2019 49 · 2020 45 · 2021 32 · 2022 38 · 2023 57 · 2024 72 · 2025 50 · 2026 (parcial) 30. Tasa 2025: 38,4 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Turbo: masacres."
+]
+},
+"05842": {
+"lineas": [
+"Tasa de homicidio 2025: 13,3 por 100.000 habitantes, por debajo de la de Antioquia (25,2).",
+"Homicidios: 2018 3 · 2019 3 · 2020 1 · 2021 2 · 2022 4 · 2023 1 · 2024 1 · 2025 1 · 2026 (enero-agosto) 4. Enero-agosto: 1 en 2025 y 4 en 2026 (+300 %).",
+"Extorsiones denunciadas: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 3 · 2024 1 · 2025 0 · 2026 (enero-agosto) 0. Tasa 2025: 0,0 por 100.000 habitantes.",
+"Actos de terrorismo: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 2 · 2023 0 · 2024 0 · 2025 1 · 2026 (enero-agosto) 0. Enero-agosto: 1 en 2025 y 0 en 2026 (-100 %).",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 3 · 2023 0 · 2024 0 · 2025 6 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 1. Enero-agosto: 6 en 2025 y 0 en 2026 (-100 %).",
+"Amenazas denunciadas: 2018 0 · 2019 9 · 2020 1 · 2021 0 · 2022 5 · 2023 3 · 2024 4 · 2025 8 · 2026 (parcial) 2. Tasa 2025: 106,3 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Uramita: secuestros, masacres."
+]
+},
+"05847": {
+"lineas": [
+"Tasa de homicidio 2025: 96,4 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 18 · 2019 19 · 2020 33 · 2021 21 · 2022 33 · 2023 34 · 2024 26 · 2025 31 · 2026 (enero-agosto) 14. Enero-agosto: 18 en 2025 y 14 en 2026 (-22 %).",
+"Extorsiones denunciadas: 2018 10 · 2019 5 · 2020 7 · 2021 7 · 2022 3 · 2023 8 · 2024 3 · 2025 6 · 2026 (enero-agosto) 4. Tasa 2025: 18,7 por 100.000 habitantes. Enero-agosto: 5 en 2025 y 4 en 2026 (-20 %).",
+"Masacres: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 1 · 2025 1 · 2026 (enero-agosto) 0. Víctimas de masacres 2018-2026: 6. Enero-agosto: 1 en 2025 y 0 en 2026 (-100 %).",
+"Actos de terrorismo: 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 1 · 2023 1 · 2024 1 · 2025 0 · 2026 (enero-agosto) 0.",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 5. De ellos, asesinados 2018-2026: 3. Enero-agosto: 0 en 2025 y 5 en 2026 (sin base de comparación).",
+"Amenazas denunciadas: 2018 18 · 2019 8 · 2020 23 · 2021 8 · 2022 17 · 2023 12 · 2024 13 · 2025 17 · 2026 (parcial) 11. Tasa 2025: 52,9 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Urrao: secuestros."
+]
+},
+"05854": {
+"lineas": [
+"Tasa de homicidio 2025: 125,8 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 40 · 2019 18 · 2020 16 · 2021 30 · 2022 27 · 2023 15 · 2024 24 · 2025 19 · 2026 (enero-agosto) 14. Enero-agosto: 15 en 2025 y 14 en 2026 (-7 %).",
+"Extorsiones denunciadas: 2018 6 · 2019 5 · 2020 3 · 2021 5 · 2022 7 · 2023 2 · 2024 3 · 2025 3 · 2026 (enero-agosto) 3. Tasa 2025: 19,9 por 100.000 habitantes. Enero-agosto: 3 en 2025 y 3 en 2026 (+0 %).",
+"Secuestros: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 1. Tasa 2025: 0,0 por 100.000 habitantes. Enero-agosto: 0 en 2025 y 1 en 2026 (sin base de comparación).",
+"Masacres: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 1 · 2025 0 · 2026 (enero-agosto) 0. Víctimas de masacres 2018-2026: 6.",
+"Actos de terrorismo: 2018 9 · 2019 15 · 2020 1 · 2021 13 · 2022 12 · 2023 1 · 2024 9 · 2025 12 · 2026 (enero-agosto) 5. Enero-agosto: 10 en 2025 y 5 en 2026 (-50 %).",
+"Miembros de la fuerza pública asesinados o heridos: 2018 5 · 2019 7 · 2020 3 · 2021 1 · 2022 1 · 2023 0 · 2024 12 · 2025 18 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 15. Enero-agosto: 17 en 2025 y 0 en 2026 (-100 %).",
+"Amenazas denunciadas: 2018 10 · 2019 8 · 2020 5 · 2021 11 · 2022 13 · 2023 10 · 2024 4 · 2025 5 · 2026 (parcial) 6. Tasa 2025: 33,1 por 100.000 habitantes."
+]
+},
+"05856": {
+"lineas": [
+"Tasa de homicidio 2025: 14,9 por 100.000 habitantes, por debajo de la de Antioquia (25,2).",
+"Homicidios: 2018 2 · 2019 1 · 2020 3 · 2021 3 · 2022 0 · 2023 0 · 2024 0 · 2025 1 · 2026 (enero-agosto) 2. Enero-agosto: 1 en 2025 y 2 en 2026 (+100 %).",
+"Extorsiones denunciadas: 2018 2 · 2019 0 · 2020 1 · 2021 0 · 2022 0 · 2023 0 · 2024 1 · 2025 1 · 2026 (enero-agosto) 1. Tasa 2025: 14,9 por 100.000 habitantes. Enero-agosto: 1 en 2025 y 1 en 2026 (+0 %).",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 0.",
+"Amenazas denunciadas: 2018 2 · 2019 0 · 2020 3 · 2021 4 · 2022 4 · 2023 2 · 2024 6 · 2025 4 · 2026 (parcial) 1. Tasa 2025: 59,6 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Valparaíso: secuestros, masacres, actos de terrorismo."
+]
+},
+"05858": {
+"lineas": [
+"Tasa de homicidio 2025: 41,0 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 22 · 2019 22 · 2020 9 · 2021 17 · 2022 22 · 2023 5 · 2024 9 · 2025 5 · 2026 (enero-agosto) 13. Enero-agosto: 5 en 2025 y 13 en 2026 (+160 %).",
+"Extorsiones denunciadas: 2018 1 · 2019 5 · 2020 1 · 2021 5 · 2022 1 · 2023 5 · 2024 5 · 2025 8 · 2026 (enero-agosto) 3. Tasa 2025: 65,7 por 100.000 habitantes. Enero-agosto: 4 en 2025 y 3 en 2026 (-25 %).",
+"Secuestros: 2018 0 · 2019 2 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. Tasa 2025: 0,0 por 100.000 habitantes.",
+"Actos de terrorismo: 2018 1 · 2019 1 · 2020 0 · 2021 1 · 2022 6 · 2023 1 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0.",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 2 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 0. Enero-agosto: 2 en 2025 y 0 en 2026 (-100 %).",
+"Amenazas denunciadas: 2018 1 · 2019 5 · 2020 4 · 2021 5 · 2022 10 · 2023 7 · 2024 12 · 2025 5 · 2026 (parcial) 3. Tasa 2025: 41,0 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Vegachí: masacres."
+]
+},
+"05861": {
+"lineas": [
+"Tasa de homicidio 2025: 40,0 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 15 · 2019 9 · 2020 9 · 2021 17 · 2022 18 · 2023 15 · 2024 8 · 2025 5 · 2026 (enero-agosto) 3. Enero-agosto: 3 en 2025 y 3 en 2026 (+0 %).",
+"Extorsiones denunciadas: 2018 3 · 2019 3 · 2020 5 · 2021 5 · 2022 4 · 2023 0 · 2024 3 · 2025 3 · 2026 (enero-agosto) 4. Tasa 2025: 24,0 por 100.000 habitantes. Enero-agosto: 3 en 2025 y 4 en 2026 (+33 %).",
+"Masacres: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 1 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. Víctimas de masacres 2018-2026: 6.",
+"Actos de terrorismo: 2018 1 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0.",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 0 · 2020 1 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 0.",
+"Amenazas denunciadas: 2018 13 · 2019 2 · 2020 12 · 2021 9 · 2022 9 · 2023 10 · 2024 10 · 2025 6 · 2026 (parcial) 8. Tasa 2025: 48,0 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Venecia: secuestros."
+]
+},
+"05873": {
+"lineas": [
+"Tasa de homicidio 2025: 0,0 por 100.000 habitantes, por debajo de la de Antioquia (25,2).",
+"Homicidios: 2018 2 · 2019 1 · 2020 0 · 2021 1 · 2022 0 · 2023 0 · 2024 2 · 2025 0 · 2026 (enero-agosto) 1. Enero-agosto: 0 en 2025 y 1 en 2026 (sin base de comparación).",
+"Extorsiones denunciadas: 2018 1 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. Tasa 2025: 0,0 por 100.000 habitantes.",
+"Actos de terrorismo: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0.",
+"Amenazas denunciadas: 2018 2 · 2019 4 · 2020 4 · 2021 1 · 2022 0 · 2023 3 · 2024 9 · 2025 7 · 2026 (parcial) 0. Tasa 2025: 59,9 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Vigía del Fuerte: secuestros, masacres, miembros de la fuerza pública asesinados o heridos."
+]
+},
+"05885": {
+"lineas": [
+"Tasa de homicidio 2025: 25,9 por 100.000 habitantes, cerca de la de Antioquia (25,2).",
+"Homicidios: 2018 6 · 2019 4 · 2020 7 · 2021 14 · 2022 4 · 2023 8 · 2024 6 · 2025 2 · 2026 (enero-agosto) 6. Enero-agosto: 0 en 2025 y 6 en 2026 (sin base de comparación).",
+"Extorsiones denunciadas: 2018 3 · 2019 2 · 2020 4 · 2021 3 · 2022 1 · 2023 2 · 2024 5 · 2025 1 · 2026 (enero-agosto) 1. Tasa 2025: 12,9 por 100.000 habitantes. Enero-agosto: 1 en 2025 y 1 en 2026 (+0 %).",
+"Actos de terrorismo: 2018 1 · 2019 1 · 2020 0 · 2021 0 · 2022 3 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0.",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 0 · 2020 2 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 0.",
+"Amenazas denunciadas: 2018 2 · 2019 2 · 2020 1 · 2021 1 · 2022 4 · 2023 4 · 2024 34 · 2025 17 · 2026 (parcial) 1. Tasa 2025: 220,1 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Yalí: secuestros, masacres."
+]
+},
+"05887": {
+"lineas": [
+"Tasa de homicidio 2025: 59,7 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 63 · 2019 16 · 2020 37 · 2021 33 · 2022 32 · 2023 26 · 2024 35 · 2025 25 · 2026 (enero-agosto) 15. Enero-agosto: 20 en 2025 y 15 en 2026 (-25 %).",
+"Extorsiones denunciadas: 2018 17 · 2019 26 · 2020 8 · 2021 11 · 2022 16 · 2023 18 · 2024 16 · 2025 12 · 2026 (enero-agosto) 15. Tasa 2025: 28,7 por 100.000 habitantes. Enero-agosto: 6 en 2025 y 15 en 2026 (+150 %).",
+"Secuestros: 2018 0 · 2019 0 · 2020 0 · 2021 1 · 2022 0 · 2023 1 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. Tasa 2025: 0,0 por 100.000 habitantes.",
+"Masacres: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 1 · 2026 (enero-agosto) 0. Víctimas de masacres 2018-2026: 5. Enero-agosto: 1 en 2025 y 0 en 2026 (-100 %).",
+"Actos de terrorismo: 2018 3 · 2019 0 · 2020 1 · 2021 4 · 2022 1 · 2023 7 · 2024 4 · 2025 3 · 2026 (enero-agosto) 2. Enero-agosto: 1 en 2025 y 2 en 2026 (+100 %).",
+"Miembros de la fuerza pública asesinados o heridos: 2018 1 · 2019 1 · 2020 0 · 2021 0 · 2022 2 · 2023 1 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 3.",
+"Amenazas denunciadas: 2018 13 · 2019 12 · 2020 19 · 2021 17 · 2022 38 · 2023 50 · 2024 48 · 2025 17 · 2026 (parcial) 9. Tasa 2025: 40,6 por 100.000 habitantes."
+]
+},
+"05890": {
+"lineas": [
+"Tasa de homicidio 2025: 31,7 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 8 · 2019 11 · 2020 13 · 2021 31 · 2022 18 · 2023 15 · 2024 8 · 2025 8 · 2026 (enero-agosto) 9. Enero-agosto: 3 en 2025 y 9 en 2026 (+200 %).",
+"Extorsiones denunciadas: 2018 4 · 2019 4 · 2020 3 · 2021 5 · 2022 6 · 2023 9 · 2024 10 · 2025 7 · 2026 (enero-agosto) 1. Tasa 2025: 27,7 por 100.000 habitantes. Enero-agosto: 5 en 2025 y 1 en 2026 (-80 %).",
+"Secuestros: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 1 · 2024 0 · 2025 0 · 2026 (enero-agosto) 1. Tasa 2025: 0,0 por 100.000 habitantes. Enero-agosto: 0 en 2025 y 1 en 2026 (sin base de comparación).",
+"Actos de terrorismo: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 2 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0.",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 1 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 1.",
+"Amenazas denunciadas: 2018 4 · 2019 8 · 2020 1 · 2021 9 · 2022 17 · 2023 4 · 2024 24 · 2025 8 · 2026 (parcial) 7. Tasa 2025: 31,7 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Yolombó: masacres."
+]
+},
+"05893": {
+"lineas": [
+"Tasa de homicidio 2025: 182,8 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 7 · 2019 3 · 2020 11 · 2021 15 · 2022 18 · 2023 19 · 2024 18 · 2025 41 · 2026 (enero-agosto) 13. Enero-agosto: 27 en 2025 y 13 en 2026 (-52 %).",
+"Extorsiones denunciadas: 2018 2 · 2019 4 · 2020 1 · 2021 5 · 2022 5 · 2023 5 · 2024 6 · 2025 6 · 2026 (enero-agosto) 9. Tasa 2025: 26,8 por 100.000 habitantes. Enero-agosto: 2 en 2025 y 9 en 2026 (+350 %).",
+"Secuestros: 2018 1 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. Tasa 2025: 0,0 por 100.000 habitantes.",
+"Masacres: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 1 · 2025 1 · 2026 (enero-agosto) 0. Víctimas de masacres 2018-2026: 8.",
+"Actos de terrorismo: 2018 2 · 2019 1 · 2020 0 · 2021 0 · 2022 1 · 2023 8 · 2024 0 · 2025 2 · 2026 (enero-agosto) 1. Enero-agosto: 2 en 2025 y 1 en 2026 (-50 %).",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 0 · 2020 0 · 2021 1 · 2022 0 · 2023 0 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 0.",
+"Amenazas denunciadas: 2018 37 · 2019 27 · 2020 56 · 2021 19 · 2022 37 · 2023 75 · 2024 93 · 2025 76 · 2026 (parcial) 23. Tasa 2025: 338,8 por 100.000 habitantes."
+]
+},
+"05895": {
+"lineas": [
+"Tasa de homicidio 2025: 33,3 por 100.000 habitantes, por encima de la de Antioquia (25,2).",
+"Homicidios: 2018 26 · 2019 30 · 2020 30 · 2021 8 · 2022 11 · 2023 9 · 2024 12 · 2025 9 · 2026 (enero-agosto) 3. Enero-agosto: 8 en 2025 y 3 en 2026 (-62 %).",
+"Extorsiones denunciadas: 2018 4 · 2019 6 · 2020 4 · 2021 0 · 2022 1 · 2023 3 · 2024 1 · 2025 3 · 2026 (enero-agosto) 4. Tasa 2025: 11,1 por 100.000 habitantes. Enero-agosto: 1 en 2025 y 4 en 2026 (+300 %).",
+"Secuestros: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 1 · 2025 0 · 2026 (enero-agosto) 0. Tasa 2025: 0,0 por 100.000 habitantes.",
+"Actos de terrorismo: 2018 3 · 2019 6 · 2020 1 · 2021 0 · 2022 5 · 2023 1 · 2024 0 · 2025 1 · 2026 (enero-agosto) 0.",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 1 · 2024 0 · 2025 1 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 1. Enero-agosto: 1 en 2025 y 0 en 2026 (-100 %).",
+"Amenazas denunciadas: 2018 18 · 2019 18 · 2020 11 · 2021 10 · 2022 6 · 2023 16 · 2024 18 · 2025 9 · 2026 (parcial) 8. Tasa 2025: 33,3 por 100.000 habitantes.",
+"Sin registros 2018-2026 en Zaragoza: masacres."
+]
+}
+},
+"subregiones": {
+"Bajo Cauca": {
+"lineas": [
+"Homicidios: 2018 398 · 2019 377 · 2020 323 · 2021 224 · 2022 160 · 2023 114 · 2024 186 · 2025 144 · 2026 (enero-agosto) 87. Tasa 2025: 54,2 por 100.000 habitantes. Enero-agosto: 99 en 2025 y 87 en 2026 (-12 %).",
+"Extorsiones denunciadas: 2018 59 · 2019 76 · 2020 55 · 2021 38 · 2022 36 · 2023 45 · 2024 37 · 2025 43 · 2026 (enero-agosto) 37. Tasa 2025: 16,2 por 100.000 habitantes. Enero-agosto: 27 en 2025 y 37 en 2026 (+37 %).",
+"Secuestros: 2018 1 · 2019 0 · 2020 0 · 2021 1 · 2022 2 · 2023 6 · 2024 4 · 2025 0 · 2026 (enero-agosto) 2. Tasa 2025: 0,0 por 100.000 habitantes. Enero-agosto: 0 en 2025 y 2 en 2026 (sin base de comparación).",
+"Masacres: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 2 · 2023 1 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. Víctimas de masacres 2018-2026: 10.",
+"Actos de terrorismo: 2018 41 · 2019 51 · 2020 16 · 2021 16 · 2022 23 · 2023 23 · 2024 11 · 2025 8 · 2026 (enero-agosto) 3. Enero-agosto: 5 en 2025 y 3 en 2026 (-40 %).",
+"Miembros de la fuerza pública asesinados o heridos: 2018 13 · 2019 23 · 2020 19 · 2021 25 · 2022 13 · 2023 4 · 2024 4 · 2025 6 · 2026 (enero-agosto) 3. De ellos, asesinados 2018-2026: 30. Enero-agosto: 4 en 2025 y 3 en 2026 (-25 %).",
+"Amenazas denunciadas: 2018 176 · 2019 135 · 2020 157 · 2021 144 · 2022 154 · 2023 218 · 2024 185 · 2025 102 · 2026 (parcial) 95. Tasa 2025: 38,4 por 100.000 habitantes.",
+"Municipios de la subregión con mayor tasa de homicidio 2025: Cáceres 96,7; Caucasia 67,0; El Bagre 51,2; Tarazá 33,9; Zaragoza 33,3."
+]
+},
+"Magdalena Medio": {
+"lineas": [
+"Homicidios: 2018 48 · 2019 83 · 2020 70 · 2021 74 · 2022 86 · 2023 77 · 2024 49 · 2025 71 · 2026 (enero-agosto) 36. Tasa 2025: 64,0 por 100.000 habitantes. Enero-agosto: 50 en 2025 y 36 en 2026 (-28 %).",
+"Extorsiones denunciadas: 2018 11 · 2019 29 · 2020 22 · 2021 17 · 2022 18 · 2023 25 · 2024 31 · 2025 35 · 2026 (enero-agosto) 29. Tasa 2025: 31,5 por 100.000 habitantes. Enero-agosto: 25 en 2025 y 29 en 2026 (+16 %).",
+"Secuestros: 2018 2 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 2 · 2024 2 · 2025 2 · 2026 (enero-agosto) 1. Tasa 2025: 1,8 por 100.000 habitantes. Enero-agosto: 1 en 2025 y 1 en 2026 (+0 %).",
+"Masacres: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 1 · 2024 1 · 2025 1 · 2026 (enero-agosto) 0. Víctimas de masacres 2018-2026: 12.",
+"Actos de terrorismo: 2018 3 · 2019 1 · 2020 1 · 2021 1 · 2022 3 · 2023 9 · 2024 0 · 2025 5 · 2026 (enero-agosto) 1. Enero-agosto: 3 en 2025 y 1 en 2026 (-67 %).",
+"Miembros de la fuerza pública asesinados o heridos: 2018 0 · 2019 0 · 2020 0 · 2021 2 · 2022 0 · 2023 0 · 2024 2 · 2025 1 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 0. Enero-agosto: 1 en 2025 y 0 en 2026 (-100 %).",
+"Amenazas denunciadas: 2018 224 · 2019 160 · 2020 201 · 2021 157 · 2022 208 · 2023 251 · 2024 225 · 2025 166 · 2026 (parcial) 62. Tasa 2025: 149,6 por 100.000 habitantes.",
+"Municipios de la subregión con mayor tasa de homicidio 2025: Yondó 182,8; Puerto Berrío 51,1; Puerto Nare 31,9; Caracolí 22,3; Puerto Triunfo 14,8."
+]
+},
+"Nordeste": {
+"lineas": [
+"Homicidios: 2018 164 · 2019 205 · 2020 174 · 2021 231 · 2022 243 · 2023 155 · 2024 198 · 2025 190 · 2026 (enero-agosto) 176. Tasa 2025: 87,4 por 100.000 habitantes. Enero-agosto: 137 en 2025 y 176 en 2026 (+28 %).",
+"Extorsiones denunciadas: 2018 58 · 2019 67 · 2020 54 · 2021 52 · 2022 40 · 2023 47 · 2024 56 · 2025 72 · 2026 (enero-agosto) 45. Tasa 2025: 33,1 por 100.000 habitantes. Enero-agosto: 50 en 2025 y 45 en 2026 (-10 %).",
+"Secuestros: 2018 0 · 2019 4 · 2020 2 · 2021 1 · 2022 2 · 2023 3 · 2024 5 · 2025 5 · 2026 (enero-agosto) 2. Tasa 2025: 2,3 por 100.000 habitantes. Enero-agosto: 1 en 2025 y 2 en 2026 (+100 %).",
+"Masacres: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 2 · 2023 0 · 2024 3 · 2025 1 · 2026 (enero-agosto) 2. Víctimas de masacres 2018-2026: 38. Enero-agosto: 1 en 2025 y 2 en 2026 (+100 %).",
+"Actos de terrorismo: 2018 6 · 2019 16 · 2020 5 · 2021 12 · 2022 34 · 2023 32 · 2024 21 · 2025 25 · 2026 (enero-agosto) 21. Enero-agosto: 10 en 2025 y 21 en 2026 (+110 %).",
+"Miembros de la fuerza pública asesinados o heridos: 2018 3 · 2019 8 · 2020 9 · 2021 17 · 2022 10 · 2023 12 · 2024 40 · 2025 40 · 2026 (enero-agosto) 11. De ellos, asesinados 2018-2026: 42. Enero-agosto: 27 en 2025 y 11 en 2026 (-59 %).",
+"Amenazas denunciadas: 2018 116 · 2019 117 · 2020 142 · 2021 161 · 2022 185 · 2023 179 · 2024 239 · 2025 115 · 2026 (parcial) 82. Tasa 2025: 52,9 por 100.000 habitantes.",
+"Municipios de la subregión con mayor tasa de homicidio 2025: Anorí 215,9; Remedios 116,3; Amalfi 112,3; Santo Domingo 88,4; San Roque 76,4."
+]
+},
+"Norte": {
+"lineas": [
+"Homicidios: 2018 214 · 2019 138 · 2020 129 · 2021 191 · 2022 168 · 2023 140 · 2024 156 · 2025 178 · 2026 (enero-agosto) 128. Tasa 2025: 69,4 por 100.000 habitantes. Enero-agosto: 132 en 2025 y 128 en 2026 (-3 %).",
+"Extorsiones denunciadas: 2018 55 · 2019 72 · 2020 54 · 2021 64 · 2022 97 · 2023 68 · 2024 79 · 2025 51 · 2026 (enero-agosto) 41. Tasa 2025: 19,9 por 100.000 habitantes. Enero-agosto: 29 en 2025 y 41 en 2026 (+41 %).",
+"Secuestros: 2018 1 · 2019 1 · 2020 0 · 2021 1 · 2022 2 · 2023 4 · 2024 2 · 2025 1 · 2026 (enero-agosto) 1. Tasa 2025: 0,4 por 100.000 habitantes. Enero-agosto: 1 en 2025 y 1 en 2026 (+0 %).",
+"Masacres: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 2 · 2023 1 · 2024 1 · 2025 1 · 2026 (enero-agosto) 0. Víctimas de masacres 2018-2026: 21. Enero-agosto: 1 en 2025 y 0 en 2026 (-100 %).",
+"Actos de terrorismo: 2018 26 · 2019 27 · 2020 13 · 2021 22 · 2022 43 · 2023 32 · 2024 28 · 2025 22 · 2026 (enero-agosto) 20. Enero-agosto: 18 en 2025 y 20 en 2026 (+11 %).",
+"Miembros de la fuerza pública asesinados o heridos: 2018 11 · 2019 16 · 2020 9 · 2021 10 · 2022 41 · 2023 12 · 2024 23 · 2025 40 · 2026 (enero-agosto) 11. De ellos, asesinados 2018-2026: 45. Enero-agosto: 35 en 2025 y 11 en 2026 (-69 %).",
+"Amenazas denunciadas: 2018 124 · 2019 87 · 2020 133 · 2021 144 · 2022 222 · 2023 256 · 2024 225 · 2025 111 · 2026 (parcial) 94. Tasa 2025: 43,3 por 100.000 habitantes.",
+"Municipios de la subregión con mayor tasa de homicidio 2025: San Andrés de Cuerquía 393,0; Briceño 227,7; Toledo 125,9; Valdivia 125,8; Campamento 99,4."
+]
+},
+"Occidente": {
+"lineas": [
+"Homicidios: 2018 88 · 2019 129 · 2020 83 · 2021 115 · 2022 99 · 2023 110 · 2024 74 · 2025 90 · 2026 (enero-agosto) 73. Tasa 2025: 39,6 por 100.000 habitantes. Enero-agosto: 66 en 2025 y 73 en 2026 (+11 %).",
+"Extorsiones denunciadas: 2018 21 · 2019 35 · 2020 31 · 2021 29 · 2022 21 · 2023 22 · 2024 54 · 2025 44 · 2026 (enero-agosto) 22. Tasa 2025: 19,4 por 100.000 habitantes. Enero-agosto: 28 en 2025 y 22 en 2026 (-21 %).",
+"Secuestros: 2018 0 · 2019 0 · 2020 0 · 2021 2 · 2022 3 · 2023 1 · 2024 0 · 2025 6 · 2026 (enero-agosto) 0. Tasa 2025: 2,6 por 100.000 habitantes. Enero-agosto: 4 en 2025 y 0 en 2026 (-100 %).",
+"Masacres: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 1 · 2024 0 · 2025 0 · 2026 (enero-agosto) 0. Víctimas de masacres 2018-2026: 14.",
+"Actos de terrorismo: 2018 4 · 2019 2 · 2020 2 · 2021 7 · 2022 48 · 2023 5 · 2024 6 · 2025 21 · 2026 (enero-agosto) 2. Enero-agosto: 16 en 2025 y 2 en 2026 (-88 %).",
+"Miembros de la fuerza pública asesinados o heridos: 2018 5 · 2019 8 · 2020 5 · 2021 8 · 2022 34 · 2023 8 · 2024 0 · 2025 30 · 2026 (enero-agosto) 7. De ellos, asesinados 2018-2026: 25. Enero-agosto: 16 en 2025 y 7 en 2026 (-56 %).",
+"Amenazas denunciadas: 2018 83 · 2019 70 · 2020 97 · 2021 96 · 2022 117 · 2023 163 · 2024 154 · 2025 84 · 2026 (parcial) 56. Tasa 2025: 37,0 por 100.000 habitantes.",
+"Municipios de la subregión con mayor tasa de homicidio 2025: Buriticá 89,5; Sabanalarga 80,3; San Jerónimo 80,0; Dabeiba 52,1; Anzá 51,7."
+]
+},
+"Oriente": {
+"lineas": [
+"Homicidios: 2018 115 · 2019 120 · 2020 146 · 2021 178 · 2022 207 · 2023 200 · 2024 210 · 2025 219 · 2026 (enero-agosto) 160. Tasa 2025: 28,7 por 100.000 habitantes. Enero-agosto: 125 en 2025 y 160 en 2026 (+28 %).",
+"Extorsiones denunciadas: 2018 96 · 2019 124 · 2020 125 · 2021 126 · 2022 163 · 2023 111 · 2024 175 · 2025 257 · 2026 (enero-agosto) 170. Tasa 2025: 33,7 por 100.000 habitantes. Enero-agosto: 182 en 2025 y 170 en 2026 (-7 %).",
+"Secuestros: 2018 4 · 2019 2 · 2020 1 · 2021 13 · 2022 2 · 2023 5 · 2024 3 · 2025 14 · 2026 (enero-agosto) 6. Tasa 2025: 1,8 por 100.000 habitantes. Enero-agosto: 14 en 2025 y 6 en 2026 (-57 %).",
+"Masacres: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 2 · 2024 2 · 2025 3 · 2026 (enero-agosto) 3. Víctimas de masacres 2018-2026: 38. Enero-agosto: 1 en 2025 y 3 en 2026 (+200 %).",
+"Actos de terrorismo: 2018 1 · 2019 1 · 2020 1 · 2021 2 · 2022 3 · 2023 3 · 2024 1 · 2025 2 · 2026 (enero-agosto) 2. Enero-agosto: 2 en 2025 y 2 en 2026 (+0 %).",
+"Miembros de la fuerza pública asesinados o heridos: 2018 5 · 2019 8 · 2020 3 · 2021 0 · 2022 3 · 2023 2 · 2024 3 · 2025 4 · 2026 (enero-agosto) 0. De ellos, asesinados 2018-2026: 2. Enero-agosto: 3 en 2025 y 0 en 2026 (-100 %).",
+"Amenazas denunciadas: 2018 168 · 2019 139 · 2020 186 · 2021 231 · 2022 355 · 2023 435 · 2024 412 · 2025 317 · 2026 (parcial) 270. Tasa 2025: 41,5 por 100.000 habitantes.",
+"Municipios de la subregión con mayor tasa de homicidio 2025: La Unión 69,7; Nariño 63,3; San Luis 61,7; Peñol 41,5; San Vicente 40,0."
+]
+},
+"Suroeste": {
+"lineas": [
+"Homicidios: 2018 260 · 2019 224 · 2020 312 · 2021 306 · 2022 217 · 2023 241 · 2024 245 · 2025 332 · 2026 (enero-agosto) 218. Tasa 2025: 85,5 por 100.000 habitantes. Enero-agosto: 215 en 2025 y 218 en 2026 (+1 %).",
+"Extorsiones denunciadas: 2018 36 · 2019 59 · 2020 65 · 2021 77 · 2022 49 · 2023 48 · 2024 90 · 2025 101 · 2026 (enero-agosto) 46. Tasa 2025: 26,0 por 100.000 habitantes. Enero-agosto: 59 en 2025 y 46 en 2026 (-22 %).",
+"Secuestros: 2018 1 · 2019 1 · 2020 1 · 2021 0 · 2022 2 · 2023 0 · 2024 1 · 2025 2 · 2026 (enero-agosto) 0. Tasa 2025: 0,5 por 100.000 habitantes. Enero-agosto: 2 en 2025 y 0 en 2026 (-100 %).",
+"Masacres: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 2 · 2023 3 · 2024 2 · 2025 2 · 2026 (enero-agosto) 2. Víctimas de masacres 2018-2026: 34. Enero-agosto: 2 en 2025 y 2 en 2026 (+0 %).",
+"Actos de terrorismo: 2018 2 · 2019 1 · 2020 1 · 2021 2 · 2022 9 · 2023 1 · 2024 3 · 2025 2 · 2026 (enero-agosto) 4. Enero-agosto: 1 en 2025 y 4 en 2026 (+300 %).",
+"Miembros de la fuerza pública asesinados o heridos: 2018 3 · 2019 7 · 2020 3 · 2021 0 · 2022 2 · 2023 4 · 2024 1 · 2025 8 · 2026 (enero-agosto) 9. De ellos, asesinados 2018-2026: 10. Enero-agosto: 6 en 2025 y 9 en 2026 (+50 %).",
+"Amenazas denunciadas: 2018 162 · 2019 136 · 2020 158 · 2021 132 · 2022 214 · 2023 292 · 2024 260 · 2025 163 · 2026 (parcial) 155. Tasa 2025: 42,0 por 100.000 habitantes.",
+"Municipios de la subregión con mayor tasa de homicidio 2025: Betulia 205,1; Betania 176,9; Hispania 167,6; Andes 147,5; Ciudad Bolívar 137,1."
+]
+},
+"Urabá": {
+"lineas": [
+"Homicidios: 2018 278 · 2019 202 · 2020 165 · 2021 212 · 2022 191 · 2023 186 · 2024 103 · 2025 82 · 2026 (enero-agosto) 48. Tasa 2025: 15,7 por 100.000 habitantes. Enero-agosto: 52 en 2025 y 48 en 2026 (-8 %).",
+"Extorsiones denunciadas: 2018 40 · 2019 38 · 2020 25 · 2021 17 · 2022 28 · 2023 35 · 2024 54 · 2025 45 · 2026 (enero-agosto) 32. Tasa 2025: 8,6 por 100.000 habitantes. Enero-agosto: 29 en 2025 y 32 en 2026 (+10 %).",
+"Secuestros: 2018 0 · 2019 1 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 2 · 2025 0 · 2026 (enero-agosto) 0. Tasa 2025: 0,0 por 100.000 habitantes.",
+"Masacres: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 0 · 2023 0 · 2024 0 · 2025 1 · 2026 (enero-agosto) 0. Víctimas de masacres 2018-2026: 3. Enero-agosto: 1 en 2025 y 0 en 2026 (-100 %).",
+"Actos de terrorismo: 2018 5 · 2019 2 · 2020 10 · 2021 11 · 2022 13 · 2023 7 · 2024 4 · 2025 1 · 2026 (enero-agosto) 0. Enero-agosto: 1 en 2025 y 0 en 2026 (-100 %).",
+"Miembros de la fuerza pública asesinados o heridos: 2018 22 · 2019 11 · 2020 1 · 2021 11 · 2022 18 · 2023 4 · 2024 13 · 2025 2 · 2026 (enero-agosto) 1. De ellos, asesinados 2018-2026: 23. Enero-agosto: 2 en 2025 y 1 en 2026 (-50 %).",
+"Amenazas denunciadas: 2018 367 · 2019 288 · 2020 240 · 2021 241 · 2022 251 · 2023 269 · 2024 333 · 2025 226 · 2026 (parcial) 125. Tasa 2025: 43,3 por 100.000 habitantes.",
+"Municipios de la subregión con mayor tasa de homicidio 2025: Mutatá 43,7; Turbo 21,5; Chigorodó 19,4; Murindó 16,6; San Pedro de Urabá 15,4."
+]
+},
+"Valle de Aburrá": {
+"lineas": [
+"Homicidios: 2018 874 · 2019 858 · 2020 623 · 2021 582 · 2022 528 · 2023 526 · 2024 463 · 2025 449 · 2026 (enero-agosto) 255. Tasa 2025: 10,7 por 100.000 habitantes. Enero-agosto: 298 en 2025 y 255 en 2026 (-14 %).",
+"Extorsiones denunciadas: 2018 803 · 2019 935 · 2020 941 · 2021 888 · 2022 1.194 · 2023 1.517 · 2024 1.448 · 2025 1.498 · 2026 (enero-agosto) 1.091. Tasa 2025: 35,6 por 100.000 habitantes. Enero-agosto: 950 en 2025 y 1.091 en 2026 (+15 %).",
+"Secuestros: 2018 5 · 2019 7 · 2020 22 · 2021 13 · 2022 18 · 2023 33 · 2024 20 · 2025 32 · 2026 (enero-agosto) 15. Tasa 2025: 0,8 por 100.000 habitantes. Enero-agosto: 19 en 2025 y 15 en 2026 (-21 %).",
+"Masacres: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 1 · 2023 1 · 2024 2 · 2025 0 · 2026 (enero-agosto) 0. Víctimas de masacres 2018-2026: 12.",
+"Actos de terrorismo: 2018 3 · 2019 12 · 2020 3 · 2021 29 · 2022 8 · 2023 6 · 2024 6 · 2025 4 · 2026 (enero-agosto) 3. Enero-agosto: 1 en 2025 y 3 en 2026 (+200 %).",
+"Miembros de la fuerza pública asesinados o heridos: 2018 22 · 2019 14 · 2020 12 · 2021 19 · 2022 16 · 2023 4 · 2024 6 · 2025 7 · 2026 (enero-agosto) 5. De ellos, asesinados 2018-2026: 9. Enero-agosto: 4 en 2025 y 5 en 2026 (+25 %).",
+"Amenazas denunciadas: 2018 1.109 · 2019 937 · 2020 1.277 · 2021 1.524 · 2022 2.592 · 2023 2.454 · 2024 2.562 · 2025 2.115 · 2026 (parcial) 1.723. Tasa 2025: 50,2 por 100.000 habitantes.",
+"Municipios de la subregión con mayor tasa de homicidio 2025: Barbosa 17,1; Copacabana 16,3; Medellín 13,2; Caldas 12,3; La Estrella 9,5."
+]
+}
+},
+"departamento": {
+"lineas": [
+"Homicidios: 2018 2.439 · 2019 2.336 · 2020 2.025 · 2021 2.113 · 2022 1.899 · 2023 1.749 · 2024 1.684 · 2025 1.755 · 2026 (enero-agosto) 1.181. Tasa 2025: 25,2 por 100.000 habitantes. Enero-agosto: 1.174 en 2025 y 1.181 en 2026 (+1 %).",
+"Extorsiones denunciadas: 2018 1.179 · 2019 1.435 · 2020 1.372 · 2021 1.308 · 2022 1.646 · 2023 1.918 · 2024 2.024 · 2025 2.146 · 2026 (enero-agosto) 1.513. Tasa 2025: 30,8 por 100.000 habitantes. Enero-agosto: 1.379 en 2025 y 1.513 en 2026 (+10 %).",
+"Secuestros: 2018 14 · 2019 16 · 2020 26 · 2021 31 · 2022 31 · 2023 54 · 2024 39 · 2025 62 · 2026 (enero-agosto) 27. Tasa 2025: 0,9 por 100.000 habitantes. Enero-agosto: 42 en 2025 y 27 en 2026 (-36 %).",
+"Masacres: 2018 0 · 2019 0 · 2020 0 · 2021 0 · 2022 10 · 2023 10 · 2024 11 · 2025 9 · 2026 (enero-agosto) 7. Víctimas de masacres 2018-2026: 182. Enero-agosto: 6 en 2025 y 7 en 2026 (+17 %).",
+"Actos de terrorismo: 2018 91 · 2019 113 · 2020 52 · 2021 102 · 2022 184 · 2023 118 · 2024 80 · 2025 90 · 2026 (enero-agosto) 56. Enero-agosto: 57 en 2025 y 56 en 2026 (-2 %).",
+"Miembros de la fuerza pública asesinados o heridos: 2018 84 · 2019 95 · 2020 61 · 2021 92 · 2022 137 · 2023 50 · 2024 92 · 2025 138 · 2026 (enero-agosto) 47. De ellos, asesinados 2018-2026: 186. Enero-agosto: 98 en 2025 y 47 en 2026 (-52 %).",
+"Amenazas denunciadas: 2018 2.529 · 2019 2.069 · 2020 2.591 · 2021 2.830 · 2022 4.298 · 2023 4.517 · 2024 4.595 · 2025 3.399 · 2026 (parcial) 2.662. Tasa 2025: 48,8 por 100.000 habitantes.",
+"Municipios con más homicidios en 2025: Medellín 333; Andes 67; Caucasia 63; Anorí 46; Bello 46; Yondó 41; Remedios 39; Ciudad Bolívar 38; Rionegro 36; Betulia 35.",
+"Mayor tasa de homicidio 2025 (municipios de 20.000 habitantes o más): Anorí 215,9; Yondó 182,8; Andes 147,5; Ciudad Bolívar 137,1; Remedios 116,3; Amalfi 112,3; Concordia 99,3; Cáceres 96,7; Urrao 96,4; San Roque 76,4."
+]
+}
+}

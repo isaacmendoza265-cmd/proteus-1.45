@@ -26,6 +26,7 @@
   - el DANE es la cifra de referencia nacional y la que usa la ley de categorización;
   - la del Distrito sirve para la serie por comuna, donde el DANE no publica proyección.
 - El motor las presenta así, con su fuente, en vez de esconder una u otra.
+- **Actualización 2-oct-2026:** se cargó el archivo original de la actualización 2025 del Distrito (convenio con el DANE), cuyo total para 2026 **coincide con el DANE** (2.526.795). Esa serie (`src/data/medellin/proyeccionesDistrito.json`, oficial, con sexo y edad por comuna, corregimiento, barrio y vereda hasta 2030) **reemplaza** a la de `populationData.ts` para población. La serie vieja solo sigue aportando viviendas, rotulada "serie anterior".
 
 **Cédulas (regla de AGENTS.md).**
 - Había **337 cédulas** de actores y candidatos en 4 archivos:

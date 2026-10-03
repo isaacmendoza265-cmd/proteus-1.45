@@ -45,7 +45,9 @@ const AÑOS = [2018, 2020, 2022, 2023, 2024, 2025, 2026, 2028, 2030];
 
 // 1. Proyección de población y vivienda de Medellín por comuna, 2018-2030
 registrarFuente({
-  id: 'aux-medellin-proyeccion', titulo: 'Proyección de población y vivienda del Distrito por comuna (2018-2030)', categoria: 'población', nivel: 'auxiliar',
+  // Desde el 2-oct-2026 la población sale del archivo oficial del DAP (src/data/motor/medellin-proyecciones-distrito.json,
+  // total igual al DANE). Esta tabla interna era una serie anterior (2.650.662 en 2026): aquí solo queda la vivienda.
+  id: 'aux-medellin-proyeccion', titulo: 'Proyección de viviendas del Distrito por comuna (2018-2030, serie anterior)', categoria: 'población', nivel: 'auxiliar',
   fuente: 'tabla interna coherente con las proyecciones del Departamento Administrativo de Planeación de Medellín (sin verificar contra el archivo original); NO es la proyección del DANE',
   aplica: ({ t }) => t?.dane === '05001',
   lineas: ({ t }) => {
@@ -55,9 +57,8 @@ registrarFuente({
     const v = (HOUSING_BY_YEAR as Record<number, Record<number, { total: number }>>)[k];
     if (!p) return [];
     const quien = k === 0 ? 'Medellín (total del Distrito)' : `${nombreComunaMed(k)}${c ? deSu(c, k) : ''}`;
-    const out = [`${quien}, población proyectada: ${AÑOS.filter((y) => p[y]).map((y) => `${y} ${n(p[y].total)}`).join('; ')}. En 2026: ${n(p[2026]?.hombres ?? 0)} hombres y ${n(p[2026]?.mujeres ?? 0)} mujeres.`];
-    if (v) out.push(`${quien}, viviendas proyectadas: ${AÑOS.filter((y) => v[y]).map((y) => `${y} ${n(v[y].total)}`).join('; ')}.`);
-    if (k === 0) out.push(`Por comuna en 2026: ${Object.entries(POPULATION_BY_YEAR as Record<string, Record<number, { total: number }>>).filter(([x]) => x !== '0').map(([x, s]) => `${nombreComunaMed(Number(x))} ${n(s[2026]?.total ?? 0)}`).join('; ')}.`);
+    const out: string[] = [];
+    if (v) out.push(`${quien}, viviendas proyectadas (serie anterior del Distrito): ${AÑOS.filter((y) => v[y]).map((y) => `${y} ${n(v[y].total)}`).join('; ')}.`);
     return out;
   },
 });

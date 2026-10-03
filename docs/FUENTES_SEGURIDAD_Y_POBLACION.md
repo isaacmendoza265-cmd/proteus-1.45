@@ -1,5 +1,10 @@
 # Fuentes nuevas verificadas: población de la Alcaldía de Medellín y seguridad
 
+> **Estado al 2-oct-2026 (tarde):** cargados con permiso de Isaac la proyección del Distrito (archivos 4 y 5, hasta
+> 2030), la estadística delictiva de la Policía/MinDefensa y las alertas de la Defensoría. Scripts:
+> `importar_proyecciones_medellin.py`, `importar_seguridad.py`, `importar_alertas_defensoria.py`; JSON del motor en
+> `src/data/motor/`. Siguen pendientes Fiscalía, MOE y estudios académicos (pasos 3 a 5 de la propuesta).
+
 - **Fecha:** 2-oct-2026.
 - **Autor:** Claude, en una sesión de Cowork.
 - **Alcance:** qué se puede traer, en qué formato y con qué nivel de detalle.

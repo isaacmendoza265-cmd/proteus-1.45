@@ -71,6 +71,8 @@ export interface SegmentacionTerritorio {
   /** Personas de 18 años o más (base de los cruces); null si no hay sexo y edad para el territorio */
   adultos: number | null;
   sexoEdad: { estado: EstadoDato; fuente: string; reparto: Record<GenderType, Reparto<AgeGroupType>> | null };
+  /** Proyección a 2030 de las personas de 18 años o más (hoy solo Medellín: proyección del Distrito, por unidad) */
+  proyeccion2030: { adultos: number; porEdad: Reparto<AgeGroupType>; adultos2026: number; porEdad2026: Reparto<AgeGroupType>; fuente: string } | null;
   estrato: { estado: EstadoDato; fuente: string; reparto: Reparto<EconomicLevelType> | null; sinEstratoPct: number | null };
   educacion: { estado: EstadoDato; fuente: string; reparto: Reparto<EducationLevelType> | null };
   /** Contexto electoral del territorio entero (no por cruce) */
@@ -213,6 +215,16 @@ function electoralDe(daneList: string[], t: TerritorioFicha | null): Segmentacio
   };
 }
 
+// --- Proyección del Distrito de Medellín 2018-2030 (DAP, actualización 2025; scripts/importar_proyecciones_medellin.py) ---
+interface UnidadDistrito { nombre: string; h: number[][]; m: number[][] }
+interface ProyeccionDistrito { meta: { fuente: string; grupos: string[]; anios: number[] }; unidades: Record<string, UnidadDistrito> }
+let distrito: Promise<ProyeccionDistrito> | null = null;
+const cargarDistrito = () => (distrito ??= import('../data/medellin/proyeccionesDistrito.json').then((m) => m.default as unknown as ProyeccionDistrito));
+const repartoAnio = (u: UnidadDistrito, k: number) => ({ hombre: edadesQuinquenales(u.h[k]), mujer: edadesQuinquenales(u.m[k]) });
+const sumaReparto = (r: Record<GenderType, Reparto<AgeGroupType>>): Reparto<AgeGroupType> =>
+  ({ joven: r.hombre.joven + r.mujer.joven, adulto: r.hombre.adulto + r.mujer.adulto, adulto_mayor: r.hombre.adulto_mayor + r.mujer.adulto_mayor });
+const totalReparto = (r: Reparto<AgeGroupType>) => r.joven + r.adulto + r.adulto_mayor;
+
 const cache = new Map<string, Promise<SegmentacionTerritorio>>();
 
 /** Segmentos de la unidad territorial (la del territorio activo, por defecto en la vista) */
@@ -232,9 +244,22 @@ async function armar(sel: SeleccionDossier): Promise<SegmentacionTerritorio> {
   const daneList = t ? [t.dane] : municipiosDe(sel.subregion);
   await Promise.all(daneList.flatMap((d) => [cargarDemografia(d), cargarEconomia(d)]));
 
+  let proy: SegmentacionTerritorio['proyeccion2030'] = null;
   let se: SexoEdadT; let eco: EcoT | null; let territorio: string; let nivel: SegmentacionTerritorio['nivel'];
   if (t) {
-    se = sexoEdadDe(t); eco = ecoDe(t); territorio = t.tipo === 'municipio' ? t.nombre : `${t.nombre} (${t.municipio})`;
+    se = sexoEdadDe(t);
+    // Medellín: la proyección del Distrito da sexo × edad 2026 oficial también por comuna, corregimiento, barrio y vereda
+    if (t.dane === '05001') {
+      const d = await cargarDistrito();
+      const u = d.unidades[t.tipo === 'municipio' ? 'medellin' : t.id];
+      if (u) {
+        const k26 = d.meta.anios.indexOf(2026), k30 = d.meta.anios.indexOf(2030);
+        if (t.tipo !== 'municipio') se = { estado: 'oficial', fuente: `${d.meta.fuente}, año 2026`, reparto: repartoAnio(u, k26) };
+        const p26 = sumaReparto(repartoAnio(u, k26)), p30 = sumaReparto(repartoAnio(u, k30));
+        proy = { adultos: Math.round(totalReparto(p30)), porEdad: p30, adultos2026: Math.round(totalReparto(p26)), porEdad2026: p26, fuente: d.meta.fuente };
+      }
+    }
+    eco = ecoDe(t); territorio = t.tipo === 'municipio' ? t.nombre : `${t.nombre} (${t.municipio})`;
     nivel = t.tipo === 'municipio' ? 'municipio' : t.tipo === 'division' ? 'división' : 'subdivisión';
   } else {
     // Subregión o departamento: suma de los municipios (proyección DANE 2026 por municipio y CNPV 2018 por manzana)
@@ -270,7 +295,7 @@ async function armar(sel: SeleccionDossier): Promise<SegmentacionTerritorio> {
   ].filter(Boolean) as string[];
 
   return {
-    territorio, nivel, adultos: adultos != null ? Math.round(adultos) : null,
+    territorio, nivel, adultos: adultos != null ? Math.round(adultos) : null, proyeccion2030: proy,
     sexoEdad: se,
     estrato: { estado: est ? 'oficial' : 'sin-informacion', fuente: `${fuenteEco}: viviendas por estrato`, reparto: est?.reparto ?? null, sinEstratoPct: est?.sinEstratoPct ?? null },
     educacion: { estado: edu ? 'oficial' : 'sin-informacion', fuente: `${fuenteEco}: personas por nivel educativo alcanzado (todas las edades)${t ? '' : ', ponderado por las personas de 18 años o más de cada municipio'}`, reparto: edu },
@@ -293,6 +318,11 @@ export function segmentacionComoTexto(s: SegmentacionTerritorio, foco?: Demograp
     `Censo electoral (${s.electoral.alcance}): ${n(s.electoral.censo)}; participación en Alcaldía 2023: ${p(s.electoral.participacionAlcaldia2023)} (${s.electoral.fuente}). El censo no trae edad, estrato ni educación: no hay votos ni participación por segmento.`,
     `Método de los cruces: ${s.metodo}`,
   ];
+  if (s.proyeccion2030) {
+    const q = s.proyeccion2030;
+    const cambio = (a: number, b: number) => (a ? `${(100 * (b - a) / a).toFixed(1).replace('.', ',')} %` : 'sin dato');
+    lineas.push(`Proyección a 2030 (${q.fuente}): ${n(q.adultos)} personas de 18 años o más (${cambio(q.adultos2026, q.adultos)} frente a 2026); jóvenes de 18 a 29: ${n(q.porEdad.joven)} (${cambio(q.porEdad2026.joven, q.porEdad.joven)}); adultos de 30 a 59: ${n(q.porEdad.adulto)} (${cambio(q.porEdad2026.adulto, q.porEdad.adulto)}); 60 o más: ${n(q.porEdad.adulto_mayor)} (${cambio(q.porEdad2026.adulto_mayor, q.porEdad.adulto_mayor)}).`);
+  } else lineas.push('Proyección a 2030: sin cargar para esta unidad (hoy solo Medellín, con la proyección del Distrito).');
   if (foco) lineas.push(`Segmento elegido: ${foco.fullTitle}: ${n(foco.personas)} personas de 18 años o más estimadas (${p(foco.pctAdultos)} de los adultos del territorio). Estimado, no conteo.`);
   return lineas.join('\n');
 }

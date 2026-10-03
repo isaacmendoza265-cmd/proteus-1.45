@@ -143,6 +143,11 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
 - 2-oct: **fuentes nuevas a verificar**: población por sexo de la Alcaldía de Medellín y seguridad (Fiscalía,
   Defensoría, MOE, estudios académicos). Resultado en `docs/FUENTES_SEGURIDAD_Y_POBLACION.md`; la carga espera
   el permiso de descarga por lote.
+- 2-oct: **cargadas** (permiso de Isaac por lote): la proyección del Distrito de Medellín 2018-2030 por sexo y edad
+  (comunas, corregimientos, barrios y veredas; Segmentos de Medellín pasa a "Oficial" y muestra 2030) y la seguridad
+  por municipio (Policía/MinDefensa 2018-ago 2026 y alertas tempranas de la Defensoría). Entran al motor de análisis,
+  así que las usan todas las herramientas de IA. Pendientes del mismo frente: Fiscalía (líderes y periodistas), MOE
+  2027 y los estudios que elija Isaac.
 
 ## 3. Pendientes (en orden sugerido)
 
@@ -233,11 +238,24 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
   (habilitados por jornada), `build_concejo_2023_candidatos.py` (Concejo 2023 por candidato; crudo
   `_originales/registraduria/Concejo_Antioquia_2023_Todos_los_resultados.xlsx`), `build_resultados_puesto_2023.py`, `build_resultados_historicos.py <2015|2018|2019|2022>`,
   `build_presidencial_2026.py`, `indice_resultados_puesto.py`, `indice_ganadores.py`, `build_e24_medellin_zonas.py`.
-- Demografía: `build_censo_electoral.mjs`, `build_proyeccion_sexo_edad.py`.
+- Demografía: `build_censo_electoral.mjs`, `build_proyeccion_sexo_edad.py`, `importar_proyecciones_medellin.py` (Distrito 2018-2030).
+- Seguridad: `importar_seguridad.py` (Policía/MinDefensa, API de datos.gov.co; `--local` recalcula desde `_originales/seguridad/`), `importar_alertas_defensoria.py` (SAT; `_originales/defensoria/`).
 - Servicios clave: `src/services/pollingStationsService.ts`, `electionResultsService.ts`, `winnersService.ts`,
   `territoryProfileService.ts`; ficha: `src/components/territorio/`.
 
 ## 5. Bitácora (agregar arriba lo más reciente)
+- 2-oct (Claude Opus, `main`): **proyecciones del Distrito hasta 2030 y seguridad en el motor.**
+  - Distrito de Medellín (actualización 2025 con el DANE; total 2026 = DANE): 351 unidades (comunas, corregimientos,
+    barrios y veredas) con sexo × 17 grupos de edad, 2018-2030. Segmentos de una comuna o barrio de Medellín usa la
+    pirámide 2026 del Distrito ("Oficial", antes "Estimado" con el CNPV 2018) y muestra la proyección 2030 de los
+    mayores de 18 años y por edad. En el motor, cada unidad trae 2026 frente a 2030 (total, 18+, 18-29, 60+).
+  - Seguridad, Policía/MinDefensa (datos.gov.co, corte 31-ago-2026): homicidio, extorsión, secuestro, masacres,
+    terrorismo, fuerza pública y amenazas por municipio y año 2018-2026, tasas por 100.000 (población DANE 2026),
+    comparación enero-agosto 2025 frente a 2026; resúmenes por subregión y Antioquia.
+  - Defensoría, SAT: 46 alertas que tocan Antioquia (38 específicas y 8 generales: electorales, líderes, etc.), con
+    grupos que nombra, economías ilegales, conductas y enlace a la ficha. Las generales no se atribuyen al municipio.
+  - Corrección: el dossier fallaba en Alejandría, Briceño, Cáceres, Maceo y Tarso (un porcentaje nulo del escrutinio
+    2023), así que esas cinco unidades llegaban sin datos a las herramientas de IA. Ya se arma en los 125.
 - 2-oct (Claude Opus, `main`): **motor de análisis y corrección de todo lo que alimentaba a Gemini con datos inventados.**
   - **Base** (`c06bfb5`, `7437f1e`): toda llamada a Gemini antepone las tres macrofuentes (`src/services/ia/`).
     - **Datos:** el dossier más las fuentes registradas y los JSON de `src/data/motor/`.

@@ -49,7 +49,7 @@ interface IndiceMunicipio { dane: string; nombre: string }
 const INDICE = rawIndice as unknown as Record<string, IndiceMunicipio>;
 
 const n = (v: number) => Math.round(v).toLocaleString('es-CO');
-const p = (v: number) => `${v.toFixed(1).replace('.', ',')} %`;
+const p = (v: number | null | undefined) => (v == null || !Number.isFinite(v) ? 'sin dato' : `${v.toFixed(1).replace('.', ',')} %`);
 
 // --- Resultados -----------------------------------------------------------------------------------
 

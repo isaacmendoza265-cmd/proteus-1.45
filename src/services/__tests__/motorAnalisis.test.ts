@@ -14,12 +14,16 @@ describe('motor de análisis: fuentes por unidad', () => {
   it('El Poblado: fuentes oficiales y auxiliares (proyección del Distrito, IPM ECV, extorsión), rotuladas y con fuente', async () => {
     const d = await dossierTerritorio(sel('medellin', 'comuna-14'));
     const txt = dossierComoTexto(d);
-    expect(txt).toMatch(/AUXILIAR \(sin verificar\) · Proyección de población y vivienda del Distrito/);
-    expect(txt).toMatch(/El Poblado, población proyectada: 2018 106\.805/);
+    // Población: la proyección oficial del Distrito (2018-2030, igual al DANE); la serie vieja solo aporta viviendas
+    expect(txt).toMatch(/## Proyección de población del Distrito de Medellín 2018-2030/);
+    expect(txt).toMatch(/Población proyectada 2026: 116\.445 .*2030: 118\.381/);
+    expect(txt).toMatch(/AUXILIAR \(sin verificar\) · Proyección de viviendas del Distrito/);
+    expect(txt).not.toMatch(/2030\.\./);
     expect(txt).toMatch(/IPM 2010/);
     expect(txt).toMatch(/extorsión a hogares/);
     const cob = Object.fromEntries(d.cobertura.map((c) => [c.id, c.estado]));
     expect(cob['aux-medellin-proyeccion']).toBe('con datos');
+    expect(cob['decl-medellin-proyecciones-distrito']).toBe('con datos');
     expect(cob['aux-rionegro-ecv-2020']).toBe('no aplica');
     expect(txt).not.toMatch(/cedula|\d{1,3}\.\d{3}\.\d{3}\.\d{3}/i);
   }, 60_000);
@@ -42,6 +46,21 @@ describe('motor de análisis: fuentes por unidad', () => {
     const d = await dossierTerritorio(sel('bello'));
     expect(dossierComoTexto(d)).toContain('Dato nuevo de prueba 123.');
     expect(fuentesRegistradas().some((f) => f.id === 'prueba-nueva')).toBe(true);
+  }, 60_000);
+
+  it('seguridad: delitos de la Policía y alertas de la Defensoría por municipio, subregión y Antioquia, rotulados oficiales', async () => {
+    const caceres = dossierComoTexto(await dossierTerritorio(sel('caceres')));
+    expect(caceres).toMatch(/## Seguridad: delitos registrados por la Policía \(2018-2026\)/);
+    expect(caceres).toMatch(/Tasa de homicidio 2025: [\d,]+ por 100\.000 habitantes, por encima de la de Antioquia/);
+    expect(caceres).toMatch(/## Alertas tempranas de la Defensoría del Pueblo/);
+    expect(caceres).toMatch(/Alerta 045-20 \(estructural, 31-ago-2020\).*Grupos que nombra la Defensoría/);
+    expect(caceres).toMatch(/alertas generales, de alcance nacional o departamental/);
+    // una comuna recibe lo del municipio, rotulado, y la advertencia de no atribuirlo al barrio
+    const poblado = dossierComoTexto(await dossierTerritorio(sel('medellin', 'comuna-14')));
+    expect(poblado).toMatch(/no se atribuye a un barrio/);
+    expect(poblado).toMatch(/\(del municipio de Medell[ií]n\) Homicidios: 2018 625/);
+    const ant = dossierComoTexto(await dossierTerritorio({ subregion: null, muniId: null, comunaId: null, barrioId: null }));
+    expect(ant).toMatch(/Municipios con más homicidios en 2025: Medellín 333/);
   }, 60_000);
 
   it('contrato de los JSON declarativos de src/data/motor/', () => {
