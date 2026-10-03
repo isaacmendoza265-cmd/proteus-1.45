@@ -25,7 +25,7 @@ import { CATEGORIA_TEXTO, categoriaMunicipio, curulesConcejo, pesos, presupuesto
 import { serieCenso } from './censoHistoricoService';
 import { concejoDesdeEleccion, cargarConcejo2023, LISTAS_POR_CANDIDATO } from './concejo2023Service';
 import { getResultado2023 } from './electoralResults2023Service';
-import { analizarMunicipio, analizarComunaMedellin, esMunicipioDelAnalisis, ZONAS_MEDELLIN, type AnalisisNarrativo } from './municipioNarrativeService';
+import { analizarUnidad, esMunicipioDelAnalisis, type AnalisisNarrativo } from './municipioNarrativeService';
 import { cargarPuestosTerritorio, codigosResultadosDe, puestosDe } from '../components/territorio/usePuestosTerritorio';
 import { fuentesRegistradas, versionFuentes, type CoberturaFuente, type CategoriaFuente, type ContextoFuente } from './ia/motor/registro';
 // Fuentes que se registran solas (auxiliares por código y archivos de src/data/motor/)
@@ -238,8 +238,8 @@ async function dossierLocal(t: TerritorioFicha): Promise<DossierTerritorial> {
 
   // 9. Lectura de Proteus (reglas del marco, Capa 1)
   let narr: AnalisisNarrativo | null = null;
-  if (t.dane === '05001' && t.tipo === 'division' && ZONAS_MEDELLIN.some((z) => z.id === t.id)) narr = await analizarComunaMedellin(t.id).catch(() => null);
-  else if (t.tipo === 'municipio' && esMunicipioDelAnalisis(t.dane)) narr = await analizarMunicipio(t.dane).catch(() => null);
+  // Lectura calculada para cualquier unidad de los 125 municipios (municipio, comuna, zona, barrio o vereda)
+  if (esMunicipioDelAnalisis(t.dane)) narr = await analizarUnidad(t.id).catch(() => null);
   if (narr) {
     const bloques: [string, AnalisisNarrativo['contextoPolitico']][] = [['Contexto político', narr.contextoPolitico], ['Contexto social', narr.contextoSocial], ['Panorama 2027', narr.panorama2027], ['Áreas clave', narr.areasClave], ['Tonos', narr.tonos]];
     secciones.push({ titulo: 'Lectura de Proteus (análisis narrativo con las reglas del marco; hipótesis, no hechos)', lineas: bloques.flatMap(([tit, os]) => os.map((o) => `${tit} · ${o.verbo.toUpperCase()}: ${o.texto}`)) });

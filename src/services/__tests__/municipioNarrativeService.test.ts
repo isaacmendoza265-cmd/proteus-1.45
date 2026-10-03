@@ -5,6 +5,8 @@ import {
   analizarComunaMedellin,
   analizarMunicipio,
   esMunicipioDelAnalisis,
+  analizarUnidad,
+  analisisComoTexto,
 } from '../municipioNarrativeService';
 import { reglamentoVigente } from '../marcoService';
 
@@ -20,7 +22,18 @@ describe('análisis narrativo por municipio', () => {
     for (const m of ['05001', '05088', '05360', '05266', '05631', '05129', '05380', '05212', '05308', '05079']) {
       expect(esMunicipioDelAnalisis(m)).toBe(true);
     }
-    expect(esMunicipioDelAnalisis('05004')).toBe(false); // Abriaquí, fuera de los 30
+    // Desde el 2-oct-2026 cubre los 125 municipios (Abriaquí estaba fuera de los 30)
+    expect(esMunicipioDelAnalisis('05004')).toBe(true);
+  });
+
+  it('los 125 municipios y cualquier unidad dentro: municipio pequeño (Abriaquí) y comuna de Bello', async () => {
+    const a = await analizarMunicipio('05004');
+    expect(a.contextoPolitico.length).toBeGreaterThan(0);
+    const b = await analizarUnidad('bello-div-4');
+    expect(b.nombre).toMatch(/^Bello, /);
+    expect(['comuna', 'zona', 'corregimiento']).toContain(b.ambito);
+    expect(analisisComoTexto(b)).toMatch(/\[(observa|no afirma)\]/);
+    for (const s of todasLasOraciones(b)) for (const f of FRAGMENTOS_PROHIBIDOS) expect(s.texto.toLowerCase()).not.toContain(f);
   });
 
   it('Medellín: 21 zonas (16 comunas + 5 corregimientos)', () => {

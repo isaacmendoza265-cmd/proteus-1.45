@@ -162,6 +162,13 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
     return comunaAbierta?.id ?? null;
   }, [daneNarrativa, fichaTerritorio, comunaAbierta]);
 
+  // Unidad del análisis dentro del municipio: la comuna, zona, barrio o vereda elegida (cualquier municipio)
+  const unidadNarrativaId = useMemo(() => {
+    if (!daneNarrativa) return null;
+    if (fichaTerritorio && fichaTerritorio.tipo !== 'municipio' && fichaTerritorio.dane === daneNarrativa) return fichaTerritorio.id;
+    return comunaNarrativaId;
+  }, [daneNarrativa, fichaTerritorio, comunaNarrativaId]);
+
   // Encuestas y urnas (debajo del análisis): municipio del mapa o, si no hay, Antioquia. Nunca a barrio.
   const daneEncuestas = useMemo(() => {
     if (daneNarrativa) return daneNarrativa;
@@ -319,7 +326,7 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
           />
           {vista === 'mapa' && (
             <div className="mt-5">
-              <AnalisisNarrativoMunicipio dane={daneNarrativa} comunaId={comunaNarrativaId} />
+              <AnalisisNarrativoMunicipio dane={daneNarrativa} territorioId={unidadNarrativaId} seleccion={seleccionContenido} />
             </div>
           )}
           {vista === 'mapa' && selectedDepartmentName === 'Antioquia' && (

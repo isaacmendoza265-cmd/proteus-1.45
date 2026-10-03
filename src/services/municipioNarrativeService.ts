@@ -11,9 +11,10 @@
  * y sin riesgo de que una IA invente una cifra). Capa 3 (retórica y creación publicitaria) todavía
  * no está ingestada, así que "Tonos narrativos" se deriva solo de los patrones de datos de la Capa 1.
  *
- * Alcance (pedido de Isaac, 27-sep-2026): el Valle de Aburrá (10 municipios) y los 30 municipios de
- * Antioquia con mayor censo electoral (los 10 del Valle ya están dentro de esos 30). Medellín se
- * analiza aparte, comuna por comuna (16 comunas + 5 corregimientos).
+ * Alcance: desde el 2-oct-2026 (decisión de Isaac) los 125 municipios de Antioquia y, dentro de cada uno, sus
+ * comunas, corregimientos, zonas, barrios y veredas cartografiados (`analizarUnidad`). Antes: el Valle de Aburrá y
+ * los 30 municipios de mayor censo, y Medellín por comuna. Las cifras se calculan siempre aquí, sin IA; la vista
+ * ofrece además "Redactar con Gemini", que convierte estas oraciones en texto (las cifras siguen visibles aparte).
  */
 import { ANTIOQUIA_125_MUNICIPIOS_GEOJSON, MEDELLIN_16_COMUNAS_OFFICIAL_GEOJSON } from '../data/geojson';
 import { colorDePartido } from '../data/electoral/partidoColors';
@@ -39,6 +40,7 @@ import {
 } from './territoryProfileService';
 import { valorDemografico, valorSubdivision } from './mapColorService';
 import rawIndice from '../data/territorio/indiceTerritorios.json';
+import { cargarPuestosTerritorio, codigosResultadosDe, puestosDe } from '../components/territorio/usePuestosTerritorio';
 
 // --- Territorios del análisis --------------------------------------------------------------------
 
@@ -55,8 +57,8 @@ export const TOP30_ANTIOQUIA: MunicipioAnalisis[] = ANTIOQUIA_125_MUNICIPIOS_GEO
   .sort((a, b) => b.censo - a.censo)
   .slice(0, 30);
 
-const DANES_ANALISIS = new Set(TOP30_ANTIOQUIA.map((m) => m.dane));
-export const esMunicipioDelAnalisis = (dane: string) => DANES_ANALISIS.has(dane);
+/** Todo municipio de Antioquia con ficha territorial (los 125) */
+export const esMunicipioDelAnalisis = (dane: string) => !!municipioFichaPorDane(dane);
 export const esMedellin = (dane: string) => dane === '05001';
 
 /** Comunas y corregimientos de Medellín (21 zonas) para el análisis por comuna */
@@ -73,7 +75,7 @@ const o = (verbo: Verbo, texto: string): Oracion => ({ verbo, texto });
 export interface AnalisisNarrativo {
   id: string;
   nombre: string;
-  ambito: 'municipio' | 'comuna' | 'corregimiento';
+  ambito: 'municipio' | 'comuna' | 'corregimiento' | 'zona' | 'barrio' | 'vereda';
   contextoPolitico: Oracion[];
   contextoSocial: Oracion[];
   panorama2027: Oracion[];
@@ -315,7 +317,8 @@ export async function analizarMunicipio(dane: string): Promise<AnalisisNarrativo
 async function construirMunicipio(dane: string): Promise<AnalisisNarrativo> {
   const id = municipioFichaPorDane(dane);
   const t = id ? territorioFicha(id) : null;
-  const meta = TOP30_ANTIOQUIA.find((m) => m.dane === dane);
+  const f = ANTIOQUIA_125_MUNICIPIOS_GEOJSON.features.find((x) => String((x.properties as { daneCode?: string }).daneCode) === dane);
+  const meta = f ? { nombre: f.properties.name, subregion: String(f.properties.subregion ?? '') } : undefined;
   const nombre = t?.municipio ?? meta?.nombre ?? dane;
   if (!t) {
     return {
@@ -466,4 +469,125 @@ function tonosComuna(estrato: number | null, ipm: number | null, nombreZona: str
       : `Tono mixto en ${nombreZona}: estrato medio, combinar servicio con propuesta de desarrollo.`));
   if (ipm !== null && ipm > 15) out.push(o('apuesta', `Con IPM de ${pct(ipm)}, ${nombreZona} admite un mensaje directo de carencias resueltas, no solo aspiracional.`));
   return out;
+}
+
+// --- Cualquier unidad: municipio, comuna, corregimiento, zona, barrio o vereda -------------------
+
+const cacheUnidad = new Map<string, Promise<AnalisisNarrativo>>();
+
+/**
+ * Análisis de la unidad del mapa (id de la ficha territorial). Municipio → `analizarMunicipio`; comuna o
+ * corregimiento de Medellín → `analizarComunaMedellin`; cualquier otra división o subdivisión → cálculo con los
+ * puestos que caen dentro (los votos se cuentan donde está el puesto, no donde vive el votante).
+ */
+export function analizarUnidad(territorioId: string): Promise<AnalisisNarrativo> {
+  const t = territorioFicha(territorioId);
+  if (!t) return Promise.resolve({ id: territorioId, nombre: territorioId, ambito: 'municipio', contextoPolitico: [o('no afirma', 'Sin ficha territorial para esta unidad.')], contextoSocial: [], panorama2027: [], areasClave: [], tonos: [] });
+  if (t.tipo === 'municipio') return analizarMunicipio(t.dane);
+  if (t.dane === MEDELLIN_DANE && t.tipo === 'division' && ZONAS_MEDELLIN.some((z) => z.id === t.id)) return analizarComunaMedellin(t.id);
+  if (!cacheUnidad.has(territorioId)) {
+    const p = construirUnidad(t);
+    p.catch(() => cacheUnidad.delete(territorioId));
+    cacheUnidad.set(territorioId, p);
+  }
+  return cacheUnidad.get(territorioId)!;
+}
+
+const ambitoDe = (t: TerritorioFicha): AnalisisNarrativo['ambito'] => {
+  const c = (t.clase ?? '').toLowerCase();
+  if (c.includes('vereda')) return 'vereda';
+  if (c.includes('barrio')) return 'barrio';
+  if (c.includes('corregimiento') || c.includes('rural')) return 'corregimiento';
+  if (c.includes('comuna')) return 'comuna';
+  return t.tipo === 'subdivision' ? 'barrio' : 'zona';
+};
+
+async function construirUnidad(t: TerritorioFicha): Promise<AnalisisNarrativo> {
+  const muniId = municipioFichaPorDane(t.dane);
+  const [, , es, puestos] = await Promise.all([
+    cargarDemografia(t.dane), cargarEconomia(t.dane),
+    tieneResultadosPorPuesto(t.dane) ? cargarElecciones(t.dane) : Promise.resolve([] as EleccionPuestos[]),
+    cargarPuestosTerritorio(muniId, t.municipio),
+  ]);
+  const tipo = t.tipo as 'division' | 'subdivision';
+  const dentro2026 = puestosDe(puestos, tipo, t.id);
+  const codigos = (e: EleccionPuestos): string[] => e.codigos === '2026'
+    ? dentro2026.map((x) => x.codPuesto)
+    : codigosResultadosDe(puestos, tipo, t.id).filter((k) => k.startsWith(`${e.codigos}|`)).map((k) => k.slice(e.codigos.length + 1));
+  const nombre = t.nombre;
+
+  // 1. Político: Alcaldía y Concejo 2023 dentro de la unidad, comparados con todo el municipio
+  const pol: Oracion[] = [];
+  const al23 = es.find((e) => e.id === 'alcaldia-2023');
+  const rU = al23 ? sumarEleccion(al23, codigos(al23)) : null;
+  const rM = al23 ? sumarEleccion(al23, 'todos') : null;
+  if (al23 && rU && rU.candidatos[0]) {
+    const g = rU.candidatos[0];
+    const enMuni = rM?.candidatos.find((c) => c.nombre === g.nombre);
+    pol.push(o('observa', `Alcaldía 2023 en ${nombre} (${rU.puestos} puestos dentro, Registraduría): ganó ${g.nombre} (${g.partido}) con ${pct(g.pct)} de los votos válidos${rU.sinHabilitados ? '' : `; participación ${pct((100 * rU.votantes) / Math.max(1, rU.habilitados))}`}.`));
+    if (enMuni && rM) pol.push(o('deduce', Math.abs(g.pct - enMuni.pct) >= 5
+      ? `${g.nombre} sacó aquí ${(g.pct - enMuni.pct > 0 ? '+' : '') + (g.pct - enMuni.pct).toFixed(1).replace('.', ',')} puntos frente a todo ${t.municipio} (${pct(enMuni.pct)}): ${nombre} ${g.pct > enMuni.pct ? 'es un bastión' : 'le fue menos favorable'} dentro del municipio.`
+      : `El resultado de ${nombre} es parecido al de todo ${t.municipio} (${pct(enMuni.pct)} para ${g.nombre}): no se comporta distinto al municipio.`));
+  } else pol.push(o('no afirma', `Ningún puesto de la Alcaldía 2023 cae dentro de ${nombre} según la ubicación de los puestos: no se puede afirmar un resultado propio (los votos se cuentan donde está el puesto).`));
+  const co23 = es.find((e) => e.id === 'concejo-2023');
+  const rC = co23 ? sumarEleccion(co23, codigos(co23)) : null;
+  if (rC && rC.partidos.length) pol.push(o('observa', `Concejo 2023 en ${nombre}: ${rC.partidos.slice(0, 4).map((x) => `${x.nombre} ${pct(x.pct)}`).join('; ')} (preconteo por puesto, Registraduría).`));
+  const actores = actoresDeTerritorio(territorioFicha(muniId ?? '') ?? t);
+  pol.push(actores.length
+    ? o('observa', `Actores de la base curada (sin verificar, a escala de todo ${t.municipio}, no específicos de ${nombre}): ${actores.slice(0, 5).map((a) => `${a.nombre} (${a.cargo})`).join('; ')}.`)
+    : o('no afirma', `Sin actores de la base curada para ${t.municipio}.`));
+
+  // 2. Social (DANE, CNPV 2018 por manzana)
+  const social: Oracion[] = [];
+  const vDem = valorSubdivision(t.id, 'demografico', 'mujeres');
+  if (vDem.valor !== null) social.push(o('observa', `${nombre}: ${vDem.texto} mujeres (${vDem.fuente}).`));
+  const vEstrato = valorSubdivision(t.id, 'economico', 'estrato');
+  if (vEstrato.valor !== null) social.push(o('observa', `${vEstrato.texto} (${vEstrato.fuente}; no es la estratificación oficial vigente).`));
+  const vIpm = valorSubdivision(t.id, 'economico', 'ipm');
+  if (vIpm.valor !== null) social.push(o('observa', `${vIpm.texto} (${vIpm.fuente}).`));
+  const vSup = valorSubdivision(t.id, 'economico', 'superior');
+  if (vSup.valor !== null) social.push(o('observa', `${vSup.texto}.`));
+  const dpto = getDaneMunicipio(t.dane);
+  const eM = muniId ? economia(territorioFicha(muniId)!) : null;
+  if (vIpm.valor !== null && eM?.ipm != null) social.push(o('deduce', (vIpm.valor as number) > eM.ipm + 3
+    ? `${nombre} tiene más pobreza multidimensional que el promedio de ${t.municipio} (${pct(eM.ipm)}): es zona de prioridad para un mensaje de servicio.`
+    : (vIpm.valor as number) < eM.ipm - 3
+      ? `${nombre} tiene menos pobreza multidimensional que el promedio de ${t.municipio} (${pct(eM.ipm)}).`
+      : `La pobreza multidimensional de ${nombre} es parecida a la de todo ${t.municipio} (${pct(eM.ipm)}).`));
+  if (!social.length) social.push(o('no afirma', `Sin datos del DANE por manzana para ${nombre}${dpto ? '' : ' ni proyección municipal'}.`));
+
+  // 3. Panorama 2027
+  const pan: Oracion[] = [];
+  if (rU && rU.candidatos[0]) {
+    const margen = rU.candidatos[0].pct - (rU.candidatos[1]?.pct ?? 0);
+    pan.push(o('hipotetiza', margen > 25
+      ? `Con ${margen.toFixed(1).replace('.', ',')} puntos de margen en 2023, la hipótesis con más apoyo es continuidad del bloque ganador en ${nombre} (rival: desgaste de gestión en el cuatrienio).`
+      : `Con ${margen.toFixed(1).replace('.', ',')} puntos de margen en 2023, ${nombre} no es un feudo cerrado: cabe disputa real en 2027.`));
+    pan.push(o('apuesta', 'Cruzar este resultado con el de Concejo en los mismos puestos antes de decidir si la pieza local reutiliza la marca de Alcaldía o construye una propia.'));
+  } else pan.push(o('no afirma', `Sin puestos propios dentro de ${nombre}: el panorama depende del municipal.`));
+
+  // 4. Áreas clave: puestos de mayor censo dentro y, en una división, el barrio o vereda de mayor IPM
+  const areas: Oracion[] = [];
+  const top = [...dentro2026].sort((a, b) => b.total - a.total).slice(0, 3).filter((x) => x.total);
+  if (top.length) areas.push(o('observa', `Puestos de mayor censo dentro de ${nombre} (Registraduría 2026): ${top.map((x) => `${x.puesto} (${fmt(x.total)} habilitados)`).join(', ')}.`));
+  if (t.tipo === 'division' && muniId) {
+    const subs = subdivisionesDe(muniId, t.id).map((x) => ({ ...x, v: valorSubdivision(x.id, 'economico', 'ipm') })).filter((x) => x.v.valor !== null).sort((a, b) => b.v.valor! - a.v.valor!);
+    if (subs.length) areas.push(o('deduce', `Dentro de ${nombre}, ${subs[0].nombre} tiene el IPM más alto (${subs[0].v.texto}): prioridad de mensaje de servicio.`));
+  }
+  if (!areas.length) areas.push(o('no afirma', `Sin puestos ni subdivisiones con datos dentro de ${nombre}.`));
+
+  return {
+    id: t.id, nombre: `${t.municipio}, ${nombre}`, ambito: ambitoDe(t),
+    contextoPolitico: pol, contextoSocial: social, panorama2027: pan, areasClave: areas,
+    tonos: tonosComuna(vEstrato.valor as number | null, vIpm.valor as number | null, nombre),
+  };
+}
+
+/** Texto plano del análisis (para Gemini y para guardar): secciones y oraciones con su verbo */
+export function analisisComoTexto(a: AnalisisNarrativo): string {
+  const sec: [string, Oracion[]][] = [
+    ['1. Contexto político e historial electoral', a.contextoPolitico], ['2. Contexto social y económico', a.contextoSocial],
+    ['3. Panorama 2027', a.panorama2027], ['4. Áreas clave', a.areasClave], ['5. Tonos narrativos', a.tonos],
+  ];
+  return [`Análisis calculado de ${a.nombre} (${a.ambito}).`, ...sec.filter(([, l]) => l.length).map(([t, l]) => `${t}\n${l.map((x) => `- [${x.verbo}] ${x.texto}`).join('\n')}`)].join('\n\n');
 }

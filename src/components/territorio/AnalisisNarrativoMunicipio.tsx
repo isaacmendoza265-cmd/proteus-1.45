@@ -1,27 +1,34 @@
 /**
- * Análisis narrativo del municipio (o de la comuna, en Medellín) activo en el mapa: contexto
- * político e historial electoral, contexto social y económico, panorama 2027, áreas clave y tonos
- * narrativos. Cada oración lleva su verbo epistémico del Reglamento (observa/deduce/hipotetiza/
- * apuesta/no afirma) — ver `municipioNarrativeService.ts`. Va debajo del mapa: cambia con lo que el
- * usuario seleccione en él.
+ * Análisis del territorio activo en el mapa (municipio, comuna, corregimiento, zona, barrio o vereda de los 125
+ * municipios de Antioquia): contexto político, social, panorama 2027, áreas clave y tonos. Cada oración lleva su
+ * verbo epistémico del Reglamento (observa/deduce/hipotetiza/apuesta/no afirma), ver `municipioNarrativeService.ts`.
+ *
+ * Dos capas (decisión de Isaac, 2-oct-2026):
+ *  - Las cifras y lecturas se calculan siempre sin IA y se muestran para revisarlas.
+ *  - "Redactar con Gemini" las convierte en un texto corrido con las tres macrofuentes (datos, perfil, marco).
+ *    Si Gemini falla, queda la versión calculada.
  */
 import React, { useEffect, useState } from 'react';
-import { BookOpenText } from 'lucide-react';
+import { BookOpenText, Sparkles } from 'lucide-react';
 import {
-  analizarComunaMedellin,
+  analisisComoTexto,
   analizarMunicipio,
-  esMedellin,
+  analizarUnidad,
   esMunicipioDelAnalisis,
   type AnalisisNarrativo,
   type Oracion,
   type Verbo,
 } from '../../services/municipioNarrativeService';
+import { callGeminiApi, formatAiError } from '../../services/geminiService';
+import type { SeleccionDossier } from '../../services/dossierTerritorialService';
 
 interface AnalisisNarrativoMunicipioProps {
   /** Código DANE del municipio activo en el mapa (null si no hay ninguno abierto) */
   dane: string | null;
-  /** En Medellín: id de la comuna o corregimiento abierto (null = análisis de todo el municipio) */
-  comunaId?: string | null;
+  /** Unidad dentro del municipio (id de la ficha: comuna, zona, barrio o vereda); null = todo el municipio */
+  territorioId?: string | null;
+  /** Unidad para las macrofuentes de la redacción con Gemini (la misma del mapa) */
+  seleccion?: SeleccionDossier;
 }
 
 const ESTILO_VERBO: Record<Verbo, string> = {
@@ -51,31 +58,60 @@ const Seccion: React.FC<{ titulo: string; oraciones: Oracion[]; abierta?: boolea
   </details>
 );
 
-export const AnalisisNarrativoMunicipio: React.FC<AnalisisNarrativoMunicipioProps> = ({ dane, comunaId = null }) => {
+const INSTRUCCION = [
+  'Eres el analista territorial de Proteus. Convierte el análisis calculado que sigue en un texto corrido y claro, en español de Colombia, para el equipo de campaña.',
+  'Reglas: usa solo las cifras del análisis calculado y de los datos del aplicativo; no agregues cifras. Conserva el verbo epistémico de cada afirmación (observa, deduce, hipotetiza, apuesta, no afirma) en la redacción: lo que es hipótesis se dice como hipótesis, y lo que el análisis no afirma no se afirma.',
+  'Recuerda que los votos se cuentan donde está el puesto, no donde vive el votante. Las recomendaciones son para el candidato del perfil, con su postura y su voz.',
+  'Estructura: los mismos 5 apartados, cada uno en uno o dos párrafos. Sin Markdown de títulos: usa el número y el nombre del apartado como primera línea.',
+].join('\n');
+
+// Redacciones de esta sesión (cada una cuesta una llamada a Gemini)
+const redacciones = new Map<string, string>();
+
+export const AnalisisNarrativoMunicipio: React.FC<AnalisisNarrativoMunicipioProps> = ({ dane, territorioId = null, seleccion }) => {
   const [analisis, setAnalisis] = useState<AnalisisNarrativo | null>(null);
   const [cargando, setCargando] = useState(false);
+  const [redaccion, setRedaccion] = useState<string | null>(null);
+  const [redactando, setRedactando] = useState(false);
+  const [errorIa, setErrorIa] = useState<string | null>(null);
 
-  const claveMedellin = dane && esMedellin(dane) ? comunaId ?? '' : null;
   useEffect(() => {
-    setAnalisis(null);
+    setAnalisis(null); setRedaccion(null); setErrorIa(null);
     if (!dane || !esMunicipioDelAnalisis(dane)) return;
     let activo = true;
     setCargando(true);
-    const promesa = dane && esMedellin(dane) && comunaId ? analizarComunaMedellin(comunaId) : analizarMunicipio(dane);
-    promesa
-      .then((a) => { if (activo) setAnalisis(a); })
+    (territorioId ? analizarUnidad(territorioId) : analizarMunicipio(dane))
+      .then((a) => { if (activo) { setAnalisis(a); setRedaccion(redacciones.get(a.id) ?? null); } })
       .catch((e) => console.error('[Proteus] Análisis narrativo:', e))
       .finally(() => { if (activo) setCargando(false); });
     return () => { activo = false; };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dane, claveMedellin]);
+  }, [dane, territorioId]);
+
+  const redactar = async () => {
+    if (!analisis) return;
+    setRedactando(true); setErrorIa(null);
+    try {
+      const texto = await callGeminiApi({
+        promptText: analisisComoTexto(analisis),
+        systemInstruction: INSTRUCCION,
+        proteus: { tarea: 'analizar', ...(seleccion ? { seleccion } : {}) },
+      });
+      const limpio = texto.replace(/^#+\s*/gm, '').replace(/\*\*(.+?)\*\*/g, '$1').trim();
+      if (!limpio) throw new Error('Gemini no devolvió texto.');
+      redacciones.set(analisis.id, limpio);
+      setRedaccion(limpio);
+    } catch (e) {
+      setErrorIa(formatAiError(e));
+    } finally {
+      setRedactando(false);
+    }
+  };
 
   if (!dane) return null;
-
   if (!esMunicipioDelAnalisis(dane)) {
     return (
       <p className="m-0 px-3 py-2 rounded-xl bg-[var(--c-sunken)] text-xs text-[var(--c-muted)]">
-        El análisis narrativo por ahora cubre el Valle de Aburrá y los 30 municipios de Antioquia con mayor censo electoral; este municipio no está en esa lista todavía.
+        El análisis del territorio cubre los 125 municipios de Antioquia; este municipio no tiene ficha territorial.
       </p>
     );
   }
@@ -88,16 +124,37 @@ export const AnalisisNarrativoMunicipio: React.FC<AnalisisNarrativoMunicipioProp
         <span className="text-xs text-[var(--c-muted)]">{cargando ? 'Calculando…' : analisis?.nombre}</span>
       </header>
       {!analisis ? (
-        <p className="m-0 text-sm text-[var(--c-muted)]">Cargando datos del municipio…</p>
+        <p className="m-0 text-sm text-[var(--c-muted)]">Cargando los datos de la unidad…</p>
       ) : (
         <>
-          <Seccion titulo="1. Contexto político e historial electoral" oraciones={analisis.contextoPolitico} abierta />
+          <div className="flex flex-wrap items-center gap-2">
+            <button type="button" onClick={redactar} disabled={redactando}
+              className="min-h-9 px-3.5 rounded-lg bg-[var(--c-accent)] text-white text-xs font-semibold flex items-center gap-1.5 disabled:opacity-50">
+              <Sparkles className="w-3.5 h-3.5" />{redactando ? 'Redactando con Gemini…' : redaccion ? 'Redactar de nuevo' : 'Redactar con Gemini'}
+            </button>
+            <span className="text-xs text-[var(--c-muted)]">Convierte las cifras de abajo en texto, con los datos, el perfil del candidato y el marco. Las cifras siguen visibles para revisarlas.</span>
+          </div>
+          {errorIa && <p className="m-0 text-xs text-[var(--c-warn)]">No se pudo redactar: {errorIa.replace(/\.?$/, ".")} Queda el análisis calculado.</p>}
+          {redaccion && (
+            <div className="rounded-xl border border-[var(--c-border)] p-3 flex flex-col gap-1.5">
+              <div className="flex items-center gap-2 text-xs">
+                <span className="px-2 py-0.5 rounded-md font-bold bg-[var(--c-warn-soft)] text-[var(--c-warn)]">Redacción de Gemini</span>
+                <span className="text-[var(--c-muted)]">A partir de las cifras calculadas de abajo; si algo no coincide, prevalecen ellas.</span>
+              </div>
+              <div className="text-sm whitespace-pre-wrap leading-relaxed">{redaccion}</div>
+            </div>
+          )}
+          <div className="flex items-center gap-2 text-xs">
+            <span className="px-2 py-0.5 rounded-md font-bold bg-[var(--c-ok-soft)] text-[var(--c-ok)]">Cifras y lecturas calculadas</span>
+            <span className="text-[var(--c-muted)]">Sin IA: Registraduría y DANE, con el reglamento de interpretación.</span>
+          </div>
+          <Seccion titulo="1. Contexto político e historial electoral" oraciones={analisis.contextoPolitico} abierta={!redaccion} />
           <Seccion titulo="2. Contexto social y económico" oraciones={analisis.contextoSocial} />
-          <Seccion titulo="3. Panorama para las elecciones territoriales de 2027" oraciones={analisis.panorama2027} abierta />
+          <Seccion titulo="3. Panorama para las elecciones territoriales de 2027" oraciones={analisis.panorama2027} abierta={!redaccion} />
           <Seccion titulo="4. Áreas clave" oraciones={analisis.areasClave} />
           <Seccion titulo="5. Tonos narrativos generales" oraciones={analisis.tonos} />
           <p className="m-0 text-[10px] text-[var(--c-muted)] leading-snug">
-            Análisis generado con los datos que ya tiene Proteus (Registraduría, DANE), siguiendo el reglamento de interpretación vigente (Ajustes › Marco metodológico). No usa Gemini ni encuestas: lo que no está calculado se marca "no afirma", nunca se inventa.
+            Lo calculado sale de los datos que ya tiene Proteus, siguiendo el reglamento de interpretación vigente (Ajustes › Marco metodológico). Lo que no está calculado se marca "no afirma", nunca se inventa.
           </p>
         </>
       )}
