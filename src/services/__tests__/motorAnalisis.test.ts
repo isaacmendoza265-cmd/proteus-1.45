@@ -3,6 +3,7 @@ import { writeFileSync } from 'node:fs';
 import { dossierTerritorio, dossierComoTexto } from '../dossierTerritorialService';
 import { fuentesRegistradas, registrarFuente, versionFuentes } from '../ia/motor/registro';
 import { validarDeclarativo } from '../ia/motor/fuentesDeclarativas';
+import { _fijarNoticias } from '../noticias/noticiasCliente';
 import { coincideNombre, historialCandidato } from '../ia/motor/historialCandidato';
 import { armarMacrofuentes } from '../ia/macrofuentes';
 import { registrarPerfil } from '../ia/registroPerfil';
@@ -61,6 +62,27 @@ describe('motor de análisis: fuentes por unidad', () => {
     expect(poblado).toMatch(/\(del municipio de Medell[ií]n\) Homicidios: 2018 625/);
     const ant = dossierComoTexto(await dossierTerritorio({ subregion: null, muniId: null, comunaId: null, barrioId: null }));
     expect(ant).toMatch(/Municipios con más homicidios en 2025: Medellín 333/);
+  }, 60_000);
+
+  it('noticias guardadas: entran como fuente auxiliar; el barrio recibe las de su comuna y las del municipio, rotuladas', async () => {
+    const reg = (unidadId: string, nombre: string, titular: string) => ({
+      unidadId, nombre, buscadoEn: '2026-10-02T15:00:00Z', descartadas: 0, consultas: [], sugerenciasHtml: null, modelo: 'm',
+      noticias: [{ fecha: '2026-09-30', medio: 'El Colombiano', titular, tema: 'seguridad' as const, resumen: 'Resumen.', enlace: 'https://medio.co/1' }],
+    });
+    _fijarNoticias('comuna-14', reg('comuna-14', 'Comuna 14 - El Poblado', 'Operativo en la comuna 14'));
+    _fijarNoticias('muni:05001', reg('muni:05001', 'Medellín', 'Concejo aprueba presupuesto'));
+    const d = await dossierTerritorio(sel('medellin', 'comuna-14', 'barrio-1411'));
+    const txt = dossierComoTexto(d);
+    expect(txt).toMatch(/AUXILIAR \(sin verificar\) · Noticias recientes de la unidad/);
+    expect(txt).toMatch(/\(de Comuna 14 - El Poblado\) 30-sep-2026 · El Colombiano · \[seguridad\] Operativo en la comuna 14/);
+    expect(txt).toMatch(/\(del municipio de Medellín\) 30-sep-2026 · El Colombiano · \[seguridad\] Concejo aprueba presupuesto/);
+    expect(d.cobertura.find((c) => c.id === 'aux-noticias-google')?.estado).toBe('con datos');
+    // y llega a las macrofuentes de cualquier herramienta
+    const m = await armarMacrofuentes({ tarea: 'analizar', seleccion: sel('medellin', 'comuna-14') });
+    expect(JSON.stringify(m)).toMatch(/Operativo en la comuna 14/);
+    _fijarNoticias('comuna-14', null);
+    _fijarNoticias('muni:05001', null);
+    expect(dossierComoTexto(await dossierTerritorio(sel('medellin', 'comuna-14')))).not.toMatch(/Operativo en la comuna 14/);
   }, 60_000);
 
   it('contrato de los JSON declarativos de src/data/motor/', () => {

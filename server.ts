@@ -9,6 +9,7 @@ import { PrismaClient } from '@prisma/client';
 import { asegurarAdmin, crearSesiones } from './src/server/sesion';
 import { rutasUsuarios } from './src/server/usuarios';
 import { rutasDatos } from './src/server/datos';
+import { rutasNoticias } from './src/server/noticias';
 import { limitarPeticiones, MODELOS_PERMITIDOS } from './src/server/limite';
 
 dotenv.config();
@@ -42,7 +43,7 @@ async function startServer() {
 
   app.use(express.json({ limit: '15mb' }));
   // Cada llamada a estas rutas gasta cuota de Gemini: 20 por minuto por cliente
-  app.use(['/api/gemini', '/api/contenido', '/api/piezas', '/api/analista', '/api/antigravity/interactions'], limitarPeticiones(20, 60_000));
+  app.use(['/api/gemini', '/api/contenido', '/api/piezas', '/api/analista', '/api/antigravity/interactions', '/api/noticias/buscar'], limitarPeticiones(20, 60_000));
 
   // Helper para inicialización perezosa de GoogleGenAI
   let cachedAi: GoogleGenAI | null = null;
@@ -62,6 +63,17 @@ async function startServer() {
     }
     return client;
   }
+
+  // Noticias por unidad territorial (botón "Noticias" del mapa): Gemini con la búsqueda de Google
+  const MODELO_NOTICIAS = 'gemini-3.8-flash';
+  app.use('/api/noticias', rutasNoticias(prisma, {
+    modelo: MODELO_NOTICIAS,
+    buscar: (prompt) => getGenAI().models.generateContent({
+      model: MODELO_NOTICIAS,
+      contents: prompt,
+      config: { tools: [{ googleSearch: {} }], temperature: 0.2 },
+    }),
+  }));
 
   // Helper para ejecutar el bridge de Python del Subproyecto Gobernación.
   // Usa execFile (sin shell) con una lista cerrada de comandos, tiempo límite

@@ -31,6 +31,7 @@ import { fuentesRegistradas, versionFuentes, type CoberturaFuente, type Categori
 // Fuentes que se registran solas (auxiliares por código y archivos de src/data/motor/)
 import './ia/motor/fuentesAuxiliares';
 import './ia/motor/fuentesDeclarativas';
+import './ia/motor/fuenteNoticias';
 
 export interface SeccionDossier { titulo: string; lineas: string[]; nivel?: 'oficial' | 'auxiliar'; categoria?: CategoriaFuente; id?: string }
 export interface DossierTerritorial {

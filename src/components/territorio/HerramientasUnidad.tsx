@@ -6,11 +6,11 @@
  */
 import React from 'react';
 import {
-  BarChart3, Building2, Calculator, FileSearch, Map, Megaphone, MessagesSquare, Network, PenLine, Sparkles, Users, Video,
+  BarChart3, Building2, Calculator, FileSearch, Map, Megaphone, MessagesSquare, Network, Newspaper, PenLine, Sparkles, Users, Video,
 } from 'lucide-react';
 import type { NavViewId } from '../layout/navigation';
 
-export type AnclaMapa = 'generador' | 'analista' | 'redes';
+export type AnclaMapa = 'generador' | 'analista' | 'redes' | 'noticias';
 
 interface Herramienta {
   id: string;
@@ -28,6 +28,7 @@ const GRUPOS: { titulo: string; items: Herramienta[] }[] = [
     items: [
       { id: 'generador', titulo: 'Generador de contenido', descripcion: 'Piezas para redes y medios con los datos de la unidad, la voz del candidato y el marco.', icon: Sparkles, destino: { ancla: 'generador' } },
       { id: 'analista', titulo: 'Analista territorial', descripcion: 'Pregunta lo que quieras: responde con todo lo que Proteus tiene de la unidad.', icon: MessagesSquare, destino: { ancla: 'analista' } },
+      { id: 'noticias', titulo: 'Noticias', descripcion: 'Noticias de los últimos 60 días con la búsqueda de Google; entran a todos los análisis.', icon: Newspaper, destino: { ancla: 'noticias' }, soloAntioquia: true },
       { id: 'redes', titulo: 'Redes de poder', descripcion: 'Casas políticas y actores con presencia en el territorio, en 3D.', icon: Network, destino: { ancla: 'redes' } },
     ],
   },

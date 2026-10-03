@@ -78,3 +78,16 @@ model ArchivoGuardado {
 
   @@index([creadoEn])
 }
+
+// Noticias por unidad territorial (búsqueda de Google desde Gemini, src/server/noticias.ts). Cada búsqueda es una
+// fila; se usa la más reciente de cada unidad. Fuente auxiliar: titular, medio, fecha, tema, resumen y enlace.
+model NoticiasUnidad {
+  id         String   @id @default(uuid())
+  unidadId   String
+  nombre     String
+  datos      Json
+  buscadoEn  DateTime @default(now())
+  buscadoPor String?
+
+  @@index([unidadId, buscadoEn])
+}

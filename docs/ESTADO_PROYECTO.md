@@ -244,6 +244,20 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
   `territoryProfileService.ts`; ficha: `src/components/territorio/`.
 
 ## 5. Bitácora (agregar arriba lo más reciente)
+- 2-oct (Claude Opus, `main`): **noticias por unidad territorial** (opción A de Isaac: bajo demanda desde el mapa).
+  - Botón "Noticias" en la consola del mapa y en la columna de herramientas: Gemini con la búsqueda de Google trae
+    las noticias de los últimos 60 días de la unidad (titular, medio, fecha, tema, resumen y enlace).
+  - Reglas: se busca por municipio, comuna o corregimiento (y divisiones de otros municipios), subregión y Antioquia;
+    un barrio o vereda hereda las de su comuna, rotuladas. Solo enlaces que devolvió Google (`groundingChunks`); lo
+    que Gemini lista sin respaldo se descarta y se cuenta. El resumen no nombra a particulares. Se muestran las
+    sugerencias de búsqueda de Google (lo exigen). Una búsqueda por unidad y día (la segunda sale de la base;
+    "Buscar de nuevo" fuerza otra). Límite de 20 por minuto, como las demás rutas de Gemini.
+  - Se guardan en la tabla `NoticiasUnidad` (migración `noticias_unidad`; el contenedor la aplica al arrancar) y
+    entran al motor como fuente auxiliar `aux-noticias-google`: las usan todos los análisis. Una comuna recibe
+    además las de su municipio (máximo 5), rotuladas.
+  - Archivos: `src/services/noticias/`, `src/server/noticias.ts`, `src/services/ia/motor/fuenteNoticias.ts`,
+    `src/components/territorio/NoticiasUnidad.tsx`. Probado con Gemini simulado (la clave de producción sigue en 403);
+    falta probarlo con búsquedas reales y confirmar la tarifa de la búsqueda de Google en Gemini.
 - 2-oct (Claude Opus, `main`): **revisión del motor de personalización** (analista de imagen, perfil y multimedia).
   - Bien: todas las llamadas pasan por el servidor con `gemini-3.8-flash` (único en `MODELOS_PERMITIDOS`), llevan las
     macrofuentes con su tarea (`evaluar`; la captura del perfil va sin ellas a propósito) y respetan Privacidad

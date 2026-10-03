@@ -9,8 +9,20 @@ import { hashClave } from './claves';
 import { asegurarAdmin, crearSesiones } from './sesion';
 import { rutasUsuarios } from './usuarios';
 import { rutasDatos } from './datos';
+import { rutasNoticias } from './noticias';
+import type { RespuestaBusqueda } from '../services/noticias/noticias';
 
 const URL_BD = process.env.TEST_DATABASE_URL;
+
+const busquedas: string[] = [];
+const respuestaBusqueda: RespuestaBusqueda = {
+  text: 'NOTICIA | 2026-09-30 | Teleantioquia | Inicia la pavimentación de la vía a Guarumo | obras e infraestructura | La Gobernación anunció la obra.\nNOTICIA | 2026-09-29 | Medio | Sin respaldo de Google | otro | x',
+  candidates: [{ groundingMetadata: {
+    groundingChunks: [{ web: { uri: 'https://vertexaisearch.cloud.google.com/grounding-api-redirect/AAA', title: 'teleantioquia.co' } }],
+    groundingSupports: [{ segment: { text: 'Inicia la pavimentación de la vía a Guarumo' }, groundingChunkIndices: [0] }],
+    searchEntryPoint: { renderedContent: '<div>sugerencias</div>' },
+  } }],
+};
 
 describe.skipIf(!URL_BD)('API con PostgreSQL', () => {
   let prisma: PrismaClient;
@@ -24,7 +36,7 @@ describe.skipIf(!URL_BD)('API con PostgreSQL', () => {
   }, 60_000);
   afterAll(async () => prisma?.$disconnect());
   beforeEach(async () => {
-    await prisma.$executeRawUnsafe('TRUNCATE "Sesion", "Usuario", "PerfilCandidato", "PiezaAnalizada", "ArchivoGuardado" CASCADE');
+    await prisma.$executeRawUnsafe('TRUNCATE "Sesion", "Usuario", "PerfilCandidato", "PiezaAnalizada", "ArchivoGuardado", "NoticiasUnidad" CASCADE');
   });
 
   /** Levanta la misma composición que server.ts en un puerto libre y devuelve un cliente con cookies. */
@@ -36,6 +48,11 @@ describe.skipIf(!URL_BD)('API con PostgreSQL', () => {
     app.use('/api/auth', sesiones.router);
     app.use('/api/usuarios', rutasUsuarios(prisma));
     app.use('/api/datos', rutasDatos(prisma));
+    app.use('/api/noticias', rutasNoticias(prisma, {
+      modelo: 'prueba',
+      buscar: async (prompt) => { busquedas.push(prompt); return respuestaBusqueda; },
+      resolver: async (uri) => uri.replace('https://vertexaisearch.cloud.google.com/grounding-api-redirect/', 'https://medio.co/'),
+    }));
     app.get('/', (_req, res) => { res.send('APP'); });
     const srv = app.listen(0);
     const base = `http://127.0.0.1:${(srv.address() as AddressInfo).port}`;
@@ -188,6 +205,32 @@ describe.skipIf(!URL_BD)('API con PostgreSQL', () => {
     const descarga = await h.pedir(`/api/datos/archivos/${creado.archivo.id}`);
     expect(JSON.parse(await descarga.text())).toEqual({ a: 1 });
     expect(descarga.headers.get('content-disposition')).toContain('Brief_Medell');
+    s.cerrar();
+  });
+
+  it('noticias: busca una vez al día por unidad, guarda solo lo respaldado por Google y valida la entrada', async () => {
+    await crearUsuario('n@x.co', 'clave-n');
+    const s = await servidor();
+    const c = s.cliente();
+    await c.entrar('n@x.co', 'clave-n');
+    busquedas.length = 0;
+    const cuerpo = { unidadId: 'muni:05120', nombre: 'Cáceres', consulta: 'municipio de Cáceres, Antioquia, Colombia' };
+    const r1 = await c.pedir('/api/noticias/buscar', { method: 'POST', json: cuerpo });
+    expect(r1.status).toBe(201);
+    const { registro } = await r1.json();
+    expect(registro.noticias).toEqual([expect.objectContaining({ medio: 'Teleantioquia', enlace: 'https://medio.co/AAA', tema: 'obras e infraestructura' })]);
+    expect(registro.descartadas).toBe(1);
+    expect(busquedas[0]).toMatch(/municipio de Cáceres/);
+    // la segunda del mismo día sale de la base sin llamar a Gemini; con forzar, busca de nuevo
+    expect((await (await c.pedir('/api/noticias/buscar', { method: 'POST', json: cuerpo })).json()).deCache).toBe(true);
+    expect(busquedas).toHaveLength(1);
+    await c.pedir('/api/noticias/buscar', { method: 'POST', json: { ...cuerpo, forzar: true } });
+    expect(busquedas).toHaveLength(2);
+    const lista = await (await c.pedir('/api/noticias?ids=muni:05120,comuna-14')).json();
+    expect(Object.keys(lista.registros)).toEqual(['muni:05120']);
+    expect(lista.registros['muni:05120'].sugerenciasHtml).toMatch(/sugerencias/);
+    expect((await c.pedir('/api/noticias/buscar', { method: 'POST', json: { ...cuerpo, unidadId: '../x' } })).status).toBe(400);
+    expect((await prisma.noticiasUnidad.findFirstOrThrow()).buscadoPor).toBe('n@x.co');
     s.cerrar();
   });
 

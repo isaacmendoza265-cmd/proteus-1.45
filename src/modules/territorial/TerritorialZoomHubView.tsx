@@ -17,6 +17,7 @@ import { PollingStationsPanel } from '../../components/maps/PollingStationsPanel
 import { FichaTerritorio, type Seccion } from '../../components/territorio/FichaTerritorio';
 import { GeneradorContenido } from '../../components/territorio/GeneradorContenido';
 import { AnalisisNarrativoMunicipio } from '../../components/territorio/AnalisisNarrativoMunicipio';
+import { NoticiasUnidad } from '../../components/territorio/NoticiasUnidad';
 import { EncuestasTerritorio } from '../../components/territorio/EncuestasTerritorio';
 import type { SeleccionEncuestas } from '../../components/encuestas/VotoCorrelaciones';
 import { SELECCION_GENERAL, nombreSeleccion, seleccionDesdeMapa, type PerfilCandidato } from '../../services/contentGeneratorService';
@@ -144,7 +145,7 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
   };
   const irAAncla = (a: AnclaMapa) => {
     if (a === 'redes') { setVista('redes'); return; }
-    document.getElementById(a === 'generador' ? 'generador-contenido' : 'analista-territorial')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.getElementById(a === 'generador' ? 'generador-contenido' : a === 'noticias' ? 'noticias-unidad' : 'analista-territorial')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
   const puestosDeFicha = useMemo(
@@ -327,6 +328,11 @@ export const TerritorialZoomHubView: React.FC<TerritorialZoomHubViewProps> = ({
           {vista === 'mapa' && (
             <div className="mt-5">
               <AnalisisNarrativoMunicipio dane={daneNarrativa} territorioId={unidadNarrativaId} seleccion={seleccionContenido} />
+            </div>
+          )}
+          {vista === 'mapa' && selectedDepartmentName === 'Antioquia' && (
+            <div className="mt-5">
+              <NoticiasUnidad seleccion={seleccionContenido} />
             </div>
           )}
           {vista === 'mapa' && selectedDepartmentName === 'Antioquia' && (

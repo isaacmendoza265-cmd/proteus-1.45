@@ -43,6 +43,8 @@ export function registrarFuente(f: FuenteMotor) {
 export const fuentesRegistradas = () => [...FUENTES.values()];
 /** Cambia cada vez que se registra una fuente: invalida las cachés del dossier */
 export const versionFuentes = () => version;
+/** Una fuente cambió sus datos (p. ej. una búsqueda de noticias nueva): el siguiente dossier se arma de nuevo */
+export const invalidarFuentes = () => { version += 1; };
 
 export interface CoberturaFuente {
   id: string;
