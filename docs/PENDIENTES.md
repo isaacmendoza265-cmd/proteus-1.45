@@ -26,7 +26,7 @@ Esta es la lista consolidada. El detalle histórico está en `docs/ESTADO_PROYEC
 
 ## 2. Bloqueantes de producción
 
-1. **Clave de Gemini válida en Coolify** (`GEMINI_API_KEY`). La actual da 403 ("Your project has been denied access"). Sin ella no responde ninguna función de IA. Responsable: Isaac, en Google AI Studio.
+1. ~~**Clave de Gemini válida en Coolify**~~: el 3-oct producción ya respondió `503 high demand` en vez de 403, así que Google acepta la clave. Para la saturación se añadió la cadena de respaldo 3.8 → 3.7 → 3.6 → 3.5 (`0e9b1cc`).
 2. **Redesplegar en Coolify** el último `main`. El contenedor aplica solo la migración `noticias_unidad`. Responsable: Jose.
 3. **Al tener clave:**
    - probar una llamada de cada tipo: análisis, generador, analista, segmentos, piezas, multimedia, noticias, subregiones, país y revisores;
@@ -37,7 +37,7 @@ Esta es la lista consolidada. El detalle histórico está en `docs/ESTADO_PROYEC
 
 - **Capa 2 del marco**: la compila Isaac.
 - **Dossiers de las familias 1, 2 y 3 y Capa 3**: en producción; se cargan cuando estén. Las reglas de la Capa 3 se integran luego al libro de reglas de piezas.
-- **Respaldo de modelos** ante saturación de Gemini: por definir (opción: DeepSeek).
+- **Respaldo de modelos** ante saturación de Gemini: dentro de Gemini ya está la cadena 3.8 → 3.5 (3-oct). Falta decidir si se añade otro proveedor (opción: DeepSeek) por si cae todo Gemini.
 - **GitHub, como dueño del repositorio:**
   - crear el webhook de auto-deploy.
 - **Privacidad de la identidad:** activar "Enviar imágenes/videos a Gemini" si se quiere que la IA vea fotos y videos del candidato.

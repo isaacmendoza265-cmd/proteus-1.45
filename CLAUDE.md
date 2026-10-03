@@ -107,7 +107,8 @@ Roles: `ADMIN` (gestiona usuarios en Ajustes › Usuarios y acceso) y `EQUIPO`.
 **Gemini solo desde el servidor.** El navegador llama a `/api/gemini/generar` (genérico, vía
 `src/services/geminiService.ts`), `/api/contenido/generar`, `/api/piezas/*` y `/api/antigravity/*`; la clave
 vive en `GEMINI_API_KEY` del servidor. Nunca definir la clave en `vite.config.ts` (acabaría en el bundle). Un
-modelo nuevo hay que añadirlo a `MODELOS_PERMITIDOS` o el servidor lo rechaza con `400`.
+modelo nuevo hay que añadirlo a `MODELOS_PERMITIDOS` o el servidor lo rechaza con `400`. Toda llamada pasa por
+`generarConRespaldo` (`src/server/geminiRespaldo.ts`): ante saturación baja 3.8 → 3.7 → 3.6 → 3.5 (decisión de Isaac, 3-oct).
 
 **Dos clases de datos, con reglas distintas:**
 1. **Datos oficiales y geográficos** (Registraduría, DANE, GeoJSON, censo, resultados por puesto): **archivos
