@@ -64,7 +64,8 @@ describe('tres macrofuentes', () => {
     registrarPerfil(null);
     const m = await armarMacrofuentes({ tarea: 'redactar', incluirDatos: false });
     expect(m.texto).toMatch(/Sin perfil del candidato cargado/);
-    expect(sistemaConMacrofuentes(m, 'X')).toMatch(/INSTRUCCIONES DE ESTA HERRAMIENTA[\s\S]*X$/);
+    // La instrucción de la herramienta, luego el estándar de calidad y al final la tarea (Gemini sigue mejor lo último)
+    expect(sistemaConMacrofuentes(m, 'X', 'analizar')).toMatch(/INSTRUCCIONES DE ESTA HERRAMIENTA[^\n]*\nX\n\nESTÁNDAR DE CALIDAD[\s\S]*Conclusión primero[\s\S]*TAREA: ANALIZAR[\s\S]*Lo esencial/);
   });
 });
 

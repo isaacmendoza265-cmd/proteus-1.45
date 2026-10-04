@@ -11,7 +11,7 @@ import { rutasUsuarios } from './src/server/usuarios';
 import { rutasDatos } from './src/server/datos';
 import { rutasNoticias } from './src/server/noticias';
 import { limitarPeticiones, MODELOS_PERMITIDOS } from './src/server/limite';
-import { cadenaDesde, generarConRespaldo, statusGemini } from './src/server/geminiRespaldo';
+import { cadenaDesde, configAnalisis, exigirTexto, generarConRespaldo, statusGemini } from './src/server/geminiRespaldo';
 
 dotenv.config();
 
@@ -332,11 +332,11 @@ async function startServer() {
         return;
       }
       const ai = getGenAI(req.headers['x-gemini-api-key'] as string | undefined);
-      const { respuesta, modelo } = await generarConRespaldo((model) => ai.models.generateContent({
+      const { respuesta, modelo } = await generarConRespaldo(async (model) => exigirTexto(await ai.models.generateContent({
         model,
         contents: instruccion,
-        config: typeof sistema === 'string' && sistema.trim() ? { systemInstruction: sistema } : undefined,
-      }), { cadena: cadenaDesde(MODELO_CONTENIDO) });
+        config: configAnalisis(typeof sistema === 'string' && sistema.trim() ? { systemInstruction: sistema } : undefined),
+      })), { cadena: cadenaDesde(MODELO_CONTENIDO) });
       res.json({ texto: respuesta.text ?? '', modelo });
     } catch (err: any) {
       console.error('Error en /api/contenido/generar:', err);
@@ -370,15 +370,15 @@ async function startServer() {
       const ai = getGenAI(req.headers['x-gemini-api-key'] as string | undefined);
       const contents = [
         { role: 'user', parts: [{ text: `DOSSIER DE LA UNIDAD TERRITORIAL (única fuente de datos para responder):\n${dossier}` }] },
-        { role: 'model', parts: [{ text: 'Leí el dossier completo. Responderé solo con esos datos y diré cuando algo no esté.' }] },
+        { role: 'model', parts: [{ text: 'Leí el dossier completo, incluidos los indicadores derivados. Responderé como estratega: primero la conclusión, con comparaciones, cuentas y apuestas concretas para el candidato, sin inventar nada que no esté en las fuentes.' }] },
         ...turnos.map((t) => ({ role: t.rol === 'analista' ? 'model' : 'user', parts: [{ text: t.texto }] })),
         { role: 'user', parts: [{ text: pregunta }] },
       ];
-      const { respuesta, modelo } = await generarConRespaldo((model) => ai.models.generateContent({
+      const { respuesta, modelo } = await generarConRespaldo(async (model) => exigirTexto(await ai.models.generateContent({
         model,
         contents,
-        config: typeof sistema === 'string' && sistema.trim() ? { systemInstruction: sistema } : undefined,
-      }), { cadena: cadenaDesde(MODELO_ANALISTA) });
+        config: configAnalisis(typeof sistema === 'string' && sistema.trim() ? { systemInstruction: sistema } : undefined),
+      })), { cadena: cadenaDesde(MODELO_ANALISTA) });
       res.json({ texto: respuesta.text ?? '', modelo });
     } catch (err: any) {
       console.error('Error en /api/analista/preguntar:', err);
@@ -443,11 +443,11 @@ async function startServer() {
       }
       partes.push({ text: instruccion });
       const ai = getGenAI(req.headers['x-gemini-api-key'] as string | undefined);
-      const { respuesta: r, modelo } = await generarConRespaldo((model) => ai.models.generateContent({
+      const { respuesta: r, modelo } = await generarConRespaldo(async (model) => exigirTexto(await ai.models.generateContent({
         model,
         contents: [{ role: 'user', parts: partes }],
-        config: { systemInstruction: sistema, responseMimeType: 'application/json', responseJsonSchema: esquema, temperature: 0.2 },
-      }), { cadena: cadenaDesde(MODELO_PIEZAS) });
+        config: configAnalisis({ systemInstruction: sistema, responseMimeType: 'application/json', responseJsonSchema: esquema }),
+      })), { cadena: cadenaDesde(MODELO_PIEZAS) });
       const texto = r.text ?? '';
       let analisis: unknown;
       try { analisis = JSON.parse(texto); } catch {
@@ -483,11 +483,11 @@ async function startServer() {
         return;
       }
       const ai = getGenAI(req.headers['x-gemini-api-key'] as string | undefined);
-      const { respuesta, modelo } = await generarConRespaldo((m) => ai.models.generateContent({
+      const { respuesta, modelo } = await generarConRespaldo(async (m) => exigirTexto(await ai.models.generateContent({
         model: m,
         contents,
-        config,
-      }), { cadena: cadenaDesde(model ?? MODELO_GENERICO) });
+        config: configAnalisis(config && typeof config === 'object' ? config : undefined),
+      })), { cadena: cadenaDesde(model ?? MODELO_GENERICO) });
       res.json({
         text: respuesta.text ?? '',
         modelo,

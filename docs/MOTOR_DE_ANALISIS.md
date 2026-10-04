@@ -47,6 +47,17 @@ La regla de integridad (`JERARQUIA`) las ordena:
 
 La prueba `src/services/__tests__/tuberiaIA.test.ts` falla si una llamada nueva no declara `proteus`.
 
+### Calidad del análisis (3-oct-2026)
+
+Isaac vio análisis "muy mediocres": recitaban cifras sin implicaciones, no comparaban, no priorizaban y ponían una cautela en cada frase. Cambios:
+
+- **Orden del sistema**: macrofuentes → instrucción propia de la herramienta → `ESTANDAR` → `TAREAS[tarea]` (`macrofuentes.ts`). Lo último es lo que Gemini sigue mejor con contextos largos.
+- **`ESTANDAR`** (común a toda herramienta): conclusión primero, el "¿y qué?" de cada cifra, comparar siempre, 3 a 5 hallazgos priorizados, nombres concretos, nada genérico, buscar lo no obvio, recomendaciones accionables, la incertidumbre una sola vez, verbos del marco por hallazgo (no por frase) y una revisión antes de responder. Si la herramienta fija un formato (JSON, apartados), ese formato manda.
+- **`TAREAS`**: cada tarea es un método con estructura de salida (analizar: Lo esencial · Hallazgos · Qué haría el candidato · Lo que falta saber; brief: diagnóstico, cuenta de votos, públicos, mensajes, acciones y riesgos, indicadores; redactar: gancho, lenguaje local, sin clichés, nada de cuentas o lemas inventados, espacio para la mención de financiación de la propaganda).
+- **Indicadores derivados** (`ia/indicadoresDerivados.ts`): sección nueva del dossier con margen 1.º-2.º, participación y votos en juego, variación frente a la jornada anterior del mismo tipo y, en comunas y barrios, brecha frente al municipio. Firmados "Modelo Proteus con datos de la Registraduría".
+- **Servidor**: `configAnalisis` (razonamiento `HIGH`, sin fijar temperatura: Gemini 3 razona peor con temperatura baja; se quitó el 0,2 de piezas) y `exigirTexto` (una respuesta vacía es 503 y baja de modelo, en vez de 200 con texto vacío) en analista, contenido, piezas y el genérico.
+- Prueba A/B con la clave paga (analista, Medellín, mismo perfil): la respuesta nueva abre con la conclusión, usa las variaciones en puntos, da la meta de votos preferentes y cierra con apuestas y datos faltantes; la vieja recitaba cifras por partido.
+
 ### Mapa de herramientas (2-oct-2026)
 
 | Herramienta | Tarea | Unidad |

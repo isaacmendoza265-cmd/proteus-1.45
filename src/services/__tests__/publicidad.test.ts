@@ -21,7 +21,7 @@ describe('publicidad sin cifras inventadas', () => {
     vi.stubGlobal('fetch', fetchMock);
     await expect(AdTargetingOptimizerService.generateCreativesWithAI(ADVERTISING_ARCHETYPES_DATA[0], 'Ana', 'Itagüí')).rejects.toThrow();
     const body = JSON.parse(String((fetchMock.mock.calls[0] as unknown as [string, RequestInit])[1].body));
-    expect(String(body.config.systemInstruction)).toMatch(/TAREA: redactar/);
+    expect(String(body.config.systemInstruction)).toMatch(/TAREA: REDACTAR/);
     expect(String(body.contents[0].parts[0].text)).not.toMatch(/42[.,]5|3[.]?850/);
   }, 60_000);
 });

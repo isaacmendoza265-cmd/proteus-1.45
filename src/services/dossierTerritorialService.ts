@@ -15,6 +15,7 @@ import { ANTIOQUIA_125_MUNICIPIOS_GEOJSON } from '../data/geojson';
 import { getDaneMunicipio } from './daneMunicipalService';
 import { cargarElecciones, sumarEleccion, type EleccionPuestos } from './electionResultsService';
 import { cargarGanadores } from './winnersService';
+import { indicadoresDerivados } from './ia/indicadoresDerivados';
 import {
   actoresDeTerritorio, cargarDemografia, cargarEconomia, censoElectoral, demografia, economia, piramide2026,
   territorioFicha, municipioFichaPorDane, type TerritorioFicha,
@@ -84,7 +85,8 @@ function lineasCandidatos(e: EleccionPuestos, codigos: string[] | 'todos', munic
 const CATEGORIA_FIJA: Record<string, CategoriaFuente> = {
   'Identificación': 'identificación', 'Población': 'población', 'Condiciones económicas (2018)': 'economía',
   'Estratificación vigente o valor del suelo': 'estratificación', 'Censo electoral': 'censo electoral',
-  'Resultados electorales (serie 2015-2026)': 'resultados electorales', 'Municipios (DANE, Contaduría, CUIPO, Registraduría)': 'institucional',
+  'Resultados electorales (serie 2015-2026)': 'resultados electorales',
+  'Indicadores derivados (Modelo Proteus): márgenes, variaciones y brechas': 'resultados electorales', 'Municipios (DANE, Contaduría, CUIPO, Registraduría)': 'institucional',
 };
 const sinDato = (l: string) => /^(sin |ninguno registrado|sin información)/i.test(l.trim());
 
@@ -230,6 +232,8 @@ async function dossierLocal(t: TerritorioFicha): Promise<DossierTerritorial> {
     }
   }
   secciones.push({ titulo: 'Resultados electorales (serie 2015-2026)', lineas: res });
+  const derivados = indicadoresDerivados({ elecciones: orden, codigosDe, subMunicipal: t.tipo !== 'municipio', alcance: t.nombre, municipio: t.municipio });
+  if (derivados.length) secciones.push({ titulo: 'Indicadores derivados (Modelo Proteus): márgenes, variaciones y brechas', lineas: derivados });
 
   // 8. Actores políticos (base curada)
   const act = actoresDeTerritorio(t);

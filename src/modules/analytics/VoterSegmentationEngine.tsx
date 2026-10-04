@@ -128,11 +128,12 @@ export const VoterSegmentationEngine: React.FC<VoterSegmentationEngineProps> = (
         '',
         `Guía general de referencia para este cruce (texto fijo del aplicativo, NO es un dato del territorio): ${foco.guia.tagline} Temas: ${foco.guia.temas.join(', ')}. Canales: ${foco.guia.canales.join(', ')}.`,
         '',
-        'Responde en 4 apartados breves:',
-        '1. Qué dicen los datos de este segmento en este territorio (solo cifras de los datos, con su rótulo Oficial/Estimado).',
-        '2. Preocupaciones probables: márcalas como HIPÓTESIS y di en qué dato del territorio se apoya cada una (o que no hay dato).',
-        '3. Cómo le habla el candidato: con su voz, ejes y postura del perfil, y las reglas del marco.',
-        '4. Canales y qué dato faltaría para confirmarlo (encuesta, grupo focal, datos de pauta).',
+        'Responde en 5 apartados breves:',
+        '1. Lo esencial: si este segmento es prioritario para el candidato del perfil y por qué, en dos frases (su tamaño frente a los adultos del territorio, su cercanía con los ejes y públicos del perfil, su tendencia demográfica).',
+        '2. Qué dicen los datos: solo las cifras que cambian la decisión, con su rótulo Oficial/Estimado y comparadas con el total del territorio.',
+        '3. Preocupaciones probables (máximo 3, marcadas como HIPÓTESIS): cada una apoyada en un dato concreto del territorio (seguridad, economía, servicios, alertas) o marcada "sin dato".',
+        '4. Cómo le habla el candidato: una idea central, dos mensajes de ejemplo con su voz (máximo 30 palabras cada uno) y lo que no debe decirle.',
+        '5. Canales y validación: dónde encontrarlo y qué dato faltaría para confirmar la lectura (encuesta, grupo focal, datos de pauta).',
         'No estimes votos, participación ni intención de voto del segmento: no hay datos para eso.',
       ].join('\n');
       const res = await callGeminiApi({

@@ -55,3 +55,21 @@ export async function generarConRespaldo<T>(
   const final = ultimoPasajero ?? ultimo;
   throw Object.assign(final instanceof Error ? final : new Error(String(final)), { modelosIntentados: cadena });
 }
+
+/**
+ * Una respuesta sin texto (corte por tokens, filtro de seguridad, fallo silencioso del modelo) no es una respuesta:
+ * se trata como falla pasajera para que la cadena reintente o baje de modelo, en vez de devolver 200 con texto vacío.
+ */
+export function exigirTexto<T extends { text?: string | null; candidates?: { finishReason?: unknown }[] | null }>(r: T): T {
+  if (String(r.text ?? '').trim()) return r;
+  const motivo = r.candidates?.[0]?.finishReason ?? 'sin motivo';
+  throw Object.assign(new Error(JSON.stringify({ error: { code: 503, status: 'RESPUESTA_VACIA', message: `Gemini devolvió una respuesta vacía (${String(motivo)}).` } })), { status: 503 });
+}
+
+/**
+ * Configuración de las llamadas analíticas: razonamiento a fondo. No se fija temperatura: Google recomienda dejar la
+ * de Gemini 3 en su valor por defecto (bajarla degrada el razonamiento). Lo que mande el cliente prevalece.
+ */
+export function configAnalisis<C extends Record<string, unknown>>(config: C | undefined): C & { thinkingConfig: unknown } {
+  return { thinkingConfig: { thinkingLevel: 'HIGH' }, ...(config ?? {}) } as C & { thinkingConfig: unknown };
+}

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { CADENA_GEMINI, cadenaDesde, generarConRespaldo, statusGemini } from './geminiRespaldo';
+import { CADENA_GEMINI, cadenaDesde, configAnalisis, exigirTexto, generarConRespaldo, statusGemini } from './geminiRespaldo';
 
 const errorGoogle = (code: number, status: string) =>
   Object.assign(new Error(JSON.stringify({ error: { code, status, message: `${status} de prueba` } })), { status: code });
@@ -83,5 +83,36 @@ describe('cadena de modelos de Gemini', () => {
     await generarConRespaldo(async (m) => { if (m === 'gemini-3.8-flash') throw errorGoogle(503, 'UNAVAILABLE'); return m; },
       { dormir: async (ms) => { esperas.push(ms); } });
     expect(esperas).toEqual([1500]);
+  });
+});
+
+describe('respuestas vacías y configuración de análisis', () => {
+  it('una respuesta sin texto es un error pasajero (503) que dice por qué terminó', () => {
+    let err: unknown;
+    try { exigirTexto({ text: '', candidates: [{ finishReason: 'MAX_TOKENS' }] }); } catch (e) { err = e; }
+    expect(statusGemini(err)).toBe(503);
+    expect(String((err as Error).message)).toContain('MAX_TOKENS');
+  });
+
+  it('con texto, devuelve la misma respuesta', () => {
+    const r = { text: 'hola', candidates: [] };
+    expect(exigirTexto(r)).toBe(r);
+  });
+
+  it('la respuesta vacía baja al modelo siguiente de la cadena', async () => {
+    const vistos: string[] = [];
+    const { respuesta, modelo } = await generarConRespaldo(async (m) => {
+      vistos.push(m);
+      return exigirTexto(m === 'gemini-3.8-flash' ? { text: '' } : { text: 'ok' });
+    }, { dormir: async () => undefined });
+    expect(respuesta.text).toBe('ok');
+    expect(modelo).toBe('gemini-3.7-flash');
+    expect(vistos).toEqual(['gemini-3.8-flash', 'gemini-3.8-flash', 'gemini-3.7-flash']);
+  });
+
+  it('el análisis piensa a fondo y no fija temperatura (Gemini 3 razona peor con temperatura baja)', () => {
+    expect(configAnalisis({ systemInstruction: 's' })).toEqual({ systemInstruction: 's', thinkingConfig: { thinkingLevel: 'HIGH' } });
+    expect(configAnalisis({ thinkingConfig: { thinkingLevel: 'LOW' } })).toEqual({ thinkingConfig: { thinkingLevel: 'LOW' } });
+    expect(configAnalisis(undefined)).toEqual({ thinkingConfig: { thinkingLevel: 'HIGH' } });
   });
 });

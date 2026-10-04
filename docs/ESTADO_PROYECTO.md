@@ -77,6 +77,7 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
 - Verificación al último commit (`f0b3769`): tsc limpio en `src/`, 211 pruebas, build OK.
 
 ## 2. Decisiones de Isaac (respetarlas)
+- 3-oct: los análisis de Gemini deben ser de **estratega, no de relator**: conclusión primero, comparaciones, prioridades y apuestas concretas (ver `docs/MOTOR_DE_ANALISIS.md` › Calidad del análisis).
 - 3-oct: **cadena de respaldo de Gemini**: si `gemini-3.8-flash` está saturado, probar 3.7, luego 3.6 y luego 3.5
   (`src/server/geminiRespaldo.ts`). Cada respuesta dice qué modelo contestó.
 - 28-sep: el análisis de video, oratoria, composición y colorimetría con Gemini 3.8 **no es un módulo independiente**:
@@ -246,6 +247,7 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
   `territoryProfileService.ts`; ficha: `src/components/territorio/`.
 
 ## 5. Bitácora (agregar arriba lo más reciente)
+- 3-oct (Claude Opus, sesión en la nube, `main`): **calidad de los análisis de Gemini** (COMMIT). Estándar de calidad común y tareas como métodos con estructura (`ia/macrofuentes.ts`), indicadores derivados en el dossier (`ia/indicadoresDerivados.ts`), analista y segmentos reescritos, razonamiento HIGH sin temperatura fija y respuesta vacía = 503 con respaldo (`geminiRespaldo.ts`). Detalle en `docs/MOTOR_DE_ANALISIS.md` › Calidad del análisis.
 - 3-oct (Claude Opus, sesión en la nube, `main`): **cadena de respaldo de Gemini** (`0e9b1cc`). En producción el generador
   mostró `503 UNAVAILABLE ... high demand`: es la respuesta de Google, así que **la clave ya pasa** (con clave mala sería
   403). Toda ruta de Gemini (contenido, analista, piezas, noticias, genérico) reintenta una vez tras 1,5 s y luego baja

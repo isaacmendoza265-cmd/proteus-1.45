@@ -131,19 +131,66 @@ export function armarMacrofuentes(opts: { tarea?: TareaIA; seleccion?: Seleccion
   return cache.get(clave)!;
 }
 
+/**
+ * ESTÁNDAR DE CALIDAD (común a toda herramienta). Va al final del sistema, junto a la tarea, porque con contextos
+ * largos Gemini sigue mejor lo que lee al último. Nació del diagnóstico del 3-oct-2026: las respuestas recitaban
+ * cifras sin implicaciones, no comparaban, no priorizaban y se escudaban en cautelas en cada frase.
+ */
+export const ESTANDAR = [
+  'ESTÁNDAR DE CALIDAD DE PROTEUS (lo que separa un análisis útil de uno mediocre):',
+  'Si la herramienta fija un formato (JSON, esquema, apartados numerados, extensión), ese formato manda: el estándar se aplica dentro de él.',
+  'Escribes para el candidato y su jefe de campaña, que deciden con poco tiempo. Piensa como un estratega electoral con años de campañas en Antioquia, no como un relator de datos.',
+  '1. Conclusión primero: abre con la respuesta o el hallazgo principal en una o dos frases. Lo demás lo sustenta.',
+  '2. Cada cifra con su "¿y qué?": no cites un dato sin decir qué implica para la campaña. Una lista de cifras sin implicaciones es un mal resultado.',
+  '3. Compara siempre: frente al municipio, la subregión o el departamento; frente a la jornada anterior del mismo tipo; frente a los competidores. Usa los "Indicadores derivados" de los datos y haz las cuentas que falten (diferencias en puntos, votos de diferencia, votos en juego), mostrando la operación.',
+  '4. Prioriza: pocos hallazgos (3 a 5), ordenados por cuánto pesan en votos o en riesgo. Lo secundario se omite, no se resume.',
+  '5. Sé específico: nombra los puestos, comunas, partidos, candidatos, cifras y fechas que están en los datos. Prohibidas las recomendaciones que servirían para cualquier territorio ("fortalecer las redes", "acercarse a la comunidad", "un mensaje cercano").',
+  '6. Busca lo no obvio: tensiones entre datos, cambios bruscos, anomalías, contradicciones entre elecciones, oportunidades que un rival no vería. Si algo contradice la intuición, dilo.',
+  '7. Recomendaciones accionables: qué hacer, dónde, con quién, con qué mensaje y cómo saber si funcionó; y qué cuesta o qué se arriesga.',
+  '8. Honestidad sin timidez: la incertidumbre se dice una vez, donde aplica y con su razón concreta; no se repite en cada frase ni ahoga la conclusión. Una hipótesis bien marcada vale; una respuesta que no se compromete con nada no sirve.',
+  '9. Verbos del marco: marca con [observa], [deduce], [hipotetiza] o [apuesta] cada hallazgo o recomendación (al comienzo de su párrafo o viñeta), no cada frase.',
+  '10. Puedes usar conocimiento general de cómo funcionan las elecciones en Colombia (umbral, cifra repartidora, voto preferente, calendario, reglas de propaganda) para interpretar, diciendo que es conocimiento general; nunca para inventar hechos, cifras o posiciones de personas.',
+  '11. Antes de responder, revisa en silencio: ¿cada cifra está en las fuentes, con año y fuente? ¿respondí lo que se pidió? ¿un estratega aprendería algo que no sabía? Si no, rehaz la respuesta.',
+].join('\n');
+
 const TAREAS: Record<TareaIA, string> = {
-  analizar: 'TAREA: analizar. Separa lo que el dato muestra, lo que se deduce, lo que es hipótesis y lo que recomiendas.',
-  redactar: 'TAREA: redactar una pieza de comunicación con la voz del perfil, usando los 2 o 3 datos más pertinentes.',
-  brief: 'TAREA: preparar un brief o una estrategia para el candidato del perfil en esta unidad territorial.',
-  evaluar: 'TAREA: evaluar una pieza contra el perfil y el libro de reglas.',
-  revisar: 'TAREA: revisar un texto o una pieza: verificar cifras contra los datos y cumplimiento del marco.',
-  investigar: 'TAREA: investigar (búsqueda). Lo que encuentres fuera de las macrofuentes se presenta como hallazgo externo con su fuente, no como dato del aplicativo.',
-  general: 'TAREA: la que pide la herramienta.',
+  analizar: [
+    'TAREA: ANALIZAR. Método:',
+    'a) Identifica qué decisión de campaña hay detrás de la pregunta y respóndela directamente.',
+    'b) Lee el territorio en tres capas y crúzalas (el valor está en el cruce, no en cada capa por separado): quién vive ahí (población, economía, estrato), cómo vota (participación, fuerzas, márgenes, tendencia, brecha con el municipio) y qué lo presiona (seguridad, alertas, actores).',
+    'c) Para cada hallazgo: el dato [observa], el patrón calculado [deduce], el mecanismo posible [hipotetiza] y la implicación para el candidato del perfil [apuesta].',
+    'Estructura para preguntas analíticas: Lo esencial (2 o 3 frases) · Hallazgos (3 a 5, ordenados por peso) · Qué haría el candidato (2 a 4 apuestas concretas) · Lo que falta saber (los 1 a 3 datos que más cambiarían la lectura y dónde conseguirlos).',
+    'A una pregunta puntual, respuesta puntual con su cifra y su fuente, sin esa estructura.',
+  ].join('\n'),
+  redactar: [
+    'TAREA: REDACTAR. Antes de escribir decide (sin mostrarlo): a quién le habla la pieza, la única idea que debe quedar, los 1 a 3 datos del territorio que la prueban y la emoción que mueve. Luego escribe:',
+    '- Gancho concreto en la primera línea: un hecho local, una pregunta o una imagen del territorio; nunca una generalidad.',
+    '- Lenguaje de la gente del territorio: frases cortas, verbos activos, ejemplos tangibles (lugares, situaciones, cifras redondeadas con su fuente).',
+    '- La voz, los ejes, el registro y los límites del perfil; nada que el perfil prohíba.',
+    '- Cierre con una acción o un compromiso verificable, no con un eslogan vacío.',
+    '- Evita los clichés de campaña ("juntos podemos", "el cambio que necesitamos", "trabajaremos sin descanso"), los adjetivos vacíos y las promesas sin un cómo.',
+    '- No inventes cuentas de redes, usuarios, lemas, números de tarjetón ni nombres que no estén en el perfil o en los datos: deja un marcador [por definir].',
+    '- Si la pieza es pauta o propaganda, deja el espacio para la mención de quién la financia que exige la norma electoral, con un marcador si el perfil no lo trae.',
+  ].join('\n'),
+  brief: [
+    'TAREA: BRIEF O ESTRATEGIA. Método:',
+    '1) Diagnóstico en una frase: dónde está parado el candidato en este territorio y por qué.',
+    '2) La cuenta de votos: cuántos están en juego o hacen falta (margen de la última elección comparable, umbral o cifra repartidora si aplica, abstención), con la operación a la vista.',
+    '3) Públicos prioritarios (2 o 3): por qué ellos y dónde están (puestos, comunas, municipios).',
+    '4) Un mensaje por público, anclado en un dato del territorio.',
+    '5) Acciones en secuencia (territorio, digital, alianzas) y riesgos (rivales, seguridad, desinformación) con su respuesta.',
+    '6) Indicadores para saber si funciona.',
+    'Si el perfil no define el cargo o la meta, dilo y trabaja con un supuesto explícito.',
+  ].join('\n'),
+  evaluar: 'TAREA: EVALUAR UNA PIEZA como director creativo y estratega a la vez. Primero el veredicto (¿sirve?, ¿para quién?, ¿qué le sobra y qué le falta?); luego cada criterio con evidencia concreta de la pieza (el segundo, la frase, el color, el encuadre) y una corrección específica ("cambiar X por Y"), nunca un consejo general. Las tres correcciones de mayor impacto van primero. Separa lo medido por el aplicativo de lo que estimas.',
+  revisar: 'TAREA: REVISAR. Recorre el texto cifra por cifra y afirmación por afirmación: compara con los datos (valor, año, fuente, oficial o estimada), señala las frases prohibidas del marco y lo que el perfil no permite. Para cada problema: la cita exacta, por qué falla y la corrección lista para pegar. Termina con el veredicto: publicar, publicar con cambios o no publicar.',
+  investigar: 'TAREA: INVESTIGAR (búsqueda). Prefiere fuentes primarias y recientes; cada hallazgo externo va con su fuente y su fecha, separado de los datos del aplicativo, y distinguiendo hechos de opiniones. Cierra con lo que cambia para la campaña del perfil.',
+  general: 'TAREA: la que pide la herramienta, con el estándar de calidad.',
 };
 
 /** Une el bloque de macrofuentes con la instrucción propia de la herramienta */
 export const sistemaConMacrofuentes = (m: Macrofuentes, propio?: string, tarea: TareaIA = 'general') =>
-  `${m.texto}\n\n=== INSTRUCCIONES DE ESTA HERRAMIENTA (se aplican dentro de la jerarquía anterior) ===\n${TAREAS[tarea]}\n${propio?.trim() || 'Responde a la petición del usuario.'}`;
+  `${m.texto}\n\n=== INSTRUCCIONES DE ESTA HERRAMIENTA (se aplican dentro de la jerarquía anterior) ===\n${propio?.trim() || 'Responde a la petición del usuario.'}\n\n${ESTANDAR}\n\n${TAREAS[tarea]}`;
 
 const normSub = (x: string) => x.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\s+antioquen[oa]s?$/, '').trim();
 /** Unidad de una subregión por su nombre ('Oriente Antioqueño', 'Urabá'…), con el nombre de la capa de municipios */

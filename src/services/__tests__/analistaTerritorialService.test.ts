@@ -5,7 +5,8 @@ afterEach(() => vi.unstubAllGlobals());
 
 describe('analista territorial', () => {
   it('las reglas exigen usar solo el dossier y separar observa/deduce/hipotetiza/apuesta', () => {
-    expect(SISTEMA_ANALISTA).toMatch(/única fuente es el DOSSIER/);
+    expect(SISTEMA_ANALISTA).toMatch(/Los datos son el DOSSIER/);
+    expect(SISTEMA_ANALISTA).toMatch(/No uses conocimiento externo sobre personas/);
     expect(SISTEMA_ANALISTA).toMatch(/observa.*deduce.*hipotetiza.*apuesta/s);
     expect(SISTEMA_ANALISTA).toMatch(/donde está el puesto/);
   });
