@@ -247,7 +247,7 @@ Entorno Windows: Node 24 está en `C:\Program Files\nodejs` pero no siempre en e
   `territoryProfileService.ts`; ficha: `src/components/territorio/`.
 
 ## 5. Bitácora (agregar arriba lo más reciente)
-- 3-oct (Claude Opus, sesión en la nube, `main`): **calidad de los análisis de Gemini** (COMMIT). Estándar de calidad común y tareas como métodos con estructura (`ia/macrofuentes.ts`), indicadores derivados en el dossier (`ia/indicadoresDerivados.ts`), analista y segmentos reescritos, razonamiento HIGH sin temperatura fija y respuesta vacía = 503 con respaldo (`geminiRespaldo.ts`). Detalle en `docs/MOTOR_DE_ANALISIS.md` › Calidad del análisis.
+- 3-oct (Claude Opus, sesión en la nube, `main`): **calidad de los análisis de Gemini** (`f556c7f`). Estándar de calidad común y tareas como métodos con estructura (`ia/macrofuentes.ts`), indicadores derivados en el dossier (`ia/indicadoresDerivados.ts`), analista y segmentos reescritos, razonamiento HIGH sin temperatura fija y respuesta vacía = 503 con respaldo (`geminiRespaldo.ts`). Detalle en `docs/MOTOR_DE_ANALISIS.md` › Calidad del análisis.
 - 3-oct (Claude Opus, sesión en la nube, `main`): **cadena de respaldo de Gemini** (`0e9b1cc`). En producción el generador
   mostró `503 UNAVAILABLE ... high demand`: es la respuesta de Google, así que **la clave ya pasa** (con clave mala sería
   403). Toda ruta de Gemini (contenido, analista, piezas, noticias, genérico) reintenta una vez tras 1,5 s y luego baja
